@@ -6,6 +6,7 @@
 #   pending     — ainda não iniciado
 #   translating — agente trabalhando na tradução
 #   translated  — tradução concluída, aguardando revisão
+#   reviewing   — agente revisor trabalhando na revisão
 #   reviewed    — revisão linguística concluída
 #   validated   — validação técnica passou
 #   done        — pronto para merge

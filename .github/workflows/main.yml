@@ -77,7 +77,7 @@ jobs:
         curl -sSL https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=bin
         echo "$(pwd)/bin" >> "${GITHUB_PATH}"
     - name: Install aspell
-      run: sudo apt-get install aspell
+      run: sudo apt-get install -y aspell aspell-pt-br
     - name: Install shellcheck
       run: sudo apt-get install shellcheck
     - name: Report versions

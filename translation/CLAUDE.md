@@ -140,3 +140,169 @@ o original (use `git diff`).
 8. Repetir para próximo arquivo do batch
 9. Ao finalizar batch, executar validação técnica
 ```
+
+---
+
+# Instruções para Agentes de Revisão — Rust Book pt-BR
+
+Você é um agente de revisão responsável por garantir a qualidade da tradução
+feita por agentes tradutores. Seu trabalho é revisar arquivos com status
+`"translated"` e promovê-los para `"reviewed"`.
+
+## Antes de começar
+
+1. **Leia os mesmos arquivos de configuração** que os agentes tradutores:
+   - `translation/glossary.yml` — termos técnicos e suas traduções
+   - `translation/style-guide.md` — regras de estilo e formatação
+   - `translation/config.yml` — configuração geral do pipeline
+
+2. **Identifique seu trabalho** em `progress.yml`:
+   - Localize arquivos com `status: "translated"`
+   - Priorize revisar todos os arquivos de um mesmo batch antes de ir ao próximo,
+     para garantir consistência intra-capítulo
+   - Atualize o status para `"reviewing"` e preencha `assigned_to` antes de
+     começar
+
+## Processo de revisão
+
+### Passo 1: Obter o original em inglês
+
+Antes de revisar, consulte o arquivo original em inglês para ter referência.
+Use o commit baseline registrado em `translation/baseline_commit.txt` para
+garantir que está comparando com a versão correta:
+
+```bash
+git show <baseline_commit>:src/<arquivo>.md
+```
+
+### Passo 2: Revisão estrutural
+
+Verifique se a estrutura do original foi preservada:
+
+- [ ] **Headings**: mesmo número, mesmo nível (`#`, `##`, `###`), nenhum omitido
+- [ ] **Blocos de código**: conteúdo idêntico ao original (nenhuma alteração)
+- [ ] **Anotações de código**: `rust,ignore`, `rust,does_not_compile`, etc.
+      preservadas exatamente
+- [ ] **Links internos**: URLs de arquivo `.md` inalteradas, somente texto do
+      link traduzido
+- [ ] **Âncoras HTML**: `<a id="...">` preservadas na posição original
+- [ ] **Imagens**: caminhos inalterados, texto alt traduzido
+- [ ] **Linhas em branco**: mesma separação entre seções que o original
+
+### Passo 3: Revisão terminológica
+
+Verifique aderência ao glossário (`translation/glossary.yml`):
+
+- [ ] Nenhum termo de `keep_english` foi traduzido indevidamente
+- [ ] Termos de `translate` usam exatamente a tradução definida (não variações)
+- [ ] Termos de `contextual` usam a variante correta para o contexto
+- [ ] Na primeira menção de cada termo `keep_english` no capítulo: está em
+      itálico com tradução entre parênteses (ex: *ownership* (propriedade))
+- [ ] Menções subsequentes do mesmo termo: sem itálico, sem parênteses
+- [ ] `Listing X-Y` → `Listagem X-Y` em todas as ocorrências
+- [ ] `Figure X-Y` → `Figura X-Y` em todas as ocorrências
+- [ ] `Chapter X` → `Capítulo X` em todas as ocorrências
+- [ ] `Note:` → `Nota:` em blocos de citação
+
+### Passo 4: Revisão linguística
+
+Verifique qualidade do português:
+
+- [ ] **Pronome**: "você" usado consistentemente (não "tu", "vós", "nós"
+      impessoal)
+- [ ] **Voz ativa**: preferida sobre voz passiva quando possível
+- [ ] **Tom**: didático, direto, acessível — similar ao original
+- [ ] **Naturalidade**: o texto soa como documentação escrita em pt-BR, não
+      como tradução literal do inglês
+- [ ] **Artigos**: gênero correto antes de termos em inglês (conforme
+      style-guide: "o trait", "a closure", "o lifetime", etc.)
+- [ ] **Plural**: termos em inglês no plural com "s" simples (traits, closures —
+      sem apóstrofo)
+- [ ] **Verbos**: sem aportuguesar termos ingleses ("fazer o build", não
+      "buildar")
+- [ ] **Números**: ponto para milhar (1.000), vírgula para decimal (3,14) —
+      exceto em contexto de código
+- [ ] **Concordância**: verbal e nominal correta em todo o texto
+- [ ] **Clareza**: frases longas ou confusas foram simplificadas sem perder
+      significado
+
+### Passo 5: Revisão de fidelidade
+
+Compare parágrafos-chave com o original:
+
+- [ ] Nenhum parágrafo foi omitido na tradução
+- [ ] Nenhum conteúdo foi adicionado que não existia no original
+- [ ] O significado técnico está preservado — a tradução não introduziu
+      ambiguidade ou imprecisão
+- [ ] Referências cruzadas a outros capítulos estão corretas
+
+### Passo 6: Consistência intra-capítulo
+
+Se o capítulo tem múltiplas seções (vários arquivos .md):
+
+- [ ] Termos são usados de forma idêntica em todas as seções
+- [ ] O tom e estilo são uniformes entre seções
+- [ ] Referências internas entre seções estão corretas
+
+### Passo 7: Registrar resultado
+
+#### Se a tradução está aprovada:
+
+1. Atualize `translation/progress.yml`:
+   - Mude o status para `"reviewed"`
+2. Prossiga para o próximo arquivo
+
+#### Se a tradução precisa de correções:
+
+1. Faça as correções diretamente no arquivo (você tem autoridade para editar)
+2. Para cada correção, adicione um comentário HTML temporário explicando a
+   mudança (será removido na validação):
+   ```markdown
+   <!-- REVISÃO: corrigido "a enum" para "o enum" (gênero masculino) -->
+   ```
+3. Após corrigir, marque como `"reviewed"` em `progress.yml`
+
+#### Se a tradução tem problemas graves:
+
+Se a tradução tem problemas estruturais sérios (parágrafos faltando, blocos de
+código alterados, significado técnico incorreto), retorne o arquivo para
+retradução:
+
+1. Atualize `progress.yml` com status `"pending"` e `assigned_to: null`
+2. Adicione um comentário HTML no topo do arquivo explicando o motivo:
+   ```markdown
+   <!-- RETRADUÇÃO NECESSÁRIA: [motivo detalhado] -->
+   ```
+
+## Checklist resumido por arquivo
+
+```
+□ Estrutura preservada (headings, código, links, âncoras)
+□ Glossário respeitado (keep_english, translate, contextual)
+□ Primeira menção em itálico com tradução entre parênteses
+□ Listing/Figure/Chapter traduzidos
+□ Pronome "você", voz ativa, tom didático
+□ Artigos e plural corretos para termos em inglês
+□ Sem verbos aportuguesar ("buildar", "pushar")
+□ Nenhum parágrafo omitido ou adicionado
+□ Significado técnico preservado
+□ Consistência com demais seções do capítulo
+```
+
+## Validação técnica (após revisar batch completo)
+
+Após revisar todos os arquivos de um batch, execute a mesma validação técnica:
+
+```bash
+# Verificar links internos
+cargo run --bin lfp src
+
+# Executar testes
+cargo test
+
+# Build do mdBook
+mdbook build
+```
+
+Se algum teste falhar após suas correções, revise os blocos de código dos
+arquivos que você editou com `git diff`.

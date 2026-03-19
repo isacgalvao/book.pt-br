@@ -19,7 +19,12 @@ pipeline:
       description: "Traduzir conteúdo seguindo glossário e guia de estilo"
     - id: "review"
       name: "Revisão linguística"
-      description: "Verificar consistência de termos, tom e fidelidade ao original"
+      description: >
+        Verificar estrutura preservada, aderência ao glossário,
+        qualidade linguística (tom, pronome, artigos, plural),
+        fidelidade ao original e consistência intra-capítulo.
+        Consultar instruções detalhadas em translation/CLAUDE.md
+        (seção 'Instruções para Agentes de Revisão').
     - id: "validate"
       name: "Validação técnica"
       description: "Executar testes, verificar links e renderização"
