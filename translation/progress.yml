@@ -76,8 +76,8 @@ batch_3:
   parallel: false
   files:
     - path: "src/ch02-00-guessing-game-tutorial.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "copilot-gpt-5"
 
 # ============================================================================
 # Batch 4 — Common Programming Concepts (prioridade alta, sequencial)
