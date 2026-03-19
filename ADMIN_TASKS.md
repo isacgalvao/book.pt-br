@@ -150,91 +150,30 @@ flow for publishing is:
 
 [pipx]: https://pipx.pypa.io/stable/#install-pipx
 
-## Plano de migração da documentação (inglês -> português do Brasil)
+## Pipeline de tradução pt-BR
 
-Objetivo: manter a tradução pt-BR sincronizada com a fonte em inglês sem perder
-consistência editorial, exemplos de código ou referências internas.
+O pipeline de tradução está organizado no diretório `translation/`. Consulte os
+arquivos abaixo para detalhes completos:
 
-1. Estabeleça a base da migração.
-   - Defina o commit/tag de origem em inglês que será usado como baseline.
-   - Registre no PR a faixa de arquivos/capítulos que entrarão nesta rodada.
-2. Mapeie e priorize diferenças.
-   - Compare `src/` da origem com este repositório e liste capítulos alterados.
-   - Priorize capítulos de maior impacto (introdução, instalação e conceitos
-     fundamentais) para reduzir divergência de conteúdo inicial.
-3. Migre capítulo por capítulo.
-   - Traduza mantendo estrutura, âncoras explícitas (`<a id="...">`) e links
-     originais sempre que possível.
-   - Preserve blocos de código e saídas; altere texto explicativo sem modificar
-     comportamento dos exemplos.
-   - Marque termos técnicos sem tradução consolidada para revisão editorial.
-4. Valide tecnicamente a cada lote.
-   - Execute `cargo test`.
-   - Execute `cargo run --bin lfp src`.
-   - Quando necessário, execute `cd packages/trpl && cargo build` antes do
-     `mdbook test --library-path packages/trpl/target/debug/deps`.
-5. Faça revisão linguística e de estilo.
-   - Revise consistência de termos (ex.: ownership, borrowing, trait, crate).
-   - Verifique tom, clareza e aderência às convenções existentes no capítulo.
-6. Publique em incrementos pequenos.
-   - Abra PRs por capítulo (ou conjunto pequeno de capítulos) para facilitar
-     revisão.
-   - Descreva no PR: fonte em inglês usada, escopo migrado, pendências e termos
-     em aberto.
-7. Mantenha sincronização contínua.
-   - Em cada nova rodada, repita o diff contra a origem e migre apenas mudanças
-     novas.
-   - Atualize este plano quando o fluxo de validação ou revisão for ajustado.
+| Arquivo | Descrição |
+|---------|-----------|
+| `translation/config.yml` | Configuração geral do pipeline (fases, validação, paralelização) |
+| `translation/glossary.yml` | Glossário de termos técnicos (manter em inglês vs. traduzir) |
+| `translation/style-guide.md` | Guia de estilo e convenções linguísticas pt-BR |
+| `translation/progress.yml` | Rastreamento de progresso por arquivo e batch |
+| `translation/CLAUDE.md` | Instruções para agentes de tradução |
+| `translation/baseline_commit.txt` | Commit de referência do upstream |
 
-### Checklist operacional por capítulo (pronto para PR)
+### Fluxo resumido
 
-Use este checklist no corpo da PR para acompanhar o andamento por capítulo.
-Marque apenas quando o capítulo estiver traduzido, revisado e validado.
+1. Agentes de tradução leem `CLAUDE.md`, `glossary.yml` e `style-guide.md`
+2. Pegam arquivos `pending` em `progress.yml`, traduzem, marcam como `translated`
+3. Agentes revisores verificam consistência e marcam como `reviewed`
+4. Validação técnica (`cargo test`, `mdbook build`) marca como `validated`
+5. GitHub Action (`translate-sync.yml`) detecta mudanças no upstream semanalmente
 
-#### Modelo de PR (copiar e colar)
+### Ordem dos batches
 
-- Fonte em inglês (commit/tag baseline): `__________`
-- Rodada de migração: `__________`
-- Escopo desta PR: `__________`
-
-**Status por capítulo**
-
-> Use os títulos exatamente como em `src/SUMMARY.md` para facilitar comparação.
-
-- [ ] ch00 — Introduction
-- [ ] ch01 — Getting Started
-- [ ] ch02 — Programming a Guessing Game
-- [ ] ch03 — Common Programming Concepts
-- [ ] ch04 — Understanding Ownership
-- [ ] ch05 — Using Structs to Structure Related Data
-- [ ] ch06 — Enums and Pattern Matching
-- [ ] ch07 — Packages, Crates, and Modules
-- [ ] ch08 — Common Collections
-- [ ] ch09 — Error Handling
-- [ ] ch10 — Generic Types, Traits, and Lifetimes
-- [ ] ch11 — Writing Automated Tests
-- [ ] ch12 — An I/O Project: Building a Command Line Program
-- [ ] ch13 — Functional Language Features: Iterators and Closures
-- [ ] ch14 — More about Cargo and Crates.io
-- [ ] ch15 — Smart Pointers
-- [ ] ch16 — Fearless Concurrency
-- [ ] ch17 — Fundamentals of Asynchronous Programming: Async, Await, Futures, and Streams
-- [ ] ch18 — Object Oriented Programming Features
-- [ ] ch19 — Patterns and Matching
-- [ ] ch20 — Advanced Features
-- [ ] ch21 — Final Project: Building a Multithreaded Web Server
-
-**Checklist de qualidade desta PR**
-
-- [ ] Estrutura, headings e links preservados
-- [ ] Blocos de código e saídas preservados
-- [ ] Termos técnicos revisados (consistência editorial)
-- [ ] `cargo run --bin lfp src`
-- [ ] `cargo test`
-- [ ] `cd packages/trpl && cargo build` (pré-requisito para `mdbook test`)
-- [ ] `mdbook test --library-path packages/trpl/target/debug/deps` (quando aplicável)
-
-**Pendências**
-
-- [ ] Sem pendências
-- [ ] Pendências registradas: `__________`
+- **Batches 1–5** (front matter, ch01–ch04): sequenciais, estabelecem vocabulário
+- **Batches 6–22** (ch05–ch21): paralelos, capítulos independentes
+- **Batch 23** (apêndices + SUMMARY): último, depende dos títulos traduzidos

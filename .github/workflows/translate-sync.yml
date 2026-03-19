@@ -1,0 +1,176 @@
+# Workflow de Sincronização com Upstream — Rust Book pt-BR
+#
+# Este workflow detecta mudanças no repositório upstream (rust-lang/book)
+# e cria uma issue com a lista de arquivos modificados para tradução incremental.
+#
+# Futuramente, pode ser estendido para disparar um agente de IA que traduz
+# automaticamente os diffs e abre PRs.
+
+name: Sync Upstream Changes
+
+on:
+  schedule:
+    # Executa toda segunda-feira às 06:00 UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      force_check:
+        description: "Forçar verificação mesmo sem mudanças detectadas"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  UPSTREAM_REPO: "https://github.com/rust-lang/book.git"
+  UPSTREAM_BRANCH: "main"
+  BASELINE_FILE: "translation/baseline_commit.txt"
+
+jobs:
+  check-upstream:
+    name: Check for upstream changes
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.diff.outputs.has_changes }}
+      changed_files: ${{ steps.diff.outputs.changed_files }}
+      new_commit: ${{ steps.diff.outputs.new_commit }}
+      old_commit: ${{ steps.diff.outputs.old_commit }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream "$UPSTREAM_REPO" || true
+          git fetch upstream "$UPSTREAM_BRANCH"
+
+      - name: Read baseline commit
+        id: baseline
+        run: |
+          if [ -f "$BASELINE_FILE" ]; then
+            echo "commit=$(cat $BASELINE_FILE | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
+          else
+            # Se não existe arquivo de baseline, usa o primeiro commit do fork
+            echo "commit=$(git merge-base HEAD upstream/$UPSTREAM_BRANCH)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect changes in src/
+        id: diff
+        run: |
+          OLD_COMMIT="${{ steps.baseline.outputs.commit }}"
+          NEW_COMMIT="$(git rev-parse upstream/$UPSTREAM_BRANCH)"
+
+          echo "old_commit=$OLD_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "new_commit=$NEW_COMMIT" >> "$GITHUB_OUTPUT"
+
+          if [ "$OLD_COMMIT" = "$NEW_COMMIT" ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected."
+            exit 0
+          fi
+
+          # Lista arquivos .md modificados em src/
+          CHANGED=$(git diff --name-only "$OLD_COMMIT".."$NEW_COMMIT" -- "src/*.md" | sort)
+
+          if [ -z "$CHANGED" ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No markdown changes in src/."
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            # Salvar como JSON array para uso posterior
+            echo "changed_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$CHANGED" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo "Changed files:"
+            echo "$CHANGED"
+          fi
+
+  create-sync-issue:
+    name: Create sync issue
+    runs-on: ubuntu-latest
+    needs: check-upstream
+    if: needs.check-upstream.outputs.has_changes == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create issue body
+        id: issue
+        run: |
+          OLD="${{ needs.check-upstream.outputs.old_commit }}"
+          NEW="${{ needs.check-upstream.outputs.new_commit }}"
+          FILES="${{ needs.check-upstream.outputs.changed_files }}"
+
+          # Contar arquivos
+          FILE_COUNT=$(echo "$FILES" | wc -l)
+
+          # Montar checklist
+          CHECKLIST=""
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            CHECKLIST="${CHECKLIST}- [ ] \`${file}\`
+          "
+          done <<< "$FILES"
+
+          cat > /tmp/issue_body.md << ISSUE_EOF
+          ## Sincronização com upstream detectada
+
+          Mudanças foram detectadas no repositório upstream entre os commits:
+          - **De:** \`${OLD:0:7}\`
+          - **Para:** \`${NEW:0:7}\`
+          - **Diff:** https://github.com/rust-lang/book/compare/${OLD:0:7}...${NEW:0:7}
+
+          ### Arquivos modificados ($FILE_COUNT)
+
+          $CHECKLIST
+
+          ### Ações necessárias
+
+          1. Revisar o diff de cada arquivo no upstream
+          2. Traduzir apenas o conteúdo novo/modificado
+          3. Manter consistência com o glossário (\`translation/glossary.yml\`)
+          4. Atualizar \`translation/baseline_commit.txt\` com \`$NEW\` após concluir
+          5. Executar validação: \`cargo test\`, \`cargo run --bin lfp src\`, \`mdbook build\`
+
+          ### Baseline
+
+          Após traduzir todos os arquivos, atualize o baseline:
+          \`\`\`bash
+          echo "$NEW" > translation/baseline_commit.txt
+          \`\`\`
+          ISSUE_EOF
+
+      - name: Create GitHub issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🔄 Sync: $(echo '${{ needs.check-upstream.outputs.changed_files }}' | wc -l) arquivo(s) modificado(s) no upstream" \
+            --body-file /tmp/issue_body.md \
+            --label "sync,translation"
+
+  update-baseline:
+    name: Update baseline (manual trigger only)
+    runs-on: ubuntu-latest
+    needs: check-upstream
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.force_check == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update baseline commit file
+        run: |
+          echo "${{ needs.check-upstream.outputs.new_commit }}" > "$BASELINE_FILE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$BASELINE_FILE"
+          git commit -m "chore: atualizar baseline commit do upstream" || echo "No changes to commit"
+          git push

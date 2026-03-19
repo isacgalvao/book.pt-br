@@ -1,0 +1,49 @@
+# Configuração do Pipeline de Tradução — Rust Book pt-BR
+# Este arquivo é lido por agentes de tradução para obter parâmetros globais.
+
+project:
+  name: "The Rust Programming Language — Tradução pt-BR"
+  source_language: "en"
+  target_language: "pt-BR"
+  upstream_repo: "https://github.com/rust-lang/book"
+  upstream_branch: "main"
+  baseline_commit: "39aecea"  # commit de referência do upstream no momento do fork
+
+pipeline:
+  # Fases sequenciais que cada arquivo percorre
+  phases:
+    - id: "translate"
+      name: "Tradução"
+      description: "Traduzir conteúdo seguindo glossário e guia de estilo"
+    - id: "review"
+      name: "Revisão linguística"
+      description: "Verificar consistência de termos, tom e fidelidade ao original"
+    - id: "validate"
+      name: "Validação técnica"
+      description: "Executar testes, verificar links e renderização"
+    - id: "done"
+      name: "Concluído"
+      description: "Arquivo pronto para merge"
+
+  # Comandos de validação
+  validation_commands:
+    - "cargo run --bin lfp src"
+    - "cargo test"
+    - "cd packages/trpl && cargo build"
+    - "mdbook test --library-path packages/trpl/target/debug/deps"
+    - "mdbook build"
+
+  # Regras de paralelização
+  parallelization:
+    # Batches 1-5 estabelecem vocabulário base — traduzir primeiro
+    sequential_first: [1, 2, 3, 4, 5]
+    # Batches 6-22 podem rodar em paralelo após os primeiros
+    parallel_after: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    # Batch 23 (SUMMARY + apêndices) é o último — depende dos títulos traduzidos
+    sequential_last: [23]
+
+files:
+  glossary: "translation/glossary.yml"
+  style_guide: "translation/style-guide.md"
+  progress: "translation/progress.yml"
+  agent_instructions: "translation/CLAUDE.md"
