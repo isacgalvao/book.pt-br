@@ -92,7 +92,7 @@ batch_4:
       assigned_to: "copilot-gpt-5"
 
     - path: "src/ch03-01-variables-and-mutability.md"
-      status: "translating"
+      status: "translated"
       assigned_to: "copilot-gpt-5"
 
     - path: "src/ch03-02-data-types.md"
