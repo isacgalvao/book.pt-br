@@ -88,8 +88,8 @@ batch_4:
   parallel: false
   files:
     - path: "src/ch03-00-common-programming-concepts.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "copilot-gpt-5"
 
     - path: "src/ch03-01-variables-and-mutability.md"
       status: "pending"
