@@ -7,7 +7,9 @@ project:
   target_language: "pt-BR"
   upstream_repo: "https://github.com/rust-lang/book"
   upstream_branch: "main"
-  baseline_commit: "39aecea"  # commit de referência do upstream no momento do fork
+  # O commit baseline é gerenciado exclusivamente em translation/baseline_commit.txt
+  # (fonte única de verdade, lido pelo workflow de sincronização)
+  baseline_commit_file: "translation/baseline_commit.txt"
 
 pipeline:
   # Fases sequenciais que cada arquivo percorre

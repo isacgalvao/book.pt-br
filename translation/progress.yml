@@ -20,7 +20,7 @@
 #   2. Traduza o arquivo
 #   3. Mude status para "translated"
 
-baseline_commit: "39aecea"
+# O commit baseline é gerenciado em translation/baseline_commit.txt (fonte única de verdade)
 last_updated: "2026-03-19"
 
 # ============================================================================

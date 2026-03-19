@@ -120,33 +120,36 @@ jobs:
           "
           done <<< "$FILES"
 
-          cat > /tmp/issue_body.md << ISSUE_EOF
-          ## Sincronização com upstream detectada
+          cat > /tmp/issue_body.md <<'ISSUE_EOF'
+## Sincronização com upstream detectada
 
-          Mudanças foram detectadas no repositório upstream entre os commits:
-          - **De:** \`${OLD:0:7}\`
-          - **Para:** \`${NEW:0:7}\`
-          - **Diff:** https://github.com/rust-lang/book/compare/${OLD:0:7}...${NEW:0:7}
+Mudanças foram detectadas no repositório upstream entre os commits:
+ISSUE_EOF
 
-          ### Arquivos modificados ($FILE_COUNT)
+          cat >> /tmp/issue_body.md << ISSUE_EOF
+- **De:** \`${OLD:0:7}\`
+- **Para:** \`${NEW:0:7}\`
+- **Diff:** https://github.com/rust-lang/book/compare/${OLD:0:7}...${NEW:0:7}
 
-          $CHECKLIST
+### Arquivos modificados ($FILE_COUNT)
 
-          ### Ações necessárias
+$CHECKLIST
 
-          1. Revisar o diff de cada arquivo no upstream
-          2. Traduzir apenas o conteúdo novo/modificado
-          3. Manter consistência com o glossário (\`translation/glossary.yml\`)
-          4. Atualizar \`translation/baseline_commit.txt\` com \`$NEW\` após concluir
-          5. Executar validação: \`cargo test\`, \`cargo run --bin lfp src\`, \`mdbook build\`
+### Ações necessárias
 
-          ### Baseline
+1. Revisar o diff de cada arquivo no upstream
+2. Traduzir apenas o conteúdo novo/modificado
+3. Manter consistência com o glossário (\`translation/glossary.yml\`)
+4. Atualizar \`translation/baseline_commit.txt\` com \`$NEW\` após concluir
+5. Executar validação: \`cargo test\`, \`cargo run --bin lfp src\`, \`mdbook build\`
 
-          Após traduzir todos os arquivos, atualize o baseline:
-          \`\`\`bash
-          echo "$NEW" > translation/baseline_commit.txt
-          \`\`\`
-          ISSUE_EOF
+### Baseline
+
+Após traduzir todos os arquivos, atualize o baseline:
+\`\`\`bash
+echo "$NEW" > translation/baseline_commit.txt
+\`\`\`
+ISSUE_EOF
 
       - name: Create GitHub issue
         env:

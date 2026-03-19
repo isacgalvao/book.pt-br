@@ -8,7 +8,7 @@
 #   translate     → termos com tradução definida (inglês: pt-BR)
 #   contextual    → termos que variam conforme o contexto
 #
-# Ao adicionar novos termos, mantenha a ordem alfabética dentro de cada seção.
+# Ao adicionar novos termos, mantenha a ordem alfabética dentro de cada categoria/subseção.
 
 # ============================================================================
 # Termos mantidos em inglês
@@ -58,7 +58,6 @@ keep_english:
 
   # Ferramentas e ecossistema
   - cargo
-  - crate
   - package
   - workspace
   - build
@@ -259,8 +258,7 @@ contextual:
     as_noun: "handle"            # "file handle" → "handle de arquivo"
     as_verb: "tratar"            # "handle the error" → "tratar o erro"
   crate:
-    as_package: "crate"          # sempre em inglês
-    as_verb_create: "criar"      # não confundir com o verbo "criar"
+    as_package: "crate"          # sempre em inglês; não confundir com o verbo "create" (criar)
   string:
     as_type: "String"            # tipo Rust, sempre com S maiúsculo
     as_concept: "string"         # conceito geral
