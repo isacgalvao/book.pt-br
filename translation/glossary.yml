@@ -8,7 +8,8 @@
 #   translate     → termos com tradução definida (inglês: pt-BR)
 #   contextual    → termos que variam conforme o contexto
 #
-# Ao adicionar novos termos, mantenha a ordem alfabética dentro de cada categoria/subseção.
+# Ao adicionar novos termos, mantenha a organização por categoria/subseção (agrupamento temático)
+# e, quando fizer sentido, preserve a ordem alfabética dentro de cada grupo.
 
 # ============================================================================
 # Termos mantidos em inglês
