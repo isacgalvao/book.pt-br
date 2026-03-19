@@ -32,16 +32,16 @@ batch_1:
   parallel: false
   files:
     - path: "src/title-page.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
     - path: "src/foreword.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
     - path: "src/ch00-00-introduction.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
 # ============================================================================
 # Batch 2 — Getting Started (prioridade alta, sequencial)
@@ -52,20 +52,20 @@ batch_2:
   parallel: false
   files:
     - path: "src/ch01-00-getting-started.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
     - path: "src/ch01-01-installation.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
     - path: "src/ch01-02-hello-world.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
     - path: "src/ch01-03-hello-cargo.md"
-      status: "pending"
-      assigned_to: null
+      status: "translated"
+      assigned_to: "claude-sonnet-4-6"
 
 # ============================================================================
 # Batch 3 — Guessing Game (prioridade alta, sequencial)

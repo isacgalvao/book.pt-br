@@ -1,47 +1,46 @@
-# Foreword
+# Prefácio
 
-The Rust programming language has come a long way in a few short years, from
-its creation and incubation by a small and nascent community of enthusiasts, to
-becoming one of the most loved and in-demand programming languages in the
-world. Looking back, it was inevitable that the power and promise of Rust would
-turn heads and gain a foothold in systems programming. What was not inevitable
-was the global growth in interest and innovation that permeated through open
-source communities and catalyzed wide-scale adoption across industries.
+A linguagem de programação Rust percorreu um longo caminho em poucos anos, desde
+sua criação e incubação por uma pequena e nascente comunidade de entusiastas, até
+se tornar uma das linguagens de programação mais amadas e requisitadas do
+mundo. Olhando para trás, era inevitável que o poder e a promessa do Rust
+chamariam atenção e ganhariam espaço na programação de sistemas. O que não era inevitável
+era o crescimento global de interesse e inovação que permeou as comunidades de código
+aberto e catalisou a adoção em larga escala em diversas indústrias.
 
-At this point in time, it is easy to point to the wonderful features that Rust
-has to offer to explain this explosion in interest and adoption. Who doesn’t
-want memory safety, *and* fast performance, *and* a friendly compiler, *and*
-great tooling, among a host of other wonderful features? The Rust language you
-see today combines years of research in systems programming with the practical
-wisdom of a vibrant and passionate community. This language was designed with
-purpose and crafted with care, offering developers a tool that makes it easier
-to write safe, fast, and reliable code.
+Hoje em dia, é fácil apontar os recursos maravilhosos que o Rust tem a oferecer para
+explicar essa explosão de interesse e adoção. Quem não quer segurança de memória, *e*
+alto desempenho, *e* um compilador amigável, *e* ótimas ferramentas, entre uma série
+de outros recursos maravilhosos? A linguagem Rust que você vê hoje combina anos de
+pesquisa em programação de sistemas com a sabedoria prática de uma comunidade vibrante
+e apaixonada. Essa linguagem foi projetada com propósito e criada com cuidado, oferecendo
+aos desenvolvedores uma ferramenta que facilita a escrita de código seguro, rápido e
+confiável.
 
-But what makes Rust truly special is its roots in empowering you, the user, to
-achieve your goals. This is a language that wants you to succeed, and the
-principle of empowerment runs through the core of the community that builds,
-maintains, and advocates for this language. Since the previous edition of this
-definitive text, Rust has further developed into a truly global and trusted
-language. The Rust Project is now robustly supported by the Rust Foundation,
-which also invests in key initiatives to ensure that Rust is secure, stable,
-and sustainable.
+Mas o que torna o Rust verdadeiramente especial são suas raízes em empoderar você, o
+usuário, a alcançar seus objetivos. Esta é uma linguagem que quer que você tenha sucesso,
+e o princípio do empoderamento perpassa o núcleo da comunidade que constrói, mantém e
+defende esta linguagem. Desde a edição anterior deste texto definitivo, o Rust se
+desenvolveu ainda mais em uma linguagem verdadeiramente global e confiável. O Projeto
+Rust agora é robustamente apoiado pela Rust Foundation, que também investe em iniciativas
+fundamentais para garantir que o Rust seja seguro, estável e sustentável.
 
-This edition of *The Rust Programming Language* is a comprehensive update,
-reflecting the language’s evolution over the years and providing valuable new
-information. But it is not just a guide to syntax and libraries—it’s an
-invitation to join a community that values quality, performance, and thoughtful
-design. Whether you’re a seasoned developer looking to explore Rust for the
-first time or an experienced Rustacean looking to refine your skills, this
-edition offers something for everyone.
+Esta edição de *A Linguagem de Programação Rust* é uma atualização abrangente,
+refletindo a evolução da linguagem ao longo dos anos e fornecendo novas informações
+valiosas. Mas não é apenas um guia de sintaxe e bibliotecas — é um convite para se
+juntar a uma comunidade que valoriza qualidade, desempenho e design cuidadoso. Seja
+você um desenvolvedor experiente querendo explorar o Rust pela primeira vez ou um
+Rustacean experiente querendo aprimorar suas habilidades, esta edição oferece algo
+para todos.
 
-The Rust journey has been one of collaboration, learning, and iteration. The
-growth of the language and its ecosystem is a direct reflection of the vibrant,
-diverse community behind it. The contributions of thousands of developers, from
-core language designers to casual contributors, are what make Rust such a
-unique and powerful tool. By picking up this book, you’re not just learning a
-new programming language—you’re joining a movement to make software better,
-safer, and more enjoyable to work with.
+A jornada do Rust tem sido uma de colaboração, aprendizado e iteração. O crescimento
+da linguagem e seu ecossistema é um reflexo direto da comunidade vibrante e diversa
+por trás dela. As contribuições de milhares de desenvolvedores, desde os designers
+centrais da linguagem até os colaboradores casuais, são o que torna o Rust uma
+ferramenta tão única e poderosa. Ao pegar este livro, você não está apenas aprendendo
+uma nova linguagem de programação — você está se juntando a um movimento para tornar
+o software melhor, mais seguro e mais agradável de trabalhar.
 
-Welcome to the Rust community!
+Bem-vindo à comunidade Rust!
 
-- Bec Rumbul, Executive Director of the Rust Foundation
+- Bec Rumbul, Diretora Executiva da Rust Foundation
