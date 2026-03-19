@@ -50,7 +50,7 @@ $ open -a "Firefox" book/index.html  # macOS
 Para rodar os testes:
 
 ```bash
-$ cd packages/trpl && cargo build
+$ (cd packages/trpl && cargo build)
 $ mdbook test --library-path packages/trpl/target/debug/deps
 ```
 
