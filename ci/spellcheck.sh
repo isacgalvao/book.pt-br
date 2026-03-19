@@ -5,6 +5,7 @@ set -eu
 aspell --version
 
 # Checks project Markdown files for spelling mistakes.
+# Adapted for the pt-BR translation of the Rust Book.
 
 # Notes:
 
@@ -34,15 +35,17 @@ aspell --version
 
 shopt -s nullglob
 
-dict_filename=./ci/dictionary.txt
+# Idioma do spellcheck — pt_BR para a tradução brasileira
+aspell_lang="pt_BR"
+dict_filename=./ci/dictionary-ptbr.txt
 markdown_sources=(./src/*.md)
 mode="check"
 
 # aspell repeatedly modifies the personal dictionary for some reason,
 # so we should use a copy of our dictionary.
-dict_path="/tmp/dictionary.txt"
+dict_path="/tmp/dictionary-ptbr.txt"
 
-if [[ "$1" == "list" ]]; then
+if [[ "${1:-}" == "list" ]]; then
     mode="list"
 fi
 
@@ -60,8 +63,8 @@ if [[ ! -f "$dict_filename" ]]; then
     echo "Scanning files to generate dictionary file '$dict_filename'."
     echo "Please check that it doesn't contain any misspellings."
 
-    echo "personal_ws-1.1 en 0 utf-8" > "$dict_filename"
-    cat "${markdown_sources[@]}" | aspell --ignore 3 list | sort -u >> "$dict_filename"
+    echo "personal_ws-1.1 ${aspell_lang} 0 utf-8" > "$dict_filename"
+    cat "${markdown_sources[@]}" | aspell --lang="$aspell_lang" --ignore 3 list | sort -u >> "$dict_filename"
 elif [[ "$mode" == "list" ]]; then
     # List (default) mode: scan all files, report errors.
     declare -i retval=0
@@ -74,7 +77,7 @@ elif [[ "$mode" == "list" ]]; then
     fi
 
     for fname in "${markdown_sources[@]}"; do
-        command=$(aspell --ignore 3 --personal="$dict_path" "$mode" < "$fname")
+        command=$(aspell --lang="$aspell_lang" --ignore 3 --personal="$dict_path" "$mode" < "$fname")
         if [[ -n "$command" ]]; then
             for error in $command; do
                 # FIXME: find more correct way to get line number
@@ -96,6 +99,6 @@ elif [[ "$mode" == "check" ]]; then
     fi
 
     for fname in "${markdown_sources[@]}"; do
-        aspell --ignore 3 --dont-backup --personal="$dict_path" "$mode" "$fname"
+        aspell --lang="$aspell_lang" --ignore 3 --dont-backup --personal="$dict_path" "$mode" "$fname"
     done
 fi
