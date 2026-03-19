@@ -71,20 +71,20 @@ elif [[ "$mode" == "list" ]]; then
 
     cp "$dict_filename" "$dict_path"
 
-    if [ ! -f $dict_path ]; then
+    if [[ ! -f "$dict_path" ]]; then
         retval=1
         exit "$retval"
     fi
 
     for fname in "${markdown_sources[@]}"; do
-        command=$(aspell --lang="$aspell_lang" --ignore 3 --personal="$dict_path" "$mode" < "$fname")
-        if [[ -n "$command" ]]; then
-            for error in $command; do
+        aspell_output=$(aspell --lang="$aspell_lang" --ignore 3 --personal="$dict_path" "$mode" < "$fname")
+        if [[ -n "$aspell_output" ]]; then
+            while IFS= read -r error; do
                 # FIXME: find more correct way to get line number
                 # (ideally from aspell). Now it can make some false positives,
                 # because it is just a grep.
                 grep --with-filename --line-number --color=always "$error" "$fname"
-            done
+            done <<< "$aspell_output"
             retval=1
         fi
     done
@@ -93,7 +93,7 @@ elif [[ "$mode" == "check" ]]; then
     # Interactive mode: fix typos.
     cp "$dict_filename" "$dict_path"
 
-    if [ ! -f $dict_path ]; then
+    if [[ ! -f "$dict_path" ]]; then
         retval=1
         exit "$retval"
     fi
