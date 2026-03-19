@@ -4,7 +4,7 @@ Como mencionado na seção [“Armazenando Valores com
 Variáveis”][storing-values-with-variables]<!-- ignore -->, por padrão, as
 variáveis são imutáveis. Esse é um dos muitos incentivos que Rust dá para que
 você escreva seu código de um jeito que aproveite a segurança e a facilidade de
-*concurrency* que Rust oferece. No entanto, você ainda tem a opção de tornar
+concorrência que Rust oferece. No entanto, você ainda tem a opção de tornar
 suas variáveis mutáveis. Vamos explorar como e por que Rust incentiva você a
 preferir a imutabilidade e por que, às vezes, você pode querer não seguir isso.
 
@@ -128,7 +128,7 @@ alterar se esse valor codificado precisar ser atualizado no futuro.
 Como você viu no tutorial do jogo de adivinhação no [Capítulo
 2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, você pode
 declarar uma nova variável com o mesmo nome de uma variável anterior.
-Rustaceans dizem que a primeira variável é _shadowed_ pela segunda, o que
+Rustaceans dizem que a primeira variável é sombreada pela segunda, o que
 significa que a segunda variável é o que o compilador verá quando você usar o
 nome da variável. Na prática, a segunda variável sombreia a primeira, assumindo
 para si todos os usos do nome da variável até que ela mesma seja sombreada ou o
