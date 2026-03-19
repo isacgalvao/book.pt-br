@@ -218,7 +218,7 @@ Marque apenas quando o capítulo estiver traduzido, revisado e validado.
 - [ ] ch14 — More about Cargo and Crates.io
 - [ ] ch15 — Smart Pointers
 - [ ] ch16 — Fearless Concurrency
-- [ ] ch17 — Fundamentals of Asynchronous Programming
+- [ ] ch17 — Fundamentals of Asynchronous Programming: Async, Await, Futures, and Streams
 - [ ] ch18 — Object Oriented Programming Features
 - [ ] ch19 — Patterns and Matching
 - [ ] ch20 — Advanced Features
