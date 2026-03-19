@@ -184,3 +184,53 @@ consistência editorial, exemplos de código ou referências internas.
    - Em cada nova rodada, repita o diff contra a origem e migre apenas mudanças
      novas.
    - Atualize este plano quando o fluxo de validação ou revisão for ajustado.
+
+### Checklist operacional por capítulo (pronto para PR)
+
+Use este checklist no corpo da PR para acompanhar o andamento por capítulo.
+Marque apenas quando o capítulo estiver traduzido, revisado e validado.
+
+#### Modelo de PR (copiar e colar)
+
+- Fonte em inglês (commit/tag baseline): `__________`
+- Rodada de migração: `__________`
+- Escopo desta PR: `__________`
+
+**Status por capítulo**
+
+- [ ] ch00 — Introdução
+- [ ] ch01 — Primeiros passos
+- [ ] ch02 — Jogo de adivinhação
+- [ ] ch03 — Conceitos comuns de programação
+- [ ] ch04 — Ownership
+- [ ] ch05 — Structs
+- [ ] ch06 — Enums e pattern matching
+- [ ] ch07 — Pacotes, crates e módulos
+- [ ] ch08 — Coleções comuns
+- [ ] ch09 — Tratamento de erros
+- [ ] ch10 — Genéricos, traits e lifetimes
+- [ ] ch11 — Testes automatizados
+- [ ] ch12 — Projeto de I/O (linha de comando)
+- [ ] ch13 — Iteradores e closures
+- [ ] ch14 — Cargo e crates.io
+- [ ] ch15 — Smart pointers
+- [ ] ch16 — Concorrência
+- [ ] ch17 — Programação assíncrona
+- [ ] ch18 — Recursos orientados a objetos
+- [ ] ch19 — Patterns e matching
+- [ ] ch20 — Recursos avançados
+- [ ] ch21 — Projeto final (servidor web)
+
+**Checklist de qualidade desta PR**
+
+- [ ] Estrutura, headings e links preservados
+- [ ] Blocos de código e saídas preservados
+- [ ] Termos técnicos revisados (consistência editorial)
+- [ ] `cargo run --bin lfp src`
+- [ ] `cargo test`
+- [ ] `mdbook test --library-path packages/trpl/target/debug/deps` (quando aplicável)
+
+**Pendências**
+
+- [ ] Sem pendências
+- [ ] Pendências registradas: `__________`
