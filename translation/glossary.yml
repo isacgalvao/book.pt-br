@@ -1,0 +1,270 @@
+# Glossário de Termos Técnicos — Tradução Rust Book pt-BR
+#
+# Este glossário garante consistência entre todos os agentes de tradução.
+# REGRA: ao encontrar um termo técnico no texto original, consulte este arquivo.
+#
+# Estrutura:
+#   keep_english  → termos que permanecem em inglês no texto traduzido
+#   translate     → termos com tradução definida (inglês: pt-BR)
+#   contextual    → termos que variam conforme o contexto
+#
+# Ao adicionar novos termos, mantenha a ordem alfabética dentro de cada seção.
+
+# ============================================================================
+# Termos mantidos em inglês
+# Estes termos são amplamente usados sem tradução na comunidade Rust/dev pt-BR.
+# No texto, podem aparecer em itálico na primeira menção: *ownership*
+# ============================================================================
+keep_english:
+  # Conceitos centrais do Rust
+  - ownership
+  - borrowing
+  - borrow checker
+  - lifetime
+  - trait
+  - crate
+  - unsafe
+  - match
+  - pattern matching
+  - smart pointer
+  - closure
+  - iterator
+  - macro
+  - async
+  - await
+  - future
+  - stream
+  - move
+
+  # Tipos e estruturas
+  - struct
+  - enum
+  - slice
+  - tuple
+  - String
+  - str
+  - Vec
+  - Box
+  - Rc
+  - Arc
+  - RefCell
+  - Mutex
+  - Option
+  - Result
+  - Ok
+  - Err
+  - Some
+  - None
+
+  # Ferramentas e ecossistema
+  - cargo
+  - crate
+  - package
+  - workspace
+  - build
+  - release
+  - debug
+  - test
+  - benchmark
+  - linter
+  - formatter
+  - toolchain
+  - crates.io
+  - rustup
+  - rustc
+  - clippy
+  - rustfmt
+  - mdbook
+
+  # Operações e padrões
+  - panic
+  - unwrap
+  - derive
+  - impl
+  - generic
+  - type alias
+  - newtype
+  - trait object
+  - dispatch
+  - monomorphization
+  - zero-cost abstraction
+  - drop
+  - deref
+  - deref coercion
+  - shadowing
+  - binding
+
+  # Computação geral (mantidos por convenção dev pt-BR)
+  - thread
+  - channel
+  - mutex
+  - heap
+  - stack
+  - buffer
+  - cache
+  - hash
+  - hash map
+  - runtime
+  - backend
+  - frontend
+  - framework
+  - middleware
+  - callback
+  - wrapper
+  - overhead
+  - deadlock
+  - race condition
+  - data race
+  - polling
+  - pinning
+  - FFI
+
+  # Siglas (nunca traduzir)
+  - API
+  - CLI
+  - HTTP
+  - URL
+  - TCP
+  - IP
+  - I/O
+  - OOP
+  - RAII
+  - ABI
+  - DST
+  - UTF-8
+  - ASCII
+  - TOML
+  - JSON
+  - YAML
+  - CI/CD
+  - PR
+  - IDE
+
+# ============================================================================
+# Termos traduzidos
+# Mapeamento inglês → pt-BR. Use exatamente a tradução indicada.
+# ============================================================================
+translate:
+  # Programação geral
+  function: "função"
+  method: "método"
+  associated function: "função associada"
+  variable: "variável"
+  constant: "constante"
+  parameter: "parâmetro"
+  argument: "argumento"
+  return value: "valor de retorno"
+  statement: "instrução"
+  expression: "expressão"
+  block: "bloco"
+  scope: "escopo"
+  comment: "comentário"
+  annotation: "anotação"
+
+  # Tipos e dados
+  data type: "tipo de dado"
+  integer: "inteiro"
+  floating-point: "ponto flutuante"
+  boolean: "booleano"
+  character: "caractere"
+  string literal: "literal de string"
+  array: "array"
+  value: "valor"
+  field: "campo"
+  variant: "variante"
+  instance: "instância"
+  pointer: "ponteiro"
+  reference: "referência"
+  raw pointer: "ponteiro bruto"
+
+  # Controle de fluxo
+  loop: "laço"
+  conditional: "condicional"
+  branch: "ramificação"
+  arm: "braço"  # em contexto de match
+
+  # Mutabilidade e propriedade
+  mutability: "mutabilidade"
+  mutable: "mutável"
+  immutable: "imutável"
+  owner: "dono"
+  borrow: "empréstimo"
+  mutable reference: "referência mutável"
+  immutable reference: "referência imutável"
+  dangling reference: "referência pendente"
+
+  # Erros
+  error handling: "tratamento de erros"
+  recoverable error: "erro recuperável"
+  unrecoverable error: "erro irrecuperável"
+  propagation: "propagação"
+  backtrace: "backtrace"
+
+  # Organização de código
+  module: "módulo"
+  path: "caminho"
+  privacy: "privacidade"
+  public: "público"
+  private: "privado"
+  namespace: "espaço de nomes"
+
+  # Concorrência
+  concurrency: "concorrência"
+  parallelism: "paralelismo"
+  message passing: "passagem de mensagens"
+  shared state: "estado compartilhado"
+  lock: "trava"
+  spawn: "criar"  # no contexto de threads
+
+  # Testes
+  unit test: "teste unitário"
+  integration test: "teste de integração"
+  assertion: "asserção"
+  test runner: "executor de testes"
+
+  # Compilação e execução
+  compiler: "compilador"
+  compilation: "compilação"
+  linker: "linker"
+  binary: "binário"
+  library: "biblioteca"
+  dependency: "dependência"
+  edition: "edição"
+  target: "alvo"
+
+  # Documentação
+  chapter: "capítulo"
+  section: "seção"
+  listing: "listagem"
+  figure: "figura"
+  appendix: "apêndice"
+  note: "nota"
+  warning: "aviso"
+
+# ============================================================================
+# Termos contextuais
+# A tradução depende do contexto. O comentário indica quando usar cada forma.
+# ============================================================================
+contextual:
+  type:
+    as_concept: "tipo"           # "Rust is a statically typed language" → "tipada estaticamente"
+    as_keyword: "type"           # "type alias" → "type alias"
+  trait:
+    as_concept: "trait"          # sempre em inglês quando se refere ao conceito Rust
+    as_english_word: "característica"  # raro, apenas em contexto genérico não-Rust
+  pattern:
+    in_matching: "padrão"        # "pattern matching" → manter "pattern matching"
+    in_design: "padrão"          # "design pattern" → "padrão de projeto"
+  handle:
+    as_noun: "handle"            # "file handle" → "handle de arquivo"
+    as_verb: "tratar"            # "handle the error" → "tratar o erro"
+  crate:
+    as_package: "crate"          # sempre em inglês
+    as_verb_create: "criar"      # não confundir com o verbo "criar"
+  string:
+    as_type: "String"            # tipo Rust, sempre com S maiúsculo
+    as_concept: "string"         # conceito geral
+    as_slice: "&str"             # string slice, manter notação Rust
+  box:
+    as_type: "Box<T>"            # tipo Rust
+    as_verb: "encapsular"        # "box the value" → "encapsular o valor"
