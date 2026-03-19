@@ -12,12 +12,14 @@ Rust, e aprendê-los cedo dará a você uma base sólida para começar.
 
 > #### Palavras-chave
 >
-> A linguagem Rust tem um conjunto de palavras-chave que são reservadas apenas para
-> uso da linguagem, assim como em outras linguagens. Tenha em mente que você não
+> A linguagem Rust tem um conjunto de palavras-chave que são reservadas para uso
+> exclusivo da linguagem, assim como em outras linguagens. Tenha em mente que
+> você não
 > pode usar essas palavras como nomes de variáveis ou funções. A maioria das
 > palavras-chave tem significados especiais, e você as usará para realizar várias
-> tarefas em seus programas Rust; algumas não têm funcionalidade associada no
-> momento, mas foram reservadas para funcionalidades que possam ser adicionadas
+> tarefas em seus programas Rust; algumas não possuem funcionalidade atualmente
+> associada, mas foram reservadas para funcionalidades que possam ser
+> adicionadas
 > ao Rust no futuro. Você pode encontrar a lista de palavras-chave no [Apêndice
 > A][appendix_a]<!-- ignore -->.
 
