@@ -149,3 +149,38 @@ flow for publishing is:
 - In the root, run `tools/generate-preview.sh`
 
 [pipx]: https://pipx.pypa.io/stable/#install-pipx
+
+## Plano de migração da documentação (inglês -> português do Brasil)
+
+Objetivo: manter a tradução pt-BR sincronizada com a fonte em inglês sem perder
+consistência editorial, exemplos de código ou referências internas.
+
+1. Estabeleça a base da migração.
+   - Defina o commit/tag de origem em inglês que será usado como baseline.
+   - Registre no PR a faixa de arquivos/capítulos que entrarão nesta rodada.
+2. Mapeie e priorize diferenças.
+   - Compare `src/` da origem com este repositório e liste capítulos alterados.
+   - Priorize capítulos de maior impacto (introdução, instalação e conceitos
+     fundamentais) para reduzir divergência de conteúdo inicial.
+3. Migre capítulo por capítulo.
+   - Traduza mantendo estrutura, heading IDs e links originais sempre que
+     possível.
+   - Preserve blocos de código e saídas; altere texto explicativo sem modificar
+     comportamento dos exemplos.
+   - Marque termos técnicos sem tradução consolidada para revisão editorial.
+4. Valide tecnicamente a cada lote.
+   - Execute `cargo test`.
+   - Execute `cargo run --bin lfp src`.
+   - Quando necessário, execute `mdbook test --library-path packages/trpl/target/debug/deps`.
+5. Faça revisão linguística e de estilo.
+   - Revise consistência de termos (ex.: ownership, borrowing, trait, crate).
+   - Verifique tom, clareza e aderência às convenções existentes no capítulo.
+6. Publique em incrementos pequenos.
+   - Abra PRs por capítulo (ou conjunto pequeno de capítulos) para facilitar
+     revisão.
+   - Descreva no PR: fonte em inglês usada, escopo migrado, pendências e termos
+     em aberto.
+7. Mantenha sincronização contínua.
+   - Em cada nova rodada, repita o diff contra a origem e migre apenas mudanças
+     novas.
+   - Atualize este plano quando o fluxo de validação ou revisão for ajustado.
