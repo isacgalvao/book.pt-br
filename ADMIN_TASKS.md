@@ -163,15 +163,16 @@ consistência editorial, exemplos de código ou referências internas.
    - Priorize capítulos de maior impacto (introdução, instalação e conceitos
      fundamentais) para reduzir divergência de conteúdo inicial.
 3. Migre capítulo por capítulo.
-   - Traduza mantendo estrutura, heading IDs e links originais sempre que
-     possível.
+   - Traduza mantendo estrutura, âncoras explícitas (`<a id="...">`) e links
+     originais sempre que possível.
    - Preserve blocos de código e saídas; altere texto explicativo sem modificar
      comportamento dos exemplos.
    - Marque termos técnicos sem tradução consolidada para revisão editorial.
 4. Valide tecnicamente a cada lote.
    - Execute `cargo test`.
    - Execute `cargo run --bin lfp src`.
-   - Quando necessário, execute `mdbook test --library-path packages/trpl/target/debug/deps`.
+   - Quando necessário, execute `cd packages/trpl && cargo build` antes do
+     `mdbook test --library-path packages/trpl/target/debug/deps`.
 5. Faça revisão linguística e de estilo.
    - Revise consistência de termos (ex.: ownership, borrowing, trait, crate).
    - Verifique tom, clareza e aderência às convenções existentes no capítulo.
@@ -198,28 +199,30 @@ Marque apenas quando o capítulo estiver traduzido, revisado e validado.
 
 **Status por capítulo**
 
-- [ ] ch00 — Introdução
-- [ ] ch01 — Primeiros passos
-- [ ] ch02 — Jogo de adivinhação
-- [ ] ch03 — Conceitos comuns de programação
-- [ ] ch04 — Ownership
-- [ ] ch05 — Structs
-- [ ] ch06 — Enums e pattern matching
-- [ ] ch07 — Pacotes, crates e módulos
-- [ ] ch08 — Coleções comuns
-- [ ] ch09 — Tratamento de erros
-- [ ] ch10 — Genéricos, traits e lifetimes
-- [ ] ch11 — Testes automatizados
-- [ ] ch12 — Projeto de I/O (linha de comando)
-- [ ] ch13 — Iteradores e closures
-- [ ] ch14 — Cargo e crates.io
-- [ ] ch15 — Smart pointers
-- [ ] ch16 — Concorrência
-- [ ] ch17 — Programação assíncrona
-- [ ] ch18 — Recursos orientados a objetos
-- [ ] ch19 — Patterns e matching
-- [ ] ch20 — Recursos avançados
-- [ ] ch21 — Projeto final (servidor web)
+> Use os títulos exatamente como em `src/SUMMARY.md` para facilitar comparação.
+
+- [ ] ch00 — Introduction
+- [ ] ch01 — Getting Started
+- [ ] ch02 — Programming a Guessing Game
+- [ ] ch03 — Common Programming Concepts
+- [ ] ch04 — Understanding Ownership
+- [ ] ch05 — Using Structs to Structure Related Data
+- [ ] ch06 — Enums and Pattern Matching
+- [ ] ch07 — Packages, Crates, and Modules
+- [ ] ch08 — Common Collections
+- [ ] ch09 — Error Handling
+- [ ] ch10 — Generic Types, Traits, and Lifetimes
+- [ ] ch11 — Writing Automated Tests
+- [ ] ch12 — An I/O Project: Building a Command Line Program
+- [ ] ch13 — Functional Language Features: Iterators and Closures
+- [ ] ch14 — More about Cargo and Crates.io
+- [ ] ch15 — Smart Pointers
+- [ ] ch16 — Fearless Concurrency
+- [ ] ch17 — Fundamentals of Asynchronous Programming
+- [ ] ch18 — Object Oriented Programming Features
+- [ ] ch19 — Patterns and Matching
+- [ ] ch20 — Advanced Features
+- [ ] ch21 — Final Project: Building a Multithreaded Web Server
 
 **Checklist de qualidade desta PR**
 
@@ -228,6 +231,7 @@ Marque apenas quando o capítulo estiver traduzido, revisado e validado.
 - [ ] Termos técnicos revisados (consistência editorial)
 - [ ] `cargo run --bin lfp src`
 - [ ] `cargo test`
+- [ ] `cd packages/trpl && cargo build` (pré-requisito para `mdbook test`)
 - [ ] `mdbook test --library-path packages/trpl/target/debug/deps` (quando aplicável)
 
 **Pendências**
