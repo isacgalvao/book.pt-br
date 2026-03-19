@@ -123,17 +123,17 @@ programa é útil para transmitir o significado desse valor a futuros mantenedor
 do código. Também ajuda ter apenas um lugar no seu código que você precisará
 alterar se esse valor codificado precisar ser atualizado no futuro.
 
-### Sombreamento
+### Shadowing
 
 Como você viu no tutorial do jogo de adivinhação no [Capítulo
 2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, você pode
 declarar uma nova variável com o mesmo nome de uma variável anterior.
-Rustaceans dizem que a primeira variável é sombreada pela segunda, o que
+Rustaceans dizem que a segunda variável faz *shadowing* da primeira, o que
 significa que a segunda variável é o que o compilador verá quando você usar o
-nome da variável. Na prática, a segunda variável sombreia a primeira, assumindo
-para si todos os usos do nome da variável até que ela mesma seja sombreada ou o
-escopo termine. Podemos sombrear uma variável usando o mesmo nome da variável e
-repetindo o uso da palavra-chave `let`, como segue:
+nome da variável. Na prática, a segunda variável faz shadowing da primeira,
+assumindo para si todos os usos do nome da variável até que ela mesma faça
+shadowing ou o escopo termine. Podemos fazer shadowing de uma variável usando o
+mesmo nome da variável e repetindo o uso da palavra-chave `let`, como segue:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -144,7 +144,7 @@ repetindo o uso da palavra-chave `let`, como segue:
 Este programa primeiro associa `x` ao valor `5`. Em seguida, ele cria uma nova
 variável `x` repetindo `let x =`, pegando o valor original e somando `1`, de
 modo que o valor de `x` seja `6`. Depois, dentro de um escopo interno criado
-com chaves, a terceira instrução `let` também sombreia `x` e cria uma nova
+com chaves, a terceira instrução `let` também faz shadowing de `x` e cria uma nova
 variável, multiplicando o valor anterior por `2` para que `x` tenha o valor
 `12`. Quando esse escopo termina, o sombreamento interno termina e `x` volta a
 ser `6`. Quando executarmos este programa, ele produzirá o seguinte:
