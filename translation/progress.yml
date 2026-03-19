@@ -92,8 +92,8 @@ batch_4:
       assigned_to: "copilot-gpt-5"
 
     - path: "src/ch03-01-variables-and-mutability.md"
-      status: "pending"
-      assigned_to: null
+      status: "translating"
+      assigned_to: "copilot-gpt-5"
 
     - path: "src/ch03-02-data-types.md"
       status: "pending"
