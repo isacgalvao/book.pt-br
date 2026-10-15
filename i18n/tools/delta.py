@@ -304,4 +304,10 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        codigo = main()
+        sys.stdout.flush()
+    except BrokenPipeError:  # saída fechada (ex.: `| head`): o delta.json já foi gravado
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        codigo = 0
+    sys.exit(codigo)

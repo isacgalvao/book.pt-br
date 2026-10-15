@@ -218,10 +218,10 @@ def main(argv=None):
         (portadas if mapa else restantes).append((e, mapa or motivo))
 
     verbo = "seria portada" if args.dry_run else "portada"
-    print(f"autoport: {len(fuzzy)} entrada(s) fuzzy em {caminho}")
+    linhas = [f"autoport: {len(fuzzy)} entrada(s) fuzzy em {caminho}"]
     for e, mapa in portadas:
         trocas = ", ".join(f"{antigo} -> {novo}" for antigo, novo in mapa.items())
-        print(f"  {verbo} {_descricao(e)}: {trocas}")
+        linhas.append(f"  {verbo} {_descricao(e)}: {trocas}")
         if not args.dry_run:
             e.msgstr = trocar(e.msgstr, mapa)
             e.flags.remove("fuzzy")
@@ -229,7 +229,7 @@ def main(argv=None):
             e.previous_msgid_plural = None
             e.previous_msgctxt = None
     for e, motivo in restantes:
-        print(f"  continua fuzzy {_descricao(e)}: {motivo}")
+        linhas.append(f"  continua fuzzy {_descricao(e)}: {motivo}")
 
     if portadas and not args.dry_run:
         try:
@@ -240,9 +240,17 @@ def main(argv=None):
             return 2
 
     resumo = f"{len(portadas)} {'portável(is)' if args.dry_run else 'portada(s)'}, {len(restantes)} restante(s) fuzzy"
-    print(f"resumo: {resumo}" + (" (simulação: nada foi gravado)" if args.dry_run else ""))
+    linhas.append(f"resumo: {resumo}" + (" (simulação: nada foi gravado)" if args.dry_run else ""))
+    # Só imprime depois de gravar: um `| head` que feche o pipe não impede a gravação.
+    print("\n".join(linhas))
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        codigo = main()
+        sys.stdout.flush()
+    except BrokenPipeError:  # saída fechada (ex.: `| head`): o trabalho já foi feito
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        codigo = 0
+    sys.exit(codigo)
