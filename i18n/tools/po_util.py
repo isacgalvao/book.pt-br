@@ -10,7 +10,9 @@ linha `#` solitária no início; o mdbook-gettext, em Rust, entra em pânico com
 essa linha).
 """
 import hashlib
+import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -48,7 +50,12 @@ CAPITULOS = (
 
 def carregar(caminho=None):
     """Lê um PO (padrão: po/pt-BR.po). `wrapwidth=0` evita quebras do polib."""
-    return polib.pofile(str(caminho or PO_PADRAO), wrapwidth=0, encoding="utf-8")
+    caminho = Path(caminho or PO_PADRAO)
+    # O polib trata um caminho que não existe como o TEXTO de um PO e responde
+    # "Syntax error in po file": mensagem enganosa. Falha antes, em português.
+    if not caminho.is_file():
+        raise FileNotFoundError(f"arquivo PO não encontrado: {caminho}")
+    return polib.pofile(str(caminho), wrapwidth=0, encoding="utf-8")
 
 
 def salvar(po, caminho=None):
@@ -58,8 +65,17 @@ def salvar(po, caminho=None):
     po/pt-BR.po. Assim `salvar(carregar(outro))` nunca escreve no arquivo errado.
     """
     caminho = Path(caminho or getattr(po, "fpath", None) or PO_PADRAO)
-    po.save(str(caminho))
-    normalizar(caminho)
+    # Sem msgcat o `po.save` deixaria o destino sem normalizar (com o '#' solitário
+    # que derruba o mdbook-gettext): confere antes e grava por arquivo temporário.
+    if shutil.which("msgcat") is None:
+        raise RuntimeError("msgcat não encontrado: instale o pacote 'gettext'")
+    tmp = caminho.with_name(f"{caminho.name}.{os.getpid()}.salvando")
+    try:
+        po.save(str(tmp))
+        normalizar(tmp)
+        tmp.replace(caminho)  # troca atômica: o destino nunca fica pela metade
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def _msgcat(texto):
