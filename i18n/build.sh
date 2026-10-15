@@ -44,6 +44,8 @@ uso: i18n/build.sh en  OUT              build em inglês
              de livro (index.html + toc*.js) ou do modo pot (só messages.pot);
              nunca "/", um diretório de primeiro nível, o HOME, o repositório,
              o .git, arquivos rastreados pelo git, as fixtures ou /etc, /usr, ...
+             (também é recusado um OUT com caractere de controle, como uma
+             quebra de linha, ou que não seja um caminho canônico)
   --po FILE  usa uma cópia de FILE em vez de po/pt-BR.po (po/ não é tocado)
 
 modo pt: aplica a identidade pt-BR (título "A Linguagem de Programação Rust" e
@@ -109,9 +111,19 @@ valida_saida() {
                     /srv /opt /snap /nix /var /mnt /media /lost+found)
   local -a fixtures=()
   [[ -n "$bruto" ]] || { _recusa "OUT vazio"; return 2; }
+  # Caracteres de controle (quebra de linha, tab, ...): o chamador captura a
+  # saída desta função com $(...), que apaga os '\n' finais; "/x/..\n" seria
+  # validado como nome comum, mas o caminho usado depois seria "/x/.." (= "/").
+  if [[ "$bruto" == *[[:cntrl:]]* ]]; then
+    _recusa "OUT contém caractere de controle (ex.: quebra de linha): $(printf '%q' "$bruto")"; return 2
+  fi
   case "${bruto%/}" in ""|.|..|*/.|*/..) _recusa "OUT não pode ser /, . ou ..: $bruto"; return 2;; esac
   [[ -L "${bruto%/}" ]] && { _recusa "OUT não pode ser link simbólico: $bruto"; return 2; }
   out="$(realpath -m -- "$bruto")" || return 2
+  # Defesa extra: o caminho validado tem de ser canônico (sem ".", ".." nem
+  # links); assim o que passou pelas checagens abaixo é exatamente o que o
+  # mdbook receberá.
+  [[ "$(realpath -m -- "$out")" == "$out" ]] || { _recusa "OUT não é canônico: $out"; return 2; }
   raiz="$(realpath -- "${RAIZ:?RAIZ não definida}")" || return 2
   casa="$(realpath -m -- "${HOME:-/root}")"
   # 1. a raiz e qualquer diretório de primeiro nível (/tmp, /home, /root, /etc...)

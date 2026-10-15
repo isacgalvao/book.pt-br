@@ -17,7 +17,17 @@ Códigos de saída: 0 = sem erros; 1 = algum achado 'erro'; 2 = erro de uso ou
 de ambiente (ferramenta ausente, referência do upstream inexistente...).
 
 Variável de ambiente PTBR_CHECKS_DIR: diretório alternativo de onde descobrir
-os módulos de check (para testes). `base` continua vindo de i18n/tools/checks.
+os módulos de check (para testes; vazia = não definida). `base` continua vindo
+de i18n/tools/checks.
+
+Opções com valor vazio (--po "", --en "", --pt "", --json "", --capitulo "",
+--so "", --upstream-ref "") são erro de uso (código 2), nunca ignoradas: no CI,
+uma variável vazia (--po "$PO") não pode cair em silêncio no PO padrão.
+
+Saída: todo texto de achado é saneado para UTF-8 (bytes inválidos de nomes de
+arquivo viram \\xNN), então o print() e o JSON nunca falham por causa dele. Se
+quem lê a saída fecha o pipe antes do fim (check.py | head), o relatório para
+em silêncio, o --json ainda é gravado e o código de saída é o calculado.
 """
 import argparse
 import errno
@@ -147,6 +157,35 @@ def _erro_os(exc):
     return _ERRNO_PT.get(exc.errno) or exc.strerror or str(exc)
 
 
+def _seguro(texto):
+    """Texto que sempre pode ser escrito em UTF-8 (print e JSON), ou None.
+
+    Caminhos e saídas de programas podem trazer bytes que não são UTF-8
+    válido; o Python os representa como surrogates solitários
+    (surrogateescape), que derrubam o json.dump e o print() com
+    UnicodeEncodeError. Bytes escapados viram `\\xNN`; outros surrogates
+    solitários viram `\\udNNN`.
+    """
+    if texto is None:
+        return None
+    texto = str(texto)
+    try:
+        texto.encode("utf-8")
+        return texto
+    except UnicodeEncodeError:
+        pass
+    try:
+        return texto.encode("utf-8", "surrogateescape").decode("utf-8", "backslashreplace")
+    except UnicodeEncodeError:  # surrogate fora da faixa do surrogateescape
+        return texto.encode("utf-8", "backslashreplace").decode("utf-8")
+
+
+def _sanear(a):
+    """Cópia do Achado com todos os textos seguros para UTF-8 (veja _seguro)."""
+    return Achado(_seguro(a.check), _seguro(a.severidade), _seguro(a.mensagem),
+                  arquivo=_seguro(a.arquivo), id=_seguro(a.id), msgid=_seguro(a.msgid))
+
+
 def _validar_json(destino):
     """Recusa (ErroUso) um --json que não dá para gravar; devolve o caminho real."""
     if not destino.strip():
@@ -190,7 +229,9 @@ def _gravar_json(caminho, dados):
         raise
 
 
-def _diretorio(valor, opcao):
+def _diretorio(valor, opcao, oque):
+    if not valor.strip():  # Path("") seria o diretório atual
+        raise ErroUso(f"{opcao}: informe o diretório {oque}")
     caminho = Path(valor).resolve()
     if not caminho.is_dir():
         raise ErroUso(f"{opcao} {valor}: não é um diretório")
@@ -201,6 +242,8 @@ def _capitulos(valores):
     if not valores:
         return None
     validos = list(po_util.CAPITULOS)
+    if any(not c.strip() for c in valores):
+        raise ErroUso(f"--capitulo: nome de capítulo vazio (válidos: {', '.join(validos)})")
     desconhecidos = [c for c in valores if c not in validos]
     if desconhecidos:
         raise ErroUso(f"--capitulo: capítulo desconhecido: {', '.join(desconhecidos)} "
@@ -297,8 +340,8 @@ def compilar(modo, destino, po=None):
     if po is not None:
         cmd += ["--po", str(po)]
     log = destino.parent / f"build-{modo}.log"
-    print(f"check.py: compilando o livro em {NOME_COMPILACAO[modo]} "
-          f"(i18n/build.sh {modo}) em {destino} ...", file=sys.stderr, flush=True)
+    _info(f"check.py: compilando o livro em {NOME_COMPILACAO[modo]} "
+          f"(i18n/build.sh {modo}) em {destino} ...")
     try:
         with open(log, "wb") as saida:
             codigo = _rodar_grupo(cmd, saida)
@@ -351,15 +394,17 @@ def _como_achado(obj, nome):
     ler = (lambda k: obj.get(k)) if isinstance(obj, dict) else (lambda k: getattr(obj, k, None))
     mensagem = ler("mensagem")
     if mensagem is None:
-        return Achado(nome, "erro", f"o check '{nome}' devolveu um item inválido: {obj!r}")
+        return _sanear(Achado(nome, "erro",
+                              f"o check '{nome}' devolveu um item inválido: {obj!r}"))
     severidade = str(ler("severidade") or "").lower()
     mensagem = str(mensagem)
     if severidade not in SEVERIDADES:
         mensagem = f"[severidade inválida {severidade!r}] {mensagem}"
         severidade = "erro"
     opcional = (lambda k: None if ler(k) is None else str(ler(k)))
-    return Achado(str(ler("check") or nome), severidade, mensagem,
-                  arquivo=opcional("arquivo"), id=opcional("id"), msgid=opcional("msgid"))
+    return _sanear(Achado(str(ler("check") or nome), severidade, mensagem,
+                          arquivo=opcional("arquivo"), id=opcional("id"),
+                          msgid=opcional("msgid")))
 
 
 def executar(nome, mod, ctx):
@@ -499,6 +544,74 @@ def imprimir(grupos, tabela, erros, avisos, erro_po=None):
 
 
 # --------------------------------------------------------------------------
+# Saída (stdout/stderr que podem estar fechados ou num pipe já fechado)
+# --------------------------------------------------------------------------
+
+def _silenciar(fluxo):
+    """Aponta o descritor de `fluxo` para /dev/null.
+
+    Depois de um BrokenPipeError, o buffer ainda guarda texto; sem isto, o
+    flush final do Python geraria outro erro ("Exception ignored ...").
+    """
+    try:
+        fd = fluxo.fileno()
+        nulo = os.open(os.devnull, os.O_WRONLY)
+        try:
+            os.dup2(nulo, fd)
+        finally:
+            os.close(nulo)
+    except (OSError, ValueError, AttributeError):
+        pass
+
+
+def _info(mensagem):
+    """Mensagem no stderr que nunca derruba o check.py (stderr fechado, pipe quebrado)."""
+    if sys.stderr is None:  # print(file=None) escreveria no stdout
+        return
+    try:
+        print(_seguro(mensagem), file=sys.stderr, flush=True)
+    except (OSError, ValueError):
+        _silenciar(sys.stderr)
+
+
+def _descarregar():
+    """Esvazia o buffer do stdout; pipe fechado pelo leitor = silêncio."""
+    try:
+        if sys.stdout is not None:
+            sys.stdout.flush()
+    except (OSError, ValueError):
+        _silenciar(sys.stdout)
+
+
+def _relatorio(grupos, tabela, erros, avisos, erro_po):
+    """Imprime o relatório. Devolve None, "pipe" ou a descrição de outra falha.
+
+    "pipe": quem lia a saída já fechou o pipe (check.py | head); o relatório
+    para em silêncio, mas o JSON ainda é gravado e o código de saída é o
+    calculado. Outra falha de escrita (disco cheio...) é erro de ambiente.
+    """
+    try:
+        imprimir(grupos, tabela, erros, avisos, erro_po)
+        if sys.stdout is not None:
+            sys.stdout.flush()
+    except BrokenPipeError:
+        _silenciar(sys.stdout)
+        return "pipe"
+    except OSError as exc:
+        _silenciar(sys.stdout)
+        return f"não foi possível escrever o relatório na saída padrão: {_erro_os(exc)}"
+    return None
+
+
+def _saida_tolerante():
+    """O que não couber na codificação do stdout vira escape, nunca exceção."""
+    try:
+        sys.stdout.reconfigure(errors="backslashreplace")
+    except (AttributeError, ValueError, OSError):  # stdout None, StringIO de teste...
+        pass
+
+
+# --------------------------------------------------------------------------
 # Principal
 # --------------------------------------------------------------------------
 
@@ -507,11 +620,19 @@ def principal(argv=None):
 
     # Tudo o que é uso/ambiente é conferido antes de qualquer trabalho.
     destino_json = _validar_json(args.json) if args.json is not None else None
-    po_path = Path(args.po).resolve() if args.po else po_util.PO_PADRAO
+    # `is not None`: um valor vazio (--po "", --en=) é erro de uso, nunca o padrão.
+    if args.po is not None and not args.po.strip():
+        raise ErroUso("--po: informe o caminho do PO")
+    po_path = Path(args.po).resolve() if args.po is not None else po_util.PO_PADRAO
+    nome_po = args.po if args.po is not None else po_path
+    if po_path.is_dir():
+        raise ErroUso(f"PO {nome_po}: é um diretório (informe o arquivo .po)")
     if not po_path.is_file():
-        raise ErroUso(f"PO não encontrado: {args.po or po_path}")
-    en_dir = _diretorio(args.en, "--en") if args.en else None
-    pt_dir = _diretorio(args.pt, "--pt") if args.pt else None
+        raise ErroUso(f"PO não encontrado: {nome_po}")
+    en_dir = (_diretorio(args.en, "--en", "da compilação em inglês")
+              if args.en is not None else None)
+    pt_dir = (_diretorio(args.pt, "--pt", "da compilação pt-BR")
+              if args.pt is not None else None)
     capitulos = _capitulos(args.capitulo)
     ref = (args.upstream_ref or "").strip()
     if not ref or ref.startswith("-"):
@@ -582,11 +703,12 @@ def principal(argv=None):
         faltam = [m for m in ("en", "pt") if m in precisa and dirs[m] is None]
         if faltam and not args.sem_build:
             tmp = Path(tempfile.mkdtemp(prefix="ptbr-check-"))
-            print(f"check.py: diretório temporário das compilações: {tmp} "
-                  f"(apagado no fim)", file=sys.stderr, flush=True)
+            _info(f"check.py: diretório temporário das compilações: {tmp} "
+                  f"(apagado no fim)")
             for modo in faltam:
                 destino = tmp / modo
-                ok, falha, amb = compilar(modo, destino, po_path if (modo == "pt" and args.po) else None)
+                po_pt = po_path if (modo == "pt" and args.po is not None) else None
+                ok, falha, amb = compilar(modo, destino, po_pt)
                 if ok:
                     dirs[modo] = destino
                 else:
@@ -617,15 +739,17 @@ def principal(argv=None):
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
             if tmp.exists():
-                print(f"check.py: aviso: não consegui apagar {tmp}; apague-o à mão",
-                      file=sys.stderr)
+                _info(f"check.py: aviso: não consegui apagar {tmp}; apague-o à mão")
 
+    # Nenhum texto com surrogate solitário chega ao print() ou ao JSON.
+    achados = [_sanear(a) for a in achados]
+    nomes_rodados = [_seguro(n) for n in nomes_rodados]
     grupos = ordenar(achados, nomes_rodados)
     em_ordem = [a for _, lista in grupos for a in lista]
     erros = sum(1 for a in em_ordem if a.severidade == "erro")
     avisos = len(em_ordem) - erros
     tabela = {} if erro_po else cobertura(ctx)
-    imprimir(grupos, tabela, erros, avisos, erro_po)
+    falha_saida = _relatorio(grupos, tabela, erros, avisos, erro_po)
 
     if destino_json is not None:
         dados = {
@@ -639,6 +763,8 @@ def principal(argv=None):
             raise ErroUso(f"--json {args.json}: não foi possível gravar: "
                           f"{_erro_os(exc)}") from None
 
+    if falha_saida and falha_saida != "pipe":
+        raise ErroUso(falha_saida)
     if ambiente:
         return 2
     return 1 if erros else 0
@@ -646,8 +772,9 @@ def principal(argv=None):
 
 class Encerrado(BaseException):
     """SIGTERM recebido. BaseException (não SystemExit) para que nenhum
-    `except` dos checks a engula; os blocos finally rodam (o subprocess.run
-    mata o build em andamento e o diretório temporário é apagado)."""
+    `except` dos checks a engula; os blocos finally rodam (_rodar_grupo mata
+    com os.killpg o grupo de processos do build em andamento e o diretório
+    temporário é apagado)."""
 
 
 def _sigterm(signum, _quadro):
@@ -655,6 +782,9 @@ def _sigterm(signum, _quadro):
 
 
 def main(argv=None):
+    _saida_tolerante()
+    # SIGPIPE fica ignorado (padrão do Python): com SIG_DFL, um `| head` mataria
+    # o processo no meio de uma compilação sem apagar o diretório temporário.
     try:
         signal.signal(signal.SIGTERM, _sigterm)
     except (ValueError, OSError):  # fora da thread principal: segue sem o tratador
@@ -662,14 +792,19 @@ def main(argv=None):
     try:
         return principal(argv)
     except ErroUso as exc:
-        print(f"check.py: erro: {exc}", file=sys.stderr)
+        _info(f"check.py: erro: {exc}")
         return 2
+    except BrokenPipeError:  # pipe fechado fora do relatório: resultado desconhecido
+        _silenciar(sys.stdout)
+        return 128 + signal.SIGPIPE
     except KeyboardInterrupt:
-        print("check.py: interrompido", file=sys.stderr)
+        _info("check.py: interrompido")
         return 130
     except Encerrado as exc:
-        print("check.py: encerrado (SIGTERM)", file=sys.stderr)
+        _info("check.py: encerrado (SIGTERM)")
         return exc.args[0] if exc.args else 143
+    finally:
+        _descarregar()  # o --help num `| head` também não pode soltar traceback
 
 
 if __name__ == "__main__":

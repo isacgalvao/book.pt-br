@@ -19,6 +19,10 @@ O check olha três coisas:
 `<ref>` vem de --upstream-ref (padrão upstream/main). Sem a referência, o check
 explica como buscá-la e o check.py sai com código 2. Só usa git de leitura e
 nunca regrava .git/index (2 e 3 vêm de `git --no-optional-locks status`).
+
+Nomes de arquivo que não são UTF-8 válido aparecem com os bytes inválidos
+escritos como `\\xNN` (por exemplo `src/inv\\xffalid.md`): o achado nunca
+leva caracteres que não podem ser gravados em UTF-8.
 """
 import fnmatch
 import os
@@ -80,6 +84,16 @@ def _texto(b):
     return b.decode("utf-8", "replace").strip()
 
 
+def _caminho(b):
+    """Decodifica um caminho vindo do git (bytes crus com -z).
+
+    Bytes que não são UTF-8 válido viram `\\xNN` (backslashreplace), não
+    surrogates (surrogateescape): um surrogate solitário no Achado derrubaria o
+    json.dump e o print() do check.py.
+    """
+    return b.decode("utf-8", "backslashreplace")
+
+
 def _como_buscar(ref):
     return (
         f"a referência do upstream '{ref}' não existe neste clone, então não dá para "
@@ -95,7 +109,7 @@ def _como_buscar(ref):
 
 def _nomes_status(saida):
     """Lê a saída de `git diff --name-status -z --no-renames`: [(status, caminho)]."""
-    campos = saida.decode("utf-8", "surrogateescape").split("\0")
+    campos = [_caminho(c) for c in saida.split(b"\0")]
     pares = []
     i = 0
     while i + 1 < len(campos):
@@ -110,7 +124,7 @@ def _nomes_status(saida):
 def _status_porcelana(saida):
     """Lê `git status --porcelain=v1 -z --no-renames`: [(XY, caminho)]."""
     pares = []
-    for registro in saida.decode("utf-8", "surrogateescape").split("\0"):
+    for registro in (_caminho(c) for c in saida.split(b"\0")):
         if len(registro) >= 4 and registro[2] == " ":
             pares.append((registro[:2], registro[3:]))
     return pares
