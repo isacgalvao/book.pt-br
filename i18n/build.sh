@@ -257,6 +257,17 @@ garante_listing() {
   exec {fd}>&-
 }
 
+# O mdbook separa `command` como um shell (aspas valem): um caminho com espaços
+# ou aspas precisa ser citado. Caminhos "limpos" ficam como estão.
+cita_comando() {
+  local c="$1"
+  if [[ "$c" =~ ^[A-Za-z0-9_./+:@%,=-]+$ ]]; then
+    printf '%s' "$c"
+  else
+    printf "'%s'" "${c//\'/\'\\\'\'}"
+  fi
+}
+
 # Cópia do PO num diretório temporário absoluto; define PO_DIR_TMP.
 prepara_po() {
   local origem="$1" tmp
@@ -430,7 +441,8 @@ main() {
         exit 2
       fi
       garante_listing
-      export MDBOOK_PREPROCESSOR__TRPL_LISTING__COMMAND="$LISTING_BIN"
+      MDBOOK_PREPROCESSOR__TRPL_LISTING__COMMAND="$(cita_comando "$LISTING_BIN")"
+      export MDBOOK_PREPROCESSOR__TRPL_LISTING__COMMAND
       export MDBOOK_BOOK__LANGUAGE=pt-BR
       export MDBOOK_PREPROCESSOR__GETTEXT__AFTER='["links","trpl-note"]'
       export MDBOOK_PREPROCESSOR__GETTEXT__BEFORE='["trpl-listing"]'
