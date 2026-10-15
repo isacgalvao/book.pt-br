@@ -1,0 +1,2892 @@
+# Glossário da tradução pt-BR de “The Rust Programming Language” — versão 2
+#
+# O QUE É: a terminologia que toda tradução de po/pt-BR.po segue (agentes e pessoas). O
+# lotes.py anexa a cada lote as entradas cujo `en` aparece nos msgid do lote; o traduz_delta.py
+# envia o mesmo subconjunto ao modelo; o módulo `glossario` do check.py usa o campo `evitar`.
+# Em caso de conflito vale: decisões do mantenedor (i18n/CONTRATO.md §7) > este glossário >
+# i18n/GUIA-DE-ESTILO.md.
+#
+# QUEM EDITA: SÓ O MANTENEDOR. Agentes nunca editam este arquivo. Quem traduz e precisa de um
+# termo que não está aqui usa a melhor opção e o PROPÕE nas notas do lote (“Termo proposto:
+# en → pt”); o orquestrador acrescenta cada termo proposto com `status: provisorio`, num commit
+# separado, e lista os provisórios para o mantenedor confirmar ou trocar.
+#
+# ESQUEMA (CONTRATO.md §6):
+#   versao: 2
+#   termos:                 lista; cada entrada tem todos os campos abaixo
+#     en             termo em inglês, em minúsculas; cada `en` aparece uma vez só
+#     pt             forma preferida em português (igual a `en` quando o termo fica em inglês)
+#     manter_ingles  true quando o termo fica em inglês na prosa
+#     classe         substantivo | verbo | adjetivo | expressão
+#     genero         m | f | null (gênero de `pt`; null em verbos, adjetivos e expressões)
+#     status         decidido = decisão explícita do mantenedor (CONTRATO §7, itens 1 e 3);
+#                    provisorio = proposta do assistente, vale até o mantenedor confirmar ou
+#                    trocar (troca = busca e substituição revisada no PO)
+#     exemplo_en     trecho real do livro (copiado de um msgid)
+#     exemplo_pt     tradução do trecho conforme este glossário e o guia de estilo
+#     evitar         lista de regex Python (pode ser vazia) com as formas que NÃO podem
+#                    aparecer na prosa do msgstr
+#     nota           uso, variações, gênero e evidência; as contagens do Comprehensive Rust
+#                    pt-BR (po/pt-BR.po de google/comprehensive-rust, revisado por humanos)
+#                    dizem, entre as mensagens cujo inglês tem o termo, quantas usam cada forma
+#
+# COMO O `evitar` É USADO: o módulo `glossario` do check.py aplica cada regex, sem diferenciar
+# maiúsculas, ao msgstr das mensagens traduzidas ou fuzzy dos tipos prosa, listing e html,
+# depois de remover os code spans, o conteúdo de <code>, <pre> e <kbd>, os destinos de link, a
+# parte ][rótulo], as tags HTML e o {#...}. Cada ocorrência vira um aviso que cita o termo e o
+# `pt` preferido (as regras de erros-recorrentes.yml rodam no mesmo texto, com a severidade
+# delas). Uma regex sem fronteira própria seria envolvida em \b(?:...)\b; todas as daqui já
+# trazem fronteiras explícitas:
+#   (?<![^\W_]) ... (?![^\W_])         nenhuma letra ou dígito encostado; o “_” de ênfase pode,
+#                                      para pegar “_borrowing_”, que \b deixaria passar;
+#   (?<![\w/\\.-]) ... (?![\w/\\]|\.\w)  termos que também são nomes de arquivo ou diretório
+#                                      (test, debug, build): não casam com caminhos que a limpeza
+#                                      mantém, como “Nome do arquivo: tests/common.rs”,
+#                                      _target/debug_, _build.rs_ ou o diretório _tests_.
+# As regex de gênero pegam artigo ou pronome do gênero errado antes de um termo mantido em
+# inglês (feminino antes de closure, trait, crate, struct e enum; masculino antes de thread,
+# slice, future, macro e string). Ao mudar uma regex, rode-a sobre o msgstr do PO e sobre os
+# exemplos.
+
+versao: 2
+termos:
+
+  # -------- Ownership, empréstimo e memória
+  - en: "ownership"
+    pt: "ownership"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Moving Ownership Into an Async Block"
+    exemplo_pt: "Movendo o ownership para um bloco assíncrono"
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*ownership(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Fica em inglês, no masculino (“o ownership”). Alternativa em aberto: “posse” (feminino); se o mantenedor escolher “posse”, fazer busca e troca revisada, ajustando o artigo (“o ownership” → “a posse”). “take ownership of” → “assumir o ownership de”; “transfer ownership” → “transferir o ownership”; “give up ownership” → “abrir mão do ownership”; “ownership rules” → “regras de ownership”. Sem glosa entre parênteses. O CR trata o termo como feminino (2 ocorrências), o que este glossário não segue. Comprehensive Rust pt-BR (mensagens com o termo: 24): ownership 18, propriedade 9, posse 2."
+  - en: "owner"
+    pt: "dono"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Each value in Rust has an _owner_."
+    exemplo_pt: "Cada valor no Rust tem um _dono_."
+    evitar:
+      - '(?<![^\W_])owners?(?![^\W_])'
+    nota: "Como no glossário antigo. “proprietário” só como variação de estilo, nunca “owner”. Comprehensive Rust pt-BR (mensagens com o termo: 4): dono 2, proprietário 1, owner 3."
+  - en: "move"
+    pt: "mover"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Passing a variable to a function will move or copy, just as assignment does."
+    exemplo_pt: "Passar uma variável para uma função vai movê-la ou copiá-la, assim como acontece na atribuição."
+    evitar: []
+    nota: "“moved” → “movido”; o substantivo (“Interacting with Move”) → “movimentação”. A palavra-chave `move` dos closures é código. Comprehensive Rust pt-BR (mensagens com o termo: 46): mov- 43, move 2."
+  - en: "copy"
+    pt: "copiar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Deep copies of data can take a lot of time."
+    exemplo_pt: "Cópias profundas de dados podem levar muito tempo."
+    evitar: []
+    nota: "Substantivo “copy” → “cópia”; “deep copy” → “cópia profunda”; “shallow copy” → “cópia rasa”. O trait `Copy` é código. Comprehensive Rust pt-BR (mensagens com o termo: 43): cópia/copiar 43."
+  - en: "clone"
+    pt: "clonar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "First, we clone `tx`, creating `tx1` outside the first async block."
+    exemplo_pt: "Primeiro, clonamos `tx`, criando `tx1` fora do primeiro bloco assíncrono."
+    evitar: []
+    nota: "O método `clone` e o trait `Clone` são código. Comprehensive Rust pt-BR (mensagens com o termo: 20): clon- 19."
+  - en: "borrowing"
+    pt: "empréstimo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Recall the borrowing rules you learned in Chapter 4:"
+    exemplo_pt: "Lembre-se das regras de empréstimo que você aprendeu no Capítulo 4:"
+    evitar:
+      - '(?<![^\W_])borrowing(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). “borrowing rules” → “regras de empréstimo”. Ver também “borrow” e “borrow checker”. Comprehensive Rust pt-BR (mensagens com o termo: 17): empréstimo 13, borrow 3."
+  - en: "borrow"
+    pt: "pegar emprestado"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: decidido
+    exemplo_en: "While references only borrow data, in many cases smart pointers _own_ the data they point to."
+    exemplo_pt: "Enquanto as referências só pegam dados emprestados, em muitos casos os ponteiros inteligentes são _donos_ dos dados para os quais apontam."
+    evitar:
+      - '(?<![^\W_])borrow(?:s|ed)?(?![^\W_])(?!\s+checker)'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). “to borrow” → “pegar emprestado” ou “emprestar”, conforme a frase; “borrowed” → “emprestado”; o substantivo (“a borrow”) → “um empréstimo”; “mutable borrow” → “empréstimo mutável”. O método `borrow` e o trait `Borrow` são código. Comprehensive Rust pt-BR (mensagens com o termo: 30): emprest- 18, empréstimo 14, borrow 10."
+  - en: "borrow checker"
+    pt: "verificador de empréstimos"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "It uses a borrow checker."
+    exemplo_pt: "Ele usa um verificador de empréstimos."
+    evitar:
+      - '(?<![^\W_])borrow[ -]checkers?(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Comprehensive Rust pt-BR (mensagens com o termo: 11): verificador de empréstimos 11, borrow checker 7."
+  - en: "reference"
+    pt: "referência"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "References must always be valid."
+    exemplo_pt: "As referências devem ser sempre válidas."
+    evitar: []
+    nota: "“reference to X” → “referência a X”; “by reference” → “por referência”. Comprehensive Rust pt-BR (mensagens com o termo: 98): referência 95."
+  - en: "mutable reference"
+    pt: "referência mutável"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Mutable references have one big restriction:"
+    exemplo_pt: "As referências mutáveis têm uma grande restrição:"
+    evitar: []
+    nota: "“immutable reference” → “referência imutável”. Não troque por “referência exclusiva” ou “compartilhada”. Comprehensive Rust pt-BR (mensagens com o termo: 7): referência mutável 6, referência exclusiva 1."
+  - en: "dangling reference"
+    pt: "referência pendente"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Let’s try to create a dangling reference to see how Rust prevents them with a compile-time error:"
+    exemplo_pt: "Vamos tentar criar uma referência pendente para ver como o Rust as impede com um erro em tempo de compilação:"
+    evitar:
+      - '(?<![^\W_])dangling(?![^\W_])'
+    nota: "“dangling pointer” → “ponteiro pendente”. Comprehensive Rust pt-BR (mensagens com o termo: 2): pendente 2, solta 0, oscilante 0, dangling 0."
+  - en: "dereference"
+    pt: "desreferenciar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "We must use the dereference operator to follow the reference to the value it’s pointing to."
+    exemplo_pt: "Precisamos usar o operador de desreferência para seguir a referência até o valor para o qual ela aponta."
+    evitar: []
+    nota: "“dereference operator” (`*`) → “operador de desreferência”; “deref” em prosa → “desreferenciar”. O trait `Deref` é código. Comprehensive Rust pt-BR (mensagens com o termo: 14): desreferenci- 12, deref 0."
+  - en: "mutable"
+    pt: "mutável"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Access or modify a mutable static variable."
+    exemplo_pt: "Acessar ou modificar uma variável estática mutável."
+    evitar: []
+    nota: "Plural “mutáveis”. Comprehensive Rust pt-BR (mensagens com o termo: 24): mutável 24."
+  - en: "immutable"
+    pt: "imutável"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "For now, all you need to know is that, like variables, references are immutable by default."
+    exemplo_pt: "Por enquanto, tudo o que você precisa saber é que, assim como as variáveis, as referências são imutáveis por padrão."
+    evitar: []
+    nota: "Plural “imutáveis”. Comprehensive Rust pt-BR (mensagens com o termo: 6): imutável 6."
+  - en: "mutability"
+    pt: "mutabilidade"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "But mutability can be very useful and can make code more convenient to write."
+    exemplo_pt: "Mas a mutabilidade pode ser muito útil e pode tornar o código mais prático de escrever."
+    evitar: []
+    nota: "“interior mutability” → “mutabilidade interior”. Comprehensive Rust pt-BR (mensagens com o termo: 9): mutabilidade 9."
+  - en: "mutate"
+    pt: "alterar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "But being able to mutate data is very useful!"
+    exemplo_pt: "Mas poder alterar dados é muito útil!"
+    evitar:
+      - '(?<![^\W_])mutat(?:e|es|ed|ing)(?![^\W_])'
+    nota: "Ou “modificar”. Nunca “mutar” (calque; regra `mutar` de erros-recorrentes.yml). “mutável”, “imutável” e “mutabilidade” estão certos. Comprehensive Rust pt-BR (mensagens com o termo: 5): mut- 1, modific- 1, alter- 2."
+  - en: "slice"
+    pt: "slice"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "But there’s a more general slice type too."
+    exemplo_pt: "Mas também existe um tipo slice mais geral."
+    evitar:
+      - '(?<![^\W_])fatias?(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*slice(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*slices(?![^\W_])'
+    nota: "Fica em inglês, no feminino (“a slice”, “uma slice”, “as slices”), como no CR (uma 7, a 1, as 1, essa 1 contra o 1, um 1, os 1). Plural “slices”. “string slice” → “slice de string”. Comprehensive Rust pt-BR (mensagens com o termo: 29): slice 28, fatia 4."
+  - en: "string slice"
+    pt: "slice de string"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Luckily, Rust has a solution to this problem: string slices."
+    exemplo_pt: "Felizmente, o Rust tem uma solução para esse problema: as slices de string."
+    evitar:
+      - '(?<![^\W_])string slices?(?![^\W_])'
+    nota: "Feminino, como “slice”. O tipo `&str` é código."
+  - en: "string"
+    pt: "string"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "To answer that question, we need to discuss how Rust stores strings in memory."
+    exemplo_pt: "Para responder a essa pergunta, precisamos discutir como o Rust armazena strings na memória."
+    evitar:
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*string(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*strings(?![^\W_])'
+    nota: "Fica em inglês, no feminino (“a string”, “uma string”), como no CR (uma 17, a 5, da 5) e na tradução antiga; o mesmo vale para o tipo: “uma `String`”. `String` e `&str` são código. “string literal” → “literal de string”. Comprehensive Rust pt-BR (mensagens com o termo: 45): string 45, cadeia 0."
+  - en: "string literal"
+    pt: "literal de string"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "This is why string literals are fast and efficient."
+    exemplo_pt: "É por isso que os literais de string são rápidos e eficientes."
+    evitar:
+      - '(?<![^\W_])string literals?(?![^\W_])'
+    nota: "“raw string literal” → “literal de string bruto”. Comprehensive Rust pt-BR (mensagens com o termo: 2): literal de string 1, string literal 0."
+  - en: "drop"
+    pt: "descartar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "If we drop a child node, the parent should still exist."
+    exemplo_pt: "Se descartarmos um nó filho, o pai ainda deve existir."
+    evitar:
+      - '(?<![^\W_])drop(?:s|ped|ping|ar|ando|ad[oa]s?|ou)?(?![^\W_])'
+    nota: "“dropped” → “descartado”; “goes out of scope and is dropped” → “sai do escopo e é descartado”. O trait `Drop` e a função `drop` são código. Comprehensive Rust pt-BR (mensagens com o termo: 24): descart- 19, liber- 1, drop 2."
+  - en: "scope"
+    pt: "escopo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A related concept is scope:"
+    exemplo_pt: "Um conceito relacionado é o escopo:"
+    evitar: []
+    nota: "“goes out of scope” → “sai do escopo”; “in scope” → “no escopo”; “bring into scope” → “trazer para o escopo”. Comprehensive Rust pt-BR (mensagens com o termo: 35): escopo 34, âmbito 0."
+  - en: "allocate"
+    pt: "alocar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "It pre-allocates space in the vector."
+    exemplo_pt: "Ele pré-aloca espaço no vetor."
+    evitar: []
+    nota: "“deallocate” → “desalocar”; “allocation” → “alocação”. Comprehensive Rust pt-BR (mensagens com o termo: 28): aloc- 28."
+  - en: "heap"
+    pt: "heap"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Storing Data on the Heap"
+    exemplo_pt: "Armazenando dados no heap"
+    evitar: []
+    nota: "Fica em inglês, no masculino (“o heap”, “no heap”), como no CR (heap 22 × monte 0; no 7, do 3). Já “stack” é traduzido: “pilha”. Comprehensive Rust pt-BR (mensagens com o termo: 24): heap 22, monte 0."
+  - en: "stack"
+    pt: "pilha"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "When the function is over, those values get popped off the stack."
+    exemplo_pt: "Quando a função termina, esses valores são retirados da pilha."
+    evitar:
+      - '(?<![^\W_])stacks?(?![^\W_])'
+    nota: "Como no CR (pilha 19 × stack 0). “stack overflow” → “estouro de pilha”; “call stack” → “pilha de chamadas”; “unwinding the stack” → “desenrolar a pilha”. Comprehensive Rust pt-BR (mensagens com o termo: 19): pilha 19, stack 0."
+  - en: "memory safety"
+    pt: "segurança de memória"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This is an example of Rust’s memory safety principles in action."
+    exemplo_pt: "Este é um exemplo dos princípios de segurança de memória do Rust em ação."
+    evitar:
+      - '(?<![^\W_])memory[ -]safe(?:ty)?(?![^\W_])'
+    nota: "“memory safe” → “seguro em relação à memória”; “memory-safe language” → “linguagem com segurança de memória”. Comprehensive Rust pt-BR (mensagens com o termo: 13): segurança de memória 9, memória segura 1."
+  - en: "memory leak"
+    pt: "vazamento de memória"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Preventing memory leaks entirely is not one of Rust’s guarantees, meaning memory leaks are memory safe in Rust."
+    exemplo_pt: "Evitar totalmente os vazamentos de memória não é uma das garantias do Rust, o que significa que vazamentos de memória são seguros em relação à memória no Rust."
+    evitar:
+      - '(?<![^\W_])memory leaks?(?![^\W_])'
+    nota: "“leak memory” → “vazar memória”."
+  - en: "garbage collector"
+    pt: "coletor de lixo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "It enables Rust to make memory safety guarantees without needing a garbage collector, so it’s important to understand how ownership works."
+    exemplo_pt: "Ele permite que o Rust dê garantias de segurança de memória sem precisar de um coletor de lixo, por isso é importante entender como o ownership funciona."
+    evitar:
+      - '(?<![^\W_])garbage[ -]collect(?:or|ors|ion|ed)(?![^\W_])'
+    nota: "“garbage collection” → “coleta de lixo”; a sigla GC fica. Comprehensive Rust pt-BR (mensagens com o termo: 8): coletor de lixo 6, coleta de lixo 3, garbage 2."
+
+  # -------- Tipos e dados
+  - en: "type"
+    pt: "tipo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "It can’t be just any type."
+    exemplo_pt: "Não pode ser um tipo qualquer."
+    evitar: []
+    nota: "A palavra-chave `type` é código. “type system” → “sistema de tipos”; “type checking” → “verificação de tipos”; “type safety” → “segurança de tipos”. Comprehensive Rust pt-BR (mensagens com o termo: 326): tipo 319."
+  - en: "data type"
+    pt: "tipo de dado"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ll look at two data type subsets: scalar and compound."
+    exemplo_pt: "Veremos dois subconjuntos de tipos de dados: escalares e compostos."
+    evitar: []
+    nota: "“scalar type” → “tipo escalar”; “compound type” → “tipo composto”; “primitive type” → “tipo primitivo”. “data” sozinho → “dados”, no plural (“the data is” → “os dados são”); “data structure” → “estrutura de dados”."
+  - en: "integer"
+    pt: "inteiro"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Integer types default to `i32`."
+    exemplo_pt: "Os tipos inteiros têm `i32` como padrão."
+    evitar: []
+    nota: "“signed/unsigned integer” → “inteiro com/sem sinal”; “integer literal” → “literal inteiro”. Comprehensive Rust pt-BR (mensagens com o termo: 23): inteiro 21."
+  - en: "integer overflow"
+    pt: "estouro de inteiro"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "When you’re compiling in debug mode, Rust includes checks for integer overflow that cause your program to _panic_ at runtime if this behavior occurs."
+    exemplo_pt: "Quando você compila no modo de depuração, o Rust inclui verificações de estouro de inteiro que fazem seu programa _entrar em pânico_ em tempo de execução se esse comportamento ocorrer."
+    evitar:
+      - '(?<![^\W_])overflow(?:s|ed|ing)?(?![^\W_])'
+    nota: "“overflow” sozinho → “estouro”; “stack overflow” → “estouro de pilha”. Comprehensive Rust pt-BR (mensagens com o termo: 6): estouro 5, transbord- 0, overflow 2."
+  - en: "floating-point"
+    pt: "ponto flutuante"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "All floating-point types are signed."
+    exemplo_pt: "Todos os tipos de ponto flutuante têm sinal."
+    evitar:
+      - '(?<![^\W_])floating[ -]point(?![^\W_])'
+    nota: "“floating-point number” → “número de ponto flutuante”. Comprehensive Rust pt-BR (mensagens com o termo: 2): ponto flutuante 2."
+  - en: "boolean"
+    pt: "booleano"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Booleans are one byte in size."
+    exemplo_pt: "Os booleanos têm um byte de tamanho."
+    evitar: []
+    nota: "“Boolean type” → “tipo booleano”, com minúscula em português. Comprehensive Rust pt-BR (mensagens com o termo: 4): booleano 4."
+  - en: "character"
+    pt: "caractere"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A _string_ is a collection of characters."
+    exemplo_pt: "Uma _string_ é uma coleção de caracteres."
+    evitar: []
+    nota: "Plural “caracteres”. O tipo `char` é código. Comprehensive Rust pt-BR (mensagens com o termo: 15): caractere 11."
+  - en: "tuple"
+    pt: "tupla"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Tuples have a fixed length:"
+    exemplo_pt: "As tuplas têm tamanho fixo:"
+    evitar:
+      - '(?<![^\W_])tuples?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. “tuple struct” → “struct de tupla”. Comprehensive Rust pt-BR (mensagens com o termo: 24): tupla 24, tuple 0."
+  - en: "array"
+    pt: "array"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Unlike a tuple, every element of an array must have the same type."
+    exemplo_pt: "Ao contrário de uma tupla, todos os elementos de um array precisam ter o mesmo tipo."
+    evitar:
+      - '(?<![^\W_])(?:matriz|matrizes)(?![^\W_])'
+    nota: "Proposta do assistente: fica em inglês, no masculino (“o array”), como no glossário antigo e no uso corrente em documentação pt-BR. Diverge do CR, que usa “matriz”: em pt-BR “matriz” lembra matriz bidimensional, e “vetor” já traduz “vector” (`Vec<T>`). O livro não fala de matrizes, então “matriz” na tradução é sempre engano. Comprehensive Rust pt-BR (mensagens com o termo: 29): array 6, matriz 23, vetor 1."
+  - en: "vector"
+    pt: "vetor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Storing Lists of Values with Vectors"
+    exemplo_pt: "Armazenando listas de valores com vetores"
+    evitar:
+      - '(?<![^\W_])vectors?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Masculino (CR: um 8, do 6, o 2). O tipo `Vec<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 18): vetor 18, vector 0."
+  - en: "hash map"
+    pt: "hash map"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Creating a New Hash Map"
+    exemplo_pt: "Criando um novo hash map"
+    evitar: []
+    nota: "Fica em inglês, no masculino (“o hash map”), como no CR (no 2, um 1). `HashMap<K, V>` é código. “hash function”/“hashing function” → “função de hash”. Comprehensive Rust pt-BR (mensagens com o termo: 5): hash map 5, mapa de hash 0, tabela hash 0."
+  - en: "collection"
+    pt: "coleção"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Looping Through a Collection with `for`"
+    exemplo_pt: "Percorrendo uma coleção com `for`"
+    evitar: []
+    nota: "Plural “coleções”. Comprehensive Rust pt-BR (mensagens com o termo: 21): coleção 17."
+  - en: "range"
+    pt: "intervalo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Here is an example using ranges of `char` values:"
+    exemplo_pt: "Aqui está um exemplo usando intervalos de valores `char`:"
+    evitar: []
+    nota: "Os tipos `Range` e as sintaxes `..` e `..=` são código. Comprehensive Rust pt-BR (mensagens com o termo: 15): intervalo 11, faixa 1, range 2."
+  - en: "struct"
+    pt: "struct"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Making Structs and Enums Public"
+    exemplo_pt: "Tornando structs e enums públicos"
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*struct(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*structs(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o struct”, “um struct”, “os structs” (CR: no 2, do 2, um 2, o 1). Para o conceito do Rust não use “estrutura” (“data structure” → “estrutura de dados” continua certo). A regra `genero-struct` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 61): struct 52, estrutura 10."
+  - en: "tuple struct"
+    pt: "struct de tupla"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Rust also supports structs that look similar to tuples, called _tuple structs_."
+    exemplo_pt: "O Rust também tem structs parecidos com tuplas, chamados _structs de tupla_."
+    evitar:
+      - '(?<![^\W_])tuple structs?(?![^\W_])'
+    nota: "Masculino, como “struct”. Comprehensive Rust pt-BR (mensagens com o termo: 4): struct de tupla 1, struct tupla 0, estrutura de tupla 0."
+  - en: "unit-like struct"
+    pt: "struct unitário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "You’ll see in Chapter 10 how to define traits and implement them on any type, including unit-like structs."
+    exemplo_pt: "Você verá no Capítulo 10 como definir traits e implementá-los em qualquer tipo, inclusive structs unitários."
+    evitar:
+      - '(?<![^\W_])unit-like(?![^\W_])'
+    nota: "Struct sem campos, que se comporta como o tipo unitário `()`; segue “tipo unitário” (unit type)."
+  - en: "unit type"
+    pt: "tipo unitário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "This function previously returned the unit type, `()`, and we keep that as the value returned in the `Ok` case."
+    exemplo_pt: "Antes, esta função retornava o tipo unitário, `()`, e mantemos isso como o valor retornado no caso `Ok`."
+    evitar: []
+    nota: "“unit value” → “valor unitário”. Comprehensive Rust pt-BR (mensagens com o termo: 3): unidade 0, unit 0, unitário 3, vazio 1."
+  - en: "field"
+    pt: "campo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Using the Field Init Shorthand"
+    exemplo_pt: "Usando a forma abreviada de inicialização de campos"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 45): campo 44."
+  - en: "method"
+    pt: "método"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The `Eq` trait has no methods."
+    exemplo_pt: "O trait `Eq` não tem métodos."
+    evitar: []
+    nota: "“method syntax” → “sintaxe de método”; “method call” → “chamada de método”. Comprehensive Rust pt-BR (mensagens com o termo: 88): método 88."
+  - en: "associated function"
+    pt: "função associada"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "However, associated functions that are not methods don’t have a `self` parameter."
+    exemplo_pt: "No entanto, as funções associadas que não são métodos não têm um parâmetro `self`."
+    evitar: []
+    nota: "Como no glossário antigo. Comprehensive Rust pt-BR: nenhuma mensagem com o termo."
+  - en: "associated type"
+    pt: "tipo associado"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Define a type alias or associated type."
+    exemplo_pt: "Definir um alias de tipo ou um tipo associado."
+    evitar: []
+    nota: "“associated constant” → “constante associada”; “associated item” → “item associado”. Comprehensive Rust pt-BR (mensagens com o termo: 7): tipo associado 7."
+  - en: "enum"
+    pt: "enum"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Enums handle this case with ease:"
+    exemplo_pt: "Os enums tratam esse caso com facilidade:"
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*enum(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*enums(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o enum”, “um enum”, “os enums” (CR: o 3, um 1). O nome por extenso, “enumeration”, vira “enumeração”. A regra `genero-enum` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 28): enum 26, enumeração 1."
+  - en: "variant"
+    pt: "variante"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "These are the variants of the enum:"
+    exemplo_pt: "Estas são as variantes do enum:"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 25): variante 25."
+  - en: "null"
+    pt: "nulo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "When we have a `None` value, in some sense it means the same thing as null:"
+    exemplo_pt: "Quando temos um valor `None`, em certo sentido isso significa o mesmo que nulo:"
+    evitar: []
+    nota: "“null value” → “valor nulo”; “null pointer” → “ponteiro nulo”."
+  - en: "newtype"
+    pt: "newtype"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Newtypes can also hide internal implementation."
+    exemplo_pt: "Os newtypes também podem esconder a implementação interna."
+    evitar: []
+    nota: "Fica em inglês, no masculino. “newtype pattern” → “padrão newtype”. Comprehensive Rust pt-BR (mensagens com o termo: 4): newtype 4, novo tipo 0."
+  - en: "type alias"
+    pt: "alias de tipo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The type alias helps in two ways:"
+    exemplo_pt: "O alias de tipo ajuda de duas maneiras:"
+    evitar:
+      - '(?<![^\W_])type alias(?:es)?(?![^\W_])'
+    nota: "“type synonym” → “sinônimo de tipo”. Comprehensive Rust pt-BR (mensagens com o termo: 12): alias 12, apelido 1, sinônimo 0."
+  - en: "never type"
+    pt: "tipo never"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The never type is useful with the `panic!` macro as well."
+    exemplo_pt: "O tipo never também é útil com a macro `panic!`."
+    evitar: []
+    nota: "É o tipo `!`; “never” fica em inglês por ser o nome do tipo (“The Never Type That Never Returns” → “O tipo never, que nunca retorna”)."
+  - en: "dynamically sized type"
+    pt: "tipo de tamanho dinâmico"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "In general, this is the way in which dynamically sized types are used in Rust:"
+    exemplo_pt: "Em geral, é assim que os tipos de tamanho dinâmico são usados no Rust:"
+    evitar:
+      - '(?<![^\W_])dynamically[ -]sized(?![^\W_])'
+    nota: "A sigla DST fica. “statically sized” → “de tamanho estático”; o trait `Sized` é código. Comprehensive Rust pt-BR (mensagens com o termo: 2): tamanho dinâmico 1, dimensionad- 1."
+  - en: "function pointer"
+    pt: "ponteiro de função"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The `fn` type is called a _function pointer_."
+    exemplo_pt: "O tipo `fn` é chamado de _ponteiro de função_."
+    evitar:
+      - '(?<![^\W_])function pointers?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 2): ponteiro de função 2, ponteiro para função 0."
+  - en: "box"
+    pt: "box"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ll look at more use cases for boxes in Chapter 18."
+    exemplo_pt: "Veremos mais casos de uso dos boxes no Capítulo 18."
+    evitar: []
+    nota: "Em prosa, “box” é um valor `Box<T>`: fica em inglês, no masculino (“um box”, “os boxes”). “recursive type” → “tipo recursivo”. Comprehensive Rust pt-BR (mensagens com o termo: 7): box 6, caixa 1."
+  - en: "cons list"
+    pt: "lista cons"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "As an example of a recursive type, let’s explore the cons list."
+    exemplo_pt: "Como exemplo de tipo recursivo, vamos explorar a lista cons."
+    evitar:
+      - '(?<![^\W_])cons lists?(?![^\W_])'
+    nota: "Estrutura de dados que vem do Lisp; “cons” fica. A variante `Cons` é código."
+  - en: "concrete type"
+    pt: "tipo concreto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "In Rust, one such tool is _generics_: abstract stand-ins for concrete types or other properties."
+    exemplo_pt: "No Rust, uma dessas ferramentas são os _genéricos_: substitutos abstratos de tipos concretos ou de outras propriedades."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 5): tipo concreto 5."
+  - en: "generic"
+    pt: "genérico"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: decidido
+    exemplo_en: "We can also specify constraints on generic types when defining methods on the type."
+    exemplo_pt: "Também podemos especificar restrições em tipos genéricos ao definir métodos no tipo."
+    evitar:
+      - '(?<![^\W_])generics?(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). O substantivo “generics” → “genéricos”; “generic type parameter” → “parâmetro de tipo genérico”. Comprehensive Rust pt-BR (mensagens com o termo: 44): genérico 42, generic 3."
+  - en: "type parameter"
+    pt: "parâmetro de tipo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The `T` and `E` are generic type parameters:"
+    exemplo_pt: "`T` e `E` são parâmetros de tipo genéricos:"
+    evitar: []
+    nota: "“default type parameters” → “parâmetros de tipo padrão”. Comprehensive Rust pt-BR (mensagens com o termo: 4): parâmetro de tipo 4, parâmetro genérico 0."
+  - en: "type annotation"
+    pt: "anotação de tipo"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Note that we added a type annotation here."
+    exemplo_pt: "Note que adicionamos uma anotação de tipo aqui."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 16): anotação 16."
+  - en: "infer"
+    pt: "inferir"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "The compiler can usually infer what type we want to use based on the value and how we use it."
+    exemplo_pt: "O compilador geralmente consegue inferir que tipo queremos usar com base no valor e em como o usamos."
+    evitar: []
+    nota: "“type inference” → “inferência de tipos”. Comprehensive Rust pt-BR (mensagens com o termo: 17): infer- 16."
+
+  # -------- Tempos de vida
+  - en: "lifetime"
+    pt: "tempo de vida"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Generic Types, Traits, and Lifetimes"
+    exemplo_pt: "Tipos genéricos, traits e tempos de vida"
+    evitar:
+      - '(?<![^\W_])lifetimes?(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Plural “tempos de vida”. “lifetime parameter” → “parâmetro de tempo de vida”; “the `'a` lifetime” → “o tempo de vida `'a`”. Comprehensive Rust pt-BR (mensagens com o termo: 35): tempo de vida 35, lifetime 4."
+  - en: "lifetime annotation"
+    pt: "anotação de tempo de vida"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Lifetime annotations have a slightly unusual syntax:"
+    exemplo_pt: "As anotações de tempo de vida têm uma sintaxe um pouco incomum:"
+    evitar: []
+    nota: "Segue a decisão sobre “lifetime”."
+  - en: "lifetime elision"
+    pt: "elisão de tempo de vida"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Here is an example where the third lifetime elision rule applies:"
+    exemplo_pt: "Aqui está um exemplo em que se aplica a terceira regra de elisão de tempo de vida:"
+    evitar:
+      - '(?<![^\W_])elision(?![^\W_])'
+    nota: "“lifetime elision rules” → “regras de elisão de tempo de vida”; “elided” → “omitido”. Comprehensive Rust pt-BR (mensagens com o termo: 2): omissão 0, elisão 2, elision 0."
+
+  # -------- Traits e genéricos
+  - en: "trait"
+    pt: "trait"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Implementing a Trait on a Type"
+    exemplo_pt: "Implementando um trait em um tipo"
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*trait(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*traits(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o trait”, “os traits”) pela evidência do CR (o 36, um 15, do 10, os 7; nenhum feminino); o gênero não foi decisão explícita do mantenedor. Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
+  - en: "trait bound"
+    pt: "limite de trait"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Multiple Trait Bounds with the `+` Syntax"
+    exemplo_pt: "Vários limites de trait com a sintaxe `+`"
+    evitar:
+      - '(?<![^\W_])trait bounds?(?![^\W_])'
+    nota: "Como no CR (título “Limites de Trait”). “bound” sozinho, no mesmo sentido → “limite”. Comprehensive Rust pt-BR (mensagens com o termo: 15): restrição 1, limite 11, vínculo 0, bound 1."
+  - en: "trait object"
+    pt: "objeto de trait"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Let’s look at how trait objects work."
+    exemplo_pt: "Vamos ver como os objetos de trait funcionam."
+    evitar:
+      - '(?<![^\W_])trait objects?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 9): objeto de trait 8, trait object 0."
+  - en: "default implementation"
+    pt: "implementação padrão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "We add a default implementation for the `content` method that returns an empty string slice."
+    exemplo_pt: "Adicionamos uma implementação padrão para o método `content` que retorna uma slice de string vazia."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): implementação padrão 1."
+  - en: "blanket implementation"
+    pt: "implementação abrangente"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Blanket implementations appear in the documentation for the trait in the “Implementors” section."
+    exemplo_pt: "As implementações abrangentes aparecem na documentação do trait, na seção “Implementors”."
+    evitar:
+      - '(?<![^\W_])blanket(?![^\W_])'
+    nota: "Implementação de um trait para todo tipo que satisfaz um limite de trait. Sem precedente no CR. “Implementors” é o nome da seção na documentação gerada e fica."
+  - en: "orphan rule"
+    pt: "regra do órfão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This restriction is part of a property called _coherence_, and more specifically the _orphan rule_, so named because the parent type is not present."
+    exemplo_pt: "Essa restrição faz parte de uma propriedade chamada _coerência_, mais especificamente da _regra do órfão_, que tem esse nome porque o tipo pai não está presente."
+    evitar:
+      - '(?<![^\W_])orphan rules?(?![^\W_])'
+    nota: "“coherence” → “coerência”."
+  - en: "supertrait"
+    pt: "supertrait"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The trait your trait definition is relying on is called a _supertrait_ of your trait."
+    exemplo_pt: "O trait do qual a definição do seu trait depende é chamado de _supertrait_ do seu trait."
+    evitar: []
+    nota: "Fica em inglês, no masculino, como “trait”. Comprehensive Rust pt-BR (mensagens com o termo: 2): supertrait 2."
+  - en: "marker trait"
+    pt: "trait marcador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "As marker traits, they don’t even have any methods to implement."
+    exemplo_pt: "Por serem traits marcadores, eles nem têm métodos para implementar."
+    evitar:
+      - '(?<![^\W_])marker traits?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 3): marcador 2."
+  - en: "implement"
+    pt: "implementar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "The returned value implements the `Future` trait with an associated type of `Output`."
+    exemplo_pt: "O valor retornado implementa o trait `Future` com um tipo associado `Output`."
+    evitar: []
+    nota: "“implementation” → “implementação”; “implementor” → “implementador” (o tipo que implementa o trait). Comprehensive Rust pt-BR (mensagens com o termo: 126): implement- 126."
+  - en: "signature"
+    pt: "assinatura"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Its signature would have to look like this:"
+    exemplo_pt: "A assinatura dela teria que ser assim:"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 14): assinatura 14."
+  - en: "fully qualified syntax"
+    pt: "sintaxe totalmente qualificada"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "In general, fully qualified syntax is defined as follows:"
+    exemplo_pt: "Em geral, a sintaxe totalmente qualificada é definida assim:"
+    evitar:
+      - '(?<![^\W_])fully qualified(?![^\W_])'
+    nota: "É a forma `<Tipo as Trait>::função(...)`."
+  - en: "dynamic dispatch"
+    pt: "despacho dinâmico"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "When we use trait objects, Rust must use dynamic dispatch."
+    exemplo_pt: "Quando usamos objetos de trait, o Rust precisa usar despacho dinâmico."
+    evitar:
+      - '(?<![^\W_])dispatch(?:es|ed|ing)?(?![^\W_])'
+    nota: "“static dispatch” → “despacho estático”. Comprehensive Rust pt-BR (mensagens com o termo: 5): despacho 5, dispatch 0."
+  - en: "dyn compatibility"
+    pt: "compatibilidade com dyn"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This is one of the dyn compatibility rules mentioned earlier."
+    exemplo_pt: "Esta é uma das regras de compatibilidade com dyn mencionadas antes."
+    evitar:
+      - '(?<![^\W_])dyn[ -]compatib(?:le|ility)(?![^\W_])'
+    nota: "Nome atual do que se chamava “object safety”; “dyn compatible” → “compatível com dyn”. `dyn` é a palavra-chave. Sem precedente no CR."
+  - en: "monomorphization"
+    pt: "monomorfização"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "When Rust compiles this code, it performs monomorphization."
+    exemplo_pt: "Quando o Rust compila este código, ele faz a monomorfização."
+    evitar:
+      - '(?<![^\W_])monomorphi[sz]ation(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 2): monomorfiz- 2."
+
+  # -------- Expressões, padrões e funções
+  - en: "expression"
+    pt: "expressão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Calling a function is an expression."
+    exemplo_pt: "Chamar uma função é uma expressão."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 38): expressão 38."
+  - en: "statement"
+    pt: "instrução"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Statements do not return values."
+    exemplo_pt: "Instruções não retornam valores."
+    evitar: []
+    nota: "Como no glossário antigo. “declaração” fica para “declaration” (“declaração `use`”). “`let` statement” → “instrução `let`”. Comprehensive Rust pt-BR (mensagens com o termo: 13): instrução 8, declaração 3, comando 1."
+  - en: "block"
+    pt: "bloco"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Remember that blocks are expressions."
+    exemplo_pt: "Lembre-se de que blocos são expressões."
+    evitar: []
+    nota: "“code block” → “bloco de código”; “async block” → “bloco assíncrono”; “`unsafe` block” → “bloco `unsafe`”. O verbo “to block” é “bloquear” (ver “blocking”). Comprehensive Rust pt-BR (mensagens com o termo: 60): bloco 45."
+  - en: "loop"
+    pt: "loop"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Choosing Between Loops and Iterators"
+    exemplo_pt: "Escolhendo entre loops e iteradores"
+    evitar:
+      - '(?<![^\W_])laços?(?![^\W_])'
+    nota: "Fica em inglês, no masculino (“o loop”, “um loop”), como no CR (um 7, o 3); diverge do glossário antigo (“laço”). “loop label” → “rótulo de loop”. As palavras-chave `loop`, `while` e `for` são código. Comprehensive Rust pt-BR (mensagens com o termo: 25): loop 23, laço 2, repetição 0."
+  - en: "iterate"
+    pt: "iterar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Iterate through each line of the contents."
+    exemplo_pt: "Iterar por cada linha do conteúdo."
+    evitar: []
+    nota: "“iterate over” → “iterar sobre” ou “percorrer”; “iteration” → “iteração”. Comprehensive Rust pt-BR (mensagens com o termo: 13): iter- 13, percorr- 0."
+  - en: "pattern"
+    pt: "padrão"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The `x` part is a pattern!"
+    exemplo_pt: "A parte `x` é um padrão!"
+    evitar: []
+    nota: "Plural “padrões”. “default” também vira “padrão”; se ficar ambíguo, reescreva. “design pattern” → “padrão de projeto”. Comprehensive Rust pt-BR (mensagens com o termo: 54): padrão 53, pattern 3."
+  - en: "pattern matching"
+    pt: "correspondência de padrões"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "We’ve already covered some other Rust features, such as pattern matching and enums, that are also influenced by the functional style."
+    exemplo_pt: "Já falamos de outros recursos do Rust, como a correspondência de padrões e os enums, que também são influenciados pelo estilo funcional."
+    evitar:
+      - '(?<![^\W_])(?:pattern[ -]matching|casamento de padrões)(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 14): correspondência de padrões 13, casamento de padrões 0, pattern matching 1."
+  - en: "match"
+    pt: "corresponder"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Any value would match this pattern."
+    exemplo_pt: "Qualquer valor corresponderia a este padrão."
+    evitar: []
+    nota: "Verbo: “corresponder a” (“the value matches the pattern” → “o valor corresponde ao padrão”). Substantivo (“a match”) → “uma correspondência”. A expressão `match` é código: “expressão `match`”, “braço do `match`”."
+  - en: "arm"
+    pt: "braço"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "An arm has two parts: a pattern and some code."
+    exemplo_pt: "Um braço tem duas partes: um padrão e algum código."
+    evitar:
+      - '(?<![^\W_])arms?(?![^\W_])'
+    nota: "“match arm” → “braço do `match`” quando o original tem `match` em code span; sem ele, “braço de correspondência”, como no CR. “catch-all arm” → “braço curinga”. Comprehensive Rust pt-BR (mensagens com o termo: 13): braço 4, ramo 1."
+  - en: "match guard"
+    pt: "guarda de correspondência"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Listing 19-27 shows how we can use a match guard to fix this problem."
+    exemplo_pt: "A Listagem 19-27 mostra como podemos usar uma guarda de correspondência para resolver esse problema."
+    evitar:
+      - '(?<![^\W_])(?:match\s+)?guards?(?![^\W_])'
+    nota: "Feminino (“uma guarda”), como no CR. “guard” sozinho, nesse sentido → “guarda”. O tipo `MutexGuard` é código. Comprehensive Rust pt-BR (mensagens com o termo: 2): guarda de correspondência 2."
+  - en: "refutable"
+    pt: "refutável"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Patterns that can fail to match for some possible value are _refutable_."
+    exemplo_pt: "Padrões que podem deixar de corresponder a algum valor possível são _refutáveis_."
+    evitar:
+      - '(?<![^\W_])refutab(?:le|ility)(?![^\W_])'
+    nota: "“refutability” → “refutabilidade”. Comprehensive Rust pt-BR (mensagens com o termo: 2): refutável 2."
+  - en: "irrefutable"
+    pt: "irrefutável"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Patterns that will match for any possible value passed are _irrefutable_."
+    exemplo_pt: "Padrões que correspondem a qualquer valor possível passado são _irrefutáveis_."
+    evitar:
+      - '(?<![^\W_])irrefutab(?:le|ility)(?![^\W_])'
+    nota: "Ver “refutable”."
+  - en: "catch-all"
+    pt: "curinga"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "This catch-all pattern meets the requirement that `match` must be exhaustive."
+    exemplo_pt: "Esse padrão curinga atende à exigência de que o `match` seja exaustivo."
+    evitar:
+      - '(?<![^\W_])(?:catch-?all|wildcards?)(?![^\W_])'
+    nota: "“catch-all pattern/arm” → “padrão/braço curinga”; “wildcard” → “curinga”. Comprehensive Rust pt-BR (mensagens com o termo: 2): curinga 2."
+  - en: "placeholder"
+    pt: "espaço reservado"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Catch-All Patterns and the `_` Placeholder"
+    exemplo_pt: "Padrões curinga e o espaço reservado `_`"
+    evitar:
+      - '(?<![^\W_])placeholders?(?![^\W_])'
+    nota: "Também os `{}` das strings de formatação. Como adjetivo (“placeholder implementation”) → “implementação provisória”. Comprehensive Rust pt-BR (mensagens com o termo: 2): espaço reservado 2, marcador 0, placeholder 0."
+  - en: "exhaustive"
+    pt: "exaustivo"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "However, you lose the exhaustive checking `match` enforces that ensures that you aren’t forgetting to handle any cases."
+    exemplo_pt: "No entanto, você perde a verificação exaustiva que o `match` impõe e que garante que você não está esquecendo de tratar nenhum caso."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): exaustiv- 0."
+  - en: "destructure"
+    pt: "desestruturar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Because the `enumerate` method returns a tuple, we can use patterns to destructure that tuple."
+    exemplo_pt: "Como o método `enumerate` retorna uma tupla, podemos usar padrões para desestruturar essa tupla."
+    evitar:
+      - '(?<![^\W_])destructur(?:e|es|ed|ing)(?![^\W_])'
+    nota: "“destructuring” → “desestruturação”. Comprehensive Rust pt-BR (mensagens com o termo: 14): desestrutur- 12."
+  - en: "binding"
+    pt: "vinculação"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Denote mutability in references, raw pointers, or pattern bindings."
+    exemplo_pt: "Indicar mutabilidade em referências, ponteiros brutos ou vinculações de padrão."
+    evitar:
+      - '(?<![^\W_])bindings?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. “variable binding” → “vinculação de variável”; “`@` bindings” → “vinculações com `@`”. Ver também “bind”. Comprehensive Rust pt-BR (mensagens com o termo: 30): vincul- 10, associação 1, ligação 1, binding 19."
+  - en: "bind"
+    pt: "vincular"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "The `i` binds to the value contained in `Some`, so `i` takes the value `5`."
+    exemplo_pt: "O `i` se vincula ao valor contido em `Some`, então `i` assume o valor `5`."
+    evitar:
+      - '(?<![^\W_])binds?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. “bound to” (particípio de “bind”) → “vinculado a”; não confundir com “trait bound” (“limite de trait”). Comprehensive Rust pt-BR (mensagens com o termo: 5): vincul- 2, associ- 1, lig- 1, bind 1."
+  - en: "shadowing"
+    pt: "sombreamento"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "When that scope is over, the inner shadowing ends and `x` returns to being `6`."
+    exemplo_pt: "Quando esse escopo termina, o sombreamento interno acaba e `x` volta a ser `6`."
+    evitar:
+      - '(?<![^\W_])shadow(?:s|ed|ing)?(?![^\W_])'
+    nota: "Proposta do assistente: “shadowing” → “sombreamento”; “to shadow” → “sombrear” (“the variable is shadowed” → “a variável é sombreada”), a forma usada em documentação técnica em pt-BR. O CR usa “sobrepor”/“sobreposição” (quase sempre com “(_shadowing_)” ao lado), que em pt-BR se confunde com “override”. A tradução antiga misturava “shadowing” e “sombreamento”. Comprehensive Rust pt-BR (mensagens com o termo: 6): sombre- 0, sobrepos-/sobrepor 6, shadow 4."
+  - en: "shadow"
+    pt: "sombrear"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "It does, but helpfully Rust allows us to shadow the previous value of `guess` with a new one."
+    exemplo_pt: "Tem, mas, para nossa sorte, o Rust nos permite sombrear o valor anterior de `guess` com um novo."
+    evitar: []
+    nota: "Proposta do assistente; ver “shadowing” (a regex `evitar` de lá cobre shadow, shadows, shadowed e shadowing). “shadowed” → “sombreado”."
+  - en: "variable"
+    pt: "variável"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "We create a variable named `guess`."
+    exemplo_pt: "Criamos uma variável chamada `guess`."
+    evitar: []
+    nota: "Plural “variáveis”. Comprehensive Rust pt-BR (mensagens com o termo: 58): variável 58."
+  - en: "constant"
+    pt: "constante"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Constants aren’t just immutable by default—they’re always immutable."
+    exemplo_pt: "As constantes não são apenas imutáveis por padrão: elas são sempre imutáveis."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 7): constante 7."
+  - en: "static variable"
+    pt: "variável estática"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Another difference is that static variables can be mutable."
+    exemplo_pt: "Outra diferença é que as variáveis estáticas podem ser mutáveis."
+    evitar: []
+    nota: "“global variable” → “variável global”. A palavra-chave `static` é código. Comprehensive Rust pt-BR (mensagens com o termo: 7): variável estática 7, estático 7."
+  - en: "function"
+    pt: "função"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The `main` function is special:"
+    exemplo_pt: "A função `main` é especial:"
+    evitar: []
+    nota: "Plural “funções”. Comprehensive Rust pt-BR (mensagens com o termo: 167): função 167."
+  - en: "parameter"
+    pt: "parâmetro"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Function parameters can also be patterns."
+    exemplo_pt: "Os parâmetros de função também podem ser padrões."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 19): parâmetro 19."
+  - en: "argument"
+    pt: "argumento"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "It parses arguments and reads files."
+    exemplo_pt: "Ele analisa argumentos e lê arquivos."
+    evitar: []
+    nota: "“command line arguments” → “argumentos de linha de comando”. Comprehensive Rust pt-BR (mensagens com o termo: 29): argumento 29."
+  - en: "return"
+    pt: "retornar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Functions can return values to the code that calls them."
+    exemplo_pt: "Funções podem retornar valores para o código que as chama."
+    evitar: []
+    nota: "Use sempre “retornar” (não alterne com “devolver”). “return value” → “valor de retorno”; “return type” → “tipo de retorno”; “early return” → “retorno antecipado”. A palavra-chave `return` é código. Comprehensive Rust pt-BR (mensagens com o termo: 18): valor de retorno 17."
+
+  # -------- Closures e iteradores
+  - en: "closure"
+    pt: "closure"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Unlike functions, closures can capture values from the scope in which they’re defined."
+    exemplo_pt: "Ao contrário das funções, os closures podem capturar valores do escopo em que são definidos."
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*closure(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*closures(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino — “o closure”, “um closure”, “os closures definidos” — pela evidência do CR (um 3, os 1; nenhum feminino) e pela escolha da sessão anterior; o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
+  - en: "capture"
+    pt: "capturar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Functions, on the other hand, are not able to capture their environment in this way."
+    exemplo_pt: "Já as funções não conseguem capturar o ambiente delas dessa forma."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 9): captur- 8."
+  - en: "environment"
+    pt: "ambiente"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Closures That Capture Their Environment"
+    exemplo_pt: "Closures que capturam o próprio ambiente"
+    evitar: []
+    nota: "“environment variable” → “variável de ambiente”; “development environment” → “ambiente de desenvolvimento”. Comprehensive Rust pt-BR (mensagens com o termo: 7): ambiente 7."
+  - en: "iterator"
+    pt: "iterador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "In other words, the `Item` type will be the type returned from the iterator."
+    exemplo_pt: "Em outras palavras, o tipo `Item` será o tipo retornado pelo iterador."
+    evitar:
+      - '(?<![^\W_])iterators?(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). O trait `Iterator` é código. Comprehensive Rust pt-BR (mensagens com o termo: 17): iterador 16, iterator 1."
+  - en: "adapter"
+    pt: "adaptador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Iterator adapters are lazy, and we need to consume the iterator here."
+    exemplo_pt: "Os adaptadores de iterador são preguiçosos, e precisamos consumir o iterador aqui."
+    evitar:
+      - '(?<![^\W_])adapt[eo]rs?(?![^\W_])'
+    nota: "“iterator adapter” → “adaptador de iterador”; “consuming adapter” → “adaptador consumidor”. O livro usa as grafias “adapter” e “adaptor”. Comprehensive Rust pt-BR (mensagens com o termo: 2): adaptador 0."
+  - en: "lazy"
+    pt: "preguiçoso"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Remember, these don’t do anything yet, because futures are lazy and we haven’t yet awaited them."
+    exemplo_pt: "Lembre-se: elas ainda não fazem nada, porque as futures são preguiçosas e ainda não as aguardamos."
+    evitar:
+      - '(?<![^\W_])(?:lazy|lazily|laziness)(?![^\W_])'
+    nota: "“laziness” → “preguiça” (como em “avaliação preguiçosa”). Comprehensive Rust pt-BR (mensagens com o termo: 2): preguiç- 1, lazy 2, tardi- 0."
+
+  # -------- Erros
+  - en: "panic"
+    pt: "pânico"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "In this situation, Rust will panic."
+    exemplo_pt: "Nessa situação, o Rust vai entrar em pânico."
+    evitar:
+      - '(?<![^\W_])panic(?:s|ked|king)?(?![^\W_])(?!!)'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). “a panic” → “um pânico”; “to panic” → “entrar em pânico” (“the program panics” → “o programa entra em pânico”; “cause a panic” → “causar um pânico”). A macro `panic!` é código. Comprehensive Rust pt-BR (mensagens com o termo: 39): pânico 32, panic 8."
+  - en: "unwinding"
+    pt: "desenrolamento"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Unwinding the Stack or Aborting in Response to a Panic"
+    exemplo_pt: "Desenrolando a pilha ou abortando em resposta a um pânico"
+    evitar:
+      - '(?<![^\W_])unwind(?:s|ing)?(?![^\W_])'
+    nota: "“unwind” → “desenrolar”; “abort” → “abortar”. Comprehensive Rust pt-BR (mensagens com o termo: 4): desenrol- 1, unwind 0."
+  - en: "recoverable error"
+    pt: "erro recuperável"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Recoverable Errors with `Result`"
+    exemplo_pt: "Erros recuperáveis com `Result`"
+    evitar:
+      - '(?<![^\W_])recoverable(?![^\W_])'
+    nota: "“recover from errors” → “se recuperar de erros”. Comprehensive Rust pt-BR (mensagens com o termo: 2): recuperável 1."
+  - en: "unrecoverable error"
+    pt: "erro irrecuperável"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "But we’ve decided in this case that trying to create a thread pool without any threads should be an unrecoverable error."
+    exemplo_pt: "Mas decidimos que, neste caso, tentar criar um pool de threads sem nenhuma thread deve ser um erro irrecuperável."
+    evitar:
+      - '(?<![^\W_])unrecoverable(?![^\W_])'
+    nota: "Ver “recoverable error” e “panic”."
+  - en: "error handling"
+    pt: "tratamento de erros"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Now we’ll work on fixing our error handling."
+    exemplo_pt: "Agora vamos corrigir o nosso tratamento de erros."
+    evitar:
+      - '(?<![^\W_])error[ -]handling(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 28): tratamento de erros 28."
+  - en: "propagate"
+    pt: "propagar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "This pattern of propagating errors is so common in Rust that Rust provides the question mark operator `?` to make this easier."
+    exemplo_pt: "Esse padrão de propagar erros é tão comum no Rust que o Rust oferece o operador ponto de interrogação `?` para facilitar isso."
+    evitar:
+      - '(?<![^\W_])propagat(?:e|es|ed|ing|ion)(?![^\W_])'
+    nota: "“error propagation” → “propagação de erros”; “question mark operator” → “operador ponto de interrogação”. Comprehensive Rust pt-BR (mensagens com o termo: 2): propag- 2."
+  - en: "backtrace"
+    pt: "backtrace"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Backtraces in Rust work as they do in other languages:"
+    exemplo_pt: "Os backtraces no Rust funcionam como em outras linguagens:"
+    evitar: []
+    nota: "Fica em inglês, no masculino, como no glossário antigo. A variável `RUST_BACKTRACE` é código. Comprehensive Rust pt-BR: nenhuma mensagem com o termo."
+  - en: "compiler error"
+    pt: "erro de compilação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ll get this compiler error:"
+    exemplo_pt: "Vamos receber este erro de compilação:"
+    evitar: []
+    nota: "“compile-time error” → “erro em tempo de compilação”; “the compiler gives us this error” → “o compilador nos dá este erro”."
+  - en: "warning"
+    pt: "aviso"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "However, this code produces a warning:"
+    exemplo_pt: "No entanto, este código gera um aviso:"
+    evitar: []
+    nota: "Como no glossário antigo (o CR usa “alerta”). Vale para os warnings do compilador. Comprehensive Rust pt-BR (mensagens com o termo: 2): aviso 0, alerta 2, advertência 0."
+  - en: "bug"
+    pt: "bug"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Consider this version of our `plus_one` function, which has a bug and won’t compile:"
+    exemplo_pt: "Considere esta versão da nossa função `plus_one`, que tem um bug e não compila:"
+    evitar: []
+    nota: "Uso corrente em pt-BR; plural “bugs”."
+  - en: "crash"
+    pt: "falhar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "If the user enters a non-number answer, the program will crash."
+    exemplo_pt: "Se o usuário digitar uma resposta que não é um número, o programa vai falhar."
+    evitar:
+      - '(?<![^\W_])crash(?:es|ed|ing|ar|ou|ando|ad[oa]s?)?(?![^\W_])'
+    nota: "“crash the program” → “derrubar o programa” ou “fazer o programa falhar”; “crashing” → “falha”. Não use “crashar” nem “travar” (em pt-BR, travar é congelar)."
+  - en: "undefined behavior"
+    pt: "comportamento indefinido"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "In C, attempting to read beyond the end of a data structure is undefined behavior."
+    exemplo_pt: "Em C, tentar ler além do fim de uma estrutura de dados é comportamento indefinido."
+    evitar:
+      - '(?<![^\W_])undefined behaviou?rs?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 9): comportamento indefinido 9, não definido 0."
+  - en: "behavior"
+    pt: "comportamento"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Defining Shared Behavior with Traits"
+    exemplo_pt: "Definindo comportamento compartilhado com traits"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 25): comportamento 25."
+
+  # -------- Pacotes, crates e módulos
+  - en: "package"
+    pt: "pacote"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Depending on an External Package"
+    exemplo_pt: "Dependendo de um pacote externo"
+    evitar:
+      - '(?<!software )(?<![^\W_])packages?(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Um pacote contém um ou mais crates. Exceção: o nome próprio “Software Package Data Exchange” (SPDX). A regra `package-em-ingles` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 10): pacote 10, package 1."
+  - en: "crate"
+    pt: "crate"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Adding Metadata to a New Crate"
+    exemplo_pt: "Adicionando metadados a um novo crate"
+    evitar:
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*crate(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*crates(?![^\W_])'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o crate”, “os crates”) pela evidência do CR (o 30, um 17, do 12, seu 5); o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
+  - en: "binary crate"
+    pt: "crate binário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Each file will be a separate binary crate."
+    exemplo_pt: "Cada arquivo será um crate binário separado."
+    evitar: []
+    nota: "Masculino, como “crate”."
+  - en: "library crate"
+    pt: "crate de biblioteca"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Splitting Code into a Library Crate"
+    exemplo_pt: "Separando o código em um crate de biblioteca"
+    evitar: []
+    nota: "Masculino, como “crate”."
+  - en: "crate root"
+    pt: "raiz do crate"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "In a module path, refers to the crate root."
+    exemplo_pt: "Em um caminho de módulo, refere-se à raiz do crate."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): raiz do crate 0."
+  - en: "module"
+    pt: "módulo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Grouping Related Code in Modules"
+    exemplo_pt: "Agrupando código relacionado em módulos"
+    evitar: []
+    nota: "“module system” → “sistema de módulos”; “child module” → “módulo filho”; “sibling modules” → “módulos irmãos”. Comprehensive Rust pt-BR (mensagens com o termo: 56): módulo 56."
+  - en: "module tree"
+    pt: "árvore de módulos"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The module tree should be defined in _src/lib.rs_."
+    exemplo_pt: "A árvore de módulos deve ser definida em _src/lib.rs_."
+    evitar: []
+    nota: "Plural “árvores de módulos”."
+  - en: "path"
+    pt: "caminho"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A path can take two forms:"
+    exemplo_pt: "Um caminho pode ter duas formas:"
+    evitar: []
+    nota: "“absolute path” → “caminho absoluto”; “relative path” → “caminho relativo”; “nested paths” → “caminhos aninhados”; “file path” → “caminho de arquivo”. Comprehensive Rust pt-BR (mensagens com o termo: 16): caminho 13."
+  - en: "parent module"
+    pt: "módulo pai"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Code within a module is private from its parent modules by default."
+    exemplo_pt: "Por padrão, o código dentro de um módulo é privado em relação aos módulos pais."
+    evitar: []
+    nota: "“child module” → “módulo filho”; plurais “módulos pais”, “módulos filhos”."
+  - en: "public"
+    pt: "público"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "It can only use the public API."
+    exemplo_pt: "Ele só pode usar a API pública."
+    evitar: []
+    nota: "“make public” → “tornar público”; “public API” → “API pública”."
+  - en: "private"
+    pt: "privado"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "The error messages say that module `hosting` is private."
+    exemplo_pt: "As mensagens de erro dizem que o módulo `hosting` é privado."
+    evitar: []
+    nota: "“privacy” → “privacidade”; “privacy rules” → “regras de privacidade”."
+  - en: "item"
+    pt: "item"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "For example, if you request the first item in a non-empty list, you would get a value."
+    exemplo_pt: "Por exemplo, se você pedir o primeiro item de uma lista não vazia, receberá um valor."
+    evitar: []
+    nota: "Plural “itens”, sem acento. “items in a module” → “itens de um módulo”. Comprehensive Rust pt-BR (mensagens com o termo: 17): item 17."
+  - en: "re-export"
+    pt: "reexportar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Re-exporting Names with `pub use`"
+    exemplo_pt: "Reexportando nomes com `pub use`"
+    evitar:
+      - '(?<![^\W_])re-?export(?:s|ed|ing)?(?![^\W_])'
+    nota: "O substantivo → “reexportação”. Grafia sem hífen. Comprehensive Rust pt-BR (mensagens com o termo: 3): reexport- 3."
+  - en: "glob"
+    pt: "glob"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Be careful when using the glob operator!"
+    exemplo_pt: "Cuidado ao usar o operador glob!"
+    evitar: []
+    nota: "É o operador `*` em `use`: “glob operator” → “operador glob”; “glob import” → “importação glob”."
+  - en: "workspace"
+    pt: "workspace"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Organize large projects with workspaces."
+    exemplo_pt: "Organize projetos grandes com workspaces."
+    evitar:
+      - '(?<![^\W_])espaços? de trabalho(?![^\W_])'
+    nota: "Fica em inglês, no masculino (“o workspace”), como no glossário antigo e na documentação do Cargo; o CR tem uma única ocorrência do termo (“espaço de trabalho”). A seção `[workspace]` do _Cargo.toml_ é código."
+  - en: "dependency"
+    pt: "dependência"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This project doesn’t have dependencies, so the file is a bit sparse."
+    exemplo_pt: "Este projeto não tem dependências, então o arquivo está meio vazio."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 16): dependência 16."
+  - en: "crates.io"
+    pt: "crates.io"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "More About Cargo and Crates.io"
+    exemplo_pt: "Mais sobre o Cargo e o crates.io"
+    evitar: []
+    nota: "Nome do registro de crates, no masculino (“o crates.io”, “no crates.io”); em início de frase o livro escreve “Crates.io”. “registry” → “registro”; “publish” → “publicar” (“publicar um crate”); “yank” → “retirar” (“retirar uma versão”; o comando `cargo yank` é código). Comprehensive Rust pt-BR (mensagens com o termo: 1): registro 1."
+  - en: "cargo"
+    pt: "Cargo"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Creating a Project with Cargo"
+    exemplo_pt: "Criando um projeto com o Cargo"
+    evitar: []
+    nota: "Nome próprio da ferramenta, com artigo masculino (“o Cargo”). O comando `cargo` é código; o arquivo _Cargo.toml_ fica como está."
+  - en: "documentation comment"
+    pt: "comentário de documentação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Place documentation comments just before the item they’re documenting."
+    exemplo_pt: "Coloque os comentários de documentação logo antes do item que eles documentam."
+    evitar:
+      - '(?<![^\W_])doc(?:umentation)? comments?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 3): comentário de documentação 2."
+  - en: "documentation test"
+    pt: "teste de documentação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We don’t have any documentation tests yet, but Rust can compile any code examples that appear in our API documentation."
+    exemplo_pt: "Ainda não temos nenhum teste de documentação, mas o Rust consegue compilar qualquer exemplo de código que apareça na documentação da nossa API."
+    evitar:
+      - '(?<![^\W_])doc(?:umentation)?[ -]tests?(?![^\W_])'
+    nota: "“doc test” → “teste de documentação”."
+  - en: "profile"
+    pt: "perfil"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Customizing Builds with Release Profiles"
+    exemplo_pt: "Personalizando compilações com perfis de release"
+    evitar: []
+    nota: "Plural “perfis”. Os perfis do Cargo se chamam `dev` e `release`: “release profile” → “perfil de release”; “dev profile” → “perfil dev”. Comprehensive Rust pt-BR (mensagens com o termo: 2): perfil 2."
+  - en: "release"
+    pt: "versão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Now, there are two releases:"
+    exemplo_pt: "Agora existem duas versões:"
+    evitar: []
+    nota: "No sentido de versão publicada → “versão”; o verbo → “lançar” ou “publicar”; “release channel” → “canal de lançamento”. No sentido de modo de compilação fica “release”, como no CR: “release build” → “compilação de release”; “release mode” → “modo release”; “release profile” → “perfil de release”. O diretório _target/release_ fica. Comprehensive Rust pt-BR (mensagens com o termo: 11): versão 3, lançamento 3, release 4."
+  - en: "edition"
+    pt: "edição"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Most features will be available on all editions."
+    exemplo_pt: "A maioria dos recursos estará disponível em todas as edições."
+    evitar: []
+    nota: "O nome de uma edição leva maiúscula: “Edição Rust 2024”. A chave `edition` do _Cargo.toml_ é código. Comprehensive Rust pt-BR (mensagens com o termo: 6): edição 6."
+  - en: "feature"
+    pt: "recurso"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "So how do you learn about these new features?"
+    exemplo_pt: "Então, como você fica sabendo desses novos recursos?"
+    evitar:
+      - '(?<![^\W_])features?(?![^\W_])'
+    nota: "“language feature” → “recurso da linguagem”; “feature flag” → “flag de recurso”. “functionality” → “funcionalidade”. Comprehensive Rust pt-BR (mensagens com o termo: 24): recurso 19, funcionalidade 2, característica 2, feature 1."
+  - en: "functionality"
+    pt: "funcionalidade"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Increasing Functionality with a Crate"
+    exemplo_pt: "Ampliando a funcionalidade com um crate"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 15): funcionalidade 15, recurso 0."
+
+  # -------- Compilação, testes e ferramentas
+  - en: "compiler"
+    pt: "compilador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The compiler gives us this error:"
+    exemplo_pt: "O compilador nos dá este erro:"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 59): compilador 58."
+  - en: "compile"
+    pt: "compilar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Now the code will compile!"
+    exemplo_pt: "Agora o código vai compilar!"
+    evitar: []
+    nota: "“compilation” → “compilação”. Ver também “build”."
+  - en: "compile time"
+    pt: "tempo de compilação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We need a macro to generate code at compile time."
+    exemplo_pt: "Precisamos de uma macro para gerar código em tempo de compilação."
+    evitar:
+      - '(?<![^\W_])compile[ -]time(?![^\W_])'
+    nota: "“at compile time” → “em tempo de compilação”; “compile-time error” → “erro em tempo de compilação”. Comprehensive Rust pt-BR (mensagens com o termo: 13): tempo de compilação 13, em compilação 13."
+  - en: "runtime"
+    pt: "runtime"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Yielding Control to the Runtime"
+    exemplo_pt: "Cedendo o controle ao runtime"
+    evitar: []
+    nota: "Dois sentidos: (1) o runtime assíncrono (o software que executa futures) fica em inglês, no masculino (“o runtime”, “um runtime”; CR: um 5, o 1); “executor” (a parte do runtime que executa as tarefas) → “executor”; (2) “at runtime” → “em tempo de execução”, e “runtime performance” → “desempenho em tempo de execução”. Comprehensive Rust pt-BR (mensagens com o termo: 36): runtime 10, tempo de execução 25, ambiente de execução 0."
+  - en: "build"
+    pt: "compilar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: decidido
+    exemplo_en: "At this point, we can build the workspace by running `cargo build`."
+    exemplo_pt: "Neste ponto, podemos compilar o workspace executando `cargo build`."
+    evitar:
+      - '(?<!cargo )(?<![\w/\\.-])build(?:s|ing|ar|ando|ad[oa]s?|ou)?(?![\w/\\]|\.\w)'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Nunca “fazer o build” nem “buildar” (regras `fazer-o-build` e `buildar` de erros-recorrentes.yml). O substantivo (“a build”) → “uma compilação”; “build system/tool” → “sistema/ferramenta de compilação”; “reproducible builds” → “compilações reproduzíveis”; “debug build” → “compilação de depuração”; “release build” → “compilação de release”. Quando “build” é construir algo (“Building a Command Line Program”) → “construir” ou “criar”. `cargo build` e _build.rs_ ficam como estão. Comprehensive Rust pt-BR (mensagens com o termo: 83): compil- 61, constru- 14, build 2."
+  - en: "run"
+    pt: "executar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Let’s run the program now:"
+    exemplo_pt: "Vamos executar o programa agora:"
+    evitar: []
+    nota: "“execute” → “executar”; “executable” → “executável”."
+  - en: "binary"
+    pt: "binário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The Cargo package also contains a library crate that the binary crate depends on."
+    exemplo_pt: "O pacote Cargo também contém um crate de biblioteca do qual o crate binário depende."
+    evitar: []
+    nota: "“binary target” → “alvo binário”. Comprehensive Rust pt-BR (mensagens com o termo: 39): binário 39."
+  - en: "library"
+    pt: "biblioteca"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Listing 15-20 shows the library code."
+    exemplo_pt: "A Listagem 15-20 mostra o código da biblioteca."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 69): biblioteca 66."
+  - en: "standard library"
+    pt: "biblioteca padrão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Consider the `std::io` module in the standard library."
+    exemplo_pt: "Considere o módulo `std::io` da biblioteca padrão."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 27): biblioteca padrão 26."
+  - en: "prelude"
+    pt: "prelúdio"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Its variants are also included in the prelude:"
+    exemplo_pt: "As variantes dele também estão no prelúdio:"
+    evitar:
+      - '(?<![^\W_])preludes?(?![^\W_])'
+    nota: "“prelude pattern” → “padrão de prelúdio”. Comprehensive Rust pt-BR (mensagens com o termo: 1): prelúdio 1, prelude 0."
+  - en: "toolchain"
+    pt: "conjunto de ferramentas"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "As you can see, the stable toolchain is the default."
+    exemplo_pt: "Como você pode ver, o conjunto de ferramentas stable é o padrão."
+    evitar:
+      - '(?<![^\W_])toolchains?(?![^\W_])'
+    nota: "Como no CR. O comando `rustup toolchain` é código. Comprehensive Rust pt-BR (mensagens com o termo: 6): toolchain 0, conjunto de ferramentas 6, cadeia de ferramentas 0."
+  - en: "nightly"
+    pt: "nightly"
+    manter_ingles: true
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Rustup and the Role of Rust Nightly"
+    exemplo_pt: "O rustup e o papel do Rust nightly"
+    evitar:
+      - '(?<![^\W_])noturn[oa]s?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Os nomes dos canais de lançamento (nightly, beta, stable) ficam em inglês: “nightly Rust” → “Rust nightly”; “nightly version” → “versão nightly”. Nunca “noturno” (regras `rust-noturno` e `noturno-ambiguo` de erros-recorrentes.yml). Comprehensive Rust pt-BR (mensagens com o termo: 4): nightly 4, noturno 0."
+  - en: "beta"
+    pt: "beta"
+    manter_ingles: true
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Six weeks after the first beta was created, it’s time for a stable release!"
+    exemplo_pt: "Seis semanas depois de criado o primeiro beta, é hora de uma versão stable!"
+    evitar: []
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Nome de canal, como “nightly”; “beta release” → “versão beta”. Comprehensive Rust pt-BR (mensagens com o termo: 6): nightly/beta/stable 4."
+  - en: "stable"
+    pt: "stable"
+    manter_ingles: true
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "By default, you’ll have stable Rust installed."
+    exemplo_pt: "Por padrão, você terá o Rust stable instalado."
+    evitar:
+      - '(?<![^\W_])(?:rust|canal|toolchain|compilador)\s+estáve(?:l|is)(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Só o nome do canal fica em inglês (“Rust stable”, “versão stable”, “canal stable”); fora disso, “stable” é “estável” (“API estável”). A regra `canal-stable-traduzido` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 5): stable 2, estável 3."
+  - en: "debug"
+    pt: "depuração"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "In order to get backtraces with this information, debug symbols must be enabled."
+    exemplo_pt: "Para obter backtraces com essas informações, os símbolos de depuração precisam estar ativados."
+    evitar:
+      - '(?<![\w/\\.-])debug(?:ging|ger|gers|ar|ando|ad[oa]s?|ou)?(?![\w/\\]|\.\w)'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. “to debug” → “depurar”; “debugger” → “depurador”; “debug build/mode” → “compilação/modo de depuração”. O trait `Debug`, o diretório _target/debug_ e a formatação `{:?}` ficam como estão. Comprehensive Rust pt-BR (mensagens com o termo: 20): depura- 10, debug 9."
+  - en: "test"
+    pt: "teste"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: decidido
+    exemplo_en: "Our test caught the bug!"
+    exemplo_pt: "Nosso teste pegou o bug!"
+    evitar:
+      - '(?<!cargo )(?<!unit )(?<!integration )(?<![\w/\\.-])(?:tests?|testing)(?![\w/\\]|\.\w)'
+    nota: "Decisão do mantenedor (CONTRATO §7.1). “to test” → “testar”; “testing” → “testes”; “test function” → “função de teste”; “test suite” → “conjunto de testes”; “test runner” → “executor de testes”. Nomes de diretório e caminhos (_tests_, _tests/common.rs_) e o comando `cargo test` ficam como estão. Comprehensive Rust pt-BR (mensagens com o termo: 88): teste 66, test 11."
+  - en: "unit test"
+    pt: "teste unitário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "You’ll put unit tests in the _src_ directory in each file with the code that they’re testing."
+    exemplo_pt: "Você vai colocar os testes unitários no diretório _src_, em cada arquivo com o código que eles testam."
+    evitar:
+      - '(?<![^\W_])(?:unit tests?|testes? de unidade)(?![^\W_])'
+    nota: "Como no CR e no glossário antigo. Comprehensive Rust pt-BR (mensagens com o termo: 15): teste de unidade 0, teste unitário 15, unit test 0."
+  - en: "integration test"
+    pt: "teste de integração"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Let’s create an integration test."
+    exemplo_pt: "Vamos criar um teste de integração."
+    evitar:
+      - '(?<![^\W_])integration tests?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 5): teste de integração 5."
+  - en: "assertion"
+    pt: "asserção"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This assertion serves as an example of the format for a typical test."
+    exemplo_pt: "Essa asserção serve de exemplo do formato de um teste típico."
+    evitar: []
+    nota: "As macros `assert!` e `assert_eq!` são código. Comprehensive Rust pt-BR (mensagens com o termo: 4): asserção 2, afirmação 0, assert 1."
+  - en: "test-driven development"
+    pt: "desenvolvimento orientado a testes"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Adding Functionality with Test-Driven Development"
+    exemplo_pt: "Adicionando funcionalidade com desenvolvimento orientado a testes"
+    evitar:
+      - '(?<![^\W_])test[ -]driven(?![^\W_])'
+    nota: "A sigla TDD fica."
+  - en: "attribute"
+    pt: "atributo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Procedural Macros for Generating Code from Attributes"
+    exemplo_pt: "Macros procedurais para gerar código a partir de atributos"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 6): atributo 6."
+  - en: "derive"
+    pt: "derivar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "You can derive `Copy` on any type whose parts all implement `Copy`."
+    exemplo_pt: "Você pode derivar `Copy` em qualquer tipo cujas partes implementem `Copy`."
+    evitar: []
+    nota: "“derivable traits” → “traits deriváveis”; “custom `derive` macro” → “macro `derive` personalizada”. O atributo `#[derive]` é código. Comprehensive Rust pt-BR (mensagens com o termo: 16): deriv- 14, derive 1."
+  - en: "lint"
+    pt: "lint"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "To run Clippy’s lints on any Cargo project, enter the following:"
+    exemplo_pt: "Para executar os lints do Clippy em qualquer projeto Cargo, digite o seguinte:"
+    evitar: []
+    nota: "Fica em inglês, no masculino, como no CR. “linter” também fica. Comprehensive Rust pt-BR (mensagens com o termo: 6): lint 5, verificação 0."
+  - en: "formatter"
+    pt: "formatador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "you can use an automatic formatter tool called `rustfmt`"
+    exemplo_pt: "você pode usar um formatador automático chamado `rustfmt`"
+    evitar:
+      - '(?<![^\W_])formatters?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 2): formatador 1."
+  - en: "command line"
+    pt: "linha de comando"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Building a Command Line Program"
+    exemplo_pt: "Construindo um programa de linha de comando"
+    evitar:
+      - '(?<![^\W_])command[ -]line(?![^\W_])'
+    nota: "“command line tool” → “ferramenta de linha de comando”; “command line arguments” → “argumentos de linha de comando”. Comprehensive Rust pt-BR (mensagens com o termo: 4): linha de comando 4."
+  - en: "environment variable"
+    pt: "variável de ambiente"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Finally, we need to check for the environment variable."
+    exemplo_pt: "Por fim, precisamos verificar a variável de ambiente."
+    evitar:
+      - '(?<![^\W_])environment variables?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR: nenhuma mensagem com o termo."
+  - en: "standard output"
+    pt: "saída padrão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Yup, our error message is being printed to standard output."
+    exemplo_pt: "Pois é, nossa mensagem de erro está sendo impressa na saída padrão."
+    evitar:
+      - '(?<![^\W_])standard output(?![^\W_])'
+    nota: "`stdout` é código. “standard input” → “entrada padrão”. Comprehensive Rust pt-BR (mensagens com o termo: 5): saída/entrada padrão 5."
+  - en: "standard error"
+    pt: "saída de erro padrão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Printing Errors to Standard Error"
+    exemplo_pt: "Imprimindo erros na saída de erro padrão"
+    evitar:
+      - '(?<![^\W_])standard error(?![^\W_])'
+    nota: "`stderr` é código."
+  - en: "output"
+    pt: "saída"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "That output has been captured."
+    exemplo_pt: "Essa saída foi capturada."
+    evitar: []
+    nota: "“input” → “entrada” (“user input” → “entrada do usuário”). O resultado de uma função ou cálculo → “resultado”. Comprehensive Rust pt-BR (mensagens com o termo: 19): saída 18, resultado 1."
+  - en: "user"
+    pt: "usuário"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "It doesn’t seem like the user can quit!"
+    exemplo_pt: "Parece que o usuário não consegue sair!"
+    evitar:
+      - '(?<![^\W_])utilizador(?:es|as?)?(?![^\W_])'
+    nota: "Grafia e termo do pt-BR, nunca “utilizador” (pt-PT). Comprehensive Rust pt-BR (mensagens com o termo: 16): usuário 15, utilizador 0."
+  - en: "file"
+    pt: "arquivo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We need `std::fs` to handle files."
+    exemplo_pt: "Precisamos de `std::fs` para lidar com arquivos."
+    evitar:
+      - '(?<![^\W_])ficheiros?(?![^\W_])'
+    nota: "Termo do pt-BR, nunca “ficheiro” (pt-PT). Comprehensive Rust pt-BR (mensagens com o termo: 78): arquivo 77, ficheiro 0."
+  - en: "directory"
+    pt: "diretório"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The project directory now looks like this:"
+    exemplo_pt: "O diretório do projeto agora está assim:"
+    evitar:
+      - '(?<![^\W_])directórios?(?![^\W_])'
+    nota: "“folder” → “pasta”. Grafia brasileira, sem “c”. Comprehensive Rust pt-BR (mensagens com o termo: 16): diretório 15, pasta 0."
+  - en: "api"
+    pt: "API"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Exporting a Convenient Public API"
+    exemplo_pt: "Exportando uma API pública conveniente"
+    evitar: []
+    nota: "Feminino (“a API”). Por extenso: “interface de programação de aplicações”. Comprehensive Rust pt-BR (mensagens com o termo: 22): API 16."
+  - en: "keyword"
+    pt: "palavra-chave"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "For example, `match` is a keyword."
+    exemplo_pt: "Por exemplo, `match` é uma palavra-chave."
+    evitar: []
+    nota: "Plural “palavras-chave”; “reserved keyword” → “palavra-chave reservada”. Comprehensive Rust pt-BR (mensagens com o termo: 16): palavra-chave 15, palavra reservada 2."
+  - en: "operator"
+    pt: "operador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Where to Use the `?` Operator"
+    exemplo_pt: "Onde usar o operador `?`"
+    evitar: []
+    nota: "“operator overloading” → “sobrecarga de operadores”. Comprehensive Rust pt-BR (mensagens com o termo: 20): operador 20."
+
+  # -------- Orientação a objetos
+  - en: "instance"
+    pt: "instância"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "We have two instances of this struct."
+    exemplo_pt: "Temos duas instâncias deste struct."
+    evitar: []
+    nota: "“instantiate” → “instanciar”. Comprehensive Rust pt-BR (mensagens com o termo: 19): instância 13."
+  - en: "object"
+    pt: "objeto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Objects Contain Data and Behavior"
+    exemplo_pt: "Objetos contêm dados e comportamento"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 48): objeto 48."
+  - en: "object-oriented"
+    pt: "orientado a objetos"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Implementing an Object-Oriented Design Pattern"
+    exemplo_pt: "Implementando um padrão de projeto orientado a objetos"
+    evitar:
+      - '(?<![^\W_])object[ -]oriented(?![^\W_])'
+    nota: "“object-oriented programming” → “programação orientada a objetos”. Comprehensive Rust pt-BR (mensagens com o termo: 1): orientad- a objetos 0."
+  - en: "encapsulation"
+    pt: "encapsulamento"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Encapsulation That Hides Implementation Details"
+    exemplo_pt: "Encapsulamento que esconde detalhes de implementação"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): encapsul- 1."
+  - en: "inheritance"
+    pt: "herança"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "You would choose inheritance for two main reasons."
+    exemplo_pt: "Você escolheria herança por dois motivos principais."
+    evitar: []
+    nota: "“inherit” → “herdar”. Comprehensive Rust pt-BR (mensagens com o termo: 3): herança/herdar 3."
+  - en: "polymorphism"
+    pt: "polimorfismo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "To many people, polymorphism is synonymous with inheritance."
+    exemplo_pt: "Para muita gente, polimorfismo é sinônimo de herança."
+    evitar: []
+    nota: "“bounded parametric polymorphism” → “polimorfismo paramétrico limitado”. Comprehensive Rust pt-BR (mensagens com o termo: 1): polimorf- 1."
+  - en: "design pattern"
+    pt: "padrão de projeto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The _state pattern_ is an object-oriented design pattern."
+    exemplo_pt: "O _padrão de estado_ é um padrão de projeto orientado a objetos."
+    evitar:
+      - '(?<![^\W_])design patterns?(?![^\W_])'
+    nota: "“state pattern” → “padrão de estado”; “newtype pattern” → “padrão newtype”; “interior mutability pattern” → “padrão de mutabilidade interior”. Comprehensive Rust pt-BR: nenhuma mensagem com o termo."
+  - en: "wrapper"
+    pt: "wrapper"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Then, the wrapper type is local to our crate, and we can implement the trait on the wrapper."
+    exemplo_pt: "Assim, o tipo wrapper é local ao nosso crate, e podemos implementar o trait no wrapper."
+    evitar: []
+    nota: "Fica em inglês, no masculino, como no CR. “to wrap” (envolver um valor) → “envolver”. Comprehensive Rust pt-BR (mensagens com o termo: 29): wrapper 19, invólucro 7, encapsul- 0."
+
+  # -------- Ponteiros inteligentes
+  - en: "pointer"
+    pt: "ponteiro"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A pointer’s size doesn’t change based on the amount of data it’s pointing to."
+    exemplo_pt: "O tamanho de um ponteiro não muda de acordo com a quantidade de dados para a qual ele aponta."
+    evitar: []
+    nota: "“pointer to X” → “ponteiro para X”; “null pointer” → “ponteiro nulo”."
+  - en: "smart pointer"
+    pt: "ponteiro inteligente"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Treating Smart Pointers Like Regular References"
+    exemplo_pt: "Tratando ponteiros inteligentes como referências comuns"
+    evitar:
+      - '(?<![^\W_])smart pointers?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 11): ponteiro inteligente 10, smart pointer 5."
+  - en: "raw pointer"
+    pt: "ponteiro bruto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Listing 20-2 shows how to create a raw pointer to an arbitrary location in memory."
+    exemplo_pt: "A Listagem 20-2 mostra como criar um ponteiro bruto para um local arbitrário da memória."
+    evitar:
+      - '(?<![^\W_])raw pointers?(?![^\W_])'
+    nota: "Como no glossário antigo. Comprehensive Rust pt-BR (mensagens com o termo: 7): ponteiro bruto 7, ponteiro cru 0, raw pointer 3."
+  - en: "deref coercion"
+    pt: "coerção de desreferência"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Using Deref Coercion in Functions and Methods"
+    exemplo_pt: "Usando a coerção de desreferência em funções e métodos"
+    evitar:
+      - '(?<![^\W_])deref coercions?(?![^\W_])'
+    nota: "Segue “desreferenciar”. O trait `Deref` é código. Sem precedente no CR."
+  - en: "reference counting"
+    pt: "contagem de referências"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "When we discuss concurrency in Chapter 16, we’ll cover how to do reference counting in multithreaded programs."
+    exemplo_pt: "Quando falarmos de concorrência no Capítulo 16, veremos como fazer contagem de referências em programas multithread."
+    evitar:
+      - '(?<![^\W_])reference[ -]count(?:ing|ed)(?![^\W_])'
+    nota: "“reference-counted” → “com contagem de referências”; “atomically reference-counted” → “com contagem atômica de referências”. `Rc<T>` e `Arc<T>` são código. Comprehensive Rust pt-BR (mensagens com o termo: 10): contagem de referências 9, contado por referência 0, contagem 9."
+  - en: "interior mutability"
+    pt: "mutabilidade interior"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This is a situation in which interior mutability can help!"
+    exemplo_pt: "Esta é uma situação em que a mutabilidade interior pode ajudar!"
+    evitar:
+      - '(?<![^\W_])interior mutability(?![^\W_])'
+    nota: "O CR divide-se entre “interior” e “interna”; use “interior”. Comprehensive Rust pt-BR (mensagens com o termo: 8): mutabilidade interior 4, mutabilidade interna 4."
+  - en: "reference cycle"
+    pt: "ciclo de referências"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Right after we create the reference cycle, the program ends."
+    exemplo_pt: "Logo depois que criamos o ciclo de referências, o programa termina."
+    evitar:
+      - '(?<![^\W_])reference cycles?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 3): ciclo 3."
+  - en: "weak reference"
+    pt: "referência fraca"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This is a case for weak references!"
+    exemplo_pt: "Este é um caso para referências fracas!"
+    evitar:
+      - '(?<![^\W_])weak references?(?![^\W_])'
+    nota: "“weak count” → “contagem fraca”; “strong count” → “contagem forte”. `Weak<T>` é código."
+
+  # -------- Concorrência
+  - en: "thread"
+    pt: "thread"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Waiting for All Threads to Finish"
+    exemplo_pt: "Esperando todas as threads terminarem"
+    evitar:
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*thread(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*threads(?![^\W_])'
+      - '(?<![^\W_])linhas? de execução(?![^\W_])'
+    nota: "Fica em inglês, no feminino (“a thread”, “uma thread”, “as threads”), a forma mais frequente no CR (a thread principal, a thread filha, a thread atual: cerca de 17 usos no feminino contra 11 no masculino) e a da tradução antiga. “main thread” → “thread principal”; “spawned thread” → “thread criada”; “multithreaded” → “multithread”; “single-threaded” → “de thread única”. Comprehensive Rust pt-BR (mensagens com o termo: 80): thread 76, linha de execução 0, encadeamento 0."
+  - en: "spawn"
+    pt: "criar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Spawning a Thread for Each Request"
+    exemplo_pt: "Criando uma thread para cada requisição"
+    evitar:
+      - '(?<![^\W_])spawn(?:s|ed|ing|ar|ando|ad[oa]s?)?(?![^\W_])'
+    nota: "“spawn a thread/task” → “criar uma thread/tarefa”; “spawned threads” → “threads criadas”. `thread::spawn` é código. Comprehensive Rust pt-BR (mensagens com o termo: 7): cri- 0, inici- 2, gerar 0, dispar- 0, spawn 1."
+  - en: "join"
+    pt: "esperar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "When the pool is dropped, our threads should all join to make sure they finish their work."
+    exemplo_pt: "Quando o pool for descartado, devemos esperar todas as threads terminarem para garantir que elas concluam o trabalho."
+    evitar: []
+    nota: "“join a thread” → “esperar a thread terminar”; “join handle” → “handle de join” (o tipo `JoinHandle` é código); combinar futures (“join futures”) → “combinar futures”; “join strings” → “juntar strings”. Comprehensive Rust pt-BR (mensagens com o termo: 7): junt- 1, aguard-/esper- 1, join 3."
+  - en: "thread pool"
+    pt: "pool de threads"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Our thread pool is now in a working state!"
+    exemplo_pt: "Nosso pool de threads agora está funcionando!"
+    evitar:
+      - '(?<![^\W_])thread pools?(?![^\W_])'
+    nota: "Masculino (“o pool”). O tipo `ThreadPool` é código. Comprehensive Rust pt-BR (mensagens com o termo: 1): pool 1, conjunto 0."
+  - en: "worker"
+    pt: "worker"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ll call this data structure _Worker_, which is a common term in pooling implementations."
+    exemplo_pt: "Vamos chamar essa estrutura de dados de _Worker_, um termo comum em implementações de pools."
+    evitar: []
+    nota: "No Capítulo 21, “worker” é o papel do struct `Worker`: fica em inglês, no masculino (“o worker”, “os workers”). Fora desse sentido (“the workers in the kitchen”) → “funcionários”. Comprehensive Rust pt-BR (mensagens com o termo: 1): worker 0, trabalhador 1."
+  - en: "job"
+    pt: "job"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Signaling to the Threads to Stop Listening for Jobs"
+    exemplo_pt: "Sinalizando às threads que parem de escutar jobs"
+    evitar: []
+    nota: "No Capítulo 21, “job” é o trabalho enviado pelo canal (o alias de tipo `Job`, um `Box` com um closure): fica em inglês, no masculino (“um job”, “os jobs”). Em expressões comuns (“get the job done”) → “resolver”, “dar conta do recado”. Comprehensive Rust pt-BR (mensagens com o termo: 2): job 0, tarefa 0, trabalho 2."
+  - en: "message passing"
+    pt: "passagem de mensagens"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Message passing is a fine way to handle concurrency, but it’s not the only way."
+    exemplo_pt: "A passagem de mensagens é uma boa maneira de lidar com a concorrência, mas não é a única."
+    evitar:
+      - '(?<![^\W_])message[ -]passing(?![^\W_])'
+    nota: "Como no glossário antigo e no CR. Comprehensive Rust pt-BR (mensagens com o termo: 1): passagem de mensagens 1, troca de mensagens 0."
+  - en: "channel"
+    pt: "canal"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Awaiting `rx.recv` will return `None` only once the other end of the channel is closed."
+    exemplo_pt: "Aguardar `rx.recv` só vai retornar `None` quando a outra ponta do canal for fechada."
+    evitar: []
+    nota: "Plural “canais”; “release channel” → “canal de lançamento”. Comprehensive Rust pt-BR (mensagens com o termo: 31): canal 30, channel 4."
+  - en: "transmitter"
+    pt: "transmissor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A channel has two halves: a transmitter and a receiver."
+    exemplo_pt: "Um canal tem duas metades: um transmissor e um receptor."
+    evitar: []
+    nota: "“sender” no mesmo sentido → “transmissor”. `tx` é código. Comprehensive Rust pt-BR (mensagens com o termo: 4): transmissor 2, remetente 2, emissor 0, sender 0."
+  - en: "receiver"
+    pt: "receptor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The receiver has two useful methods:"
+    exemplo_pt: "O receptor tem dois métodos úteis:"
+    evitar: []
+    nota: "Vale também para o receptor de um método (`self`): “method receivers” → “receptores de método”. `rx` é código. Comprehensive Rust pt-BR (mensagens com o termo: 10): receptor 10, recebedor 0, receiver 0."
+  - en: "mutex"
+    pt: "mutex"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "For an example, let’s look at mutexes, one of the more common concurrency primitives for shared memory."
+    exemplo_pt: "Como exemplo, vamos ver os mutexes, uma das primitivas de concorrência mais comuns para memória compartilhada."
+    evitar: []
+    nota: "Fica em inglês, no masculino (CR: o 1, um 1); plural “mutexes”. `Mutex<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 8): mutex 8."
+  - en: "lock"
+    pt: "lock"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "You must attempt to acquire the lock before using the data."
+    exemplo_pt: "Você precisa tentar adquirir o lock antes de usar os dados."
+    evitar: []
+    nota: "O substantivo fica em inglês, no masculino (“o lock”), como no CR; diverge do glossário antigo (“trava”). O verbo “to lock” → “bloquear”; “locked into” (fixado) → “fixado em”. O método `lock` e o arquivo _Cargo.lock_ ficam como estão. Comprehensive Rust pt-BR (mensagens com o termo: 8): trava 1, bloqueio 2, lock 5."
+  - en: "deadlock"
+    pt: "deadlock"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Deadlocks, in which two threads are waiting for each other, preventing both threads from continuing"
+    exemplo_pt: "Deadlocks, em que duas threads esperam uma pela outra, impedindo as duas de continuar"
+    evitar: []
+    nota: "Fica em inglês, no masculino, como no CR. Comprehensive Rust pt-BR (mensagens com o termo: 5): deadlock 3, impasse 0."
+  - en: "race condition"
+    pt: "condição de corrida"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Race conditions, in which threads are accessing data or resources in an inconsistent order"
+    exemplo_pt: "Condições de corrida, em que threads acessam dados ou recursos em uma ordem inconsistente"
+    evitar:
+      - '(?<![^\W_])race conditions?(?![^\W_])'
+    nota: "Ver também “data race”."
+  - en: "data race"
+    pt: "corrida de dados"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Multiple mutable borrows to the same place can cause data races and inconsistencies."
+    exemplo_pt: "Vários empréstimos mutáveis do mesmo lugar podem causar corridas de dados e inconsistências."
+    evitar:
+      - '(?<![^\W_])data races?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 4): corrida de dados 3, data race 2."
+  - en: "concurrency"
+    pt: "concorrência"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Next, we’ll talk about concurrency in Rust."
+    exemplo_pt: "Em seguida, vamos falar sobre concorrência no Rust."
+    evitar: []
+    nota: "“shared-state concurrency” → “concorrência com estado compartilhado”. Comprehensive Rust pt-BR (mensagens com o termo: 20): concorrência 19."
+  - en: "concurrent"
+    pt: "concorrente"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Now your concurrent work has also become serial."
+    exemplo_pt: "Agora o seu trabalho concorrente também ficou serial."
+    evitar: []
+    nota: "“concurrently” → “de forma concorrente”. Comprehensive Rust pt-BR (mensagens com o termo: 15): concorrente 12."
+  - en: "parallelism"
+    pt: "paralelismo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Parallelism and concurrency can intersect with each other, too."
+    exemplo_pt: "Paralelismo e concorrência também podem se sobrepor."
+    evitar: []
+    nota: "“in parallel” → “em paralelo”. Comprehensive Rust pt-BR (mensagens com o termo: 4): paralel- 4."
+  - en: "fearless concurrency"
+    pt: "concorrência sem medo"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "We’ve nicknamed this aspect of Rust _fearless concurrency_."
+    exemplo_pt: "Apelidamos esse aspecto do Rust de _concorrência sem medo_."
+    evitar:
+      - '(?<![^\W_])(?:fearless|fearlessly)(?![^\W_])'
+    nota: "“fearlessly” → “sem medo”."
+  - en: "atomic"
+    pt: "atômico"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "These types provide safe, concurrent, atomic access to primitive types."
+    exemplo_pt: "Esses tipos oferecem acesso seguro, concorrente e atômico a tipos primitivos."
+    evitar: []
+    nota: "“atomics” → “atômicos” (os tipos de `std::sync::atomic`). Comprehensive Rust pt-BR (mensagens com o termo: 6): atômic- 6."
+  - en: "blocking"
+    pt: "bloqueante"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Return a `Future` instead of blocking the current thread."
+    exemplo_pt: "Retornar um `Future` em vez de bloquear a thread atual."
+    evitar: []
+    nota: "“to block” → “bloquear”; “blocking call” → “chamada bloqueante”; “non-blocking” → “não bloqueante”. Não confundir com “block” = “bloco”. Comprehensive Rust pt-BR (mensagens com o termo: 25): bloque- 10."
+
+  # -------- Async
+  - en: "async"
+    pt: "assíncrono"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "This laziness allows Rust to avoid running async code until it’s actually needed."
+    exemplo_pt: "Essa preguiça permite que o Rust evite executar código assíncrono até que ele seja realmente necessário."
+    evitar: []
+    nota: "Em prosa: “async code” → “código assíncrono”; “async block” → “bloco assíncrono”; “async function” → “função assíncrona”; “async programming” → “programação assíncrona”. A palavra-chave `async` em code span não muda. O CR mantém “_async_” em itálico na maioria das vezes; aqui se traduz. Comprehensive Rust pt-BR (mensagens com o termo: 31): assíncron- 5, async 26."
+  - en: "await"
+    pt: "aguardar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "That means we need something we can await!"
+    exemplo_pt: "Isso significa que precisamos de algo que possamos aguardar!"
+    evitar: []
+    nota: "“await a future” → “aguardar uma future”; “await point” → “ponto de await”. `.await` e a palavra-chave `await` são código. Comprehensive Rust pt-BR (mensagens com o termo: 5): await 2, aguard- 3, esper- 1."
+  - en: "future"
+    pt: "future"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "You may sometimes hear this referred to as one future _starving_ other futures."
+    exemplo_pt: "Às vezes você vai ouvir isso descrito como uma future _matando de fome_ as outras futures."
+    evitar:
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*future(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*futures(?![^\W_])'
+    nota: "Fica em inglês, no feminino (“a future”, “uma future”, “as futures”), como no CR (uma 8, as 5, essa 4; nenhum masculino). O trait `Future` é código. “in the future” (tempo) → “no futuro”. Comprehensive Rust pt-BR (mensagens com o termo: 37): future 32, futuro 5."
+  - en: "stream"
+    pt: "stream"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A stream is like an asynchronous form of iteration."
+    exemplo_pt: "Um stream é como uma forma assíncrona de iteração."
+    evitar: []
+    nota: "Fica em inglês, no masculino (“o stream”; CR: um 2, o 1). Vale também para o stream TCP do Capítulo 21 (`TcpStream` é código). Comprehensive Rust pt-BR (mensagens com o termo: 5): stream 5, fluxo 1."
+  - en: "task"
+    pt: "tarefa"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "In fact, we don’t even need to spawn a task here."
+    exemplo_pt: "Na verdade, nem precisamos criar uma tarefa aqui."
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 30): tarefa 30, task 0."
+  - en: "pin"
+    pt: "fixar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "When we _pin_ a value by wrapping a pointer to that value in `Pin`, it can no longer move."
+    exemplo_pt: "Quando _fixamos_ um valor envolvendo um ponteiro para ele em `Pin`, ele não pode mais se mover."
+    evitar: []
+    nota: "“pinning” → “fixação”; “pinned” → “fixado”. Os tipos `Pin` e `Unpin` são código. O CR mantém “pin”, mas no sentido de pino de hardware. Comprehensive Rust pt-BR (mensagens com o termo: 17): fix- 0, pin 11."
+  - en: "poll"
+    pt: "consultar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "The `recv` call returns a future, and awaiting the future polls it."
+    exemplo_pt: "A chamada a `recv` retorna uma future e, quando aguardamos a future, ela é consultada."
+    evitar: []
+    nota: "“polling” → “consulta”. O método `poll` é código. O CR mantém “poll”, quase sempre como nome do método. Comprehensive Rust pt-BR (mensagens com o termo: 9): poll 8, sond- 0, consult- 1, verific- 0."
+  - en: "yield"
+    pt: "ceder"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "While yielding control in this way is relatively inexpensive, it’s not free."
+    exemplo_pt: "Embora ceder o controle dessa forma seja relativamente barato, não é de graça."
+    evitar: []
+    nota: "“yield control” → “ceder o controle”. Quando “yield” é produzir valores (iteradores, streams) → “produzir”. Comprehensive Rust pt-BR (mensagens com o termo: 2): ced- 0, yield 0, produz- 2."
+  - en: "state machine"
+    pt: "máquina de estados"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "It then creates a corresponding variant in the compiled state machine."
+    exemplo_pt: "Em seguida, ele cria uma variante correspondente na máquina de estados compilada."
+    evitar:
+      - '(?<![^\W_])state machines?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): máquina de estados 1."
+
+  # -------- Macros e código inseguro
+  - en: "macro"
+    pt: "macro"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Next, let’s look at macros!"
+    exemplo_pt: "Agora, vamos ver as macros!"
+    evitar:
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*macro(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*macros(?![^\W_])'
+    nota: "Feminino (“a macro”, “uma macro”), como no CR (a 15, uma 2, da 2 contra o 1, um 1). Macros como `println!` são código. “macro invocation” → “invocação de macro”; “metaprogramming” → “metaprogramação”. Comprehensive Rust pt-BR (mensagens com o termo: 42): macro 42."
+  - en: "declarative macro"
+    pt: "macro declarativa"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The most widely used form of macros in Rust is the _declarative macro_."
+    exemplo_pt: "A forma de macro mais usada no Rust é a _macro declarativa_."
+    evitar:
+      - '(?<![^\W_])declarative macros?(?![^\W_])'
+    nota: "As definidas com `macro_rules!`."
+  - en: "procedural macro"
+    pt: "macro procedural"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The next step is to define the procedural macro."
+    exemplo_pt: "O próximo passo é definir a macro procedural."
+    evitar:
+      - '(?<![^\W_])procedural macros?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 2): macro procedural 2."
+  - en: "attribute-like macro"
+    pt: "macro semelhante a atributo"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Here’s an example of using an attribute-like macro."
+    exemplo_pt: "Aqui está um exemplo de uso de uma macro semelhante a atributo."
+    evitar:
+      - '(?<![^\W_])attribute-like(?![^\W_])'
+    nota: "Um dos três tipos de macro procedural."
+  - en: "function-like macro"
+    pt: "macro semelhante a função"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Function-like macros define macros that look like function calls."
+    exemplo_pt: "As macros semelhantes a funções definem macros que parecem chamadas de função."
+    evitar:
+      - '(?<![^\W_])function-like(?![^\W_])'
+    nota: "Um dos três tipos de macro procedural."
+  - en: "unsafe"
+    pt: "inseguro"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Then, we get to the unsafe code:"
+    exemplo_pt: "Depois, chegamos ao código inseguro:"
+    evitar: []
+    nota: "“unsafe code” → “código inseguro”; “Unsafe Rust” → “Rust inseguro”; “unsafe superpowers” → “superpoderes inseguros”. Quando o original traz a palavra-chave em code span (“`unsafe` block”), ela fica: “bloco `unsafe`”. Comprehensive Rust pt-BR (mensagens com o termo: 41): unsafe 9, insegur- 36, não segur- 1."
+  - en: "safe"
+    pt: "seguro"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Creating a Safe Abstraction over Unsafe Code"
+    exemplo_pt: "Criando uma abstração segura sobre código inseguro"
+    evitar: []
+    nota: "“safe Rust” → “Rust seguro”; “safety” → “segurança”; “type safety” → “segurança de tipos”; “thread-safe” → “seguro para threads”. Comprehensive Rust pt-BR (mensagens com o termo: 40): seguro 31."
+  - en: "ffi"
+    pt: "FFI"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "However, some FFI functions _are_ safe to call."
+    exemplo_pt: "No entanto, algumas funções FFI _são_ seguras de chamar."
+    evitar: []
+    nota: "Sigla de “foreign function interface” → “interface de função externa” (“a FFI”)."
+  - en: "abi"
+    pt: "ABI"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The ABI defines how to call the function at the assembly level."
+    exemplo_pt: "A ABI define como chamar a função no nível do assembly."
+    evitar: []
+    nota: "Sigla de “application binary interface” → “interface binária de aplicação” (“a ABI”)."
+
+  # -------- Prosa sujeita a decalque
+  - en: "idiom"
+    pt: "expressão idiomática"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "There’s no strong reason behind this idiom:"
+    exemplo_pt: "Não há um motivo forte por trás dessa expressão idiomática:"
+    evitar:
+      - '(?<![^\W_])idioms?(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Nunca “idioma”, que é língua natural (regras `idiomas-rust` e `idiomas-ambiguo` de erros-recorrentes.yml). “Rust 2024 edition idioms” → “expressões idiomáticas da Edição Rust 2024”. Comprehensive Rust pt-BR (mensagens com o termo: 1): idiomático/expressão 1, idioma 0."
+  - en: "idiomatic"
+    pt: "idiomático"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Making this change will make the code more idiomatic."
+    exemplo_pt: "Essa mudança vai deixar o código mais idiomático."
+    evitar:
+      - '(?<![^\W_])(?:idiomatic|idiomatically)(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. “idiomatically” → “de forma idiomática”. Comprehensive Rust pt-BR (mensagens com o termo: 9): idiomátic- 9, idiomas 0, idiomatic 9."
+  - en: "trade-off"
+    pt: "concessão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Rust has chosen a different set of trade-offs by not offering inheritance."
+    exemplo_pt: "O Rust escolheu um conjunto diferente de concessões ao não oferecer herança."
+    evitar:
+      - '(?<![^\W_])trade-?offs?(?![^\W_])'
+    nota: "Sem precedente no CR. Conforme o contexto, também “prós e contras” (“The Trade-Offs of Using `clone`” → “Os prós e contras de usar `clone`”) ou “compensar” (“is an appropriate trade-off” → “compensa”). Nunca “troca” (regra `troca-por-trade-off` de erros-recorrentes.yml)."
+  - en: "boilerplate"
+    pt: "código repetitivo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Using `if let` means less typing, less indentation, and less boilerplate code."
+    exemplo_pt: "Usar `if let` significa digitar menos, indentar menos e escrever menos código repetitivo."
+    evitar:
+      - '(?<![^\W_])boilerplate(?![^\W_])'
+    nota: "Sem precedente no CR."
+  - en: "ergonomic"
+    pt: "ergonômico"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "The fact that Rust makes borrowing implicit for method receivers is a big part of making ownership ergonomic in practice."
+    exemplo_pt: "O fato de o Rust tornar o empréstimo implícito para os receptores de métodos é uma parte importante do que torna o ownership ergonômico na prática."
+    evitar:
+      - '(?<![^\W_])(?:ergonomic|ergonomics|ergonomically)(?![^\W_])'
+    nota: "“ergonomics” → “ergonomia”. Comprehensive Rust pt-BR (mensagens com o termo: 4): ergonômic- 4."
+  - en: "overhead"
+    pt: "custo adicional"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "They don’t have any special capabilities other than referring to data, and they have no overhead."
+    exemplo_pt: "Elas não têm nenhuma capacidade especial além de referenciar dados e não têm custo adicional."
+    evitar:
+      - '(?<![^\W_])overheads?(?![^\W_])'
+    nota: "Conforme o contexto, também “custo” (“performance overhead” → “custo de desempenho”); “zero-overhead principle” → “princípio do custo zero”. Comprehensive Rust pt-BR (mensagens com o termo: 3): overhead 1, sobrecarga 0, custo 1."
+  - en: "zero-cost abstraction"
+    pt: "abstração de custo zero"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This is part of Rust’s goal to strive to provide zero-cost abstractions."
+    exemplo_pt: "Isso faz parte do objetivo do Rust de se esforçar para oferecer abstrações de custo zero."
+    evitar:
+      - '(?<![^\W_])zero-?cost(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 3): custo zero 2, sem custo 1."
+  - en: "hardcoded"
+    pt: "fixo no código"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "We’re creating an `IpAddr` instance by parsing a hardcoded string."
+    exemplo_pt: "Estamos criando uma instância de `IpAddr` analisando uma string fixa no código."
+    evitar:
+      - '(?<![^\W_])hard-?cod(?:e|ed|ing)(?![^\W_])'
+    nota: "Concorda com o substantivo (“valores fixos no código”). Nunca “codificado diretamente” (regra `codificado-diretamente` de erros-recorrentes.yml). “to hardcode” → “fixar no código”. Comprehensive Rust pt-BR (mensagens com o termo: 1): fixo no código 0, codificad- 1, hardcoded 0."
+  - en: "refactor"
+    pt: "refatorar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Let’s address these four problems by refactoring our project."
+    exemplo_pt: "Vamos resolver esses quatro problemas refatorando nosso projeto."
+    evitar:
+      - '(?<![^\W_])refactor(?:s|ed|ing)?(?![^\W_])'
+    nota: "“refactoring” → “refatoração”. Comprehensive Rust pt-BR (mensagens com o termo: 3): refator- 3."
+  - en: "performance"
+    pt: "desempenho"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The two implementations have similar performance!"
+    exemplo_pt: "As duas implementações têm desempenho parecido!"
+    evitar: []
+    nota: "“runtime performance” → “desempenho em tempo de execução”. Comprehensive Rust pt-BR (mensagens com o termo: 11): desempenho 11, performance 0."
+  - en: "under the hood"
+    pt: "por baixo dos panos"
+    manter_ingles: false
+    classe: expressão
+    genero: null
+    status: provisorio
+    exemplo_en: "When you see code that uses `await`, Rust compiles it under the hood to code that calls `poll`."
+    exemplo_pt: "Quando você vê código que usa `await`, o Rust o compila, por baixo dos panos, para código que chama `poll`."
+    evitar:
+      - '(?<![^\W_])(?:under the hood|sob o capô)(?![^\W_])'
+    nota: "Também “internamente”. Nunca o decalque “sob o capô”. Comprehensive Rust pt-BR (mensagens com o termo: 1): por baixo dos panos 1, internamente 0, nos bastidores 0."
+  - en: "rustacean"
+    pt: "rustáceo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Experienced Rustaceans still get compiler errors."
+    exemplo_pt: "Rustáceos experientes também recebem erros de compilação."
+    evitar:
+      - '(?<![^\W_])rustaceans?(?![^\W_])'
+    nota: "Apelido de quem programa em Rust; em pt-BR, “rustáceo(s)”, com minúscula no meio da frase. Sem precedente no CR."
+  - en: "default"
+    pt: "padrão"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "This code overrides the default setting of `0`."
+    exemplo_pt: "Este código substitui a configuração padrão de `0`."
+    evitar:
+      - '(?<![^\W_])por defeito(?![^\W_])'
+    nota: "“by default” → “por padrão”; “default value” → “valor padrão”. O trait `Default` é código. Nunca “por defeito” (pt-PT). “pattern” também é “padrão”; se a frase ficar ambígua, reescreva. Comprehensive Rust pt-BR (mensagens com o termo: 26): padrão 20, predefinido 0."
+  - en: "handle"
+    pt: "tratar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "The other arm of the `match` handles the case where we get an `Err` value from `File::open`."
+    exemplo_pt: "O outro braço do `match` trata o caso em que recebemos um valor `Err` de `File::open`."
+    evitar: []
+    nota: "Verbo: “tratar”, “lidar com” (“Cargo handles a lot of tasks” → “o Cargo cuida de muitas tarefas”). Substantivo (“a handle to the standard input”, “file handle”) → “handle”, em inglês, no masculino (“um handle para a entrada padrão”). `JoinHandle` é código."
+
+  # -------- Servidor web (Capítulo 21)
+  - en: "server"
+    pt: "servidor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Building a Multithreaded Web Server"
+    exemplo_pt: "Construindo um servidor web multithread"
+    evitar: []
+    nota: "“web server” → “servidor web”; “client” → “cliente”; “connection” → “conexão”; “listen” → “escutar”; “port” → “porta”."
+  - en: "request"
+    pt: "requisição"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "`GET` requests have no body."
+    exemplo_pt: "Requisições `GET` não têm corpo."
+    evitar: []
+    nota: "Em HTTP, “requisição”. No exemplo do restaurante do Capítulo 21, os pedidos dos clientes → “pedidos”. Comprehensive Rust pt-BR (mensagens com o termo: 4): requisição 1, solicitação 1, pedido 0."
+  - en: "response"
+    pt: "resposta"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Responses have the following format:"
+    exemplo_pt: "As respostas têm o seguinte formato:"
+    evitar: []
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 3): resposta 2."
+  - en: "graceful shutdown"
+    pt: "encerramento gracioso"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’re able to perform a graceful shutdown of the server, which cleans up all the threads in the pool."
+    exemplo_pt: "Conseguimos fazer um encerramento gracioso do servidor, que limpa todas as threads do pool."
+    evitar:
+      - '(?<![^\W_])(?:graceful|gracefully)(?![^\W_])'
+    nota: "“shut down gracefully” → “encerrar graciosamente”; “cleanup” → “limpeza”."
+
+  # -------- Outros
+  - en: "guessing game"
+    pt: "jogo de adivinhação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "So, in Chapter 2, we’ll build a guessing game program."
+    exemplo_pt: "Então, no Capítulo 2, vamos construir um programa de jogo de adivinhação."
+    evitar:
+      - '(?<![^\W_])guessing games?(?![^\W_])'
+    nota: "Projeto do Capítulo 2, citado em outros capítulos: use sempre o mesmo nome."
+  - en: "unicode scalar value"
+    pt: "valor escalar Unicode"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "For individual Unicode scalar values, use the `chars` method."
+    exemplo_pt: "Para valores escalares Unicode individuais, use o método `chars`."
+    evitar:
+      - '(?<![^\W_])scalar values?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): valor escalar 1."
+  - en: "grapheme cluster"
+    pt: "agrupamento de grafemas"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Bytes, Scalar Values, and Grapheme Clusters"
+    exemplo_pt: "Bytes, valores escalares e agrupamentos de grafemas"
+    evitar:
+      - '(?<![^\W_])grapheme clusters?(?![^\W_])'
+    nota: "Comprehensive Rust pt-BR (mensagens com o termo: 1): grafema 1."
+  - en: "curly bracket"
+    pt: "chave"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Rust requires curly brackets around all function bodies."
+    exemplo_pt: "O Rust exige chaves em volta do corpo de todas as funções."
+    evitar: []
+    nota: "Plural “chaves” (`{}`). “square brackets” → “colchetes”; “angle brackets” → “colchetes angulares”; “parentheses” → “parênteses”. “key” (de um hash map) também é “chave”; o contexto desfaz a ambiguidade."
+  - en: "operating system"
+    pt: "sistema operacional"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Then, on any operating system, run the following:"
+    exemplo_pt: "Depois, em qualquer sistema operacional, execute o seguinte:"
+    evitar:
+      - '(?<![^\W_])sistemas? operativos?(?![^\W_])'
+    nota: "Termo do pt-BR, nunca “sistema operativo” (pt-PT)."
+  - en: "shorthand"
+    pt: "forma abreviada"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Luckily, there’s a convenient shorthand!"
+    exemplo_pt: "Felizmente, existe uma forma abreviada prática!"
+    evitar:
+      - '(?<![^\W_])shorthand(?![^\W_])'
+    nota: "“field init shorthand” → “forma abreviada de inicialização de campos”."
+  - en: "struct update syntax"
+    pt: "sintaxe de atualização de struct"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "You can do this using struct update syntax."
+    exemplo_pt: "Você pode fazer isso usando a sintaxe de atualização de struct."
+    evitar:
+      - '(?<![^\W_])struct update syntax(?![^\W_])'
+    nota: "Masculino “struct”: “a sintaxe de atualização do struct”, quando o original se refere a um struct específico."
