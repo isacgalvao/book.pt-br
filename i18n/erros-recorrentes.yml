@@ -8,10 +8,9 @@
 #     sem destinos de link, sem ][rótulo], sem tags HTML e sem {#...}) das mensagens traduzidas
 #     ou fuzzy. Cada regex escolhe sozinha se diferencia maiúsculas, com (?i:...) ou (?-i:...),
 #     e dá o mesmo resultado com ou sem re.IGNORECASE. Nenhuma depende de re.MULTILINE.
-#   - Exceção: escopo: bruto (campo opcional) pede a regex sobre o msgstr ORIGINAL, porque o
-#     defeito mora justamente no que a limpeza remove (code spans). Um verificador que ignore
-#     esse campo simplesmente não dispara a entrada; a regra 2 de validar_par (mesmo
-#     multiconjunto de code spans) já pega o mesmo defeito como erro.
+#   - Defeitos que moram no que a limpeza remove (português dentro de um code span, link sem
+#     destino) não têm regex aqui: as regras 2 e 3 de validar_par (mesmo multiconjunto de code
+#     spans, mesmos destinos de link) já os recusam como erro.
 #   - erro = defeito certo: a mensagem não deve ser aplicada nem passar no CI.
 #     aviso = suspeita (a forma também tem uso legítimo): um revisor decide.
 #   - Código, URLs e comandos ficam fora do texto avaliado.
@@ -22,22 +21,26 @@
 erros:
   # ---------------------------------------------------------------- gramática
   - id: futuro-subjuntivo-ver
-    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente|o leitor|a pessoa)\s+(?:(?:não|nunca)\s+)?|não\s+)ver\b)'
+    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente|o leitor|a pessoa)\s+(?:(?:não|nunca)\s+)?|não\s+)(?:ver|verem|vermos)\b)'
     severidade: erro
-    correcao: "se você vir; se não vir"
+    correcao: "se você vir, se vocês virem, se nós virmos; se não vir"
     explicacao: >-
-      O futuro do subjuntivo de “ver” é “vir” (se eu vir, se você vir, se nós virmos). “Se você
-      ver” é a forma do infinitivo e soa errada. Aparecia 5 vezes no capítulo 1 (“Se você ver
-      essas informações”, “Se não ver essas informações”, “Se você não ver essa saída”).
+      O futuro do subjuntivo de “ver” é “vir” (se eu vir, se você vir, se nós virmos, se vocês
+      virem). “Se você ver”, “se vocês verem” e “se nós vermos” são formas do infinitivo e soam
+      erradas. Aparecia 5 vezes no capítulo 1 (“Se você ver essas informações”, “Se não ver essas
+      informações”, “Se você não ver essa saída”). Com “caso”, o certo é o presente do
+      subjuntivo: caso você veja.
 
   - id: futuro-subjuntivo-irregular
-    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente)\s+(?:(?:não|nunca)\s+)?(?:ter|fazer|dizer|trazer|querer|poder|saber|estar|ser|dar|haver|manter|conter|obter|reter|supor|compor|dispor|expor|impor|propor)\b)'
+    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente)\s+(?:(?:não|nunca)\s+)?(?:ter|fazer|dizer|trazer|querer|poder|saber|estar|ser|dar|haver|manter|conter|obter|reter|supor|compor|dispor|expor|impor|propor)(?:em|mos)?\b)'
     severidade: erro
     correcao: "se você tiver, fizer, disser, trouxer, quiser, puder, souber, estiver, for, der, houver, mantiver..."
     explicacao: >-
       Verbos irregulares não usam o infinitivo no futuro do subjuntivo: “se você tiver” (não “se
-      você ter”), “quando você fizer” (não “fazer”), “caso você puder” (não “poder”). Só os
-      verbos regulares (-ar, -er, -ir) coincidem com o infinitivo (“se você executar”).
+      você ter”), “quando você fizer” (não “fazer”), “assim que você puder” (não “poder”), “se
+      eles tiverem” (não “terem”). Só os verbos regulares (-ar, -er, -ir) coincidem com o
+      infinitivo (“se você executar”). Com “caso”, use o presente do subjuntivo: caso você
+      tenha, caso você possa.
 
   - id: concordancia-alguem-eles
     regex: '(?i:\balguém\b(?:[^.!?;:]|\.(?=\S)){0,90}?\b(?:eles|elas)\b)'
@@ -95,25 +98,15 @@ erros:
   - id: atalho-traduzido-sem-definicao
     regex: '\\\[[^\[\]\n]{0,40}[A-Za-zÀ-ÿ]{3,}[^\[\]\n]{0,40}\\\]'
     severidade: erro
-    correcao: "[texto traduzido](destino) ou [texto traduzido][rótulo], como no original"
+    correcao: "[texto traduzido](destino copiado do msgid)"
     explicacao: >-
-      Colchetes escapados (\[texto\]) no msgstr mostram que o atalho de link perdeu o destino ou
-      a definição: o rótulo foi traduzido e a página mostra os colchetes soltos. Aconteceu com
-      “Várias \[traduções\] da comunidade” na página de rosto, que perdeu o link para o
-      Apêndice F. Mantenha o destino ou o rótulo do original e traduza só o texto visível.
-      Esta regex só vê a forma escapada; a forma `[traduções]` sem escape, sem destino nem
-      rótulo, é pega pela regra 4 de validar_par (mesmos rótulos de referência).
-
-  - id: portugues-em-code-span
-    escopo: bruto
-    regex: '(?-i:(?<![^\s(\[“])`(?:crate\s+[a-z_]+[^`\n]*|[^`\n]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b)[^`\n]*)`(?![^\s)\].,;:!?”]))'
-    severidade: erro
-    correcao: "só o identificador no code span: [método `expect`][expect], [crate `rand`][randcrate]"
-    explicacao: >-
-      Palavras em português dentro de um code span aparecem em monoespaçado como se fossem código.
-      Aconteceu 3 vezes no capítulo 2: [`método expect`], [`crate rand`] e
-      [`método parse em strings`]. O code span copia o original (`expect`, `rand`, `parse`); o
-      português fica fora dele.
+      Colchetes escapados (\[texto\]) no msgstr mostram que o link perdeu o destino: no PO todo
+      link vem na forma inline [texto](destino) e a página mostra os colchetes soltos. Aconteceu
+      com “Várias \[traduções\] da comunidade” na página de rosto, que perdeu o link para o
+      Apêndice F (correto: [traduções](appendix-06-translation.html)). Traduza só o texto entre
+      colchetes e copie o destino do msgid. Esta regex só vê a forma escapada; a forma
+      `[traduções]` sem escape e sem destino é recusada como erro pela regra 3 de validar_par
+      (mesmos destinos de link).
 
   - id: filename-em-ingles
     regex: '(?-i:\bFilename:)'
@@ -189,7 +182,7 @@ erros:
 
   # ----------------------------------------------------------- terminologia (§7)
   - id: genero-enum
-    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+[_*]*enum(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+[_*]*enums(?![A-Za-zÀ-ÿ0-9]))'
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+\[?[_*]*enum(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+\[?[_*]*enums(?![A-Za-zÀ-ÿ0-9]))'
     severidade: erro
     correcao: "o enum, um enum, do enum, no enum, os enums"
     explicacao: >-
@@ -197,7 +190,7 @@ erros:
       enum” e “outra enum” em 3 pontos do capítulo 2.
 
   - id: genero-struct
-    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+[_*]*struct(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+[_*]*structs(?![A-Za-zÀ-ÿ0-9]))'
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+\[?[_*]*struct(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+\[?[_*]*structs(?![A-Za-zÀ-ÿ0-9]))'
     severidade: erro
     correcao: "o struct, um struct, do struct, no struct, os structs"
     explicacao: >-
@@ -214,7 +207,7 @@ erros:
       Exchange” (SPDX), que a regex ignora.
 
   - id: fazer-o-build
-    regex: '(?i:\b(?:faz\w*|fiz\w*|fez|faça\w*)\s+(?:(?:o|os|um|uns|seu|seus|esse|este|do|de)\s+)?builds?\b)'
+    regex: '(?i:\b(?:faz\w*|fiz\w*|fez|feit[oa]s?|far(?:ei|ás?|emos|ão|ia\w*)|faç\w*)\s+(?:(?:o|os|a|as|um|uns|uma|umas|seu|seus|sua|suas|esse|este|do|de)\s+)?builds?\b)'
     severidade: erro
     correcao: "compilar (o projeto), fazer a compilação"
     explicacao: >-

@@ -32,6 +32,7 @@ import os
 import re
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -171,12 +172,20 @@ def _descricao(e):
 
 
 def _gravar(po, caminho):
-    """Grava via po_util.salvar numa cópia temporária e troca de forma atômica."""
-    tmp = caminho.with_name(f".{caminho.name}.autoport.tmp")
+    """Grava via po_util.salvar numa cópia temporária e troca de forma atômica.
+
+    Segue links simbólicos (como as ferramentas irmãs): o temporário nasce na
+    pasta do arquivo real e é ele que o os.replace troca, então um PO passado
+    por link continua sendo link e o alvo é que recebe a atualização.
+    """
+    alvo = Path(os.path.realpath(caminho))
+    fd, nome = tempfile.mkstemp(dir=alvo.parent, prefix=f".{alvo.name}.", suffix=".autoport.tmp")
+    os.close(fd)
+    tmp = Path(nome)
     try:
         po_util.salvar(po, tmp)
-        shutil.copymode(caminho, tmp)
-        os.replace(tmp, caminho)
+        shutil.copymode(alvo, tmp)
+        os.replace(tmp, alvo)
     finally:
         if tmp.exists():
             tmp.unlink()

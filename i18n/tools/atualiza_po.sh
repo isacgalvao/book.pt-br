@@ -102,12 +102,22 @@ if ((PO_DADO == 0)); then
     PO="$RAIZ/po/pt-BR.po"
 fi
 [[ -f "$PO" ]] || erro_uso "PO não encontrado: $PO"
+# Segue links simbólicos: o temporário nasce na pasta do arquivo real e o mv -f
+# final troca o arquivo real, não o link (que continuaria apontando para ele).
+PO_ARG="$PO"
+PO="$(readlink -f -- "$PO" 2>/dev/null)" || PO=""
+[[ -n "$PO" && -f "$PO" ]] || erro_uso "não consegui resolver o caminho de $PO_ARG"
 
 # --- ferramentas -------------------------------------------------------------
 exige msgmerge "pacote 'gettext'"
 exige msgfmt "pacote 'gettext'"
 exige msgcat "pacote 'gettext'"
 exige python3
+# normaliza_po.py (e o po_util) precisam do módulo polib: confere antes de tocar em qualquer arquivo.
+if ! python3 -c 'import polib' >/dev/null 2>&1; then
+    echo "atualiza_po.sh: erro: o módulo 'polib' do Python não está instalado (pip install polib)" >&2
+    exit 2
+fi
 
 # --- limpeza -----------------------------------------------------------------
 TMP_PROPRIO=""
@@ -133,9 +143,17 @@ if [[ -z "$POT" ]]; then
     if [[ -f "$RAIZ/i18n/build.sh" ]]; then
         echo "Gerando o POT com i18n/build.sh pot ..."
         exige mdbook "necessário para gerar o POT"
-        if ! bash "$RAIZ/i18n/build.sh" pot "$SAIDA_POT" >"$LOG_POT" 2>&1; then
+        rc=0
+        bash "$RAIZ/i18n/build.sh" pot "$SAIDA_POT" >"$LOG_POT" 2>&1 || rc=$?
+        if ((rc != 0)); then
             tail -n 30 "$LOG_POT" >&2 || true
-            falha "i18n/build.sh pot falhou"
+            # O build.sh sai com 2 em erro de uso ou de ambiente (cargo,
+            # mdbook-xgettext, flock... ausentes): propaga o mesmo código.
+            if ((rc == 2)); then
+                echo "atualiza_po.sh: erro: i18n/build.sh pot não pôde rodar (erro de ambiente ou de uso, código 2)" >&2
+                exit 2
+            fi
+            falha "i18n/build.sh pot falhou (código $rc)"
         fi
     else
         echo "i18n/build.sh não existe; gerando o POT direto com o mdbook ..."
@@ -151,8 +169,11 @@ if [[ -z "$POT" ]]; then
             falha "mdbook build (POT) falhou"
         fi
     fi
+    # POT gerado e ausente é falha da geração (código 1), não erro de uso.
+    [[ -f "$SAIDA_POT/messages.pot" ]] || falha "o POT não foi gerado: esperava $SAIDA_POT/messages.pot"
     POT="$SAIDA_POT/messages.pot"
 fi
+# Só chega aqui sem arquivo se o --pot dado pelo usuário não existe (erro de uso).
 [[ -f "$POT" ]] || erro_uso "POT não encontrado: $POT"
 [[ -s "$POT" ]] || falha "POT vazio: $POT"
 
@@ -165,8 +186,16 @@ echo "Mesclando $PO com $POT ..."
 msgmerge --quiet --no-wrap --previous --add-location=file --update --backup=none "$PO_TMP" "$POT" ||
     falha "msgmerge falhou (o PO não foi alterado)"
 
-python3 "$SCRIPT_DIR/normaliza_po.py" "$PO_TMP" >/dev/null ||
+rc=0
+python3 "$SCRIPT_DIR/normaliza_po.py" "$PO_TMP" >/dev/null || rc=$?
+if ((rc == 2)); then
+    # normaliza_po.py sai com 2 em erro de ambiente (polib ou msgcat ausente...).
+    # O trap de saída apaga o temporário; o PO original continua intacto.
+    echo "atualiza_po.sh: erro: a normalização não pôde rodar (erro de ambiente ou de uso; o PO não foi alterado)" >&2
+    exit 2
+elif ((rc != 0)); then
     falha "a normalização falhou (o PO não foi alterado)"
+fi
 
 ESTATISTICA="$(LC_ALL=C msgfmt --statistics -o /dev/null "$PO_TMP" 2>&1)" ||
     falha "msgfmt rejeitou o PO mesclado (o PO não foi alterado): $ESTATISTICA"
@@ -174,5 +203,5 @@ ESTATISTICA="$(LC_ALL=C msgfmt --statistics -o /dev/null "$PO_TMP" 2>&1)" ||
 mv -f -- "$PO_TMP" "$PO"
 PO_TMP=""
 
-echo "PO atualizado: $PO"
+echo "PO atualizado: $PO_ARG"
 echo "$ESTATISTICA"

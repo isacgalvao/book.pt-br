@@ -176,13 +176,18 @@ _ERRNO_PT = {
     errno.EPERM: "operação não permitida",
     errno.EROFS: "sistema de arquivos somente leitura",
     errno.ENOSPC: "sem espaço no disco",
+    errno.ELOOP: "links simbólicos em ciclo",
 }
+
+_NAO_REGULAR = "não é um arquivo regular"
 
 
 def _motivo(exc):
     """Descrição em português de uma exceção de leitura/gravação de arquivo."""
     if isinstance(exc, UnicodeDecodeError):
         return "o conteúdo não é texto UTF-8 válido"
+    if isinstance(exc, UnicodeEncodeError):
+        return "o texto tem caracteres que não podem ser codificados em UTF-8"
     if isinstance(exc, OSError) and exc.errno in _ERRNO_PT:
         return _ERRNO_PT[exc.errno]
     if isinstance(exc, OSError):
@@ -190,12 +195,32 @@ def _motivo(exc):
     return str(exc).strip().splitlines()[0] if str(exc).strip() else type(exc).__name__
 
 
+def _modo(caminho):
+    """st_mode de `caminho` (seguindo links) ou None se ele não existe; OSError nos demais casos."""
+    try:
+        return os.stat(caminho).st_mode
+    except (FileNotFoundError, NotADirectoryError):
+        return None
+
+
+def _problema_de_tipo(modo):
+    """Mensagem em português se `modo` não é o de um arquivo regular; None se é."""
+    if stat.S_ISREG(modo):
+        return None
+    return _ERRNO_PT[errno.EISDIR] if stat.S_ISDIR(modo) else _NAO_REGULAR
+
+
 def ler_po(caminho):
     caminho = Path(caminho)
-    if caminho.is_dir():
-        raise ErroUso(f"não foi possível ler o PO '{caminho}': {_ERRNO_PT[errno.EISDIR]}")
-    if not caminho.is_file():
+    try:
+        modo = _modo(caminho)
+    except OSError as exc:
+        raise ErroUso(f"não foi possível ler o PO '{caminho}': {_motivo(exc)}") from None
+    if modo is None:
         raise ErroUso(f"não foi possível ler o PO '{caminho}': {_ERRNO_PT[errno.ENOENT]}")
+    problema = _problema_de_tipo(modo)
+    if problema:  # diretório, dispositivo (/dev/null), FIFO, socket
+        raise ErroUso(f"não foi possível ler o PO '{caminho}': {problema}")
     try:
         po = po_util.carregar(caminho)
     except Exception as exc:  # polib levanta OSError, ValueError, IndexError...
@@ -263,8 +288,15 @@ _CABECALHO = re.compile(r"\A﻿?(?:[ \t]*(?:#[^\r\n]*|---[ \t]*)?(?:\r?\n|\Z))*"
 def ler_revisao(caminho):
     """-> (texto, dados). Arquivo ausente = ("", {}). Estrutura inválida = ErroUso."""
     caminho = Path(caminho)
-    if not caminho.exists():
+    try:
+        modo = _modo(caminho)
+    except OSError as exc:
+        raise ErroUso(f"não foi possível ler '{caminho}': {_motivo(exc)}") from None
+    if modo is None:
         return "", {}
+    problema = _problema_de_tipo(modo)
+    if problema:  # um FIFO travaria a leitura; /dev/zero nunca terminaria
+        raise ErroUso(f"não foi possível ler '{caminho}': {problema}")
     try:
         texto = caminho.read_bytes().decode("utf-8")
     except (OSError, UnicodeDecodeError) as exc:
@@ -275,6 +307,8 @@ def ler_revisao(caminho):
         marca = getattr(exc, "problem_mark", None)
         onde = f" (linha {marca.line + 1}, coluna {marca.column + 1})" if marca else ""
         raise ErroUso(f"'{caminho}' não é um YAML válido{onde}") from None
+    except RecursionError:  # o compositor do PyYAML é recursivo: ~500 níveis estouram a pilha
+        raise ErroUso(f"'{caminho}' não é um YAML válido (aninhamento profundo demais)") from None
     if dados is None:
         dados = {}
     if not isinstance(dados, dict):
@@ -293,6 +327,12 @@ def ler_revisao(caminho):
                           f"({reg.get('tipo')!r}); use {' ou '.join(TIPOS)}")
         if not str(reg.get("hash") or "").strip():
             raise ErroUso(f"'{caminho}': o registro de '{cap}' não tem 'hash'")
+        for campo in ("revisado_em", "revisor"):  # ex.: "Jos\uDCE9" (surrogate solto)
+            try:
+                str(reg.get(campo, "")).encode("utf-8")
+            except UnicodeEncodeError:
+                raise ErroUso(f"'{caminho}': o registro de '{cap}' tem caracteres inválidos "
+                              f"(não são UTF-8) em '{campo}'") from None
     dados["capitulos"] = {str(k): v for k, v in caps.items()}
     return texto, dados
 
@@ -319,13 +359,23 @@ def gravar_atomico(caminho, texto):
     pasta = destino.parent
     if not pasta.is_dir():
         raise ErroUso(f"não foi possível gravar '{caminho}': o diretório '{pasta}' não existe")
+    # Nunca substituir um destino que não seja arquivo regular: os.replace sobre /dev/null
+    # (ou outro dispositivo/FIFO) o transformaria num arquivo comum. Vale antes de criar o temporário.
+    try:
+        modo_destino = _modo(destino)
+    except OSError as exc:
+        raise ErroUso(f"não foi possível gravar '{caminho}': {_motivo(exc)}") from None
+    if modo_destino is not None:
+        problema = _problema_de_tipo(modo_destino)
+        if problema:
+            raise ErroUso(f"não foi possível gravar '{caminho}': {problema}")
     tmp = None
     try:
         fd, tmp = tempfile.mkstemp(prefix=destino.name + ".", suffix=".tmp", dir=str(pasta))
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
             f.write(texto)
-        if destino.exists():
-            modo = stat.S_IMODE(destino.stat().st_mode)
+        if modo_destino is not None:
+            modo = stat.S_IMODE(modo_destino)
         else:
             mascara = os.umask(0)
             os.umask(mascara)
@@ -333,7 +383,7 @@ def gravar_atomico(caminho, texto):
         os.chmod(tmp, modo)
         os.replace(tmp, destino)
         tmp = None
-    except OSError as exc:
+    except (OSError, UnicodeEncodeError) as exc:
         raise ErroUso(f"não foi possível gravar '{caminho}': {_motivo(exc)}") from None
     finally:
         if tmp is not None:
@@ -361,8 +411,12 @@ def registrar(caminho, texto_atual, dados, cap, tipo, revisor, hash_atual):
         "hash": hash_atual,
     }
     novos["capitulos"] = _ordenar_capitulos(caps)
-    corpo = yaml.safe_dump(novos, allow_unicode=True, sort_keys=False,
-                           default_flow_style=False, width=1_000_000)
+    try:
+        corpo = yaml.safe_dump(novos, allow_unicode=True, sort_keys=False,
+                               default_flow_style=False, width=1_000_000)
+    except RecursionError:  # o emissor também é recursivo e estoura antes do carregador
+        raise ErroUso(f"não foi possível gravar '{caminho}': o YAML existente tem "
+                      "aninhamento profundo demais para ser reescrito") from None
     if "\r\n" in cabecalho:
         corpo = corpo.replace("\n", "\r\n")
     gravar_atomico(caminho, cabecalho + corpo)
@@ -422,14 +476,39 @@ def formatar_json(dados):
     return json.dumps(dados, ensure_ascii=False, indent=2) + "\n"
 
 
+def exigir_stdout():
+    if sys.stdout is None:  # `status.py >&-`
+        raise ErroUso("a saída padrão está fechada")
+
+
+def _descartar_stdout():
+    """Aponta o descritor da saída padrão para /dev/null.
+
+    Depois de uma gravação que falhou, o buffer do sys.stdout continua cheio e o flush
+    final do interpretador falharia de novo: sairia "Exception ignored on flushing
+    sys.stdout" (em inglês) e o código 120, em vez da mensagem em português e do código 2.
+    Com o descritor redirecionado, o flush final tem sucesso e nada mais é impresso.
+    """
+    try:
+        fd = os.open(os.devnull, os.O_WRONLY)
+        try:
+            os.dup2(fd, sys.stdout.fileno())
+        finally:
+            os.close(fd)
+    except (OSError, ValueError):  # sem descritor (fluxo em memória) ou já fechado
+        pass
+
+
 def escrever_saida(texto):
+    exigir_stdout()
     try:
         sys.stdout.write(texto)
         sys.stdout.flush()
     except BrokenPipeError:  # receita da documentação do Python para `| head`
-        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        _descartar_stdout()
         return 1
-    except OSError as exc:  # disco cheio, /dev/full...
+    except (OSError, ValueError) as exc:  # disco cheio, /dev/full, caractere não UTF-8...
+        _descartar_stdout()
         raise ErroUso(f"não foi possível escrever a saída: {_motivo(exc)}") from None
     return 0
 
@@ -451,7 +530,12 @@ def executar(args, ap):
         if args.revisor is None or not args.revisor.strip():
             ap.error("--registrar exige --revisor NOME (não vazio)")
         args.revisor = " ".join(args.revisor.split())
+        try:  # argv fora de UTF-8 vira surrogates soltos; nunca gravá-los no revisao.yml
+            args.revisor.encode("utf-8")
+        except UnicodeEncodeError:
+            ap.error("--revisor deve ser texto UTF-8 válido")
 
+    exigir_stdout()  # antes de qualquer gravação: não registrar e depois falhar na saída
     po = ler_po(po_util.PO_PADRAO if args.po is None else args.po)
     caminho_rev = REVISAO_PADRAO if args.revisao is None else Path(args.revisao)
     texto_rev, dados_rev = ler_revisao(caminho_rev)
@@ -483,17 +567,23 @@ def executar(args, ap):
 
 
 def main(argv=None):
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except (AttributeError, ValueError):
-        pass
+    # Em tentativas separadas: com a saída padrão fechada (`>&-`) o stdout é None e não
+    # pode impedir o ajuste do stderr. O stderr nunca falha ao imprimir bytes não UTF-8
+    # (argumentos inválidos aparecem como \udcXX na mensagem de erro).
+    for fluxo, erros in ((sys.stdout, "strict"), (sys.stderr, "backslashreplace")):
+        try:
+            fluxo.reconfigure(encoding="utf-8", errors=erros)
+        except (AttributeError, ValueError):
+            pass
     ap = montar_parser()
     args = ap.parse_args(argv)
     try:
         return executar(args, ap)
     except ErroUso as exc:
         print(f"{PROG}: erro: {exc}", file=sys.stderr)
+        return 2
+    except RecursionError:  # estrutura aninhada demais em algum ponto não previsto acima
+        print(f"{PROG}: erro: dados com aninhamento profundo demais", file=sys.stderr)
         return 2
 
 
