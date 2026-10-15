@@ -408,6 +408,16 @@ def carregar_glossario(caminho=None):
     if len(validos) != len(termos):
         _aviso(f"{len(termos) - len(validos)} entrada(s) do glossário sem 'en' em texto "
                f"foram ignoradas ({caminho})")
+    # O YAML pode parsear e mesmo assim não caber em JSON (chave que não é texto, como uma
+    # data; referência circular por âncora/alias; NaN/Infinity). Sem esta conferência o erro
+    # estouraria só na hora de gravar o lote, depois de gravar os capítulos anteriores.
+    try:
+        json.dumps(validos, ensure_ascii=False, default=str, allow_nan=False)
+    except (TypeError, ValueError, RecursionError) as erro:
+        resumo = " ".join(str(erro).split())[:200]
+        _aviso(f"glossário com valores que não cabem em JSON ({caminho}): {resumo}; "
+               "'termos' sai vazio")
+        return []
     return validos
 
 
@@ -601,8 +611,18 @@ def _gravar_atomico(caminho, conteudo):
 
 def preparar_saida(texto):
     """Cria o diretório de saída (se preciso) e confere que dá para escrever nele."""
+    # `Path("")` é o diretório corrente: um --saida vazio (por exemplo, `--saida "$D"` com D
+    # sem valor) gravaria os lotes e apagaria os antigos no cwd. Vazio ou só espaço é erro.
+    if not texto.strip():
+        raise _ErroDeUso("--saida está vazio; informe o diretório onde gravar os lotes")
+    if "\0" in texto:
+        raise _ErroDeUso(f"a saída {texto!r} contém o caractere nulo, que não cabe num caminho")
     saida = Path(texto)
-    real = saida.resolve()
+    try:
+        real = saida.resolve()
+    except (OSError, RuntimeError) as erro:  # elo simbólico circular levanta RuntimeError (3.10-3.12)
+        motivo = _motivo_os(erro) if isinstance(erro, OSError) else "elos simbólicos demais"
+        raise _ErroDeUso(f"não foi possível resolver a saída {texto!r}: {motivo}") from None
     raiz = RAIZ.resolve()
     if real == raiz or (real.is_relative_to(raiz) and not any(
             real.is_relative_to(raiz / permitido) for permitido in ("i18n", "po"))):

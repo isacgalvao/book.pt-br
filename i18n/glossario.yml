@@ -28,7 +28,10 @@
 #                    aparecer na prosa do msgstr
 #     nota           uso, variações, gênero e evidência; as contagens do Comprehensive Rust
 #                    pt-BR (po/pt-BR.po de google/comprehensive-rust, revisado por humanos)
-#                    dizem, entre as mensagens cujo inglês tem o termo, quantas usam cada forma
+#                    dizem, entre as mensagens cujo inglês tem o termo, quantas usam cada forma;
+#                    as contagens de gênero (“feminino 11: uma 7, ...”) contam o artigo, a
+#                    contração ou outro determinante logo antes do termo (singular e plural, com
+#                    ou sem ênfase) no msgstr das mensagens de prosa do CR, sem os code spans
 #
 # COMO O `evitar` É USADO: o módulo `glossario` do check.py aplica cada regex, sem diferenciar
 # maiúsculas, ao msgstr das mensagens traduzidas ou fuzzy dos tipos prosa, listing e html,
@@ -44,9 +47,9 @@
 #                                      mantém, como “Nome do arquivo: tests/common.rs”,
 #                                      _target/debug_, _build.rs_ ou o diretório _tests_.
 # As regex de gênero pegam artigo ou pronome do gênero errado antes de um termo mantido em
-# inglês (feminino antes de closure, trait, crate, struct e enum; masculino antes de thread,
-# slice, future, macro e string). Ao mudar uma regex, rode-a sobre o msgstr do PO e sobre os
-# exemplos.
+# inglês (feminino antes de ownership, closure, trait, crate, struct e enum; masculino antes de
+# thread, slice, future, macro e string). Ao mudar uma regex, rode-a sobre o msgstr do PO e
+# sobre os exemplos.
 
 versao: 2
 termos:
@@ -62,7 +65,7 @@ termos:
     exemplo_pt: "Movendo o ownership para um bloco assíncrono"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*ownership(?![^\W_])'
-    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Fica em inglês, no masculino (“o ownership”). Alternativa em aberto: “posse” (feminino); se o mantenedor escolher “posse”, fazer busca e troca revisada, ajustando o artigo (“o ownership” → “a posse”). “take ownership of” → “assumir o ownership de”; “transfer ownership” → “transferir o ownership”; “give up ownership” → “abrir mão do ownership”; “ownership rules” → “regras de ownership”. Sem glosa entre parênteses. O CR trata o termo como feminino (2 ocorrências), o que este glossário não segue. Comprehensive Rust pt-BR (mensagens com o termo: 24): ownership 18, propriedade 9, posse 2."
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Fica em inglês, no masculino (“o ownership”). Alternativa em aberto: “posse” (feminino); se o mantenedor escolher “posse”, fazer busca e troca revisada, ajustando o artigo (“o ownership” → “a posse”). “take ownership of” → “assumir o ownership de”; “transfer ownership” → “transferir o ownership”; “give up ownership” → “abrir mão do ownership”; “ownership rules” → “regras de ownership”. Sem glosa entre parênteses. No CR o feminino é mais comum (feminino 8: a 5, à 1, da 1, sua 1) que o masculino (masculino 4: o 4); este glossário adota o masculino, como no CONTRATO §7 (“o ownership”). Comprehensive Rust pt-BR (mensagens com o termo: 24): ownership 18, propriedade 9, posse 2."
   - en: "owner"
     pt: "dono"
     manter_ingles: false
@@ -230,7 +233,7 @@ termos:
     evitar:
       - '(?<![^\W_])fatias?(?![^\W_])'
       - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*slice(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*slices(?![^\W_])'
-    nota: "Fica em inglês, no feminino (“a slice”, “uma slice”, “as slices”), como no CR (uma 7, a 1, as 1, essa 1 contra o 1, um 1, os 1). Plural “slices”. “string slice” → “slice de string”. Comprehensive Rust pt-BR (mensagens com o termo: 29): slice 28, fatia 4."
+    nota: "Fica em inglês, no feminino (“a slice”, “uma slice”, “as slices”), como no CR (feminino 11: uma 7, a 1, as 1, essa 1, nossa 1; masculino 4: o 1, um 1, os 1, do 1). Plural “slices”. “string slice” → “slice de string”. Comprehensive Rust pt-BR (mensagens com o termo: 29): slice 28, fatia 4."
   - en: "string slice"
     pt: "slice de string"
     manter_ingles: false
@@ -252,7 +255,7 @@ termos:
     exemplo_pt: "Para responder a essa pergunta, precisamos discutir como o Rust armazena strings na memória."
     evitar:
       - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*string(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*strings(?![^\W_])'
-    nota: "Fica em inglês, no feminino (“a string”, “uma string”), como no CR (uma 17, a 5, da 5) e na tradução antiga; o mesmo vale para o tipo: “uma `String`”. `String` e `&str` são código. “string literal” → “literal de string”. Comprehensive Rust pt-BR (mensagens com o termo: 45): string 45, cadeia 0."
+    nota: "Fica em inglês, no feminino (“a string”, “uma string”), como no CR (feminino 28: uma 13, a 4, as 4, da 4; nenhum masculino) e na tradução antiga; o mesmo vale para o tipo: “uma `String`”. `String` e `&str` são código. “string literal” → “literal de string”. Comprehensive Rust pt-BR (mensagens com o termo: 45): string 45, cadeia 0."
   - en: "string literal"
     pt: "literal de string"
     manter_ingles: false
@@ -304,7 +307,7 @@ termos:
     exemplo_en: "Storing Data on the Heap"
     exemplo_pt: "Armazenando dados no heap"
     evitar: []
-    nota: "Fica em inglês, no masculino (“o heap”, “no heap”), como no CR (heap 22 × monte 0; no 7, do 3). Já “stack” é traduzido: “pilha”. Comprehensive Rust pt-BR (mensagens com o termo: 24): heap 22, monte 0."
+    nota: "Fica em inglês, no masculino (“o heap”, “no heap”), como no CR (heap 22 × monte 0; masculino 13: no 10, do 3; nenhum feminino). Já “stack” é traduzido: “pilha”. Comprehensive Rust pt-BR (mensagens com o termo: 24): heap 22, monte 0."
   - en: "stack"
     pt: "pilha"
     manter_ingles: false
@@ -371,6 +374,17 @@ termos:
     exemplo_pt: "Veremos dois subconjuntos de tipos de dados: escalares e compostos."
     evitar: []
     nota: "“scalar type” → “tipo escalar”; “compound type” → “tipo composto”; “primitive type” → “tipo primitivo”. “data” sozinho → “dados”, no plural (“the data is” → “os dados são”); “data structure” → “estrutura de dados”."
+  - en: "data structure"
+    pt: "estrutura de dados"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Creating a Tree Data Structure"
+    exemplo_pt: "Criando uma estrutura de dados em árvore"
+    evitar:
+      - '(?<![^\W_])data structures?(?![^\W_])'
+    nota: "Plural “estruturas de dados”. É o conceito geral (vetor, hash map, árvore, lista cons): nunca “struct” nem “estrutura” sozinha para ele; “struct” é só o item `struct` do Rust. Comprehensive Rust pt-BR (mensagens com o termo: 10): estrutura de dados 10, struct 0."
   - en: "integer"
     pt: "inteiro"
     manter_ingles: false
@@ -455,7 +469,7 @@ termos:
     exemplo_pt: "Armazenando listas de valores com vetores"
     evitar:
       - '(?<![^\W_])vectors?(?![^\W_])'
-    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Masculino (CR: um 8, do 6, o 2). O tipo `Vec<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 18): vetor 18, vector 0."
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Masculino (CR: masculino 12: um 4, do 4, o 2; nenhum feminino). O tipo `Vec<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 18): vetor 18, vector 0."
   - en: "hash map"
     pt: "hash map"
     manter_ingles: true
@@ -465,7 +479,7 @@ termos:
     exemplo_en: "Creating a New Hash Map"
     exemplo_pt: "Criando um novo hash map"
     evitar: []
-    nota: "Fica em inglês, no masculino (“o hash map”), como no CR (no 2, um 1). `HashMap<K, V>` é código. “hash function”/“hashing function” → “função de hash”. Comprehensive Rust pt-BR (mensagens com o termo: 5): hash map 5, mapa de hash 0, tabela hash 0."
+    nota: "Fica em inglês, no masculino (“o hash map”), como no CR (masculino 3: no 2, um 1; nenhum feminino). `HashMap<K, V>` é código. “hash function”/“hashing function” → “função de hash”. Comprehensive Rust pt-BR (mensagens com o termo: 5): hash map 5, mapa de hash 0, tabela hash 0."
   - en: "collection"
     pt: "coleção"
     manter_ingles: false
@@ -496,7 +510,7 @@ termos:
     exemplo_pt: "Tornando structs e enums públicos"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*struct(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*structs(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o struct”, “um struct”, “os structs” (CR: no 2, do 2, um 2, o 1). Para o conceito do Rust não use “estrutura” (“data structure” → “estrutura de dados” continua certo). A regra `genero-struct` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 61): struct 52, estrutura 10."
+    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o struct”, “um struct”, “os structs”. No CR o gênero é dividido (masculino 11: um 3, no 2, do 2, o 2; feminino 11: uma 5, da 2); vale a decisão do mantenedor. Para o conceito do Rust não use “estrutura” (“data structure” → “estrutura de dados” continua certo). A regra `genero-struct` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 61): struct 52, estrutura 10."
   - en: "tuple struct"
     pt: "struct de tupla"
     manter_ingles: false
@@ -579,7 +593,7 @@ termos:
     exemplo_pt: "Os enums tratam esse caso com facilidade:"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*enum(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*enums(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o enum”, “um enum”, “os enums” (CR: o 3, um 1). O nome por extenso, “enumeration”, vira “enumeração”. A regra `genero-enum` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 28): enum 26, enumeração 1."
+    nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o enum”, “um enum”, “os enums”. No CR o gênero é dividido (masculino 6: o 3, um 2, próprio 1; feminino 4: uma 3, as 1); vale a decisão do mantenedor. O nome por extenso, “enumeration”, vira “enumeração”. A regra `genero-enum` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 28): enum 26, enumeração 1."
   - en: "variant"
     pt: "variante"
     manter_ingles: false
@@ -724,7 +738,18 @@ termos:
     exemplo_en: "The compiler can usually infer what type we want to use based on the value and how we use it."
     exemplo_pt: "O compilador geralmente consegue inferir que tipo queremos usar com base no valor e em como o usamos."
     evitar: []
-    nota: "“type inference” → “inferência de tipos”. Comprehensive Rust pt-BR (mensagens com o termo: 17): infer- 16."
+    nota: "“type inference” → “inferência de tipos” (ver a entrada “type inference”). Comprehensive Rust pt-BR (mensagens com o termo: 17): infer- 16."
+  - en: "type inference"
+    pt: "inferência de tipos"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "However, it also has type inference."
+    exemplo_pt: "No entanto, ele também tem inferência de tipos."
+    evitar:
+      - '(?<![^\W_])type inference(?![^\W_])'
+    nota: "“inference” sozinho → “inferência” (“full inference” → “inferência completa”); o verbo “infer” → “inferir” (ver a entrada “infer”). Comprehensive Rust pt-BR (mensagens com o termo: 10): inferência 10."
 
   # -------- Tempos de vida
   - en: "lifetime"
@@ -771,7 +796,7 @@ termos:
     exemplo_pt: "Implementando um trait em um tipo"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*trait(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*traits(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o trait”, “os traits”) pela evidência do CR (o 36, um 15, do 10, os 7; nenhum feminino); o gênero não foi decisão explícita do mantenedor. Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o trait”, “os traits”) pela evidência do CR (masculino 73: o 32, um 15, do 10, os 7; nenhum feminino nas mensagens ativas, só 1 numa entrada obsoleta); o gênero não foi decisão explícita do mantenedor. Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
   - en: "trait bound"
     pt: "limite de trait"
     manter_ingles: false
@@ -943,6 +968,18 @@ termos:
     exemplo_pt: "Lembre-se de que blocos são expressões."
     evitar: []
     nota: "“code block” → “bloco de código”; “async block” → “bloco assíncrono”; “`unsafe` block” → “bloco `unsafe`”. O verbo “to block” é “bloquear” (ver “blocking”). Comprehensive Rust pt-BR (mensagens com o termo: 60): bloco 45."
+  - en: "control flow"
+    pt: "fluxo de controle"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Specifically, you’ll learn about variables, basic types, functions, comments, and control flow."
+    exemplo_pt: "Especificamente, você vai aprender sobre variáveis, tipos básicos, funções, comentários e fluxo de controle."
+    evitar:
+      - '(?<![^\W_])control[ -]flow(?![^\W_])'
+      - '(?<![^\W_])controles? de fluxo(?![^\W_])'
+    nota: "“control flow construct” → “construção de fluxo de controle” (“the `match` control flow construct” → “a construção de fluxo de controle `match`”). Nunca “controle de fluxo”, que é outra coisa (flow control) e que o CR usa só em títulos de seção. Comprehensive Rust pt-BR (mensagens com o termo: 13): fluxo de controle 9, controle de fluxo 4."
   - en: "loop"
     pt: "loop"
     manter_ingles: true
@@ -953,7 +990,7 @@ termos:
     exemplo_pt: "Escolhendo entre loops e iteradores"
     evitar:
       - '(?<![^\W_])laços?(?![^\W_])'
-    nota: "Fica em inglês, no masculino (“o loop”, “um loop”), como no CR (um 7, o 3); diverge do glossário antigo (“laço”). “loop label” → “rótulo de loop”. As palavras-chave `loop`, `while` e `for` são código. Comprehensive Rust pt-BR (mensagens com o termo: 25): loop 23, laço 2, repetição 0."
+    nota: "Fica em inglês, no masculino (“o loop”, “um loop”), como no CR (masculino 12: um 6, o 3, do 2; nenhum feminino); diverge do glossário antigo (“laço”). “loop label” → “rótulo de loop”. As palavras-chave `loop`, `while` e `for` são código. Comprehensive Rust pt-BR (mensagens com o termo: 25): loop 23, laço 2, repetição 0."
   - en: "iterate"
     pt: "iterar"
     manter_ingles: false
@@ -961,7 +998,7 @@ termos:
     genero: null
     status: provisorio
     exemplo_en: "Iterate through each line of the contents."
-    exemplo_pt: "Iterar por cada linha do conteúdo."
+    exemplo_pt: "Iterar sobre cada linha do conteúdo."
     evitar: []
     nota: "“iterate over” → “iterar sobre” ou “percorrer”; “iteration” → “iteração”. Comprehensive Rust pt-BR (mensagens com o termo: 13): iter- 13, percorr- 0."
   - en: "pattern"
@@ -1207,7 +1244,7 @@ termos:
     exemplo_pt: "Ao contrário das funções, os closures podem capturar valores do escopo em que são definidos."
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*closure(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*closures(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino — “o closure”, “um closure”, “os closures definidos” — pela evidência do CR (um 3, os 1; nenhum feminino) e pela escolha da sessão anterior; o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino — “o closure”, “um closure”, “os closures definidos” — pela evidência do CR (masculino 4: um 3, os 1; nenhum feminino) e pela escolha da sessão anterior; o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
   - en: "capture"
     pt: "capturar"
     manter_ingles: false
@@ -1349,6 +1386,17 @@ termos:
     exemplo_pt: "Vamos receber este erro de compilação:"
     evitar: []
     nota: "“compile-time error” → “erro em tempo de compilação”; “the compiler gives us this error” → “o compilador nos dá este erro”."
+  - en: "error message"
+    pt: "mensagem de erro"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "If we run this code, we get an error message like this one:"
+    exemplo_pt: "Se executarmos este código, vamos receber uma mensagem de erro como esta:"
+    evitar:
+      - '(?<![^\W_])error messages?(?![^\W_])'
+    nota: "Plural “mensagens de erro”. “the error message’s advice” → “a sugestão da mensagem de erro”. Comprehensive Rust pt-BR (mensagens com o termo: 10): mensagem de erro 10."
   - en: "warning"
     pt: "aviso"
     manter_ingles: false
@@ -1424,7 +1472,7 @@ termos:
     exemplo_pt: "Adicionando metadados a um novo crate"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*crate(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*crates(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o crate”, “os crates”) pela evidência do CR (o 30, um 17, do 12, seu 5); o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
+    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o crate”, “os crates”) pela evidência do CR (masculino 95: o 30, um 17, do 12, no 8; feminino 4); o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
   - en: "binary crate"
     pt: "crate binário"
     manter_ingles: false
@@ -1576,7 +1624,18 @@ termos:
     exemplo_en: "More About Cargo and Crates.io"
     exemplo_pt: "Mais sobre o Cargo e o crates.io"
     evitar: []
-    nota: "Nome do registro de crates, no masculino (“o crates.io”, “no crates.io”); em início de frase o livro escreve “Crates.io”. “registry” → “registro”; “publish” → “publicar” (“publicar um crate”); “yank” → “retirar” (“retirar uma versão”; o comando `cargo yank` é código). Comprehensive Rust pt-BR (mensagens com o termo: 1): registro 1."
+    nota: "Nome do registro de crates, no masculino (“o crates.io”, “no crates.io”); em início de frase o livro escreve “Crates.io”. “registry” → “registro” (ver a entrada “registry”); “publish” → “publicar” (“publicar um crate”); “yank” → “retirar” (“retirar uma versão”; o comando `cargo yank` é código)."
+  - en: "registry"
+    pt: "registro"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The next time you run `cargo build`, Cargo will update the registry of crates available and reevaluate your `rand` requirements according to the new version you have specified."
+    exemplo_pt: "Na próxima vez que você executar `cargo build`, o Cargo vai atualizar o registro de crates disponíveis e reavaliar os requisitos do `rand` de acordo com a nova versão que você especificou."
+    evitar:
+      - '(?<![^\W_])registr(?:y|ies)(?![^\W_])'
+    nota: "O registro de crates do Rust é o crates.io (“the crate registry at crates.io” → “o registro de crates em crates.io”); plural “registros”. Comprehensive Rust pt-BR (mensagens com o termo: 1): registro 1."
   - en: "cargo"
     pt: "Cargo"
     manter_ingles: true
@@ -1702,7 +1761,7 @@ termos:
     exemplo_en: "Yielding Control to the Runtime"
     exemplo_pt: "Cedendo o controle ao runtime"
     evitar: []
-    nota: "Dois sentidos: (1) o runtime assíncrono (o software que executa futures) fica em inglês, no masculino (“o runtime”, “um runtime”; CR: um 5, o 1); “executor” (a parte do runtime que executa as tarefas) → “executor”; (2) “at runtime” → “em tempo de execução”, e “runtime performance” → “desempenho em tempo de execução”. Comprehensive Rust pt-BR (mensagens com o termo: 36): runtime 10, tempo de execução 25, ambiente de execução 0."
+    nota: "Dois sentidos: (1) o runtime assíncrono (o software que executa futures) fica em inglês, no masculino (“o runtime”, “um runtime”; CR: masculino 8: um 5, dos 2, o 1; nenhum feminino); “executor” (a parte do runtime que executa as tarefas) → “executor”; (2) “at runtime” → “em tempo de execução”, e “runtime performance” → “desempenho em tempo de execução”. Comprehensive Rust pt-BR (mensagens com o termo: 36): runtime 10, tempo de execução 25, ambiente de execução 0."
   - en: "build"
     pt: "compilar"
     manter_ingles: false
@@ -1873,6 +1932,17 @@ termos:
     evitar:
       - '(?<![^\W_])test[ -]driven(?![^\W_])'
     nota: "A sigla TDD fica."
+  - en: "mock object"
+    pt: "objeto mock"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Testing with Mock Objects"
+    exemplo_pt: "Testando com objetos mock"
+    evitar:
+      - '(?<![^\W_])mock objects?(?![^\W_])'
+    nota: "Plural “objetos mock”; “mock” fica em inglês, como no CR (que usa “mock”/“mocking” em todas as mensagens com o termo). Alternativa em aberto: “objeto simulado”. “test double” → “dublê de teste”. Comprehensive Rust pt-BR (mensagens com o termo: 8): mock 8, simulad- 0."
   - en: "attribute"
     pt: "atributo"
     manter_ingles: false
@@ -2217,7 +2287,7 @@ termos:
     evitar:
       - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*thread(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*threads(?![^\W_])'
       - '(?<![^\W_])linhas? de execução(?![^\W_])'
-    nota: "Fica em inglês, no feminino (“a thread”, “uma thread”, “as threads”), a forma mais frequente no CR (a thread principal, a thread filha, a thread atual: cerca de 17 usos no feminino contra 11 no masculino) e a da tradução antiga. “main thread” → “thread principal”; “spawned thread” → “thread criada”; “multithreaded” → “multithread”; “single-threaded” → “de thread única”. Comprehensive Rust pt-BR (mensagens com o termo: 80): thread 76, linha de execução 0, encadeamento 0."
+    nota: "Fica em inglês, no feminino (“a thread”, “uma thread”, “as threads”), a forma mais frequente no CR (feminino 23: a 10, as 4, da 2, outra 2; masculino 12: outro 5, o 3, um 2) e a da tradução antiga. “main thread” → “thread principal”; “spawned thread” → “thread criada”; “multithreaded” → “multithread”; “single-threaded” → “de thread única”. Comprehensive Rust pt-BR (mensagens com o termo: 80): thread 76, linha de execução 0, encadeamento 0."
   - en: "spawn"
     pt: "criar"
     manter_ingles: false
@@ -2320,7 +2390,7 @@ termos:
     exemplo_en: "For an example, let’s look at mutexes, one of the more common concurrency primitives for shared memory."
     exemplo_pt: "Como exemplo, vamos ver os mutexes, uma das primitivas de concorrência mais comuns para memória compartilhada."
     evitar: []
-    nota: "Fica em inglês, no masculino (CR: o 1, um 1); plural “mutexes”. `Mutex<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 8): mutex 8."
+    nota: "Fica em inglês, no masculino (CR: masculino 3: um 2, o 1; nenhum feminino); plural “mutexes”. `Mutex<T>` é código. Comprehensive Rust pt-BR (mensagens com o termo: 8): mutex 8."
   - en: "lock"
     pt: "lock"
     manter_ingles: true
@@ -2421,7 +2491,7 @@ termos:
     genero: null
     status: provisorio
     exemplo_en: "Return a `Future` instead of blocking the current thread."
-    exemplo_pt: "Retornar um `Future` em vez de bloquear a thread atual."
+    exemplo_pt: "Retornar uma `Future` em vez de bloquear a thread atual."
     evitar: []
     nota: "“to block” → “bloquear”; “blocking call” → “chamada bloqueante”; “non-blocking” → “não bloqueante”. Não confundir com “block” = “bloco”. Comprehensive Rust pt-BR (mensagens com o termo: 25): bloque- 10."
 
@@ -2456,7 +2526,7 @@ termos:
     exemplo_pt: "Às vezes você vai ouvir isso descrito como uma future _matando de fome_ as outras futures."
     evitar:
       - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*future(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*futures(?![^\W_])'
-    nota: "Fica em inglês, no feminino (“a future”, “uma future”, “as futures”), como no CR (uma 8, as 5, essa 4; nenhum masculino). O trait `Future` é código. “in the future” (tempo) → “no futuro”. Comprehensive Rust pt-BR (mensagens com o termo: 37): future 32, futuro 5."
+    nota: "Fica em inglês, no feminino (“a future”, “uma future”, “as futures”), como no CR (feminino 30: uma 8, as 5, a 4, essa 4; nenhum masculino). O trait `Future` é código. “in the future” (tempo) → “no futuro”. Comprehensive Rust pt-BR (mensagens com o termo: 37): future 32, futuro 5."
   - en: "stream"
     pt: "stream"
     manter_ingles: true
@@ -2466,7 +2536,7 @@ termos:
     exemplo_en: "A stream is like an asynchronous form of iteration."
     exemplo_pt: "Um stream é como uma forma assíncrona de iteração."
     evitar: []
-    nota: "Fica em inglês, no masculino (“o stream”; CR: um 2, o 1). Vale também para o stream TCP do Capítulo 21 (`TcpStream` é código). Comprehensive Rust pt-BR (mensagens com o termo: 5): stream 5, fluxo 1."
+    nota: "Fica em inglês, no masculino (“o stream”; CR: masculino 2: um 2; nenhum feminino). Vale também para o stream TCP do Capítulo 21 (`TcpStream` é código). Comprehensive Rust pt-BR (mensagens com o termo: 5): stream 5, fluxo 1."
   - en: "task"
     pt: "tarefa"
     manter_ingles: false
@@ -2530,7 +2600,7 @@ termos:
     exemplo_pt: "Agora, vamos ver as macros!"
     evitar:
       - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*macro(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*macros(?![^\W_])'
-    nota: "Feminino (“a macro”, “uma macro”), como no CR (a 15, uma 2, da 2 contra o 1, um 1). Macros como `println!` são código. “macro invocation” → “invocação de macro”; “metaprogramming” → “metaprogramação”. Comprehensive Rust pt-BR (mensagens com o termo: 42): macro 42."
+    nota: "Feminino (“a macro”, “uma macro”), como no CR (feminino 20: a 15, uma 2, da 2, as 1; masculino 5: os 3, o 1, um 1). Macros como `println!` são código. “macro invocation” → “invocação de macro”; “metaprogramming” → “metaprogramação”. Comprehensive Rust pt-BR (mensagens com o termo: 42): macro 42."
   - en: "declarative macro"
     pt: "macro declarativa"
     manter_ingles: false
@@ -2595,6 +2665,17 @@ termos:
     exemplo_pt: "Criando uma abstração segura sobre código inseguro"
     evitar: []
     nota: "“safe Rust” → “Rust seguro”; “safety” → “segurança”; “type safety” → “segurança de tipos”; “thread-safe” → “seguro para threads”. Comprehensive Rust pt-BR (mensagens com o termo: 40): seguro 31."
+  - en: "unsound"
+    pt: "incorreto"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Miri also does not cover every possible way your code can be unsound."
+    exemplo_pt: "O Miri também não cobre todas as formas pelas quais seu código pode ser incorreto."
+    evitar:
+      - '(?<![^\W_])(?:unsound(?:ness)?|soundness)(?![^\W_])'
+    nota: "Sentido técnico: código que permite comportamento indefinido a partir de código seguro. Como no CR (“isso é incorreto”; “soundness” → “correção”). “sound” (adjetivo, nesse sentido) → “correto”. Nunca “som”, “sonoro” ou “não sólido”; não confundir com “unsafe” → “inseguro”. O verbo “to sound (like)” é outra palavra (“That might not sound like much” → “Pode não parecer muito”). Comprehensive Rust pt-BR (mensagens com o termo: 3): correção 1, incorreto 2, solidez 0, sound 0."
   - en: "ffi"
     pt: "FFI"
     manter_ingles: true
@@ -2856,7 +2937,29 @@ termos:
     exemplo_en: "Rust requires curly brackets around all function bodies."
     exemplo_pt: "O Rust exige chaves em volta do corpo de todas as funções."
     evitar: []
-    nota: "Plural “chaves” (`{}`). “square brackets” → “colchetes”; “angle brackets” → “colchetes angulares”; “parentheses” → “parênteses”. “key” (de um hash map) também é “chave”; o contexto desfaz a ambiguidade."
+    nota: "Plural “chaves” (`{}`). “square brackets” → “colchetes” e “angle brackets” → “colchetes angulares” (ver as entradas próprias); “parentheses” → “parênteses”. “key” (de um hash map) também é “chave”; o contexto desfaz a ambiguidade."
+  - en: "angle bracket"
+    pt: "colchete angular"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We place trait bounds with the declaration of the generic type parameter after a colon and inside angle brackets."
+    exemplo_pt: "Colocamos os limites de trait na declaração do parâmetro de tipo genérico, depois de dois-pontos e dentro de colchetes angulares."
+    evitar:
+      - '(?<![^\W_])angle brackets?(?![^\W_])'
+    nota: "Os sinais `<` e `>`; quase sempre no plural, “colchetes angulares”. Ver “curly bracket” e “square bracket”."
+  - en: "square bracket"
+    pt: "colchete"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We write the values in an array as a comma-separated list inside square brackets:"
+    exemplo_pt: "Escrevemos os valores de um array como uma lista separada por vírgulas dentro de colchetes:"
+    evitar:
+      - '(?<![^\W_])square brackets?(?![^\W_])'
+    nota: "Os sinais `[` e `]`; quase sempre no plural, “colchetes” (“Table B-10: Square Brackets” → “Tabela B-10: colchetes”)."
   - en: "operating system"
     pt: "sistema operacional"
     manter_ingles: false
