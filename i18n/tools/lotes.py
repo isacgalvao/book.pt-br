@@ -25,8 +25,13 @@ Grava `DIR/<CAP>-<NN>.json` (NN = 01, 02, ...):
 O glossário é i18n/glossario.yml (a variável de ambiente PTBR_GLOSSARIO o substitui). O termo
 `en` casa sem diferenciar maiúsculas, como palavra inteira (o `_` NÃO conta como letra, então
 `_ownership_` e `*borrowing*` casam), com plural s/es, formas -ed/-ing, hífen e espaço
-equivalentes entre as partes de um termo composto. Glossário ausente ou inválido: aviso no
-stderr e `termos: []`.
+equivalentes entre as partes de um termo composto. O casamento ignora código em linha,
+`<code>`, destinos de link, URLs e tags HTML (o texto de alt/title/caption conta). Glossário
+ausente ou inválido: aviso no stderr e `termos: []`.
+
+A saída (--saida) não pode ficar dentro do repositório, salvo em i18n/ ou po/: os lotes são
+artefatos de execução e não devem sujar os caminhos do upstream. Ao regerar no mesmo DIR, os
+lotes <CAP>-<NN>.json antigos dos capítulos pedidos são removidos.
 
 Uso:
     lotes.py --capitulo CAP [CAP ...] --saida DIR [--palavras 1500] [--po ARQUIVO.po]
@@ -36,6 +41,7 @@ Códigos de saída: 0 = ok, 2 = erro de uso ou de ambiente.
 """
 import argparse
 import errno
+import functools
 import json
 import os
 import re
@@ -416,14 +422,14 @@ _IRREGULARES = {
 }
 
 
-def _formas(palavra):
-    """Padrão de uma palavra inglesa com as flexões: plural s/es/ies, -d/-ed/-ing.
+def _lista_formas(palavra):
+    """Formas inglesas de uma palavra: plural s/es/ies e -d/-ed/-ing (incluída a própria).
 
     Cobre o plural dos substantivos e as formas verbais (`panic` → panicked, `run` → running,
     `copy` → copied, `compile` → compiling). Palavra com dígito, ponto ou apóstrofo não flexiona.
     """
     if not re.fullmatch(r"[a-z]{2,}", palavra):
-        return re.escape(palavra)
+        return {palavra}
     formas = {palavra, palavra + "s", palavra + "es"}
     if re.search(r"[^aeiou]y$", palavra):                 # copy → copies, copied, copying
         formas |= {palavra[:-1] + "ies", palavra[:-1] + "ied", palavra + "ing"}
@@ -435,7 +441,14 @@ def _formas(palavra):
         formas |= {palavra + "ked", palavra + "king"}
     if re.search(r"[aeiou][^aeiouwxy]$", palavra):        # drop → dropped, run → running
         formas |= {palavra + palavra[-1] + "ed", palavra + palavra[-1] + "ing"}
-    formas |= set(_IRREGULARES.get(palavra, ()))
+    return formas | set(_IRREGULARES.get(palavra, ()))
+
+
+def _formas(palavra):
+    """Padrão regex de uma palavra com as flexões de `_lista_formas`."""
+    formas = _lista_formas(palavra)
+    if len(formas) == 1:
+        return re.escape(palavra)
     return "(?:" + "|".join(re.escape(f) for f in sorted(formas, key=len, reverse=True)) + ")"
 
 
@@ -443,6 +456,19 @@ def _formas(palavra):
 # `[^\W_]` = letra ou dígito (Unicode) sem o sublinhado.
 _ANTES = r"(?<![^\W_])"
 _DEPOIS = r"(?![^\W_])"
+
+
+def _analisar_termo(en, classe):
+    """([[parte, ...] por palavra], índice da palavra que flexiona) ou None se `en` é vazio."""
+    grupos = [[p for p in g.split("-") if p] for g in en.strip().lower().split()]
+    grupos = [g for g in grupos if g]
+    if not grupos:
+        return None
+    if classe == "expressão":  # frase feita: nada flexiona
+        alvo = -1
+    else:
+        alvo = 0 if (classe == "verbo" and len(grupos) > 1) else len(grupos) - 1
+    return grupos, alvo
 
 
 def regex_do_termo(en, classe=None):
@@ -458,13 +484,10 @@ def regex_do_termo(en, classe=None):
       (`trade-off` casa com `trade-offs`, `re-export` com `re-exporting`).
     Devolve None se `en` não tem nenhuma palavra.
     """
-    grupos = [[p for p in g.split("-") if p] for g in en.strip().lower().split()]
-    grupos = [g for g in grupos if g]
-    if not grupos:
+    analise = _analisar_termo(en, classe)
+    if analise is None:
         return None
-    alvo = 0 if (classe == "verbo" and len(grupos) > 1) else len(grupos) - 1
-    if classe == "expressão":  # frase feita: nada flexiona
-        alvo = -1
+    grupos, alvo = analise
 
     def palavra(partes, flexiona):
         corpo = [re.escape(p) for p in partes[:-1]] + \
@@ -473,6 +496,26 @@ def regex_do_termo(en, classe=None):
 
     corpo = r"[\s\-]+".join(palavra(g, i == alvo) for i, g in enumerate(grupos))
     return re.compile(_ANTES + corpo + _DEPOIS, re.I)
+
+
+def _agulha(en, classe):
+    """Prefixo (minúsculo) com que todo trecho que casa com o termo começa.
+
+    Serve para descartar rápido, com `in`, os termos que não estão no texto, antes de
+    gastar a regex (a maior parte do tempo do programa). Vazio = sem pré-filtro.
+    """
+    grupos, alvo = _analisar_termo(en, classe)
+    primeira = grupos[0][0]
+    formas = _lista_formas(primeira) if (alvo == 0 and len(grupos[0]) == 1) else {primeira}
+    prefixo = os.path.commonprefix(sorted(formas))
+    return prefixo if len(prefixo) >= 2 else ""
+
+
+@functools.lru_cache(maxsize=None)
+def _termo_compilado(en, classe):
+    """(regex, agulha) de um termo; None se `en` não tem palavra."""
+    rx = regex_do_termo(en, classe)
+    return None if rx is None else (rx, _agulha(en, classe))
 
 
 # Texto que não conta como prosa para o casamento: código, destinos de link, URLs, tags.
@@ -508,23 +551,20 @@ def texto_para_termos(msgid):
     return _URL.sub(" ", t)
 
 
-def compilar_termos(glossario):
-    """[(termo, regex)] na ordem do glossário; termo sem regex válida é ignorado."""
-    pares = []
-    for t in glossario:
-        try:
-            rx = regex_do_termo(t["en"], t.get("classe"))
-        except re.error:
-            continue
-        if rx is not None:
-            pares.append((t, rx))
-    return pares
-
-
-def termos_do_lote(termos_compilados, msgids):
-    """Entradas inteiras do glossário cujo `en` aparece em algum dos `msgids`."""
+def termos_do_lote(glossario, msgids):
+    """Entradas inteiras do glossário cujo `en` aparece em algum dos `msgids` (ordem do glossário)."""
     texto = _SEPARADOR.join(texto_para_termos(m) for m in msgids)
-    return [t for t, rx in termos_compilados if rx.search(texto)]
+    minusculas = texto.lower()
+    achados = []
+    for t in glossario:
+        classe = t.get("classe")
+        compilado = _termo_compilado(t["en"], classe if isinstance(classe, str) else None)
+        if compilado is None:
+            continue
+        rx, agulha = compilado
+        if agulha in minusculas and rx.search(texto):
+            achados.append(t)
+    return achados
 
 
 # --------------------------------------------------------------------------
@@ -628,7 +668,7 @@ def executar(args):
     saida = preparar_saida(args.saida)
     todas = [e for e in po if not e.obsolete]
     por_cap = selecionar(todas, capitulos, args.incluir_traduzidas)
-    termos_compilados = compilar_termos(carregar_glossario())
+    glossario = carregar_glossario()
 
     linhas = []
     gravados = set()
@@ -638,7 +678,7 @@ def executar(args):
         if not lotes:
             linhas.append(f"{cap}: nada a traduzir")
         for n, lote in enumerate(lotes, 1):
-            termos = termos_do_lote(termos_compilados, [i.e.msgid for i in lote])
+            termos = termos_do_lote(glossario, [i.e.msgid for i in lote])
             arquivos = list(dict.fromkeys(i.arquivo for i in lote))
             dados = {
                 "capitulo": cap,
