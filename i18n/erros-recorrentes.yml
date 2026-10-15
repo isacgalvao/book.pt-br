@@ -103,7 +103,7 @@ erros:
 
   - id: portugues-em-code-span
     escopo: bruto
-    regex: '(?s:\A(?:[^`]*`[^`]*`)*?[^`]*`(?=[^`]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b|\bcrate\s+[a-z_]+\b))[^`]*`)'
+    regex: '(?-i:(?<![^\s(\[“"_*—-])`[^`\n]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b|\bcrate\s+[a-z_]+\b)[^`\n]*`(?![^\s)\].,;:!?”"_*—-]))'
     severidade: erro
     correcao: "só o identificador no code span: [método `expect`][expect], [crate `rand`][randcrate]"
     explicacao: >-
