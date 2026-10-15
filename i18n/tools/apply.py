@@ -29,6 +29,14 @@ trava, então dois aplicadores simultâneos não perdem atualizações), por arq
 temporário + conferência do resultado + `os.replace`; em qualquer falha o ARQ.po
 original fica intacto.
 
+A trava é o arquivo ARQ.po.lock, que NUNCA é apagado: ele permanece (vazio) ao lado
+do PO (em `po/`, o `.gitignore` já ignora `*.lock`) e é a trava comum a todo escritor
+do PO. Qualquer outro processo que precise serializar com o apply.py (o orquestrador
+rodando slugs.py, autoport.py, normaliza_po.py ou msgmerge) deve pegar o MESMO
+caminho, por exemplo `flock po/pt-BR.po.lock COMANDO...`. O contrário não vale: não
+embrulhe o próprio apply.py em `flock` nesse caminho, porque ele já pega a trava,
+esperaria 300 s por si mesmo e sairia com código 2.
+
 Saída: o relatório `{"aplicadas":N,"rejeitadas":[{"id","msgid","motivos":[...]}],
 "avisos":[{"id","motivos":[...]}]}` em JSON na saída padrão (e em --relatorio);
 o resumo legível, em português, vai para a saída de erro.
@@ -398,44 +406,38 @@ def aplica_em_memoria(po, itens, fora_do_escopo):
 def trava_exclusiva(po_path, espera=None):
     """`flock` exclusivo em PO + '.lock' (mesmo diretório), durante todo o bloco.
 
-    O arquivo de trava é removido ao sair, ainda sob a trava; quem esperava confere
-    se a trava que obteve ainda é o arquivo do caminho e, se não for, tenta de novo.
+    O arquivo de trava NUNCA é apagado: ele persiste (vazio) ao lado do PO e é a
+    trava compartilhada por todo escritor do PO. Apagá-lo quebraria a exclusão
+    mútua com qualquer outro participante que trave o mesmo caminho sem esta
+    mesma lógica (um `flock po/pt-BR.po.lock ...` do orquestrador em volta de
+    slugs.py, autoport.py, normaliza_po.py ou msgmerge, por exemplo): quem esperava
+    no inode antigo e quem criasse um inode novo teriam, os dois, a "mesma" trava.
+    `po/.gitignore` já ignora `*.lock`.
+
+    Fica o caminho inteiro de `flock(2)`: o descritor só é fechado ao sair, e a
+    trava some com ele (também se o processo morrer). Não embrulhe o apply.py em
+    `flock` no mesmo caminho: ele mesmo pega a trava, esperaria ESPERA_TRAVA (300 s)
+    e sairia com código 2.
     """
     espera = ESPERA_TRAVA if espera is None else espera
     caminho = str(po_path) + ".lock"
     limite = time.monotonic() + espera
-    fd = None
-    while True:
-        try:
-            fd = os.open(caminho, os.O_RDWR | os.O_CREAT, 0o644)
-        except OSError as exc:
-            raise ErroUso(f"não consegui criar a trava {caminho}: {exc.strerror or exc}") from None
-        try:
-            while True:
-                try:
-                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    break
-                except (BlockingIOError, InterruptedError):
-                    if time.monotonic() > limite:
-                        raise ErroUso(f"outro aplicador está gravando {po_path} há mais de "
-                                      f"{int(espera)} s; tente de novo (trava: {caminho})") from None
-                    time.sleep(0.05)
-            try:
-                atual = os.stat(caminho)
-            except FileNotFoundError:
-                atual = None
-            meu = os.fstat(fd)
-            if atual is not None and (atual.st_ino, atual.st_dev) == (meu.st_ino, meu.st_dev):
-                break                                     # a trava vale
-        except BaseException:
-            os.close(fd)
-            raise
-        os.close(fd)                                      # o dono anterior removeu o arquivo: recomeça
     try:
+        fd = os.open(caminho, os.O_RDWR | os.O_CREAT, 0o644)
+    except OSError as exc:
+        raise ErroUso(f"não consegui criar a trava {caminho}: {exc.strerror or exc}") from None
+    try:
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except (BlockingIOError, InterruptedError):
+                if time.monotonic() > limite:
+                    raise ErroUso(f"outro aplicador está gravando {po_path} há mais de "
+                                  f"{int(espera)} s; tente de novo (trava: {caminho})") from None
+                time.sleep(0.05)
         yield
     finally:
-        with contextlib.suppress(OSError):
-            os.unlink(caminho)
         os.close(fd)
 
 
