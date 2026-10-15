@@ -45,7 +45,6 @@ import json
 import os
 import re
 import signal
-import socket
 import ssl
 import sys
 import time
@@ -341,6 +340,8 @@ def _formas(palavra):
         formas.append(re.escape(palavra[:-1]) + r"(?:ies|ied)")
     if re.search(r"[^aeiou][aeiou][^aeiouwxy]$", palavra):  # run -> running
         formas.append(p + re.escape(palavra[-1]) + r"(?:ed|ing|er|ers)")
+    if palavra.endswith("c"):  # panic -> panicked, panicking
+        formas.append(p + r"k(?:ed|ing)")
     return "(?:" + "|".join(formas) + ")"
 
 
@@ -657,7 +658,12 @@ class _SemRedirecionar(urllib.request.HTTPRedirectHandler):
 
 
 def _abrir(req, timeout):
-    return urllib.request.build_opener(_SemRedirecionar).open(req, timeout=timeout)
+    """Abre a requisição sem seguir redirecionamentos. Um servidor local de testes
+    (PTBR_API_URL) nunca passa por proxy; a API de verdade respeita os proxies do ambiente."""
+    manipuladores = [_SemRedirecionar]
+    if urlsplit(req.full_url).hostname in HOSTS_LOCAIS:
+        manipuladores.append(urllib.request.ProxyHandler({}))
+    return urllib.request.build_opener(*manipuladores).open(req, timeout=timeout)
 
 
 def url_da_api():
@@ -968,6 +974,10 @@ def apagar_saida_antiga(saida):
             f.write("")
         tmp.unlink()
     except OSError as e:
+        try:
+            tmp.unlink()
+        except OSError:
+            pass
         raise ErroFatal(f"não consigo gravar em {p.parent}: {_limpo(e)}") from None
 
 
