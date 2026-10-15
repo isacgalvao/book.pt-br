@@ -51,6 +51,8 @@ modo pt: aplica a identidade pt-BR (título "A Linguagem de Programação Rust" 
   português ("Listagem N", "Nome do arquivo:"), compilado uma vez no cache, e
   termina com i18n/tools/pos_build.py OUT (remove os ' {#id}' vazados).
 
+variáveis MDBOOK_* do ambiente são ignoradas (o build é hermético).
+
 variáveis: SITE_URL (padrão /book.pt-br/; só no modo pt)
            I18N_CACHE (padrão ~/.cache/book-ptbr-i18n)
            CARGO_TARGET_DIR (respeitado nos preprocessors do upstream;
@@ -97,12 +99,12 @@ _parece_saida() {
   if [[ -f "$d/index.html" ]] && { [[ -f "$d/toc.html" ]] || compgen -G "$d/book*.js" >/dev/null || compgen -G "$d/toc*.js" >/dev/null; }; then
     return 0
   fi
-  f="$(ls -A -- "$d")"
+  f="$(ls -A -- "$d" 2>/dev/null)" || return 1
   [[ "$f" == "messages.pot" ]]
 }
 
 valida_saida() {
-  local bruto="${1:-}" out raiz casa p d rastreados
+  local bruto="${1:-}" out raiz casa p d rastreados conteudo
   local -a sistema=(/etc /usr /bin /sbin /lib /lib32 /lib64 /libx32 /boot /proc /sys /dev /run
                     /srv /opt /snap /nix /var /mnt /media /lost+found)
   local -a fixtures=()
@@ -142,7 +144,9 @@ valida_saida() {
   # 6. existente: só diretório vazio ou saída anterior do mdbook
   if [[ -e "$out" ]]; then
     [[ -d "$out" ]] || { _recusa "OUT existe e não é diretório: $out"; return 2; }
-    if [[ -n "$(ls -A -- "$out")" ]] && ! _parece_saida "$out"; then
+    # Se não der para listar o diretório, recusa: não dá para provar que está vazio.
+    conteudo="$(ls -A -- "$out" 2>/dev/null)" || { _recusa "não consegui listar OUT: $out"; return 2; }
+    if [[ -n "$conteudo" ]] && ! _parece_saida "$out"; then
       _recusa "OUT existe, não está vazio e não parece saída de livro: $out"; return 2
     fi
   fi
@@ -246,7 +250,7 @@ garante_listing() {
   hash="$(hash_do_listing)" || { erro "não consegui calcular o hash de packages/mdbook-trpl."; exit 2; }
   entrada="$CACHE/$hash"
   LISTING_BIN="$entrada/target/debug/mdbook-trpl-listing"
-  mkdir -p -- "$CACHE"
+  mkdir -p -- "$CACHE" 2>/dev/null || { erro "não consegui criar o diretório de cache '$CACHE' (ajuste I18N_CACHE)."; exit 2; }
   trava="$CACHE/$hash.lock"
   exec {fd}>"$trava" || { erro "não consegui abrir a trava $trava."; exit 2; }
   if ! flock -w 3600 "$fd"; then
@@ -442,6 +446,9 @@ main() {
         prepara_po "$po_arg"
         export MDBOOK_PREPROCESSOR__GETTEXT__PO_DIR="$PO_DIR_TMP"
         echo "usando uma cópia de $po_arg (po/ não é tocado)" >&2
+      elif [[ ! -f "$RAIZ/po/pt-BR.po" ]]; then
+        erro "po/pt-BR.po não existe em '$RAIZ' (use --po FILE para outro arquivo)."
+        exit 2
       elif [[ "$(head -n 1 -- "$RAIZ/po/pt-BR.po" 2>/dev/null || true)" == "#" ]]; then
         erro "po/pt-BR.po começa com uma linha '#' solta (o mdbook-gettext entra em pânico)."
         erro "rode: python3 i18n/tools/normaliza_po.py"
