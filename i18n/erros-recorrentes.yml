@@ -63,7 +63,7 @@ erros:
   - id: idiomas-ambiguo
     regex: '(?i:\bidiomas?\b(?!\s+(?:d[oae]s?\s+)?(?:Rust|edição)\b))'
     severidade: aviso
-    correcao: "expressões idiomáticas, se o original diz idioms"
+    correcao: "expressões idiomáticas (se o original fala de formas típicas de escrever código)"
     explicacao: >-
       “Idiomas” em português são as línguas naturais (“traduzido para vários idiomas”). Se o
       inglês diz “idiom” ou “idiomatic”, o certo é “expressão idiomática” ou “idiomático”. Se o
@@ -266,11 +266,11 @@ erros:
   - id: troca-por-trade-off
     regex: '(?i:\btudo é uma troca\b|\beliminar (?:as )?trocas\b|\b(?:fazer|fazemos|faz|fazendo) trocas?\b)'
     severidade: aviso
-    correcao: "concessões, trade-offs"
+    correcao: "concessão, concessões (ou “prós e contras”, “compensa”, conforme o glossário)"
     explicacao: >-
       “Trade-off” não é “troca”. “Tudo é uma troca” e “eliminar as trocas” apareceram nos capítulos
-      0 e 1. Use “tudo é uma concessão”, “abrir mão de” ou mantenha “trade-off”, conforme o
-      glossário.
+      0 e 1. Use “tudo é uma concessão”, “abrir mão de”, “prós e contras” ou “compensar”,
+      conforme o glossário.
 
   - id: calque-onde-brilha
     regex: '(?i:\b(?:é|são)\s+(?:aqui |justamente |exatamente )?onde\b[^.!?;]{0,60}\b(?:realmente )?(?:brilha|se destaca)\b)'
@@ -289,8 +289,10 @@ erros:
   - id: codificado-diretamente
     regex: '(?i:\bcodificad[oa]s? diretamente\b)'
     severidade: aviso
-    correcao: "valores fixos no código (hardcoded)"
-    explicacao: "“Hard-coded” não é “codificado diretamente”. Use “valores fixos no código”."
+    correcao: "valores fixos no código"
+    explicacao: >-
+      “Hard-coded” não é “codificado diretamente”. Use “valores fixos no código” (sem glosa em
+      inglês).
 
   - id: parenteses-traducao
     regex: '(?i:\((?:aqui,? )?(?:tradução|traduzido como|em português)\b[^)]*\))'
