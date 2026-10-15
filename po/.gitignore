@@ -1,0 +1,4 @@
+# Arquivos temporários das ferramentas de i18n (trava do apply.py e gravação atômica)
+*.lock
+*.salvando
+*.tmp
