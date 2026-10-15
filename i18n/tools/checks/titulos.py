@@ -11,7 +11,8 @@ leitura) e converte o resumo em achados:
 - `paginas_puladas` (página cujos títulos não batem com o HTML) -> aviso.
 
 Precisa da compilação em inglês (`ctx.en_dir`); sem ela, ou sem o slugs.py, o
-check é pulado com um aviso.
+check é pulado com um aviso. Se o slugs.py sair com código 2 (uso/ambiente), o
+check levanta ErroAmbiente (o check.py sai com código 2).
 """
 import json
 import os
@@ -25,7 +26,7 @@ if str(_FERRAMENTAS) not in sys.path:
     sys.path.insert(0, str(_FERRAMENTAS))
 
 import po_util  # noqa: E402
-from checks.base import Achado  # noqa: E402
+from checks.base import Achado, ErroAmbiente  # noqa: E402
 
 NOME = "titulos"
 PRECISA = ("en",)
@@ -58,6 +59,8 @@ def run(ctx):
     )
     saida = r.stdout.decode("utf-8", "replace")
     erro = r.stderr.decode("utf-8", "replace")
+    if r.returncode == 2:  # uso/ambiente no slugs.py (PO ou compilação inválidos...)
+        raise ErroAmbiente(f"slugs.py --check não pôde rodar (código 2): {_resumo(erro or saida)}")
     if r.returncode not in (0, 1):
         return [Achado(NOME, "erro", f"slugs.py --check falhou (código {r.returncode}): "
                        f"{_resumo(erro or saida)}")]

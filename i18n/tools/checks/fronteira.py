@@ -17,7 +17,8 @@ O check olha três coisas:
    ignorados pelo .gitignore não contam).
 
 `<ref>` vem de --upstream-ref (padrão upstream/main). Sem a referência, o check
-explica como buscá-la e o check.py sai com código 2. Só usa git de leitura.
+explica como buscá-la e o check.py sai com código 2. Só usa git de leitura e
+nunca regrava .git/index (2 e 3 vêm de `git --no-optional-locks status`).
 """
 import fnmatch
 import os
@@ -82,7 +83,7 @@ def _texto(b):
 def _como_buscar(ref):
     return (
         f"a referência do upstream '{ref}' não existe neste clone, então não dá para "
-        f"conferir a fronteira. Busque o upstream (só leitura no seu fork) com:\n"
+        f"conferir a fronteira. Busque o upstream (o fetch não altera os seus branches) com:\n"
         f"    git remote add upstream {UPSTREAM_URL}.git   # se o remoto ainda não existir\n"
         f"    git fetch --no-tags upstream main\n"
         f"  ou, sem criar remoto:\n"
@@ -103,6 +104,15 @@ def _nomes_status(saida):
             break
         pares.append((status[0], caminho))
         i += 2
+    return pares
+
+
+def _status_porcelana(saida):
+    """Lê `git status --porcelain=v1 -z --no-renames`: [(XY, caminho)]."""
+    pares = []
+    for registro in saida.decode("utf-8", "surrogateescape").split("\0"):
+        if len(registro) >= 4 and registro[2] == " ":
+            pares.append((registro[:2], registro[3:]))
     return pares
 
 
@@ -147,29 +157,39 @@ def run(ctx):
                 arquivo=caminho,
             ))
 
-    # 2. Alterações não commitadas (índice ou árvore de trabalho) em arquivos rastreados.
-    r = _git(raiz, "diff", "--name-status", "-z", "--no-renames", "HEAD", "--")
+    # 2 e 3. Alterações não commitadas e arquivos não rastreados, numa só
+    # chamada de `git status`. Não usar `git diff HEAD` aqui: o `git diff`
+    # porcelana atualiza o cache de stat e REGRAVA .git/index mesmo com
+    # --no-optional-locks (git 2.43), o que disputaria o index.lock com um
+    # `git commit` simultâneo. O `git status` respeita --no-optional-locks.
+    r = _git(raiz, "status", "--porcelain=v1", "-z", "--no-renames",
+             "--untracked-files=all", "--ignore-submodules=none")
     if r.returncode != 0:
-        raise ErroAmbiente(f"git diff HEAD falhou: {_texto(r.stderr)}")
-    for status, caminho in _nomes_status(r.stdout):
-        if not permitido(caminho):
-            achados.append(Achado(
-                NOME, "erro",
-                f"caminho do upstream {_STATUS.get(status, status)} sem commit (índice ou "
-                f"árvore de trabalho); desfaça a alteração antes de commitar",
-                arquivo=caminho,
-            ))
-
-    # 3. Arquivos não rastreados (os ignorados pelo .gitignore não aparecem).
-    r = _git(raiz, "ls-files", "--others", "--exclude-standard", "-z", "--full-name")
-    if r.returncode != 0:
-        raise ErroAmbiente(f"git ls-files falhou: {_texto(r.stderr)}")
-    for caminho in r.stdout.decode("utf-8", "surrogateescape").split("\0"):
-        if caminho and not permitido(caminho):
+        raise ErroAmbiente(f"git status falhou: {_texto(r.stderr)}")
+    for xy, caminho in _status_porcelana(r.stdout):
+        if permitido(caminho):
+            continue
+        if xy == "??":
+            # Os ignorados pelo .gitignore não aparecem (sem --ignored).
             achados.append(Achado(
                 NOME, "aviso",
                 "arquivo não rastreado fora dos caminhos do fork (não o commite; "
                 "apague-o ou mova-o para fora do repositório)",
                 arquivo=caminho,
             ))
+            continue
+        x, y = xy[0], xy[1]
+        if "U" in xy or xy in ("AA", "DD"):
+            estado = "em conflito"
+        else:
+            letra = x if x not in (" ", "?") else y
+            estado = _STATUS.get(letra, letra)
+        onde = "no índice" if y == " " else "na árvore de trabalho" if x == " " else \
+            "no índice e na árvore de trabalho"
+        achados.append(Achado(
+            NOME, "erro",
+            f"caminho do upstream {estado} sem commit ({onde}); desfaça a alteração "
+            f"antes de commitar (o fork só pode mexer nos caminhos dele)",
+            arquivo=caminho,
+        ))
     return achados

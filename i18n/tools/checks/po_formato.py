@@ -40,6 +40,8 @@ _AVISO_CABECALHO_IGNORADO = re.compile(
     r"header field '(?:PO-Revision-Date|Last-Translator)' "
     r"(?:missing in header|still has the initial default value)"
 )
+# Linha final do msgfmt ("msgfmt: found 2 fatal errors"): repete os erros acima.
+_RESUMO_MSGFMT = re.compile(r"^msgfmt: found \d+ fatal errors?$")
 # Campos que o polib do Rust reconhece (consume_line de polib 0.3).
 _CAMPOS_COMENTARIO = ("# ", "#. ", "#: ", "#, ")
 _CAMPO_CONTEUDO = re.compile(r"(?:msgctxt|msgid|msgid_plural|msgstr|msgstr\[\d\]) ")
@@ -103,7 +105,7 @@ def _msgfmt(ctx, arquivo):
     houve_erro = False
     for linha in r.stderr.decode("utf-8", "replace").splitlines():
         linha = linha.strip()
-        if not linha or _AVISO_CABECALHO_IGNORADO.search(linha):
+        if not linha or _AVISO_CABECALHO_IGNORADO.search(linha) or _RESUMO_MSGFMT.match(linha):
             continue
         texto = linha[len(caminho) + 1:] if linha.startswith(caminho + ":") else linha
         if "warning:" in linha:
@@ -176,6 +178,13 @@ def run(ctx):
     achados += novos
     if problema:
         problemas_ambiente.append(problema)
+
+    # 4 a 6 precisam do PO lido pelo polib; se ele não leu, o check.py já
+    # registrou o erro e não há o que conferir aqui.
+    if getattr(ctx, "erro_po", None):
+        if problemas_ambiente:
+            raise ErroAmbiente("; ".join(problemas_ambiente), achados=achados)
+        return achados
 
     # 4. Cabeçalho
     meta = getattr(ctx.po, "metadata", None) or {}

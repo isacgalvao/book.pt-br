@@ -6,9 +6,12 @@ Roda todos os checks de i18n/tools/checks/ (cada módulo define `NOME` e
 cobertura por capítulo e uma linha de resumo.
 
 Sem --en/--pt e sem --sem-build, compila o livro em inglês e em pt-BR com
-i18n/build.sh num diretório temporário novo (tempfile.mkdtemp), apagado no fim.
-Com --po FILE, a compilação pt-BR usa esse PO (i18n/build.sh pt OUT --po FILE).
-Só compila o que os checks escolhidos precisam (html: en e pt; titulos: en).
+i18n/build.sh em subdiretórios novos de um diretório temporário criado por
+tempfile.mkdtemp (respeita TMPDIR), apagado no fim, mesmo com erro, Ctrl+C ou
+SIGTERM. Com --po FILE, a compilação pt-BR usa esse PO (i18n/build.sh pt OUT
+--po FILE). Uma compilação que falha vira achado 'erro' do check `build`.
+Com --so, só compila o que os checks escolhidos precisam (html: en e pt;
+titulos: en; um módulo pode declarar `PRECISA = ("en", "pt")`).
 
 Códigos de saída: 0 = sem erros; 1 = algum achado 'erro'; 2 = erro de uso ou
 de ambiente (ferramenta ausente, referência do upstream inexistente...).
@@ -17,11 +20,13 @@ Variável de ambiente PTBR_CHECKS_DIR: diretório alternativo de onde descobrir
 os módulos de check (para testes). `base` continua vindo de i18n/tools/checks.
 """
 import argparse
+import errno
 import importlib
 import importlib.util
 import json
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -106,7 +111,8 @@ def _parser():
     ap.add_argument("--en", metavar="DIR", help="compilação em inglês já pronta")
     ap.add_argument("--pt", metavar="DIR", help="compilação pt-BR já pronta")
     ap.add_argument("--sem-build", action="store_true",
-                    help="não compila nada: pula o check html (aviso) e, sem --en, o titulos")
+                    help="não compila nada: sem --en/--pt, pula o check html (aviso) e, "
+                         "sem --en, o titulos (aviso)")
     ap.add_argument("--capitulo", metavar="CAP", nargs="+", action="extend", default=None,
                     help="restringe o escopo a estes capítulos (title-page, foreword, "
                          "ch00..ch21, appendix, summary)")
@@ -123,8 +129,30 @@ def _parser():
 # Validação dos argumentos
 # --------------------------------------------------------------------------
 
+_ERRNO_PT = {
+    errno.ENOENT: "arquivo ou diretório inexistente",
+    errno.EACCES: "permissão negada",
+    errno.EPERM: "operação não permitida",
+    errno.EROFS: "sistema de arquivos somente leitura",
+    errno.ENOSPC: "sem espaço no dispositivo",
+    errno.EISDIR: "é um diretório",
+    errno.ENOTDIR: "um componente do caminho não é um diretório",
+    errno.EEXIST: "o arquivo já existe",
+    errno.EINVAL: "argumento inválido",
+}
+
+
+def _erro_os(exc):
+    """Descrição em português de um OSError (o strerror da libc vem em inglês)."""
+    return _ERRNO_PT.get(exc.errno) or exc.strerror or str(exc)
+
+
 def _validar_json(destino):
     """Recusa (ErroUso) um --json que não dá para gravar; devolve o caminho real."""
+    if not destino.strip():
+        raise ErroUso("--json: informe o caminho do arquivo JSON")
+    if destino.endswith(("/", os.sep)):
+        raise ErroUso(f"--json {destino}: é um diretório (informe um arquivo)")
     caminho = Path(os.path.realpath(destino))
     if caminho.is_dir():
         raise ErroUso(f"--json {destino}: é um diretório")
@@ -141,7 +169,7 @@ def _validar_json(destino):
         os.unlink(teste)
     except OSError as exc:
         raise ErroUso(f"--json {destino}: não é possível gravar em {pai}: "
-                      f"{exc.strerror or exc}") from None
+                      f"{_erro_os(exc)}") from None
     return caminho
 
 
@@ -271,19 +299,47 @@ def compilar(modo, destino, po=None):
     log = destino.parent / f"build-{modo}.log"
     print(f"check.py: compilando o livro em {NOME_COMPILACAO[modo]} "
           f"(i18n/build.sh {modo}) em {destino} ...", file=sys.stderr, flush=True)
-    with open(log, "wb") as saida:
-        r = subprocess.run(cmd, cwd=str(RAIZ), stdout=saida, stderr=subprocess.STDOUT,
-                           stdin=subprocess.DEVNULL)
-    if r.returncode == 0 and (destino / "index.html").is_file():
+    try:
+        with open(log, "wb") as saida:
+            codigo = _rodar_grupo(cmd, saida)
+    except OSError as exc:
+        return False, Achado("build", "erro", f"não foi possível rodar i18n/build.sh {modo}: "
+                             f"{_erro_os(exc)}"), True
+    if codigo == 0 and (destino / "index.html").is_file():
         return True, None, False
-    motivo = (f"código {r.returncode}" if r.returncode != 0
+    motivo = (f"código {codigo}" if codigo != 0
               else "terminou sem gerar index.html")
     cauda = _cauda(log).replace("\n", "\n    ")
     return False, Achado(
         "build", "erro",
         f"a compilação em {NOME_COMPILACAO[modo]} (i18n/build.sh {modo}) falhou ({motivo}); "
         f"últimas linhas:\n    {cauda}",
-    ), r.returncode == 2
+    ), codigo == 2
+
+
+def _rodar_grupo(cmd, saida):
+    """Roda `cmd` num grupo de processos próprio e devolve o código de saída.
+
+    Se check.py for interrompido (Ctrl+C, SIGTERM), mata o grupo inteiro
+    (build.sh e os mdbook/cargo filhos) antes de o diretório temporário ser
+    apagado, para nenhum processo continuar escrevendo nele.
+    """
+    proc = subprocess.Popen(cmd, cwd=str(RAIZ), stdout=saida, stderr=subprocess.STDOUT,
+                            stdin=subprocess.DEVNULL, start_new_session=True)
+    try:
+        return proc.wait()
+    except BaseException:
+        for sinal, espera in ((signal.SIGTERM, 5), (signal.SIGKILL, 5)):
+            try:
+                os.killpg(proc.pid, sinal)
+            except (ProcessLookupError, PermissionError):
+                break
+            try:
+                proc.wait(timeout=espera)
+                break
+            except subprocess.TimeoutExpired:
+                continue
+        raise
 
 
 # --------------------------------------------------------------------------
@@ -399,7 +455,7 @@ def _uma_linha(texto, limite=100):
     return texto if len(texto) <= limite else texto[:limite - 1] + "…"
 
 
-def imprimir(grupos, tabela, erros, avisos):
+def imprimir(grupos, tabela, erros, avisos, erro_po=None):
     for nome, lista in grupos:
         ne = sum(1 for a in lista if a.severidade == "erro")
         na = len(lista) - ne
@@ -418,6 +474,13 @@ def imprimir(grupos, tabela, erros, avisos):
             if a.msgid and a.msgid not in a.mensagem:
                 print(f"        msgid: {_uma_linha(a.msgid)!s}")
     print()
+    if erro_po:
+        print("Cobertura por capítulo: indisponível (o PO não pôde ser lido; veja o check "
+              "po_formato)")
+        print()
+        print(f"Resumo: {_plural(erros, 'erro', 'erros')}, {_plural(avisos, 'aviso', 'avisos')} "
+              f"em {_plural(len(grupos), 'check', 'checks')}; cobertura indisponível")
+        return
     print("Cobertura por capítulo (mensagens traduzíveis, sem as que não têm texto):")
     print(f"  {'capítulo':<11} {'total':>6} {'traduzidas':>10} {'fuzzy':>6} {'faltando':>8} {'%':>6}")
     soma = {"total": 0, "traduzidas": 0, "fuzzy": 0, "faltando": 0}
@@ -443,7 +506,7 @@ def principal(argv=None):
     args = _parser().parse_args(argv)
 
     # Tudo o que é uso/ambiente é conferido antes de qualquer trabalho.
-    destino_json = _validar_json(args.json) if args.json else None
+    destino_json = _validar_json(args.json) if args.json is not None else None
     po_path = Path(args.po).resolve() if args.po else po_util.PO_PADRAO
     if not po_path.is_file():
         raise ErroUso(f"PO não encontrado: {args.po or po_path}")
@@ -503,14 +566,24 @@ def principal(argv=None):
             continue
         modulos.append((nome, mod))
 
-    precisa = {p for nome, mod in modulos for p in _requisitos(nome, mod)}
+    # Sem --so, roda o portão inteiro: compila os dois livros (a própria
+    # compilação pt-BR é uma verificação: um PO que derruba o mdbook-gettext
+    # aparece aqui). Com --so, só o que os checks escolhidos precisam.
+    if args.so:
+        precisa = {p for nome, mod in modulos for p in _requisitos(nome, mod)}
+    else:
+        precisa = {"en", "pt"}
     dirs = {"en": en_dir, "pt": pt_dir}
     falhou = set()
     tmp = None
+    ctx = Contexto(RAIZ, po_path, po, en_dir=en_dir, pt_dir=pt_dir,
+                   capitulos=capitulos, upstream_ref=ref)
     try:
         faltam = [m for m in ("en", "pt") if m in precisa and dirs[m] is None]
         if faltam and not args.sem_build:
             tmp = Path(tempfile.mkdtemp(prefix="ptbr-check-"))
+            print(f"check.py: diretório temporário das compilações: {tmp} "
+                  f"(apagado no fim)", file=sys.stderr, flush=True)
             for modo in faltam:
                 destino = tmp / modo
                 ok, falha, amb = compilar(modo, destino, po_path if (modo == "pt" and args.po) else None)
@@ -523,8 +596,7 @@ def principal(argv=None):
             if falhou:
                 nomes_rodados.append("build")
 
-        ctx = Contexto(RAIZ, po_path, po, en_dir=dirs["en"], pt_dir=dirs["pt"],
-                       capitulos=capitulos, upstream_ref=ref)
+        ctx.en_dir, ctx.pt_dir = dirs["en"], dirs["pt"]
         ctx.erro_po = erro_po
         for nome, mod in modulos:
             nomes_rodados.append(nome)
@@ -544,13 +616,16 @@ def principal(argv=None):
     finally:
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
+            if tmp.exists():
+                print(f"check.py: aviso: não consegui apagar {tmp}; apague-o à mão",
+                      file=sys.stderr)
 
     grupos = ordenar(achados, nomes_rodados)
     em_ordem = [a for _, lista in grupos for a in lista]
     erros = sum(1 for a in em_ordem if a.severidade == "erro")
     avisos = len(em_ordem) - erros
-    tabela = cobertura(ctx)
-    imprimir(grupos, tabela, erros, avisos)
+    tabela = {} if erro_po else cobertura(ctx)
+    imprimir(grupos, tabela, erros, avisos, erro_po)
 
     if destino_json is not None:
         dados = {
@@ -562,14 +637,28 @@ def principal(argv=None):
             _gravar_json(destino_json, dados)
         except OSError as exc:
             raise ErroUso(f"--json {args.json}: não foi possível gravar: "
-                          f"{exc.strerror or exc}") from None
+                          f"{_erro_os(exc)}") from None
 
     if ambiente:
         return 2
     return 1 if erros else 0
 
 
+class Encerrado(BaseException):
+    """SIGTERM recebido. BaseException (não SystemExit) para que nenhum
+    `except` dos checks a engula; os blocos finally rodam (o subprocess.run
+    mata o build em andamento e o diretório temporário é apagado)."""
+
+
+def _sigterm(signum, _quadro):
+    raise Encerrado(128 + signum)
+
+
 def main(argv=None):
+    try:
+        signal.signal(signal.SIGTERM, _sigterm)
+    except (ValueError, OSError):  # fora da thread principal: segue sem o tratador
+        pass
     try:
         return principal(argv)
     except ErroUso as exc:
@@ -578,6 +667,9 @@ def main(argv=None):
     except KeyboardInterrupt:
         print("check.py: interrompido", file=sys.stderr)
         return 130
+    except Encerrado as exc:
+        print("check.py: encerrado (SIGTERM)", file=sys.stderr)
+        return exc.args[0] if exc.args else 143
 
 
 if __name__ == "__main__":
