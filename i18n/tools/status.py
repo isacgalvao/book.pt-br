@@ -34,6 +34,7 @@ português, nunca um traceback).
 """
 import argparse
 import datetime
+import errno
 import hashlib
 import json
 import os
@@ -167,14 +168,39 @@ def montar_parser():
 # Leitura do PO e contagens
 # --------------------------------------------------------------------------
 
+_ERRNO_PT = {
+    errno.ENOENT: "arquivo não encontrado",
+    errno.EISDIR: "é um diretório, não um arquivo",
+    errno.ENOTDIR: "um componente do caminho não é um diretório",
+    errno.EACCES: "permissão negada",
+    errno.EPERM: "operação não permitida",
+    errno.EROFS: "sistema de arquivos somente leitura",
+    errno.ENOSPC: "sem espaço no disco",
+}
+
+
+def _motivo(exc):
+    """Descrição em português de uma exceção de leitura/gravação de arquivo."""
+    if isinstance(exc, UnicodeDecodeError):
+        return "o conteúdo não é texto UTF-8 válido"
+    if isinstance(exc, OSError) and exc.errno in _ERRNO_PT:
+        return _ERRNO_PT[exc.errno]
+    if isinstance(exc, OSError):
+        return exc.strerror or str(exc)
+    return str(exc).strip().splitlines()[0] if str(exc).strip() else type(exc).__name__
+
+
 def ler_po(caminho):
     caminho = Path(caminho)
+    if caminho.is_dir():
+        raise ErroUso(f"não foi possível ler o PO '{caminho}': {_ERRNO_PT[errno.EISDIR]}")
     if not caminho.is_file():
-        raise ErroUso(f"não foi possível ler o PO '{caminho}': arquivo não encontrado")
+        raise ErroUso(f"não foi possível ler o PO '{caminho}': {_ERRNO_PT[errno.ENOENT]}")
     try:
         po = po_util.carregar(caminho)
     except Exception as exc:  # polib levanta OSError, ValueError, IndexError...
-        detalhe = str(exc).strip().splitlines()[0] if str(exc).strip() else type(exc).__name__
+        m = re.search(r"Syntax error in po file.*\(line (\d+)\)", str(exc))
+        detalhe = f"erro de sintaxe na linha {m.group(1)}" if m else _motivo(exc)
         raise ErroUso(f"não foi possível ler o PO '{caminho}': {detalhe}") from None
     if not len(po):
         raise ErroUso(f"o PO '{caminho}' não tem nenhuma entrada (arquivo vazio ou inválido)")
@@ -242,12 +268,13 @@ def ler_revisao(caminho):
     try:
         texto = caminho.read_bytes().decode("utf-8")
     except (OSError, UnicodeDecodeError) as exc:
-        raise ErroUso(f"não foi possível ler '{caminho}': {exc}") from None
+        raise ErroUso(f"não foi possível ler '{caminho}': {_motivo(exc)}") from None
     try:
         dados = yaml.safe_load(texto)
     except yaml.YAMLError as exc:
-        resumo = " ".join(str(exc).split())
-        raise ErroUso(f"'{caminho}' não é um YAML válido: {resumo}") from None
+        marca = getattr(exc, "problem_mark", None)
+        onde = f" (linha {marca.line + 1}, coluna {marca.column + 1})" if marca else ""
+        raise ErroUso(f"'{caminho}' não é um YAML válido{onde}") from None
     if dados is None:
         dados = {}
     if not isinstance(dados, dict):
@@ -307,7 +334,7 @@ def gravar_atomico(caminho, texto):
         os.replace(tmp, destino)
         tmp = None
     except OSError as exc:
-        raise ErroUso(f"não foi possível gravar '{caminho}': {exc.strerror or exc}") from None
+        raise ErroUso(f"não foi possível gravar '{caminho}': {_motivo(exc)}") from None
     finally:
         if tmp is not None:
             try:
@@ -402,6 +429,8 @@ def escrever_saida(texto):
     except BrokenPipeError:  # receita da documentação do Python para `| head`
         os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
         return 1
+    except OSError as exc:  # disco cheio, /dev/full...
+        raise ErroUso(f"não foi possível escrever a saída: {_motivo(exc)}") from None
     return 0
 
 
@@ -423,8 +452,8 @@ def executar(args, ap):
             ap.error("--registrar exige --revisor NOME (não vazio)")
         args.revisor = " ".join(args.revisor.split())
 
-    po = ler_po(args.po or po_util.PO_PADRAO)
-    caminho_rev = Path(args.revisao) if args.revisao else REVISAO_PADRAO
+    po = ler_po(po_util.PO_PADRAO if args.po is None else args.po)
+    caminho_rev = REVISAO_PADRAO if args.revisao is None else Path(args.revisao)
     texto_rev, dados_rev = ler_revisao(caminho_rev)
     contagens = calcular(po)
     registros = dados_rev.get("capitulos", {})
