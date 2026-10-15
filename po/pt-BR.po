@@ -11,7 +11,7 @@ msgstr ""
 
 #: src/SUMMARY.md src/title-page.md
 msgid "The Rust Programming Language"
-msgstr "A Linguagem de Programação Rust"
+msgstr "A Linguagem de Programação Rust {#the-rust-programming-language}"
 
 #: src/SUMMARY.md
 msgid "The Rust Programming Language Foreword Introduction"
@@ -19,11 +19,11 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch01-00-getting-started.md
 msgid "Getting Started"
-msgstr "Começando"
+msgstr "Começando {#getting-started}"
 
 #: src/SUMMARY.md src/ch01-01-installation.md
 msgid "Installation"
-msgstr "Instalação"
+msgstr "Instalação {#installation}"
 
 #: src/SUMMARY.md src/ch01-02-hello-world.md
 msgid "Hello, World!"
@@ -35,15 +35,15 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch02-00-guessing-game-tutorial.md
 msgid "Programming a Guessing Game"
-msgstr "Programando um Jogo de Adivinhação"
+msgstr "Programando um Jogo de Adivinhação {#programming-a-guessing-game}"
 
 #: src/SUMMARY.md src/ch03-00-common-programming-concepts.md
 msgid "Common Programming Concepts"
-msgstr "Conceitos Comuns de Programação"
+msgstr "Conceitos Comuns de Programação {#common-programming-concepts}"
 
 #: src/SUMMARY.md src/ch03-01-variables-and-mutability.md
 msgid "Variables and Mutability"
-msgstr "Variáveis e Mutabilidade"
+msgstr "Variáveis e Mutabilidade {#variables-and-mutability}"
 
 #: src/SUMMARY.md src/ch03-02-data-types.md
 msgid "Data Types"
@@ -456,10 +456,8 @@ msgid "_by Steve Klabnik, Carol Nichols, and Chris Krycho, with contributions fr
 msgstr "_por Steve Klabnik, Carol Nichols e Chris Krycho, com contribuições da Comunidade Rust_"
 
 #: src/title-page.md
-#, fuzzy
-#| msgid "This version of the text assumes you’re using Rust 1.90.0 (released 2025-09-18) or later with `edition = \"2024\"` in the _Cargo.toml_ file of all projects to configure them to use Rust 2024 Edition idioms. See the [“Installation” section of Chapter 1](ch01-01-installation.html)<!-- ignore --> for instructions on installing or updating Rust, and see [Appendix E](appendix-05-editions.html)<!-- ignore --> for information on editions."
 msgid "This version of the text assumes you’re using Rust 1.98.0 (released 2026-08-20) or later with `edition = \"2024\"` in the _Cargo.toml_ file of all projects to configure them to use Rust 2024 Edition idioms. See the [“Installation” section of Chapter 1](ch01-01-installation.html)<!-- ignore --> for instructions on installing or updating Rust, and see [Appendix E](appendix-05-editions.html)<!-- ignore --> for information on editions."
-msgstr "Esta versão do texto pressupõe que você está usando Rust 1.90.0 (lançado em 2025-09-18) ou posterior com `edition = \"2024\"` no arquivo _Cargo.toml_ de todos os projetos para configurá-los para usar os idiomas da Edição Rust 2024. Consulte a [seção \"Instalação\" do Capítulo 1](ch01-01-installation.html)<!-- ignore --> para instruções sobre como instalar ou atualizar o Rust, e consulte o [Apêndice E](appendix-05-editions.html)<!-- ignore --> para informações sobre edições."
+msgstr "Esta versão do texto pressupõe que você está usando Rust 1.98.0 (lançado em 2026-08-20) ou posterior com `edition = \"2024\"` no arquivo _Cargo.toml_ de todos os projetos para configurá-los para usar os idiomas da Edição Rust 2024. Consulte a [seção \"Instalação\" do Capítulo 1](ch01-01-installation.html)<!-- ignore --> para instruções sobre como instalar ou atualizar o Rust, e consulte o [Apêndice E](appendix-05-editions.html)<!-- ignore --> para informações sobre edições."
 
 #: src/title-page.md
 msgid "The HTML format is available online at [https://doc.rust-lang.org/stable/book/](https://doc.rust-lang.org/stable/book/) and offline with installations of Rust made with `rustup`; run `rustup doc --book` to open."
@@ -479,7 +477,7 @@ msgstr "**🚨 Quer uma experiência de aprendizado mais interativa? Experimente
 
 #: src/foreword.md
 msgid "Foreword"
-msgstr "Prefácio"
+msgstr "Prefácio {#foreword}"
 
 #: src/foreword.md
 msgid "The Rust programming language has come a long way in a few short years, from its creation and incubation by a small and nascent community of enthusiasts, to becoming one of the most loved and in-demand programming languages in the world. Looking back, it was inevitable that the power and promise of Rust would turn heads and gain a foothold in systems programming. What was not inevitable was the global growth in interest and innovation that permeated through open source communities and catalyzed wide-scale adoption across industries."
@@ -511,7 +509,7 @@ msgstr "Bec Rumbul, Diretora Executiva da Rust Foundation"
 
 #: src/ch00-00-introduction.md
 msgid "Introduction"
-msgstr "Introdução"
+msgstr "Introdução {#introduction}"
 
 #: src/ch00-00-introduction.md
 msgid "Note: This edition of the book is the same as [The Rust Programming Language](https://nostarch.com/rust-programming-language-3rd-edition) available in print and ebook format from [No Starch Press](https://nostarch.com/)."
@@ -523,7 +521,7 @@ msgstr "Bem-vindo a _A Linguagem de Programação Rust_, um livro introdutório 
 
 #: src/ch00-00-introduction.md
 msgid "Who Rust Is For"
-msgstr "Para Quem é o Rust"
+msgstr "Para Quem é o Rust {#who-rust-is-for}"
 
 #: src/ch00-00-introduction.md
 msgid "Rust is ideal for many people for a variety of reasons. Let’s look at a few of the most important groups."
@@ -531,7 +529,7 @@ msgstr "O Rust é ideal para muitas pessoas por uma variedade de razões. Vejamo
 
 #: src/ch00-00-introduction.md
 msgid "Teams of Developers"
-msgstr "Equipes de Desenvolvedores"
+msgstr "Equipes de Desenvolvedores {#teams-of-developers}"
 
 #: src/ch00-00-introduction.md
 msgid "Rust is proving to be a productive tool for collaborating among large teams of developers with varying levels of systems programming knowledge. Low-level code is prone to various subtle bugs, which in most other languages can only be caught through extensive testing and careful code review by experienced developers. In Rust, the compiler plays a gatekeeper role by refusing to compile code with these elusive bugs, including concurrency bugs. By working alongside the compiler, the team can spend its time focusing on the program’s logic rather than chasing down bugs."
@@ -559,7 +557,7 @@ msgstr "Ao usar essas e outras ferramentas no ecossistema Rust, os desenvolvedor
 
 #: src/ch00-00-introduction.md
 msgid "Students"
-msgstr "Estudantes"
+msgstr "Estudantes {#students}"
 
 #: src/ch00-00-introduction.md
 msgid "Rust is for students and those who are interested in learning about systems concepts. Using Rust, many people have learned about topics like operating systems development. The community is very welcoming and happy to answer students’ questions. Through efforts such as this book, the Rust teams want to make systems concepts more accessible to more people, especially those new to programming."
@@ -567,7 +565,7 @@ msgstr "O Rust é para estudantes e aqueles interessados em aprender sobre conce
 
 #: src/ch00-00-introduction.md
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Empresas {#companies}"
 
 #: src/ch00-00-introduction.md
 msgid "Hundreds of companies, large and small, use Rust in production for a variety of tasks, including command line tools, web services, DevOps tooling, embedded devices, audio and video analysis and transcoding, cryptocurrencies, bioinformatics, search engines, Internet of Things applications, machine learning, and even major parts of the Firefox web browser."
@@ -575,7 +573,7 @@ msgstr "Centenas de empresas, grandes e pequenas, usam Rust em produção para u
 
 #: src/ch00-00-introduction.md
 msgid "Open Source Developers"
-msgstr "Desenvolvedores de Código Aberto"
+msgstr "Desenvolvedores de Código Aberto {#open-source-developers}"
 
 #: src/ch00-00-introduction.md
 msgid "Rust is for people who want to build the Rust programming language, community, developer tools, and libraries. We’d love to have you contribute to the Rust language."
@@ -583,7 +581,7 @@ msgstr "O Rust é para pessoas que querem construir a linguagem de programação
 
 #: src/ch00-00-introduction.md
 msgid "People Who Value Speed and Stability"
-msgstr "Pessoas que Valorizam Velocidade e Estabilidade"
+msgstr "Pessoas que Valorizam Velocidade e Estabilidade {#people-who-value-speed-and-stability}"
 
 #: src/ch00-00-introduction.md
 msgid "Rust is for people who crave speed and stability in a language. By speed, we mean both how quickly Rust code can run and the speed at which Rust lets you write programs. The Rust compiler’s checks ensure stability through feature additions and refactoring. This is in contrast to the brittle legacy code in languages without these checks, which developers are often afraid to modify. By striving for zero-cost abstractions—higher-level features that compile to lower-level code as fast as code written manually—Rust endeavors to make safe code be fast code as well."
@@ -595,7 +593,7 @@ msgstr "A linguagem Rust espera apoiar muitos outros usuários também; os menci
 
 #: src/ch00-00-introduction.md
 msgid "Who This Book Is For"
-msgstr "Para Quem é Este Livro"
+msgstr "Para Quem é Este Livro {#who-this-book-is-for}"
 
 #: src/ch00-00-introduction.md
 msgid "This book assumes that you’ve written code in another programming language, but it doesn’t make any assumptions about which one. We’ve tried to make the material broadly accessible to those from a wide variety of programming backgrounds. We don’t spend a lot of time talking about what programming _is_ or how to think about it. If you’re entirely new to programming, you would be better served by reading a book that specifically provides an introduction to programming."
@@ -603,7 +601,7 @@ msgstr "Este livro pressupõe que você já escreveu código em outra linguagem 
 
 #: src/ch00-00-introduction.md
 msgid "How to Use This Book"
-msgstr "Como Usar Este Livro"
+msgstr "Como Usar Este Livro {#how-to-use-this-book}"
 
 #: src/ch00-00-introduction.md
 msgid "In general, this book assumes that you’re reading it in sequence from front to back. Later chapters build on concepts in earlier chapters, and earlier chapters might not delve into details on a particular topic but will revisit the topic in a later chapter."
@@ -699,7 +697,7 @@ msgstr "Na maioria das situações, iremos guiá-lo para a versão correta de qu
 
 #: src/ch00-00-introduction.md
 msgid "Source Code"
-msgstr "Código-Fonte"
+msgstr "Código-Fonte {#source-code}"
 
 #: src/ch00-00-introduction.md
 msgid "The source files from which this book is generated can be found on [GitHub](https://github.com/rust-lang/book/tree/main/src)."
@@ -735,7 +733,7 @@ msgstr "Os passos a seguir instalam a versão estável mais recente do compilado
 
 #: src/ch01-01-installation.md
 msgid "Command Line Notation"
-msgstr "Notação de Linha de Comando"
+msgstr "Notação de Linha de Comando {#command-line-notation}"
 
 #: src/ch01-01-installation.md
 msgid "In this chapter and throughout the book, we’ll show some commands used in the terminal. Lines that you should enter in a terminal all start with `$`. You don’t need to type the `$` character; it’s the command line prompt shown to indicate the start of each command. Lines that don’t start with `$` typically show the output of the previous command. Additionally, PowerShell-specific examples will use `>` rather than `$`."
@@ -743,7 +741,7 @@ msgstr "Neste capítulo e ao longo do livro, mostraremos alguns comandos usados 
 
 #: src/ch01-01-installation.md
 msgid "Installing `rustup` on Linux or macOS"
-msgstr "Instalando o `rustup` no Linux ou macOS"
+msgstr "Instalando o `rustup` no Linux ou macOS {#installing-rustup-on-linux-or-macos}"
 
 #: src/ch01-01-installation.md
 msgid "If you’re using Linux or macOS, open a terminal and enter the following command:"
@@ -774,7 +772,7 @@ msgstr "Os usuários de Linux geralmente devem instalar GCC ou Clang, de acordo 
 
 #: src/ch01-01-installation.md
 msgid "Installing `rustup` on Windows"
-msgstr "Instalando o `rustup` no Windows"
+msgstr "Instalando o `rustup` no Windows {#installing-rustup-on-windows}"
 
 #: src/ch01-01-installation.md
 msgid ""
@@ -792,7 +790,7 @@ msgstr "O restante deste livro usa comandos que funcionam tanto no _cmd.exe_ qua
 
 #: src/ch01-01-installation.md
 msgid "Troubleshooting"
-msgstr "Solução de Problemas"
+msgstr "Solução de Problemas {#troubleshooting}"
 
 #: src/ch01-01-installation.md
 msgid "To check whether you have Rust installed correctly, open a shell and enter this line:"
@@ -824,7 +822,7 @@ msgstr "Se tudo isso estiver correto e o Rust ainda não estiver funcionando, h�
 
 #: src/ch01-01-installation.md
 msgid "Updating and Uninstalling"
-msgstr "Atualizando e Desinstalando"
+msgstr "Atualizando e Desinstalando {#updating-and-uninstalling}"
 
 #: src/ch01-01-installation.md
 msgid "Once Rust is installed via `rustup`, updating to a newly released version is easy. From your shell, run the following update script:"
@@ -879,7 +877,7 @@ msgstr ""
 
 #: src/ch01-01-installation.md
 msgid "Reading the Local Documentation"
-msgstr "Lendo a Documentação Local"
+msgstr "Lendo a Documentação Local {#reading-the-local-documentation}"
 
 #: src/ch01-01-installation.md
 msgid "The installation of Rust also includes a local copy of the documentation so that you can read it offline. Run `rustup doc` to open the local documentation in your browser."
@@ -895,7 +893,7 @@ msgstr ""
 
 #: src/ch01-01-installation.md
 msgid "Using Text Editors and IDEs"
-msgstr "Usando Editores de Texto e IDEs"
+msgstr "Usando Editores de Texto e IDEs {#using-text-editors-and-ides}"
 
 #: src/ch01-01-installation.md
 msgid "This book makes no assumptions about what tools you use to author Rust code. Just about any text editor will get the job done! However, many text editors and integrated development environments (IDEs) have built-in support for Rust. You can always find a fairly current list of many editors and IDEs on [the tools page](https://www.rust-lang.org/tools) on the Rust website."
@@ -903,7 +901,7 @@ msgstr "Este livro não faz suposições sobre quais ferramentas você usa para 
 
 #: src/ch01-01-installation.md
 msgid "Working Offline with This Book"
-msgstr "Trabalhando Offline com Este Livro"
+msgstr "Trabalhando Offline com Este Livro {#working-offline-with-this-book}"
 
 #: src/ch01-01-installation.md
 msgid "In several examples, we will use Rust packages beyond the standard library. To work through those examples, you will either need to have an internet connection or to have downloaded those dependencies ahead of time. To download the dependencies ahead of time, you can run the following commands. (We’ll explain what `cargo` is and what each of these commands does in detail later.)"
@@ -938,7 +936,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Project Directory Setup"
-msgstr "Configuração do Diretório do Projeto"
+msgstr "Configuração do Diretório do Projeto {#project-directory-setup}"
 
 #: src/ch01-02-hello-world.md
 msgid "You’ll start by making a directory to store your Rust code. It doesn’t matter to Rust where your code lives, but for the exercises and projects in this book, we suggest making a _projects_ directory in your home directory and keeping all your projects there."
@@ -966,7 +964,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Rust Program Basics"
-msgstr "Fundamentos de um Programa Rust"
+msgstr "Fundamentos de um Programa Rust {#rust-program-basics}"
 
 #: src/ch01-02-hello-world.md
 msgid "Next, make a new source file and call it _main.rs_. Rust files always end with the _.rs_ extension. If you’re using more than one word in your filename, the convention is to use an underscore to separate them. For example, use _hello_world.rs_ rather than _helloworld.rs_."
@@ -1052,7 +1050,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "The Anatomy of a Rust Program"
-msgstr "A Anatomia de um Programa Rust"
+msgstr "A Anatomia de um Programa Rust {#the-anatomy-of-a-rust-program}"
 
 #: src/ch01-02-hello-world.md
 msgid "Let’s review this “Hello, world!” program in detail. Here’s the first piece of the puzzle:"
@@ -1096,7 +1094,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Compilation and Execution"
-msgstr "Compilação e Execução"
+msgstr "Compilação e Execução {#compilation-and-execution}"
 
 #: src/ch01-02-hello-world.md
 msgid "You’ve just run a newly created program, so let’s examine each step in the process."
@@ -1152,7 +1150,7 @@ msgstr "Se você ver um número de versão, você o tem! Se você ver um erro, c
 
 #: src/ch01-03-hello-cargo.md
 msgid "Creating a Project with Cargo"
-msgstr "Criando um Projeto com Cargo"
+msgstr "Criando um Projeto com Cargo {#creating-a-project-with-cargo}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Let’s create a new project using Cargo and look at how it differs from our original “Hello, world!” project. Navigate back to your _projects_ directory (or wherever you decided to store your code). Then, on any operating system, run the following:"
@@ -1239,7 +1237,7 @@ msgstr "Se você iniciou um projeto que não usa Cargo, como fizemos com o proje
 
 #: src/ch01-03-hello-cargo.md
 msgid "Building and Running a Cargo Project"
-msgstr "Fazendo o Build e Executando um Projeto Cargo"
+msgstr "Fazendo o Build e Executando um Projeto Cargo {#building-and-running-a-cargo-project}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Now let’s look at what’s different when we build and run the “Hello, world!” program with Cargo! From your _hello_cargo_ directory, build your project by entering the following command:"
@@ -1332,7 +1330,7 @@ msgstr "Uma vantagem adicional de usar Cargo é que os comandos são os mesmos i
 
 #: src/ch01-03-hello-cargo.md
 msgid "Building for Release"
-msgstr "Fazendo o Build para Release"
+msgstr "Fazendo o Build para Release {#building-for-release}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "When your project is finally ready for release, you can use `cargo build --release` to compile it with optimizations. This command will create an executable in _target/release_ instead of _target/debug_. The optimizations make your Rust code run faster, but turning them on lengthens the time it takes for your program to compile. This is why there are two different profiles: one for development, when you want to rebuild quickly and often, and another for building the final program you’ll give to a user that won’t be rebuilt repeatedly and that will run as fast as possible. If you’re benchmarking your code’s running time, be sure to run `cargo build --release` and benchmark with the executable in _target/release_."
@@ -1344,7 +1342,7 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "Leveraging Cargo’s Conventions"
-msgstr "Aproveitando as Convenções do Cargo"
+msgstr "Aproveitando as Convenções do Cargo {#leveraging-cargos-conventions}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "With simple projects, Cargo doesn’t provide a lot of value over just using `rustc`, but it will prove its worth as your programs become more intricate. Once programs grow to multiple files or need a dependency, it’s much easier to let Cargo coordinate the build."
@@ -1372,7 +1370,7 @@ msgstr "Para mais informações sobre Cargo, consulte [sua documentação](https
 #: src/ch19-03-pattern-syntax.md src/ch20-05-macros.md
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Summary"
-msgstr "Resumo"
+msgstr "Resumo {#summary}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "You’re already off to a great start on your Rust journey! In this chapter, you learned how to:"
@@ -1412,7 +1410,7 @@ msgstr "Vamos implementar um problema clássico para iniciantes em programação
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Setting Up a New Project"
-msgstr "Configurando um Novo Projeto"
+msgstr "Configurando um Novo Projeto {#setting-up-a-new-project}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "To set up a new project, go to the _projects_ directory that you created in Chapter 1 and make a new project using Cargo, like so:"
@@ -1484,7 +1482,7 @@ msgstr "Reabra o arquivo _src/main.rs_. Você escreverá todo o código neste ar
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Processing a Guess"
-msgstr "Processando um Palpite"
+msgstr "Processando um Palpite {#processing-a-guess}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "The first part of the guessing game program will ask for user input, process that input, and check that the input is in the expected form. To start, we’ll allow the player to input a guess. Enter the code in Listing 2-1 into _src/main.rs_."
@@ -1548,7 +1546,7 @@ msgstr "Esse código está imprimindo um prompt que informa sobre o jogo e solic
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Storing Values with Variables"
-msgstr "Armazenando Valores com Variáveis"
+msgstr "Armazenando Valores com Variáveis {#storing-values-with-variables}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Next, we’ll create a _variable_ to store the user input, like this:"
@@ -1588,7 +1586,7 @@ msgstr "No total, a linha `let mut guess = String::new();` criou uma variável m
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Receiving User Input"
-msgstr "Recebendo Entrada do Usuário"
+msgstr "Recebendo Entrada do Usuário {#receiving-user-input}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Recall that we included the input/output functionality from the standard library with `use std::io;` on the first line of the program. Now we’ll call the `stdin` function from the `io` module, which will allow us to handle user input:"
@@ -1616,7 +1614,7 @@ msgstr ""
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Handling Potential Failure with `Result`"
-msgstr "Lidando com Falhas Potenciais com `Result`"
+msgstr "Lidando com Falhas Potenciais com `Result` {#handling-potential-failure-with-result}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "We’re still working on this line of code. We’re now discussing a third line of text, but note that it’s still part of a single logical line of code. The next part is this method:"
@@ -1687,7 +1685,7 @@ msgstr "A forma correta de suprimir esse aviso é de fato escrever código de tr
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Printing Values with `println!` Placeholders"
-msgstr "Imprimindo Valores com Placeholders de `println!`"
+msgstr "Imprimindo Valores com Placeholders de `println!` {#printing-values-with-println-placeholders}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Aside from the closing curly bracket, there’s only one more line to discuss in the code so far:"
@@ -1707,7 +1705,7 @@ msgstr "Esse código imprimiria `x = 5 and y + 2 = 12`."
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Testing the First Part"
-msgstr "Testando a Primeira Parte"
+msgstr "Testando a Primeira Parte {#testing-the-first-part}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Let’s test the first part of the guessing game. Run it using `cargo run`:"
@@ -1742,7 +1740,7 @@ msgstr "Neste ponto, a primeira parte do jogo está pronta: estamos recebendo en
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Generating a Secret Number"
-msgstr "Gerando um Número Secreto"
+msgstr "Gerando um Número Secreto {#generating-a-secret-number}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Next, we need to generate a secret number that the user will try to guess. The secret number should be different every time so that the game is fun to play more than once. We’ll use a random number between 1 and 100 so that the game isn’t too difficult. Rust doesn’t yet include random number functionality in its standard library. However, the Rust team does provide a [`rand` crate](https://crates.io/crates/rand) with said functionality."
@@ -1754,7 +1752,7 @@ msgstr ""
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Increasing Functionality with a Crate"
-msgstr "Aumentando a Funcionalidade com um Crate"
+msgstr "Aumentando a Funcionalidade com um Crate {#increasing-functionality-with-a-crate}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Remember that a crate is a collection of Rust source code files. The project we’ve been building is a binary crate, which is an executable. The `rand` crate is a library crate, which contains code that is intended to be used in other programs and can’t be executed on its own."
@@ -1790,10 +1788,8 @@ msgid "In the _Cargo.toml_ file, everything that follows a header is part of tha
 msgstr "No arquivo _Cargo.toml_, tudo o que vem após um cabeçalho faz parte daquela seção até que outra seção comece. Em `[dependencies]`, você informa ao Cargo quais crates externos seu projeto depende e quais versões desses crates você exige. Neste caso, especificamos o crate `rand` com o especificador de versão semântica `0.8.5`. O Cargo entende [Versionamento Semântico](http://semver.org)<!-- ignore --> (às vezes chamado de _SemVer_), que é um padrão para escrever números de versão. O especificador `0.8.5` é, na verdade, uma forma abreviada de `^0.8.5`, que significa qualquer versão que seja pelo menos 0.8.5, mas menor que 0.9.0."
 
 #: src/ch02-00-guessing-game-tutorial.md
-#, fuzzy
-#| msgid "Cargo considers these versions to have public APIs compatible with version 0.8.5, and this specification ensures that you’ll get the latest patch release that will still compile with the code in this chapter. Any version 0.9.0 or greater is not guaranteed to have the same API as what the following examples use."
 msgid "Cargo considers these versions to have public APIs compatible with version 0.10.1, and this specification ensures that you’ll get the latest patch release that will still compile with the code in this chapter. Any version 0.11.0 or greater is not guaranteed to have the same API as what the following examples use."
-msgstr "O Cargo considera que essas versões têm APIs públicas compatíveis com a versão 0.8.5, e essa especificação garante que você obterá a versão de patch mais recente que ainda compila com o código deste capítulo. Qualquer versão 0.9.0 ou maior não tem garantia de ter a mesma API que os exemplos a seguir usam."
+msgstr "O Cargo considera que essas versões têm APIs públicas compatíveis com a versão 0.10.1, e essa especificação garante que você obterá a versão de patch mais recente que ainda compila com o código deste capítulo. Qualquer versão 0.11.0 ou maior não tem garantia de ter a mesma API que os exemplos a seguir usam."
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Now, without changing any of the code, let’s build the project, as shown in Listing 2-2."
@@ -1880,29 +1876,23 @@ msgstr ""
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Ensuring Reproducible Builds"
-msgstr "Garantindo Builds Reproduzíveis"
+msgstr "Garantindo Builds Reproduzíveis {#ensuring-reproducible-builds}"
 
 #: src/ch02-00-guessing-game-tutorial.md
-#, fuzzy
-#| msgid "Cargo has a mechanism that ensures that you can rebuild the same artifact every time you or anyone else builds your code: Cargo will use only the versions of the dependencies you specified until you indicate otherwise. For example, say that next week version 0.8.6 of the `rand` crate comes out, and that version contains an important bug fix, but it also contains a regression that will break your code. To handle this, Rust creates the _Cargo.lock_ file the first time you run `cargo build`, so we now have this in the _guessing_game_ directory."
 msgid "Cargo has a mechanism that ensures that you can rebuild the same artifact every time you or anyone else builds your code: Cargo will use only the versions of the dependencies you specified until you indicate otherwise. For example, say that next week version 0.10.2 of the `rand` crate comes out, and that version contains an important bug fix, but it also contains a regression that will break your code. To handle this, Rust creates the _Cargo.lock_ file the first time you run `cargo build`, so we now have this in the _guessing_game_ directory."
-msgstr "O Cargo tem um mecanismo que garante que você possa reconstruir o mesmo artefato toda vez que você ou qualquer outra pessoa compilar seu código: o Cargo usará apenas as versões das dependências que você especificou até que você indique o contrário. Por exemplo, digamos que na próxima semana a versão 0.8.6 do crate `rand` seja lançada, e que essa versão contenha uma correção importante de bug, mas também contenha uma regressão que vai quebrar seu código. Para lidar com isso, Rust cria o arquivo _Cargo.lock_ na primeira vez que você executa `cargo build`, então agora temos esse arquivo no diretório _guessing_game_."
+msgstr "O Cargo tem um mecanismo que garante que você possa reconstruir o mesmo artefato toda vez que você ou qualquer outra pessoa compilar seu código: o Cargo usará apenas as versões das dependências que você especificou até que você indique o contrário. Por exemplo, digamos que na próxima semana a versão 0.10.2 do crate `rand` seja lançada, e que essa versão contenha uma correção importante de bug, mas também contenha uma regressão que vai quebrar seu código. Para lidar com isso, Rust cria o arquivo _Cargo.lock_ na primeira vez que você executa `cargo build`, então agora temos esse arquivo no diretório _guessing_game_."
 
 #: src/ch02-00-guessing-game-tutorial.md
-#, fuzzy
-#| msgid "When you build a project for the first time, Cargo figures out all the versions of the dependencies that fit the criteria and then writes them to the _Cargo.lock_ file. When you build your project in the future, Cargo will see that the _Cargo.lock_ file exists and will use the versions specified there rather than doing all the work of figuring out versions again. This lets you have a reproducible build automatically. In other words, your project will remain at 0.8.5 until you explicitly upgrade, thanks to the _Cargo.lock_ file. Because the _Cargo.lock_ file is important for reproducible builds, it’s often checked into source control with the rest of the code in your project."
 msgid "When you build a project for the first time, Cargo figures out all the versions of the dependencies that fit the criteria and then writes them to the _Cargo.lock_ file. When you build your project in the future, Cargo will see that the _Cargo.lock_ file exists and will use the versions specified there rather than doing all the work of figuring out versions again. This lets you have a reproducible build automatically. In other words, your project will remain at 0.10.1 until you explicitly upgrade, thanks to the _Cargo.lock_ file. Because the _Cargo.lock_ file is important for reproducible builds, it’s often checked into source control with the rest of the code in your project."
-msgstr "Quando você compila um projeto pela primeira vez, o Cargo descobre todas as versões das dependências que atendem aos critérios e as grava no arquivo _Cargo.lock_. Quando você compila seu projeto no futuro, o Cargo verá que o arquivo _Cargo.lock_ existe e usará as versões especificadas nele em vez de fazer todo o trabalho de descobrir versões novamente. Isso permite que você tenha um build reproduzível automaticamente. Em outras palavras, seu projeto permanecerá em 0.8.5 até que você atualize explicitamente, graças ao arquivo _Cargo.lock_. Como o arquivo _Cargo.lock_ é importante para builds reproduzíveis, ele normalmente é versionado junto com o restante do código do seu projeto."
+msgstr "Quando você compila um projeto pela primeira vez, o Cargo descobre todas as versões das dependências que atendem aos critérios e as grava no arquivo _Cargo.lock_. Quando você compila seu projeto no futuro, o Cargo verá que o arquivo _Cargo.lock_ existe e usará as versões especificadas nele em vez de fazer todo o trabalho de descobrir versões novamente. Isso permite que você tenha um build reproduzível automaticamente. Em outras palavras, seu projeto permanecerá em 0.10.1 até que você atualize explicitamente, graças ao arquivo _Cargo.lock_. Como o arquivo _Cargo.lock_ é importante para builds reproduzíveis, ele normalmente é versionado junto com o restante do código do seu projeto."
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Updating a Crate to Get a New Version"
-msgstr "Atualizando um Crate para Obter uma Nova Versão"
+msgstr "Atualizando um Crate para Obter uma Nova Versão {#updating-a-crate-to-get-a-new-version}"
 
 #: src/ch02-00-guessing-game-tutorial.md
-#, fuzzy
-#| msgid "When you _do_ want to update a crate, Cargo provides the command `update`, which will ignore the _Cargo.lock_ file and figure out all the latest versions that fit your specifications in _Cargo.toml_. Cargo will then write those versions to the _Cargo.lock_ file. Otherwise, by default, Cargo will only look for versions greater than 0.8.5 and less than 0.9.0. If the `rand` crate has released the two new versions 0.8.6 and 0.999.0, you would see the following if you ran `cargo update`:"
 msgid "When you _do_ want to update a crate, Cargo provides the command `update`, which will ignore the _Cargo.lock_ file and figure out all the latest versions that fit your specifications in _Cargo.toml_. Cargo will then write those versions to the _Cargo.lock_ file. Otherwise, by default, Cargo will only look for versions greater than 0.10.1 and less than 0.11.0. If the `rand` crate has released the two new versions 0.10.2 and 0.999.0, you would see the following if you ran `cargo update`:"
-msgstr "Quando você _quiser_ atualizar um crate, o Cargo oferece o comando `update`, que ignorará o arquivo _Cargo.lock_ e descobrirá todas as versões mais recentes que se encaixam nas especificações de _Cargo.toml_. O Cargo então gravará essas versões no arquivo _Cargo.lock_. Caso contrário, por padrão, o Cargo só buscará versões maiores que 0.8.5 e menores que 0.9.0. Se o crate `rand` tiver lançado as duas novas versões 0.8.6 e 0.999.0, você veria o seguinte ao executar `cargo update`:"
+msgstr "Quando você _quiser_ atualizar um crate, o Cargo oferece o comando `update`, que ignorará o arquivo _Cargo.lock_ e descobrirá todas as versões mais recentes que se encaixam nas especificações de _Cargo.toml_. O Cargo então gravará essas versões no arquivo _Cargo.lock_. Caso contrário, por padrão, o Cargo só buscará versões maiores que 0.10.1 e menores que 0.11.0. Se o crate `rand` tiver lançado as duas novas versões 0.10.2 e 0.999.0, você veria o seguinte ao executar `cargo update`:"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid ""
@@ -1914,10 +1904,8 @@ msgid ""
 msgstr ""
 
 #: src/ch02-00-guessing-game-tutorial.md
-#, fuzzy
-#| msgid "Cargo ignores the 0.999.0 release. At this point, you would also notice a change in your _Cargo.lock_ file noting that the version of the `rand` crate you are now using is 0.8.6. To use `rand` version 0.999.0 or any version in the 0.999._x_ series, you’d have to update the _Cargo.toml_ file to look like this instead (don’t actually make this change because the following examples assume you’re using `rand` 0.8):"
 msgid "Cargo ignores the 0.999.0 release. At this point, you would also notice a change in your _Cargo.lock_ file noting that the version of the `rand` crate you are now using is 0.10.2. To use `rand` version 0.999.0 or any version in the 0.999._x_ series, you’d have to update the _Cargo.toml_ file to look like this instead (don’t actually make this change because the following examples assume you’re using `rand` 0.10):"
-msgstr "O Cargo ignora o lançamento 0.999.0. Neste ponto, você também notaria uma mudança no arquivo _Cargo.lock_ indicando que a versão do crate `rand` que você está usando agora é 0.8.6. Para usar `rand` versão 0.999.0 ou qualquer versão na série 0.999._x_, você teria que atualizar o arquivo _Cargo.toml_ para ficar assim (não faça essa mudança de fato, porque os exemplos a seguir assumem que você está usando `rand` 0.8):"
+msgstr "O Cargo ignora o lançamento 0.999.0. Neste ponto, você também notaria uma mudança no arquivo _Cargo.lock_ indicando que a versão do crate `rand` que você está usando agora é 0.10.2. Para usar `rand` versão 0.999.0 ou qualquer versão na série 0.999._x_, você teria que atualizar o arquivo _Cargo.toml_ para ficar assim (não faça essa mudança de fato, porque os exemplos a seguir assumem que você está usando `rand` 0.10):"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid ""
@@ -1937,7 +1925,7 @@ msgstr "Há muito mais para dizer sobre [Cargo](https://doc.rust-lang.org/cargo/
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Generating a Random Number"
-msgstr "Gerando um Número Aleatório"
+msgstr "Gerando um Número Aleatório {#generating-a-random-number}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Let’s start using `rand` to generate a number to guess. The next step is to update _src/main.rs_, as shown in Listing 2-3."
@@ -2018,7 +2006,7 @@ msgstr ""
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Comparing the Guess to the Secret Number"
-msgstr "Comparando o Palpite com o Número Secreto"
+msgstr "Comparando o Palpite com o Número Secreto {#comparing-the-guess-to-the-secret-number}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Now that we have user input and a random number, we can compare them. That step is shown in Listing 2-4. Note that this code won’t compile just yet, as we will explain."
@@ -2204,7 +2192,7 @@ msgstr "Agora temos a maior parte do jogo funcionando, mas o usuário só pode d
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Allowing Multiple Guesses with Looping"
-msgstr "Permitindo Múltiplos Palpites com Laço"
+msgstr "Permitindo Múltiplos Palpites com Laço {#allowing-multiple-guesses-with-looping}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "The `loop` keyword creates an infinite loop. We’ll add a loop to give users more chances at guessing the number:"
@@ -2267,7 +2255,7 @@ msgstr "Digitar `quit` encerrará o jogo, mas, como você notará, inserir qualq
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Quitting After a Correct Guess"
-msgstr "Encerrando Após um Palpite Correto"
+msgstr "Encerrando Após um Palpite Correto {#quitting-after-a-correct-guess}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Let’s program the game to quit when the user wins by adding a `break` statement:"
@@ -2279,7 +2267,7 @@ msgstr "Adicionar a linha `break` após `You win!` faz o programa sair do laço 
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "Handling Invalid Input"
-msgstr "Lidando com Entrada Inválida"
+msgstr "Lidando com Entrada Inválida {#handling-invalid-input}"
 
 #: src/ch02-00-guessing-game-tutorial.md
 msgid "To further refine the game’s behavior, rather than crashing the program when the user inputs a non-number, let’s make the game ignore a non-number so that the user can continue guessing. We can do that by altering the line where `guess` is converted from a `String` to a `u32`, as shown in Listing 2-5."
@@ -2369,7 +2357,7 @@ msgstr "Especificamente, você aprenderá sobre variáveis, tipos básicos, fun�
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "Keywords"
-msgstr "Palavras-chave"
+msgstr "Palavras-chave {#keywords}"
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "The Rust language has a set of _keywords_ that are reserved for use by the language only, much as in other languages. Keep in mind that you cannot use these words as names of variables or functions. Most of the keywords have special meanings, and you’ll be using them to do various tasks in your Rust programs; a few have no current functionality associated with them but have been reserved for functionality that might be added to Rust in the future. You can find the list of the keywords in [Appendix A](appendix-01-keywords.md)<!-- ignore -->."
@@ -2465,7 +2453,7 @@ msgstr ""
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Declaring Constants"
-msgstr "Declarando Constantes"
+msgstr "Declarando Constantes {#declaring-constants}"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Like immutable variables, _constants_ are values that are bound to a name and are not allowed to change, but there are a few differences between constants and variables."
