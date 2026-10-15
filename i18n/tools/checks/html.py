@@ -248,11 +248,12 @@ def _vazamentos(ctx, pt_dir, en_dir, pt):
         for m in achei[:3]:
             ini, fim = max(0, m.start() - 35), min(len(texto), m.end() + 20)
             exemplos.append("«" + _em_uma_linha(texto[ini:fim], 80) + "»")
+        ids = sorted({m.group(0) for m in achei})
+        lista = ", ".join(ids[:5]) + (f" e mais {len(ids) - 5}" if len(ids) > 5 else "")
         achados.append(Achado(
             NOME, "erro",
-            f"{len(achei)} id(s) de título vazado(s) no pt-BR ({', '.join(sorted({m.group(0) for m in achei}))}): "
-            f"o pós-processamento (i18n/tools/pos_build.py) não rodou ou falhou; exemplos: "
-            f"{'; '.join(exemplos)}",
+            f"{len(achei)} id(s) de título vazado(s) no pt-BR ({lista}): o pós-processamento "
+            f"(i18n/tools/pos_build.py) não rodou ou falhou; exemplos: {'; '.join(exemplos)}",
             arquivo=rel))
     return achados
 
