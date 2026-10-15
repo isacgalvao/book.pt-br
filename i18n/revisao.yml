@@ -1,0 +1,31 @@
+# Registro da revisão humana dos capítulos da tradução pt-BR.
+#
+# O QUE É: guarda, para cada capítulo revisado por uma pessoa, quem revisou, quando, de que tipo
+# (integral ou amostragem) e o hash do conteúdo revisado. O `status.py` compara esse hash com o
+# do `po/pt-BR.po` atual e mostra o status do capítulo: “rascunho IA” (traduzido, sem registro),
+# “revisado”, “revisado (amostragem)” ou “alterado após revisão” (o capítulo mudou depois de
+# revisado e precisa de nova revisão).
+#
+# QUEM ESCREVE: SÓ O MANTENEDOR, e só pelo comando abaixo. Não edite o arquivo à mão e agentes
+# nunca o alteram: o hash é calculado pela ferramenta, e um registro falso faria um capítulo de
+# rascunho aparecer como revisado.
+#
+#   python3 i18n/tools/status.py --registrar CAP --tipo integral|amostragem --revisor NOME
+#
+#   CAP         identificador do capítulo (title-page, foreword, ch00 a ch21, appendix, summary)
+#   integral    o revisor leu o capítulo inteiro
+#   amostragem  o revisor leu só parte do capítulo (por exemplo, os trechos sinalizados por uma
+#               revisão automática mais uma amostra sorteada)
+#   NOME        nome de quem revisou
+#
+# O comando regrava o arquivo mantendo este cabeçalho exatamente como está. Depois dele, cada
+# capítulo registrado aparece assim (o hash é o sha256 das mensagens traduzíveis do capítulo):
+#
+#   capitulos:
+#     ch01:
+#       revisado_em: '2026-10-15'
+#       revisor: Fulana de Tal
+#       tipo: integral
+#       hash: <64 caracteres hexadecimais>
+
+capitulos: {}
