@@ -950,8 +950,8 @@ def run(ctx):
     from checks.base import Achado          # import tardio: base.py é de outro módulo
 
     achados = []
-    for e in ctx.entradas():
-        if not e.msgstr.strip():
+    for e in ctx.entradas(incluir_vazias=True):
+        if e.msgstr == "":                   # msgstr só com espaços é validado (regra 'vazio')
             continue
         fuzzy = "fuzzy" in e.flags
         arquivo = None
@@ -1337,7 +1337,7 @@ def _varre_po(caminho, exemplos):
     por_regra = {}
     total = 0
     for e in po:
-        if e.obsolete or not e.msgid or not e.msgstr.strip():
+        if e.obsolete or not e.msgid or e.msgstr == "":
             continue
         total += 1
         fuzzy = "fuzzy" in e.flags
@@ -1377,7 +1377,12 @@ def main(argv=None):
     args = ap.parse_args(argv)
     if args.autoteste:
         return autoteste()
-    return _varre_po(args.po or po_util.PO_PADRAO, max(args.exemplos, 0))
+    try:
+        return _varre_po(args.po or po_util.PO_PADRAO, max(args.exemplos, 0))
+    except BrokenPipeError:                  # saída canalizada para `head` etc.
+        import os
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        return 1
 
 
 if __name__ == "__main__":
