@@ -40,12 +40,13 @@ erros:
       verbos regulares (-ar, -er, -ir) coincidem com o infinitivo (“se você executar”).
 
   - id: concordancia-alguem-eles
-    regex: '(?i:\balguém\b[^.!?;:]{0,70}\b(?:eles|elas)\b)'
+    regex: '(?i:\balguém\b(?:[^.!?;:]|\.(?=\S)){0,90}?\b(?:eles|elas)\b)'
     severidade: aviso
     correcao: "essa pessoa, ela"
     explicacao: >-
-      “Se você der a alguém... eles precisam” liga um singular (“alguém”) a um plural. Prefira
-      “essa pessoa” e verbos no singular.
+      “Se você der a alguém um arquivo _.rb_, _.py_ ou _.js_, eles precisam” liga um singular
+      (“alguém”) a um plural (capítulo 1). Prefira “essa pessoa” e verbos no singular. O ponto
+      de uma extensão de arquivo (“_.rb_”) não encerra a frase para a regex.
 
   # ----------------------------------------------------------- falsos amigos
   - id: idiomas-rust
@@ -92,7 +93,7 @@ erros:
 
   # ---------------------------------------------------- links e rótulos de link
   - id: atalho-traduzido-sem-definicao
-    regex: '\\\[[^\[\]\n]{1,80}\\\]'
+    regex: '\\\[[^\[\]\n]{0,40}[A-Za-zÀ-ÿ]{3,}[^\[\]\n]{0,40}\\\]'
     severidade: erro
     correcao: "[texto traduzido](destino) ou [texto traduzido][rótulo], como no original"
     explicacao: >-
@@ -100,6 +101,8 @@ erros:
       a definição: o rótulo foi traduzido e a página mostra os colchetes soltos. Aconteceu com
       “Várias \[traduções\] da comunidade” na página de rosto, que perdeu o link para o
       Apêndice F. Mantenha o destino ou o rótulo do original e traduza só o texto visível.
+      Esta regex só vê a forma escapada; a forma `[traduções]` sem escape, sem destino nem
+      rótulo, é pega pela regra 4 de validar_par (mesmos rótulos de referência).
 
   - id: portugues-em-code-span
     escopo: bruto
@@ -122,7 +125,7 @@ erros:
       nome do arquivo e traduza só o rótulo.
 
   - id: nome-do-arquivo-forma
-    regex: '(?-i:\bNome do Arquivo\b|\bNome de [Aa]rquivo\b)'
+    regex: '(?-i:\bNome d[eo] Arquivo\b|\bNome de arquivo\s*:)'
     severidade: aviso
     correcao: "Nome do arquivo:"
     explicacao: "O rótulo é sempre “Nome do arquivo:”, com “do” e “arquivo” em minúscula."
@@ -140,6 +143,29 @@ erros:
     explicacao: >-
       O número da listagem é copiado do original com hífen comum e a palavra “Listagem” leva
       maiúscula, igual ao rótulo gerado pelo build.
+
+  - id: figure-em-ingles
+    regex: '(?-i:\bFigure\s+\d)'
+    severidade: erro
+    correcao: "Figura N-M"
+    explicacao: >-
+      Referências e legendas de figuras ficam em português, no mesmo molde de “Listagem 3-1”:
+      “Figure 4-1” vira “Figura 4-1”. O livro tem 52 ocorrências (capítulos 4, 14, 15, 17 e 21), a
+      maioria em legendas `<span class="caption">`.
+
+  - id: table-em-ingles
+    regex: '(?-i:\bTable\s+\d)'
+    severidade: erro
+    correcao: "Tabela N-M"
+    explicacao: "“Table 3-1” vira “Tabela 3-1”, como “Listing 3-1” vira “Listagem 3-1”."
+
+  - id: figura-tabela-formato
+    regex: '(?-i:\b(?:figura|tabela)\s+\d|\b(?:Figura|Tabela)\s+\d+(?:\.|–|—)\d+)'
+    severidade: aviso
+    correcao: "Figura 4-1, Tabela 3-1 (maiúscula, hífen comum)"
+    explicacao: >-
+      O número vem copiado do original com hífen comum e a palavra leva maiúscula, como em
+      “Listagem 2-1”.
 
   - id: capitulo-em-ingles
     regex: '(?-i:\b(?:Chapter\s+\d+|Appendix\s+[A-Z]\b))'
@@ -308,6 +334,15 @@ erros:
       adjetivo (“código Rust”, “Edição Rust 2024”, “Comunidade Rust”), que esta regra não pega. O
       aviso lista os casos “em Rust”, “de Rust”, “sobre Rust” para conferir.
 
+  - id: palavra-repetida
+    regex: '(?i:\b([A-Za-zÀ-ÿ]{2,}) \1\b)'
+    severidade: aviso
+    correcao: "apagar a repetição"
+    explicacao: >-
+      Palavra repetida em sequência (“você você precisa”, “bem como como”). Só uma ocorrência é
+      certa; confira. A regex exige um único espaço entre as duas palavras, para não confundir
+      com um code span removido no meio (“para `x` para”).
+
   - id: tratamento-tu
     regex: '(?i:\b(?:tu|vós|teu|tua|teus|tuas|contigo|convosco)\b)'
     severidade: aviso
@@ -326,13 +361,14 @@ erros:
       neste teste.
 
   - id: maiuscula-apos-dois-pontos
-    regex: '(?-i:(?<=[a-zà-ÿ0-9\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Rustacean|Rustaceans|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
+    regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Rustacean|Rustaceans|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
     severidade: aviso
     correcao: "minúscula depois de dois-pontos, salvo nome próprio"
     explicacao: >-
       Em português, depois de dois-pontos vem minúscula (“livro: se você”, “exibe: elas”, “Nota:
-      esta edição”), exceto nome próprio, sigla ou citação. O aviso pode pegar nomes próprios que
-      a lista de exceções da regex não conhece; confira.
+      esta edição”), exceto nome próprio, sigla ou citação. Legendas como “Figura 4-1: A
+      representação...” não entram no teste (o dois-pontos vem depois de um número). O aviso
+      pode pegar nomes próprios que a lista de exceções da regex não conhece; confira.
 
   - id: titulo-com-todas-maiusculas
     regex: '(?-i:\A(?!A Linguagem de Programação Rust\s*\Z)[A-ZÀ-Ý][\wà-ÿ-]*(?:\s+(?:(?:de|da|do|das|dos|e|em|com|para|no|na|nos|nas|ao|à|a|o|os|as|um|uma|por|sobre)\s+)?[A-ZÀ-Ý][\wà-ÿ-]*){2,}(?:\s+(?:de|da|do|das|dos|e|em|com|para|no|na|a|o|os|as|um|uma|por|sobre))*\s*\Z)'
