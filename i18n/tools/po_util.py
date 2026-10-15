@@ -178,3 +178,69 @@ def traduzida(e):
 def mapa_ids(po):
     """{entry_id: entrada} das entradas não obsoletas."""
     return {entry_id(e): e for e in po if not e.obsolete}
+
+
+# --------------------------------------------------------------------------
+# Mensagens sem texto traduzível
+# --------------------------------------------------------------------------
+
+# Mensagem estranha que o mdbook-xgettext monta juntando os três capítulos de
+# prefixo do SUMMARY.md; fica vazia para sempre (contrato §4, item 11).
+SEMPRE_VAZIAS = frozenset({"The Rust Programming Language Foreword Introduction"})
+
+# Arquivo cujas mensagens só de links para outros idiomas não têm o que traduzir.
+_ARQ_TRADUCOES = "src/appendix-06-translation.md"
+
+# <code>...</code> inteiro, com o conteúdo (célula de tabela só com código).
+_CODE_HTML = re.compile(r"<code\b[^>]*>.*?</code\s*>", re.I | re.S)
+# Código em linha com qualquer número de crases (abre e fecha com o mesmo número).
+_CODE_CRASES = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)", re.S)
+# Diretivas `{{#include ...}}` e ids de título `{#id}`.
+_DIRETIVA = re.compile(r"\{\{#.*?\}\}|\{#[^{}\s]*\}", re.S)
+# Uma tag HTML; os valores de atributo entre aspas podem ter `<` e `>`.
+_TAG = re.compile(r"""</?[A-Za-z](?:"[^"]*"|'[^']*'|[^<>"'])*>""")
+# Atributos cujo valor é texto traduzível.
+_ATRIB_TEXTO = re.compile(r"""(?<![\w:-])(?:alt|title|caption)\s*=\s*(?:"([^"]*)"|'([^']*)')""", re.I)
+# Destino de link `](...)` (aceita um nível de parênteses) e rótulo `][ref]`.
+_DESTINO_LINK = re.compile(r"\]\((?:[^()]|\([^()]*\))*\)")
+_ROTULO_REF = re.compile(r"\]\[[^\]]*\]")
+# Duas letras seguidas ou mais: o mínimo para haver uma palavra a traduzir.
+_PALAVRA = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ]{2,}")
+# Só links para outros idiomas: `[Português](https://...) (BR)`,
+# `简体中文: [a/b](https://...), [c/d](https://...)`.
+_LINK_IDIOMA = re.compile(
+    r"""(?:[^\[\]\n:]{1,40}:\s*)?"""            # rótulo opcional: "简体中文: "
+    r"""\[[^\]\n]+\]\(https?://[^)\s]+\)"""     # primeiro link
+    r"""(?:\s*[,;]\s*\[[^\]\n]+\]\(https?://[^)\s]+\))*"""  # demais links
+    r"""(?:\s*\([A-Za-z]{2,3}\))?"""            # sufixo curto: " (BR)"
+)
+
+
+def _texto_dos_atributos(m):
+    """Troca uma tag HTML pelo texto de seus atributos alt/title/caption."""
+    valores = [a or b for a, b in _ATRIB_TEXTO.findall(m.group(0))]
+    return " " + " ".join(valores) + " "
+
+
+def sem_texto(e_ou_msgid):
+    """True se o msgid não tem palavra traduzível (contrato §6, algoritmo de referência).
+
+    Exemplos: células `i8`, o literal `'z'`, `<code>i8</code>`, `[Русский](https://...)`.
+    Com um str não vale a regra 5 (links de idioma), que precisa das ocorrências.
+    """
+    msgid = _msgid(e_ou_msgid)
+    t = _CODE_HTML.sub(" ", msgid)                 # 1. <code>...</code> some com o conteúdo
+    # Código em linha sai antes das tags: `Option<i32>` não pode virar uma "tag".
+    t = _CODE_CRASES.sub(" ", t)                   # 3. código em linha
+    t = _DIRETIVA.sub(" ", t)                      # 3. {{#...}} e {#...}
+    t = _TAG.sub(_texto_dos_atributos, t)          # 2. tag -> texto de alt/title/caption
+    t = _DESTINO_LINK.sub("]", t)                  # 3. mantém o texto visível do link
+    t = _ROTULO_REF.sub("]", t)                    # 3. `][rótulo]`
+    if not _PALAVRA.search(t):                     # 4. nenhuma palavra de 2+ letras
+        return True
+    # 5. links de idiomas do apêndice F (só com a entrada: precisa das ocorrências)
+    if not isinstance(e_ou_msgid, str):
+        arqs = arquivos(e_ou_msgid)
+        if arqs and all(a == _ARQ_TRADUCOES for a in arqs):
+            return _LINK_IDIOMA.fullmatch(msgid.strip()) is not None
+    return False
