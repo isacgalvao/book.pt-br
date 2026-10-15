@@ -1,0 +1,358 @@
+# Erros recorrentes de tradução (pt-BR) — lidos por i18n/tools/checks/glossario.py.
+#
+# Cada entrada: id (único), regex (Python), severidade (erro | aviso), correcao, explicacao.
+#
+# Como o verificador usa este arquivo:
+#   - A regex é aplicada ao msgstr LIMPO (sem code spans, sem o conteúdo de <code>/<pre>/<kbd>,
+#     sem destinos de link, sem ][rótulo], sem tags HTML e sem {#...}) das mensagens traduzidas
+#     ou fuzzy de prosa, listing e html. Nenhuma regex depende do flag de maiúsculas: cada uma
+#     escolhe por conta própria, com (?i:...) ou (?-i:...), e dá o mesmo resultado com ou sem
+#     re.IGNORECASE. Nenhuma depende de re.MULTILINE.
+#   - Exceção: escopo: bruto (campo opcional) pede a regex sobre o msgstr ORIGINAL, porque o
+#     defeito mora justamente no que a limpeza remove (code spans). Um verificador que ignore o
+#     campo não dispara essa entrada (a regra 2 de validar_par, "mesmo multiconjunto de code
+#     spans", pega o mesmo defeito como erro).
+#   - erro = defeito certo, a mensagem não pode ser aplicada nem passar no CI;
+#     aviso = suspeita (a forma também tem uso legítimo): um humano ou o revisor decide.
+#   - Trechos de código, URLs e comandos nunca são avaliados: ficam fora do msgstr limpo.
+#
+# Para acrescentar uma entrada: escreva a regex, rode-a sobre o msgstr de po/pt-BR.po e sobre
+# prosa correta em pt-BR, e só use erro se não houver falso positivo em nenhum dos dois.
+
+erros:
+  # ---------------------------------------------------------------- gramática
+  - id: futuro-subjuntivo-ver
+    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente|o leitor|a pessoa)\s+(?:(?:não|nunca)\s+)?ver\b)'
+    severidade: erro
+    correcao: "se você vir"
+    explicacao: >-
+      O futuro do subjuntivo de “ver” é “vir” (se eu vir, se você vir, se nós virmos). “Se você
+      ver” é a forma do infinitivo e soa errada. Aparecia 5 vezes no capítulo 1 (“Se você ver
+      essas informações”, “Se você não ver essa saída”).
+
+  - id: futuro-subjuntivo-ver-sem-sujeito
+    regex: '(?i:\b(?:se|caso)\s+não\s+ver\b)'
+    severidade: aviso
+    correcao: "se não vir"
+    explicacao: >-
+      “Se não ver essas informações” repete o erro de “se você ver” com o sujeito oculto. Só é
+      legítimo quando “ver” é o sujeito da frase (“não sei se não ver é melhor”), o que quase não
+      acontece neste livro.
+
+  - id: futuro-subjuntivo-irregular
+    regex: '(?i:\b(?:se|quando|caso|enquanto|assim que|sempre que|logo que|depois que)\s+(?:você|vocês|ele|ela|eles|elas|nós|eu|alguém|a gente)\s+(?:(?:não|nunca)\s+)?(?:ter|fazer|dizer|trazer|querer|poder|saber|estar|ser|dar|haver|manter|conter|obter|reter|supor|compor|dispor|expor|impor|propor)\b)'
+    severidade: erro
+    correcao: "se você tiver, fizer, disser, trouxer, quiser, puder, souber, estiver, for, der, houver, mantiver..."
+    explicacao: >-
+      Verbos irregulares não usam o infinitivo no futuro do subjuntivo: “se você tiver” (não “se
+      você ter”), “quando você fizer”, “caso você puder” é errado (“puder” já é a forma certa, mas
+      “poder” não). Só os regulares (-ar, -er, -ir) coincidem com o infinitivo.
+
+  - id: concordancia-alguem-eles
+    regex: '(?i:\balguém\b[^.!?;:]{0,70}\b(?:eles|elas)\b)'
+    severidade: aviso
+    correcao: "essa pessoa, ela"
+    explicacao: >-
+      “Se você der a alguém... eles precisam” liga um singular (“alguém”) a um plural. Prefira
+      “essa pessoa” e verbos no singular.
+
+  - id: palavra-repetida
+    regex: '(?i:\b([a-zà-ÿ]{3,})\s+\1\b)'
+    severidade: aviso
+    correcao: "apagar a repetição"
+    explicacao: >-
+      Palavra duplicada em sequência (“que que”, “então então”) costuma ser resto de reflow ou de
+      reescrita. Algumas repetições são legítimas, por isso é só aviso.
+
+  # ----------------------------------------------------------- falsos amigos
+  - id: idiomas-rust
+    regex: '(?i:\bidiomas?\s+(?:d[oae]s?\s+)?(?:Rust|edição)\b)'
+    severidade: erro
+    correcao: "expressões idiomáticas (ou padrões idiomáticos) do Rust"
+    explicacao: >-
+      “Idiom” é uma forma típica de escrever em uma linguagem, não um idioma natural. Apareceu
+      como “os idiomas da Edição Rust 2024” (página de rosto) e “os idiomas do Rust” (capítulo 0).
+
+  - id: idiomas-ambiguo
+    regex: '(?i:\bidiomas?\b(?!\s+(?:d[oae]s?\s+)?(?:Rust|edição)\b))'
+    severidade: aviso
+    correcao: "expressões idiomáticas, se o original diz idioms"
+    explicacao: >-
+      “Idiomas” em português são as línguas naturais (“traduzido para vários idiomas”). Se o
+      inglês diz “idiom” ou “idiomatic”, o certo é “expressão idiomática” ou “idiomático”. Se o
+      inglês diz “languages”, a frase está certa e o aviso pode ser ignorado.
+
+  - id: rust-noturno
+    regex: '(?i:\b(?:rust|canal|versão|compilador|toolchain|release|lançamento|recursos?|funcionalidades?)\s+noturn[oa]s?\b)'
+    severidade: erro
+    correcao: "Rust nightly"
+    explicacao: >-
+      “Nightly” é o nome do canal de lançamento (aparece assim no `rustup` e no Apêndice G), não
+      um adjetivo a traduzir. Apareceu como “o que é o Rust noturno” no capítulo 0. Os canais
+      nightly, beta e stable ficam em inglês.
+
+  - id: noturno-ambiguo
+    regex: '(?i:\bnoturn[oa]s?\b)'
+    severidade: aviso
+    correcao: "nightly, se o original fala do canal de lançamento"
+    explicacao: >-
+      “Noturno” quase sempre é a tradução errada de “nightly”. Só é aceitável fora do contexto
+      dos canais do Rust.
+
+  - id: canal-stable-traduzido
+    regex: '(?i:\b(?:rust|canal|toolchain|compilador)\s+estáve(?:l|is)\b)'
+    severidade: aviso
+    correcao: "Rust stable, canal stable"
+    explicacao: >-
+      Os nomes dos canais (nightly, beta, stable) ficam em inglês. “Estável” só se aplica a
+      funcionalidades (“API estável”), não ao nome do canal.
+
+  # ---------------------------------------------------- links e rótulos de link
+  - id: atalho-traduzido-sem-definicao
+    regex: '\\\[[^\[\]\n]{1,80}\\\]'
+    severidade: erro
+    correcao: "[texto traduzido][rótulo] ou [texto traduzido](destino)"
+    explicacao: >-
+      Colchetes escapados (\[texto\]) no msgstr mostram que o atalho de link perdeu a definição:
+      o rótulo foi traduzido e a página mostra os colchetes soltos. Aconteceu com
+      “Várias \[traduções\] da comunidade” na página de rosto, que perdeu o link para o
+      Apêndice F. Mantenha o destino ou o rótulo do original e traduza só o texto visível.
+
+  - id: portugues-em-code-span
+    escopo: bruto
+    regex: '(?s:\A(?:[^`]*`[^`]*`)*?[^`]*`(?=[^`]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b|\bcrate\s+[a-z_]+\b))[^`]*`)'
+    severidade: erro
+    correcao: "pôr só o identificador no code span: [método `expect`][expect], [crate `rand`][randcrate]"
+    explicacao: >-
+      Palavras em português dentro de um code span aparecem em monoespaçado como se fossem código.
+      Aconteceu três vezes no capítulo 2: [`método expect`], [`crate rand`] e
+      [`método parse em strings`]. O code span copia o original (`expect`, `rand`, `parse`); o
+      português fica fora dele.
+
+  - id: filename-em-ingles
+    regex: '(?-i:\bFilename:)'
+    severidade: erro
+    correcao: "Nome do arquivo:"
+    explicacao: >-
+      O rótulo do `<span class="filename">` e da legenda de listagem é “Nome do arquivo:”. Sobrou
+      “Filename:” sem tradução em 3 pontos do capítulo 3 na tradução antiga. Mantenha a tag e o
+      nome do arquivo e traduza só o rótulo.
+
+  - id: listing-em-ingles
+    regex: '(?-i:\bListing\s+\d)'
+    severidade: erro
+    correcao: "Listagem N-M"
+    explicacao: "Referências a listagens usam “Listagem 2-1”, como o rótulo que o build gera."
+
+  - id: listagem-formato
+    regex: '(?-i:\bListagem\s+\d+(?:\.|–|—)\d+|\blistagem\s+\d)'
+    severidade: aviso
+    correcao: "Listagem 2-1 (maiúscula, hífen comum)"
+    explicacao: >-
+      O número da listagem é copiado do original com hífen comum e a palavra “Listagem” leva
+      maiúscula, igual ao rótulo gerado pelo build.
+
+  - id: capitulo-em-ingles
+    regex: '(?-i:\b(?:Chapter\s+\d+|Appendix\s+[A-Z]\b))'
+    severidade: erro
+    correcao: "Capítulo N, Apêndice X"
+    explicacao: "Referências a capítulos e apêndices ficam em português: “Capítulo 4”, “Apêndice D”."
+
+  - id: capitulo-minusculo
+    regex: '(?-i:\bcap[ií]tulos?\s+\d|\bapêndice\s+[A-Z]\b)'
+    severidade: aviso
+    correcao: "Capítulo 4, Apêndice D"
+    explicacao: "Em referência numerada, “Capítulo” e “Apêndice” levam maiúscula, como em “Capítulo 18”."
+
+  - id: note-em-ingles
+    regex: '(?-i:(?:^|[\n>]\s*)Note:)'
+    severidade: erro
+    correcao: "Nota:"
+    explicacao: >-
+      Notas começam com “Nota:”. O pré-processador do livro aceita essa forma e mantém o estilo da
+      nota (o número de blocos class="note" é o mesmo em inglês e em português).
+
+  - id: nome-do-arquivo-forma
+    regex: '(?-i:\bNome do Arquivo\b|\bNome de [Aa]rquivo\b)'
+    severidade: aviso
+    correcao: "Nome do arquivo:"
+    explicacao: "O rótulo é sempre “Nome do arquivo:”, com “arquivo” em minúscula."
+
+  # ---------------------------------------------------------- terminologia (§7)
+  - id: genero-enum
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+[_*]*enum\b|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+[_*]*enums\b)'
+    severidade: erro
+    correcao: "o enum, um enum, do enum, no enum, os enums"
+    explicacao: >-
+      Decisão do mantenedor: enum é masculino (o enum). A tradução antiga dizia “uma enum”, “da
+      enum” e “outra enum” em 4 pontos do capítulo 2.
+
+  - id: genero-struct
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+[_*]*struct\b|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+[_*]*structs\b)'
+    severidade: erro
+    correcao: "o struct, um struct, do struct, no struct, os structs"
+    explicacao: >-
+      Decisão do mantenedor: struct é masculino (o struct), igual a enum. O guia antigo dizia “a
+      struct”, que não vale mais.
+
+  - id: package-em-ingles
+    regex: '(?i:(?<!software )\bpackages?\b)'
+    severidade: erro
+    correcao: "pacote, pacotes"
+    explicacao: >-
+      Decisão do mantenedor: package vira pacote. A tradução antiga misturava “um package”,
+      “vários packages” e “pacotes”. Exceção real: o nome próprio “Software Package Data
+      Exchange” (SPDX), que a regex já ignora.
+
+  - id: fazer-o-build
+    regex: '(?i:\b(?:faz\w*|fiz\w*|fez|faça\w*)\s+(?:(?:o|um|seu|esse|este|do|de)\s+)?builds?\b)'
+    severidade: erro
+    correcao: "compilar (o projeto), fazer a compilação"
+    explicacao: >-
+      Decisão do mantenedor: build (verbo) vira compilar. “Fazer o build” apareceu 10 vezes no
+      capítulo 1, até no título “Fazendo o Build e Executando um Projeto Cargo” (correto:
+      “Compilando e executando um projeto Cargo”).
+
+  - id: buildar
+    regex: '(?i:\bbuild(?:ar|ando|ado|ada|ados|adas|amos|ou)\b)'
+    severidade: erro
+    correcao: "compilar, compilando, compilado"
+    explicacao: "Não aportuguese “build”: o verbo é “compilar”."
+
+  # ----------------------------------------------------------- calques e tom
+  - id: mutar
+    regex: '(?i:\bmut(?:ar|ando|ad[oa]s?|amos)\b)'
+    severidade: aviso
+    correcao: "alterar, modificar"
+    explicacao: >-
+      “Mutar” é calque de “to mutate”. Apareceu em “não temos permissão para mutar o tipo de uma
+      variável”. Prefira “alterar” ou “modificar”. “Mutável” e “imutável” continuam certos.
+
+  - id: subotimo
+    regex: '(?i:\bsub[óo]tim[oa]s?\b)'
+    severidade: aviso
+    correcao: "está longe do ideal, não é o melhor"
+    explicacao: >-
+      “Subótimo” é calque de “suboptimal” (“Isso é subótimo, para dizer o mínimo”). Em
+      documentação em português, “está longe do ideal” soa mais natural.
+
+  - id: como-tal
+    regex: '(?i:\bcomo tal\b)'
+    severidade: aviso
+    correcao: "por isso, por esse motivo"
+    explicacao: >-
+      “Como tal” é calque de “as such” e muda o sentido (“Como tal, muitos Rustaceans executam
+      `cargo check` periodicamente”). O sentido era consequência: “Por isso”.
+
+  - id: tem-sido-uma-de
+    regex: '(?i:\b(?:tem sido|têm sido|foi|foram|é|são|era|será)\s+(?:um|uma)\s+de\s+\w+(?:ção|mento|dade|ismo|agem)\b)'
+    severidade: aviso
+    correcao: "reescrever: marcada por colaboração, aprendizado e iteração"
+    explicacao: >-
+      “A jornada do Rust tem sido uma de colaboração” copia o inglês “has been one of
+      collaboration”. Em português, reescreva (“tem sido marcada pela colaboração”).
+
+  - id: construir-sobre
+    regex: '(?i:\b(?:construímos|construímos|construímos|construir|construiremos|construindo|construída?s?)\s+sobre\s+(?:isso|esse|essa|esses|essas|o que|ele|ela)\b)'
+    severidade: aviso
+    correcao: "partimos disso, com base nisso, se baseiam em"
+    explicacao: >-
+      “Construímos sobre isso” é calque de “build on that”. Use “com base nisso” ou “se baseiam
+      em” (ou “partimos disso”).
+
+  - id: troca-por-trade-off
+    regex: '(?i:\btudo é uma troca\b|\beliminar (?:as )?trocas\b|\b(?:fazer|fazemos|faz|fazendo) trocas?\b)'
+    severidade: aviso
+    correcao: "concessões, trade-offs"
+    explicacao: >-
+      “Trade-off” não é “troca”. “Tudo é uma troca” e “eliminar as trocas” apareceram nos capítulos
+      0 e 1. Use “tudo é uma concessão”, “abrir mão de” ou mantenha “trade-off”, conforme o
+      glossário.
+
+  - id: calque-onde-brilha
+    regex: '(?i:\b(?:é|são) onde\b[^.!?;]{0,60}\b(?:realmente )?(?:brilha|se destaca)\b)'
+    severidade: aviso
+    correcao: "é nisso que ele se destaca, é aí que ele mostra seu valor"
+    explicacao: >-
+      “É onde o Cargo realmente se destaca” copia “is where Cargo really shines”. Reescreva em
+      português natural (“é nisso que o Cargo se destaca”).
+
+  - id: raciocinar-transitivo
+    regex: '(?i:\bfácil de raciocinar\b|\bfáceis de raciocinar\b)'
+    severidade: aviso
+    correcao: "mais fácil de entender"
+    explicacao: >-
+      “Mais fácil de raciocinar” copia “easier to reason about”. Use “mais fácil de entender” ou
+      “mais fácil de analisar”.
+
+  - id: codificado-diretamente
+    regex: '(?i:\bcodificad[oa]s? diretamente\b)'
+    severidade: aviso
+    correcao: "valores fixos no código (hardcoded)"
+    explicacao: "“Hard-coded” não é “codificado diretamente”. Use “valores fixos no código”."
+
+  - id: parenteses-traducao
+    regex: '(?i:\((?:aqui,? )?(?:tradução|traduzido como|em português)\b[^)]*\))'
+    severidade: aviso
+    correcao: "apagar o parêntese; manter só a ênfase do original"
+    explicacao: >-
+      Decisão do mantenedor: nada de “(tradução)” depois de termo em inglês e nenhum itálico além
+      dos do original. A auditoria descartou a regra antiga do “termo em itálico (tradução) na
+      primeira menção”.
+
+  - id: artigo-antes-de-rust
+    regex: '(?i:\b(?:dizer|diz|dizem|dizendo|disse|dissemos)\s+(?:a|à)\s+Rust\b)'
+    severidade: erro
+    correcao: "dizer ao Rust, dizem ao Rust"
+    explicacao: >-
+      Decisão do mantenedor: “o Rust” leva artigo. A tradução antiga dizia “dizer a Rust” e, na
+      linha seguinte, “dizem ao Rust”.
+
+  - id: rust-sem-artigo
+    regex: '(?-i:\b(?:[Dd]e|[Ee]m|[Pp]ara|[Cc]om|[Pp]or|[Ss]em|[Ss]obre|[Aa]té)\s+Rust\b(?!\s*(?:\d|Foundation|Playground|Book)))'
+    severidade: aviso
+    correcao: "do Rust, no Rust, para o Rust, com o Rust"
+    explicacao: >-
+      Decisão do mantenedor: “o Rust” leva artigo. Sem artigo continua certo quando “Rust” é
+      adjetivo (“código Rust”, “Edição Rust 2024”, “Comunidade Rust”). O aviso lista os casos para
+      conferir; “escrito em Rust” às vezes é aceitável.
+
+  - id: tratamento-tu
+    regex: '(?-i:\b(?:tu|vós|teu|tua|teus|tuas|contigo|convosco)\b)'
+    severidade: aviso
+    correcao: "você, seu, sua, seus, suas, com você"
+    explicacao: "O livro trata o leitor por “você”, nunca por “tu” ou “vós”."
+
+  # --------------------------------------------------------------- tipografia
+  - id: aspas-retas
+    regex: '"'
+    severidade: aviso
+    correcao: "“ ” (aspas curvas, como o upstream)"
+    explicacao: >-
+      O upstream usa aspas curvas “ ” em prosa. Aspas retas (") em prosa quebram a consistência
+      (“seção "Instalação"” na página de rosto). Aspas dentro de código ficam como estão e não
+      entram neste teste.
+
+  - id: apostrofo-reto
+    regex: "(?<=[A-Za-zÀ-ÿ])'(?=[A-Za-zÀ-ÿ])"
+    severidade: aviso
+    correcao: "’ (apóstrofo curvo)"
+    explicacao: "O upstream usa o apóstrofo curvo ’ em prosa, nunca o reto '."
+
+  - id: maiuscula-apos-dois-pontos
+    regex: '(?-i:(?<=[a-zà-ÿ0-9\)\]]): +[A-ZÀ-Ý][a-zà-ÿ]+)'
+    severidade: aviso
+    correcao: "minúscula depois de dois-pontos, salvo nome próprio"
+    explicacao: >-
+      Em português, depois de dois-pontos vem minúscula (“livro: se você”, “exibe: elas”), exceto
+      nome próprio, sigla ou citação. O aviso pode pegar nomes próprios legítimos (“Nota: Rust...”
+      ainda deve ser “Nota: o Rust...”), então confira.
+
+  - id: titulo-com-todas-maiusculas
+    regex: '(?-i:\A[A-ZÀ-Ý][\wà-ÿ-]*(?:\s+(?:(?:de|da|do|das|dos|e|em|com|para|no|na|nos|nas|ao|à|a|o|os|as|um|uma|por|sobre)\s+)?[A-ZÀ-Ý][\wà-ÿ-]*){2,}\s*\Z)'
+    severidade: aviso
+    correcao: "só a primeira palavra (e nomes próprios) em maiúscula"
+    explicacao: >-
+      Título em formato de inglês (“Lidando com Falhas Potenciais com Result”). Títulos em pt-BR
+      usam só a primeira palavra e os nomes próprios com maiúscula (“Lidando com falhas potenciais
+      com `Result`”). Nomes de obra e de organização legítimos aparecem aqui; confira.
