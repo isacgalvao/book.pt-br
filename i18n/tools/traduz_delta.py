@@ -172,8 +172,10 @@ def _criar_parser():
             "Mensagens da Anthropic e grava uma lista JSON de traduções para o apply.py."
         ),
         epilog=(
-            "Cada lote pago é gravado em --saida assim que chega. Um --saida antigo é apagado\n"
-            "antes da primeira requisição: uma falha total nunca deixa uma saída velha para trás.\n\n"
+            "Cada lote pago é gravado em --saida assim que chega. Uma saída anterior desta\n"
+            "ferramenta é apagada antes da primeira requisição (uma falha total nunca deixa uma\n"
+            "saída velha para trás); qualquer outro arquivo existente em --saida (um .po, .md...)\n"
+            "é recusado com exit 2 e nunca é sobrescrito.\n\n"
             "Variáveis de ambiente: ANTHROPIC_API_KEY (obrigatória, exceto com --simular ou\n"
             "--imprimir-prompt), PTBR_MODELO_TRADUCAO (modelo padrão), PTBR_GLOSSARIO, PTBR_GUIA,\n"
             "PTBR_AGENTS (arquivos de contexto alternativos).\n\n"
@@ -361,18 +363,25 @@ def _formas(palavra):
 def regex_do_termo(en, classe=None):
     """Regex (sem diferenciar maiúsculas) de um termo do glossário num texto em inglês.
 
-    Palavra inteira, sem tratar `_` como letra (`_borrowing_` casa). Plural s/es e
-    verbos -ed/-ing flexionam a última palavra do termo, ou a primeira se a classe é
-    'verbo' (ex.: 'bind to'); hífen e espaço são equivalentes entre as palavras. Uma
-    palavra com hífen é flexionada pelo final: 're-export' casa com 're-exporting' e
-    'trade-off' com 'trade-offs'.
+    Palavra inteira, sem tratar `_` como letra (`_borrowing_` casa). O termo é dividido em
+    palavras SÓ por espaço; plural s/es e verbos -ed/-ing flexionam a última palavra, ou a
+    primeira se a classe é 'verbo' e o termo tem mais de uma palavra (ex.: 'bind to' casa com
+    'binding to'). Dentro de uma palavra com hífen, o hífen e o espaço são equivalentes e a
+    flexão vai só no final da palavra: 're-export' (verbo ou substantivo) casa com
+    're-exporting', 're-exports' e 're-exported', e 'trade-off' com 'trade-offs'.
     """
-    palavras = [w for w in re.split(r"[\s\-]+", en.strip().lower()) if w]
-    if not palavras:
+    grupos = [[p for p in w.split("-") if p] for w in en.strip().lower().split()]
+    grupos = [g for g in grupos if g]
+    if not grupos:
         return None
-    i = 0 if (classe == "verbo" and len(palavras) > 1) else len(palavras) - 1
-    partes = [_formas(w) if j == i else re.escape(w) for j, w in enumerate(palavras)]
-    corpo = r"[\s\-]+".join(partes)
+    i = 0 if (classe == "verbo" and len(grupos) > 1) else len(grupos) - 1
+
+    def palavra(partes, flexionar):
+        corpo = [re.escape(p) for p in partes[:-1]]
+        corpo.append(_formas(partes[-1]) if flexionar else re.escape(partes[-1]))
+        return r"[\s\-]+".join(corpo)
+
+    corpo = r"[\s\-]+".join(palavra(g, j == i) for j, g in enumerate(grupos))
     return re.compile(r"(?<![A-Za-z0-9])" + corpo + r"(?![A-Za-z0-9])", re.I)
 
 
@@ -413,9 +422,14 @@ def _sem_acento(texto):
     return "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn")
 
 
+# Palavra inteira (minúsculas, sem acento): "Portador de sync", "Porter rules", "Portadores".
+_TITULO_PORTADOR = re.compile(r"(?<![a-z0-9])(?:portador(?:es)?|porters?)(?![a-z0-9])")
+
+
 def extrair_secao_portador(texto):
-    """Seção do AGENTS.md sobre o portador de sync: do título que contém 'portador' (ou
-    'porter') até o próximo título de nível igual ou superior. None se não houver."""
+    """Seção do AGENTS.md sobre o portador de sync: do título que contém a PALAVRA 'portador'
+    (ou 'porter'; 'Importadores' e 'Reporter' não contam) até o próximo título de nível igual
+    ou superior. None se não houver."""
     linhas = texto.splitlines()
     em_codigo, inicio, nivel = False, None, 0
     for i, linha in enumerate(linhas):
@@ -429,7 +443,7 @@ def extrair_secao_portador(texto):
             continue
         n = len(m.group(1))
         if inicio is None:
-            if re.search(r"portador|porter", _sem_acento(m.group(2)).lower()):
+            if _TITULO_PORTADOR.search(_sem_acento(m.group(2)).lower()):
                 inicio, nivel = i, n
         elif n <= nivel:
             return "\n".join(linhas[inicio:i]).strip()
@@ -954,8 +968,48 @@ def _mesmo_arquivo(a, b):
     return Path(os.path.abspath(a)) == Path(os.path.abspath(b))
 
 
+LIMITE_SAIDA_ANTIGA = 64 * 1024 * 1024  # uma saída desta ferramenta nunca chega perto disso
+
+# Começo do que gravar_saida escreve (json.dumps(indent=2)); serve para reconhecer o .tmp
+# que uma queda no meio da gravação deixa para trás (texto cortado, JSON inválido).
+_INICIO_TMP = re.compile(r'\s*\[\s*(?:\{\s*"id"\s*:|(?:\{\s*)?\Z)')
+
+
+def _saida_anterior(caminho, parcial=False):
+    """Devolve (True, "") se o arquivo existente pode ser apagado sem perda: vazio, ou uma
+    saída anterior desta ferramenta (lista JSON de objetos com 'id' e 'msgstr'). Com `parcial`
+    (o .tmp deixado por uma queda), aceita também o começo cortado dessa lista. Qualquer outro
+    arquivo (um .po, .md, .py, .yml...) volta como (False, motivo) e nunca deve ser apagado."""
+    try:
+        if caminho.stat().st_size > LIMITE_SAIDA_ANTIGA:
+            return False, "grande demais para ser uma saída desta ferramenta"
+        texto = caminho.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        return False, "não é texto UTF-8"
+    except OSError as e:
+        return False, f"não consegui ler: {_limpo(e)}"
+    if not texto.strip():
+        return True, ""
+    try:
+        dados = json.loads(texto)
+    except ValueError:
+        if parcial and _INICIO_TMP.match(texto):
+            return True, ""
+        return False, "não é um JSON válido"
+    if not isinstance(dados, list):
+        return False, "não é uma lista JSON"
+    if not all(isinstance(x, dict) and isinstance(x.get("id"), str) and isinstance(x.get("msgstr"), str)
+               for x in dados):
+        return False, "os itens da lista não têm 'id' e 'msgstr'"
+    return True, ""
+
+
 def validar_saida(saida, delta, simular):
-    """Valida --saida ANTES de qualquer requisição paga (sem tocar no disco)."""
+    """Valida --saida ANTES de qualquer requisição paga (sem tocar no disco).
+
+    Um arquivo que já exista só é aceito se for vazio ou uma saída anterior desta ferramenta:
+    apagar_saida_antiga o remove antes da primeira requisição, e um `--saida po/pt-BR.po` (ou
+    qualquer .md/.py/.yml) por engano nunca pode destruir o arquivo."""
     texto = str(saida)
     p = Path(saida)
     if texto.endswith(("/", os.sep)) or p.is_dir():
@@ -965,6 +1019,18 @@ def validar_saida(saida, delta, simular):
             raise ErroFatal(f"--saida é o mesmo arquivo de entrada ({outro}); escolha outro nome")
     if p.exists() and not p.is_file():
         raise ErroFatal(f"--saida existe e não é um arquivo comum: {saida}")
+    if p.is_file():
+        ok, motivo = _saida_anterior(p)
+        if not ok:
+            raise ErroFatal(f"--saida já existe e não parece uma saída anterior de traduz_delta.py: "
+                            f"{saida} ({motivo}); escolha outro nome (o arquivo não foi tocado)")
+    tmp = p.with_name(p.name + ".tmp")  # o resto de uma gravação interrompida também é apagado
+    if tmp.exists():
+        ok, motivo = (False, "não é um arquivo comum") if not tmp.is_file() else _saida_anterior(tmp, parcial=True)
+        if not ok:
+            raise ErroFatal(f"o arquivo temporário {tmp} já existe e não parece um resto de "
+                            f"traduz_delta.py ({motivo}); remova-o ou escolha outro nome para --saida "
+                            "(nada foi apagado)")
     existente = p.parent  # o ancestral mais próximo que já existe precisa ser um diretório gravável
     while not existente.exists() and existente != existente.parent:
         existente = existente.parent
@@ -974,7 +1040,8 @@ def validar_saida(saida, delta, simular):
 
 def apagar_saida_antiga(saida):
     """Cria os diretórios pai, remove uma saída antiga (e seu .tmp) e testa a gravação,
-    tudo antes da primeira requisição."""
+    tudo antes da primeira requisição. Só chamada depois de validar_saida, que já recusou
+    qualquer arquivo existente que não seja uma saída anterior desta ferramenta."""
     p = Path(saida)
     try:
         p.parent.mkdir(parents=True, exist_ok=True)

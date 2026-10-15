@@ -506,7 +506,15 @@ class _Analise:
         destinos, rotulos, cortes, self.prof_colchetes = _varre_colchetes(self.mascarado)
         restaura = self.marcadores.restaura
         self.destinos = [restaura(d) for d in destinos] + list(self.autolinks)
-        self.rotulos = [" ".join(restaura(r).split()).casefold() for r in rotulos]
+        # chave de comparação (sem caixa, espaços normalizados) e a primeira forma original
+        # de cada rótulo, para as mensagens mostrarem o que o tradutor escreveu de fato
+        self.rotulos = []
+        self.rotulos_originais = {}
+        for r in rotulos:
+            original = " ".join(restaura(r).split())
+            chave = original.casefold()
+            self.rotulos.append(chave)
+            self.rotulos_originais.setdefault(chave, original)
         self.sem_destinos = _sem_cortes(self.mascarado, cortes)
 
     # texto para contar palavras: sem marcadores nem destinos
@@ -606,16 +614,27 @@ def _regra_links(msgid, msgstr, add):
 def _regra_referencias(msgid, msgstr, add):
     no_id = set(msgid.rotulos)
     no_str = set(msgstr.rotulos)
+
+    def mostra(analise, chaves):
+        # forma original do rótulo (com a caixa e o código inline do texto), entre colchetes
+        return _lista(f"[{analise.rotulos_originais.get(c, c)}]" for c in chaves)
+
     falta = sorted(no_id - no_str)
     if falta:
+        dicas = []
+        if any(c.startswith("^") for c in falta):
+            dicas.append("mantenha a nota de rodapé `[^x]` exatamente como está no original")
+        if any(not c.startswith("^") for c in falta):
+            dicas.append("um `[rótulo]` traduzido sem definição vira texto solto: mantenha o "
+                         "rótulo idêntico ao original ou use `[texto traduzido][rótulo]` "
+                         "com o rótulo original")
         add("referencias", "erro",
-            "rótulos de referência do msgid ausentes no msgstr: " + _lista(falta)
-            + " (um `[rótulo]` traduzido sem definição vira texto solto; "
-            "use `[texto traduzido][rótulo]`)")
+            "rótulos de referência do msgid ausentes no msgstr: " + mostra(msgid, falta)
+            + " (" + "; ".join(dicas) + ")")
     novos = sorted(no_str - no_id)
     if novos and not falta:
         add("referencias", "aviso",
-            "rótulos de referência que o msgid não tem: " + _lista(novos)
+            "rótulos de referência que o msgid não tem: " + mostra(msgstr, novos)
             + " (sem definição no PO, aparecem como texto entre colchetes)")
 
 
@@ -700,8 +719,18 @@ def _regra_ignore(msgid, msgstr, add):
             f"quantidade de `<!-- ignore -->` diferente: msgid {msgid.n_ignore}, msgstr {msgstr.n_ignore}")
 
 
+def _texto_versoes(a):
+    """Texto onde procurar versões/datas: o texto visível mais os valores dos atributos
+    traduzíveis das tags (caption= do <Listing>, alt=, title=...), que o mascaramento
+    das tags tirou de `sem_destinos` mas que o tradutor também escreve."""
+    partes = [a.sem_destinos]
+    for _nome, _fechando, attrs, _bruto in a.tags:
+        partes.extend(v for k, v in attrs if v and k.lower() in _ATRIBUTOS_TRADUZIVEIS)
+    return "\n".join(partes)
+
+
 def _versoes(a):
-    texto = a.sem_destinos
+    texto = _texto_versoes(a)
     return Counter(_RE_VERSAO.findall(texto) + _RE_DATA.findall(texto))
 
 
@@ -714,8 +743,9 @@ def _regra_versoes(msgid, msgstr, add):
             "versão/data do msgid ausente no msgstr: " + _lista(falta)
             + " (o número deve acompanhar o original; não vale como parte de outro número)")
     # "10,800" no original vira "10.800" em português: separador de milhar, não versão
+    texto_id = _texto_versoes(msgid)
     sobra = sorted(t for t in set(vs) - set(vi)
-                   if not (_RE_MILHAR_PT.fullmatch(t) and t.replace(".", ",") in msgid.sem_destinos))
+                   if not (_RE_MILHAR_PT.fullmatch(t) and t.replace(".", ",") in texto_id))
     if sobra and not falta:
         add("versoes", "aviso",
             "versão/data que só existe no msgstr: " + _lista(sobra)
@@ -1051,6 +1081,26 @@ CASOS = [
     ("versoes", "aviso", "Version 0.10 is out.", "A versão 0.10 (antes 0.8) saiu.", "versão antiga sobrando no msgstr"),
     ("versoes", None, "That is 10,800 seconds.", "São 10.800 segundos.", "separador de milhar do português não é versão"),
     ("versoes", "aviso", "That is 10 seconds.", "São 10.800 segundos.", "10.800 sem '10,800' no msgid continua aviso"),
+    # versões e datas dentro de atributos traduzíveis (caption= do <Listing>, alt=, title=)
+    ("versoes", "erro",
+     '<Listing number="2-3" file-name="Cargo.toml" caption="Requiring rand 0.10.1 and Rust 1.98.0 (2026-08-20)">\n',
+     '<Listing number="2-3" file-name="Cargo.toml" caption="Exigindo rand 0.8.5 e Rust 1.90.0 (2025-09-18)">\n',
+     "versões e data trocadas na legenda de um Listing"),
+    ("versoes", "erro", '<img alt="Server at 127.0.0.1:8080" src="a.png">',
+     '<img alt="Servidor em localhost" src="a.png">', "versão/endereço perdido no alt de uma imagem"),
+    ("versoes", "erro", '<a title="Since Rust 1.98.0" href="x.html">link</a>',
+     '<a title="Desde o Rust 1.97.0" href="x.html">link</a>', "versão trocada em title="),
+    ("versoes", None,
+     '<Listing number="2-3" file-name="Cargo.toml" caption="Requiring rand 0.10.1 and Rust 1.98.0 (2026-08-20)">\n',
+     '<Listing number="2-3" file-name="Cargo.toml" caption="Exigindo rand 0.10.1 e Rust 1.98.0 (2026-08-20)">\n',
+     "versões e data mantidas na legenda de um Listing"),
+    ("versoes", None, '<img alt="Server at 127.0.0.1:8080" src="a.png">',
+     '<img alt="Servidor em 127.0.0.1:8080" src="a.png">', "versão/endereço mantido no alt de uma imagem"),
+    ("versoes", None, '<Listing number="1-1" file-name="src/1.2.3/main.rs" caption="Prints hello">\n',
+     '<Listing number="1-1" file-name="src/1.2.3/main.rs" caption="Imprime olá">\n',
+     "versão no file-name= (atributo fixo) não é exigida na legenda"),
+    ("versoes", "aviso", '<img alt="Server" src="a.png">', '<img alt="Servidor 0.8.5" src="a.png">',
+     "versão que só existe no alt do msgstr"),
     # slug
     ("slug", None, "Installation", "Instalação {#installation}", "slug no fim"),
     ("slug", None, "Installation", "Instalação", "sem slug"),
@@ -1150,6 +1200,17 @@ def _verifica_geral():
         except UnicodeEncodeError:
             falhas.append("mensagem não codificável em UTF-8")
     confere("surrogate isolado vira erro 'caracteres'", ("erro" in [s for s, _ in r]))
+    # mensagem de `referencias` mostra o rótulo como o autor escreveu (com caixa e código inline)
+    r = validar_par("See [`String`] here.", "Veja [o tipo `String`] aqui.")
+    confere("referencias: mostra [`String`] e não o rótulo normalizado",
+            len(r) == 1 and "[`String`]" in r[0][1] and "«`string`»" not in r[0][1])
+    r = validar_par("See [Translations] here.", "Veja [traduções] aqui.")
+    confere("referencias: mantém a caixa original do rótulo", len(r) == 1 and "[Translations]" in r[0][1])
+    r = [m for rg, _sv, m in _validar("Hash tables[^siphash]<!-- ignore -->.", "Tabelas hash<!-- ignore -->.")
+         if rg == "referencias"]
+    confere("referencias: dica de nota de rodapé em vez de [texto][rótulo]",
+            len(r) == 1 and "[^siphash]" in r[0] and "nota de rodapé" in r[0]
+            and "[texto traduzido][rótulo]" not in r[0])
     # caractere privado natural não confunde os marcadores
     confere("caractere privado no texto não quebra códigos",
             not [1 for rg, sv, _ in _validar("Use `a`.", "Use \ue100 `a`.") if rg == "code_spans"])
