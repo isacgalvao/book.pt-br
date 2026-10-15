@@ -110,9 +110,15 @@ def normalizar(caminho):
 
     if novo == original:
         return False
-    tmp = caminho.with_name(caminho.name + ".tmp")  # troca atômica: nunca deixa PO pela metade
-    tmp.write_bytes(novo)
-    tmp.replace(caminho)
+    # Troca atômica: nunca deixa PO pela metade. O temporário leva o PID (dois
+    # processos não pisam no mesmo arquivo) e some mesmo se a gravação falhar
+    # (disco cheio deixava um '.tmp' parcial ao lado do PO).
+    tmp = caminho.with_name(f"{caminho.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_bytes(novo)
+        tmp.replace(caminho)
+    finally:
+        tmp.unlink(missing_ok=True)
     return True
 
 
