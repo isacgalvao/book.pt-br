@@ -15,33 +15,37 @@ Uso como script:
 O segundo modo só LÊ o PO e imprime, por regra, quantas entradas traduzidas ou
 fuzzy foram apontadas, com alguns exemplos (código de saída 1 se houver 'erro').
 
-Regras (CONTRATO.md §6; 'erro' salvo indicação):
+Regras (CONTRATO.md §6, numeradas como lá; 'erro' salvo indicação):
 
-  nao_traduzivel   mensagem de código, âncora ou comentário com msgstr não vazio
-  code_spans       mesmo multiconjunto de trechos de código inline (exato; vários crases)
-  links            mesmo multiconjunto de destinos de links `](...)` e autolinks `<url>`
-  referencias      todo rótulo de referência do msgid (`[texto][rótulo]`, `[rótulo][]`,
-                   `[rótulo]` não seguido de `(`, `[` ou `:`) continua sendo rótulo no msgstr
-                   (sem diferenciar maiúsculas, espaços normalizados); aviso para rótulo novo
-  listing          `<Listing>`: number=, file-name= e demais atributos idênticos; legenda
-                   (caption=) presente se, e só se, presente no msgid
-  tags_html        mesmo multiconjunto de tags HTML (nome, abrir/fechar)
-  atributos_html   atributos que não são texto (id, href, src, class, style...) idênticos
-  ignore           mesma quantidade de `<!-- ignore -->`
-  versoes          toda versão/data do msgid está no msgstr, em qualquer lugar e também
-                   com duas partes (`1.98.0`, `2026-08-20`, `rand` 0.10, pre-1.0, HTTP 1.1);
-                   aviso para versão que existe só no msgstr
-  slug             `{#id}` só no fim, uma vez, com [A-Za-z0-9_.:-]
-  caracteres       sem surrogate isolado, NUL nem caracteres de controle (exceto \\n e \\t)
-  identico         (aviso) prosa com msgstr igual ao msgid, com 4 palavras ou mais
-  enfase           (aviso) quantidade diferente de marcadores de ênfase (_x_, *x*, **x**)
+  (1)  nao_traduzivel  mensagem de código, âncora ou comentário com msgstr não vazio
+  (2)  code_spans      mesmo multiconjunto de trechos de código inline (exato, também
+                       com várias crases)
+  (3)  links           mesmo multiconjunto de destinos de links `](...)` e autolinks `<url>`
+  (4)  referencias     todo rótulo de referência do msgid (`[texto][rótulo]`, `[rótulo][]`,
+                       `[rótulo]` não seguido de `(`, `[` ou `:`) continua sendo rótulo no
+                       msgstr (sem diferenciar maiúsculas, espaços normalizados); aviso
+                       para rótulo novo
+  (5)  listing         `<Listing>`: number=, file-name= e demais atributos idênticos;
+                       legenda (caption=) presente se, e só se, presente no msgid
+  (6)  tags_html       mesmo multiconjunto de tags HTML (nome, abrir/fechar)
+       atributos_html  atributos que não são texto (id, href, src, class, style...) idênticos
+  (7)  ignore          mesma quantidade de `<!-- ignore -->`
+  (8)  versoes         toda versão/data do msgid está no msgstr, em qualquer lugar e também
+                       com duas partes (`1.98.0`, `2026-08-20`, `rand` 0.10, pre-1.0,
+                       HTTP 1.1); aviso para versão que existe só no msgstr
+  (9)  slug            `{#id}` só no fim, uma vez, com [A-Za-z0-9_.:-]
+  (10) caracteres      sem surrogate isolado, NUL nem caracteres de controle (exceto \\n e \\t)
+  (11) identico        (aviso) prosa com msgstr igual ao msgid, com 4 palavras ou mais
+  (12) enfase          (aviso) quantidade diferente de marcadores de ênfase (_x_, *x*, **x**)
 
 Regras extras (item 13 do contrato):
 
-  diretivas        mesmo multiconjunto de diretivas do mdbook `{{#...}}`
-  bordas           msgid e msgstr começam e terminam com '\\n' nos mesmos casos
-                   (o `msgfmt --check` recusa quando diferem)
-  vazio            msgstr só com espaços (o gettext o trataria como traduzido)
+  aninhamento          mais de 16 níveis de colchetes aninhados no msgstr (texto corrompido
+                       ou malicioso; também protege o varredor de colchetes)
+  diretivas            mesmo multiconjunto de diretivas do mdbook `{{#...}}`
+  bordas               msgid e msgstr começam e terminam com '\\n' nos mesmos casos
+                       (o `msgfmt --check` recusa quando diferem)
+  vazio                msgstr só com espaços (o gettext o trataria como traduzido)
 
 Nada aqui levanta exceção: a varredura de colchetes é iterativa (sem recursão) e
 cada regra roda isolada; uma falha interna vira um 'erro' da própria regra.
@@ -70,7 +74,7 @@ NOME = "mensagens"
 
 # Ordem em que as regras rodam (e nomes usados no --autoteste e no relatório).
 REGRAS = (
-    "caracteres", "vazio", "nao_traduzivel", "code_spans", "links", "referencias",
+    "caracteres", "vazio", "nao_traduzivel", "aninhamento", "code_spans", "links", "referencias",
     "listing", "tags_html", "atributos_html", "ignore", "versoes", "slug",
     "diretivas", "bordas", "identico", "enfase",
 )
@@ -84,13 +88,15 @@ _ATRIBUTOS_TRADUZIVEIS = {"alt", "title", "caption", "aria-label", "placeholder"
 # nenhuma mensagem sai com marcador: o texto é sempre restaurado ou escapado.
 _PRIMEIRO_MARCADOR = 0xE100
 _ULTIMO_MARCADOR = 0xF8FE
-_MARCADOR_EXCESSO = ""
-_RE_PRIVADO = re.compile("[-]")
+_MARCADOR_EXCESSO = "\uf8ff"
+_RE_PRIVADO = re.compile("[\ue000-\uf8ff]")
 
 # Tetos que evitam varreduras quadráticas em texto patológico (o CommonMark limita o
 # rótulo a 999 caracteres; nenhum destino real do livro chega perto de 4096).
 _MAX_DESTINO = 4096
 _MAX_ROTULO = 1000
+_MAX_ANINHAMENTO = 16              # colchetes `[[[...]]]` além disso só aparecem em texto corrompido
+_MAX_SLUGS_RELATADOS = 3          # mensagens de slug por entrada (o resto vira um total)
 
 _RE_CRASES = re.compile(r"`+")
 _RE_IGNORE = re.compile(r"<!--\s*ignore\s*-->")
@@ -104,15 +110,16 @@ _RE_VERSAO = re.compile(
     r"|\d+(?:\.\d+)+)"
     r"(?!\w)(?!\.\d)"
 )
+_RE_MILHAR_PT = re.compile(r"\d{1,3}(?:\.\d{3})+")
 _RE_DATA = re.compile(r"(?<![\d-])\d{4}-\d{2}-\d{2}(?![\d-])")
 _RE_SLUG_QUALQUER = re.compile(r"(?<!\{)\{#([^{}]*)(\}?)")
 _RE_SLUG_VALIDO = re.compile(r"[A-Za-z0-9_.:-]+")
-_RE_SLUG_FINAL = re.compile(r"\s*\{#[A-Za-z0-9_.:-]+\}\s*$")
+_RE_SLUG_FINAL = re.compile(r"\{#[A-Za-z0-9_.:-]+\}")
 _RE_DIRETIVA = re.compile(r"\{\{#[^{}]*\}\}")
 _RE_URL = re.compile(r"https?://\S+")
 _RE_PALAVRA = re.compile(r"[^\W\d_]{2,}")
 _RE_CARACTERES_RUINS = re.compile(
-    "[\x00-\x08\x0b-\x1f\x7f-\x9f  \ud800-\udfff￾￿]"
+    "[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029\ud800-\udfff\ufffe\uffff]"
 )
 
 
@@ -130,7 +137,7 @@ def _texto(valor):
 def _mostra(valor, limite=70):
     """Texto seguro para mensagens: sem surrogate/controle/marcador, encurtado."""
     s = _texto(valor)
-    s = "".join(c if (c.isprintable() and not ("" <= c <= ""))
+    s = "".join(c if (c.isprintable() and not ("\ue000" <= c <= "\uf8ff"))
                 else c.encode("unicode_escape").decode("ascii") for c in s)
     return s if len(s) <= limite else s[: limite - 1] + "…"
 
@@ -324,6 +331,17 @@ def _mascara_html(s, marcadores):
     return "".join(partes), tags, autolinks, ignores
 
 
+# Saltos rápidos (em C) por trechos "sem graça" dentro de um destino de link: o laço
+# em Python só para nos caracteres que importam, o que evita custo quadrático em
+# texto patológico como `[a](` repetido milhares de vezes.
+_RE_CORRIDA_DESTINO = re.compile(r"[^\s()\\]*")
+_RE_CORRIDA_TITULO = {
+    '"': re.compile(r'[^"\\]*'),
+    "'": re.compile(r"[^'\\]*"),
+    ")": re.compile(r"[^)\\]*"),
+}
+
+
 def _destino_inline(s, j):
     """Lê `(destino "título")` a partir de s[j] == '('; devolve (destino, indice_do_')') ou None."""
     n = min(len(s), j + _MAX_DESTINO)
@@ -333,7 +351,7 @@ def _destino_inline(s, j):
     if k >= n:
         return None
     if s[k] == "<":
-        fim = s.find(">", k + 1)
+        fim = s.find(">", k + 1, n)
         if fim < 0 or "\n" in s[k:fim]:
             return None
         destino = s[k + 1:fim]
@@ -342,6 +360,9 @@ def _destino_inline(s, j):
         inicio = k
         profundidade = 0
         while k < n:
+            k = _RE_CORRIDA_DESTINO.match(s, k, n).end()
+            if k >= n:
+                break
             c = s[k]
             if c == "\\":
                 k += 2
@@ -350,21 +371,26 @@ def _destino_inline(s, j):
                 break
             if c == "(":
                 profundidade += 1
-            elif c == ")":
+            else:                                  # c == ")"
                 if profundidade == 0:
                     break
                 profundidade -= 1
             k += 1
-        destino = s[inicio:k]
+        destino = s[inicio:min(k, n)]
     while k < n and s[k].isspace():
         k += 1
     if k < n and s[k] in "\"'(":
         fecha = ")" if s[k] == "(" else s[k]
+        corrida = _RE_CORRIDA_TITULO[fecha]
         k += 1
-        while k < n and s[k] != fecha:
-            k += 2 if s[k] == "\\" else 1
-        if k >= n:
-            return None
+        while True:
+            k = corrida.match(s, k, n).end() if k < n else n
+            if k >= n:
+                return None
+            if s[k] == "\\":
+                k += 2
+                continue
+            break                                   # achou o fecha
         k += 1
         while k < n and s[k].isspace():
             k += 1
@@ -393,14 +419,16 @@ def _rotulo_depois(s, j):
 def _varre_colchetes(s):
     """Varre colchetes SEM recursão (pilha explícita).
 
-    Devolve (destinos, rotulos, cortes): destinos de links em linha `](...)`;
-    rótulos de referência (texto bruto, sem normalizar); `cortes`, os intervalos
-    de s ocupados pelos `(destino)` para quem quiser ignorá-los.
+    Devolve (destinos, rotulos, cortes, profundidade): destinos de links em linha
+    `](...)`; rótulos de referência (texto bruto, sem normalizar); `cortes`, os
+    intervalos de s ocupados pelos `(destino)` para quem quiser ignorá-los; e a
+    maior profundidade de colchetes abertos ao mesmo tempo.
     """
     destinos = []
     rotulos = []
     cortes = []
     pilha = []                         # [posição do '[', tem colchete aninhado]
+    profundidade = 0
     n = len(s)
     i = 0
     while i < n:
@@ -410,6 +438,7 @@ def _varre_colchetes(s):
             continue
         if c == "[":
             pilha.append([i, False])
+            profundidade = max(profundidade, len(pilha))
             i += 1
             continue
         if c != "]" or not pilha:
@@ -439,7 +468,7 @@ def _varre_colchetes(s):
         elif prox != ":" and not aninhado:
             rotulos.append(s[ini + 1:i])               # [rótulo]
         i += 1
-    return destinos, rotulos, cortes
+    return destinos, rotulos, cortes, profundidade
 
 
 def _sem_cortes(s, cortes):
@@ -459,7 +488,7 @@ class _Analise:
 
     def __init__(self, texto):
         self.original = _texto(texto)
-        t = _RE_PRIVADO.sub("�", self.original)
+        t = _RE_PRIVADO.sub("\ufffd", self.original)
         self.marcadores = _Marcadores()
         trechos = _trechos_de_codigo(t)
         partes = []
@@ -474,7 +503,7 @@ class _Analise:
         s1 = "".join(partes)
         (self.mascarado, self.tags, self.autolinks,
          self.n_ignore) = _mascara_html(s1, self.marcadores)
-        destinos, rotulos, cortes = _varre_colchetes(self.mascarado)
+        destinos, rotulos, cortes, self.prof_colchetes = _varre_colchetes(self.mascarado)
         restaura = self.marcadores.restaura
         self.destinos = [restaura(d) for d in destinos] + list(self.autolinks)
         self.rotulos = [" ".join(restaura(r).split()).casefold() for r in rotulos]
@@ -482,7 +511,8 @@ class _Analise:
 
     # texto para contar palavras: sem marcadores nem destinos
     def palavras(self):
-        return len(_RE_PALAVRA.findall(_RE_PRIVADO.sub(" ", self.sem_destinos)))
+        texto = _RE_URL.sub(" ", _RE_PRIVADO.sub(" ", self.sem_destinos))
+        return len(_RE_PALAVRA.findall(texto))
 
 
 def _tags_listing(a):
@@ -504,9 +534,9 @@ def _regra_caracteres(msgid, msgstr, add):
                 nome = "surrogate isolado"
             elif c == "\x00":
                 nome = "NUL"
-            elif c in "  ":
+            elif c in "\u2028\u2029":
                 nome = "separador de linha/parágrafo Unicode"
-            elif c in "￾￿":
+            elif c in "\ufffe\uffff":
                 nome = "não-caractere Unicode"
             else:
                 nome = "caractere de controle"
@@ -515,7 +545,7 @@ def _regra_caracteres(msgid, msgstr, add):
         add("caracteres", "erro",
             "caracteres inválidos no msgstr: " + "; ".join(descricao) + extra
             + " (só '\\n' e '\\t' são aceitos como controle; surrogate costuma ser emoji cortado)")
-    if s.count("�") > msgid.original.count("�"):
+    if s.count("\ufffd") > msgid.original.count("\ufffd"):
         add("caracteres", "erro",
             "caractere de substituição U+FFFD no msgstr (texto corrompido na geração)")
 
@@ -550,6 +580,14 @@ def _regra_code_spans(msgid, msgstr, add):
         partes.append("sobram no msgstr " + _lista(map(fmt, sobra)))
     add("code_spans", "erro",
         "trechos de código inline diferentes (o código não se traduz): " + "; ".join(partes))
+
+
+def _regra_aninhamento(msgid, msgstr, add):
+    limite = max(_MAX_ANINHAMENTO, msgid.prof_colchetes)
+    if msgstr.prof_colchetes > limite:
+        add("aninhamento", "erro",
+            f"colchetes aninhados em excesso no msgstr: {msgstr.prof_colchetes} níveis "
+            f"(o msgid tem {msgid.prof_colchetes}; texto real não passa de {_MAX_ANINHAMENTO})")
 
 
 def _regra_links(msgid, msgstr, add):
@@ -675,7 +713,9 @@ def _regra_versoes(msgid, msgstr, add):
         add("versoes", "erro",
             "versão/data do msgid ausente no msgstr: " + _lista(falta)
             + " (o número deve acompanhar o original; não vale como parte de outro número)")
-    sobra = sorted(set(vs) - set(vi))
+    # "10,800" no original vira "10.800" em português: separador de milhar, não versão
+    sobra = sorted(t for t in set(vs) - set(vi)
+                   if not (_RE_MILHAR_PT.fullmatch(t) and t.replace(".", ",") in msgid.sem_destinos))
     if sobra and not falta:
         add("versoes", "aviso",
             "versão/data que só existe no msgstr: " + _lista(sobra)
@@ -692,16 +732,23 @@ def _regra_slug(msgid, msgstr, add):
     achados = list(_RE_SLUG_QUALQUER.finditer(s))
     if not achados:
         return
+    problemas = 0
     for m in achados:
         bem_formado = bool(m.group(2)) and bool(_RE_SLUG_VALIDO.fullmatch(m.group(1)))
         no_fim = not s[m.end():].strip()
         texto = "{#" + m.group(1) + m.group(2)
         if not bem_formado:
-            add("slug", "erro",
-                f"slug malformado {_mostra(texto)}: use `{{#id}}` com apenas [A-Za-z0-9_.:-] "
-                "(outros caracteres vazam no menu lateral)")
+            problemas += 1
+            if problemas <= _MAX_SLUGS_RELATADOS:
+                add("slug", "erro",
+                    f"slug malformado {_mostra(texto)}: use `{{#id}}` com apenas [A-Za-z0-9_.:-] "
+                    "(outros caracteres vazam no menu lateral)")
         elif not no_fim:
-            add("slug", "erro", f"slug {_mostra(texto)} fora do fim da mensagem: `{{#id}}` só vale no fim")
+            problemas += 1
+            if problemas <= _MAX_SLUGS_RELATADOS:
+                add("slug", "erro", f"slug {_mostra(texto)} fora do fim da mensagem: `{{#id}}` só vale no fim")
+    if problemas > _MAX_SLUGS_RELATADOS:
+        add("slug", "erro", f"... e mais {problemas - _MAX_SLUGS_RELATADOS} slug(s) `{{#...}}` com problema")
     if len(achados) > 1 and all(bool(m.group(2)) for m in achados):
         add("slug", "erro", f"{len(achados)} slugs `{{#...}}` no msgstr: só pode haver um, no fim")
     if (len(achados) == 1 and not _RE_SLUG_QUALQUER.search(msgid.mascarado)
@@ -743,13 +790,23 @@ def _regra_identico(msgid, msgstr, add):
 
 
 def _eh_pontuacao(c):
-    return ("" <= c <= "") or unicodedata.category(c)[0] in "PS"
+    return ("\ue000" <= c <= "\uf8ff") or unicodedata.category(c)[0] in "PS"
+
+
+def _sem_slug_final(s):
+    """Tira um ` {#id}` do fim de `s` (sem regex com \\s*, que seria quadrática)."""
+    t = s.rstrip()
+    if t.endswith("}"):
+        i = t.rfind("{#")
+        if i >= 0 and _RE_SLUG_FINAL.fullmatch(t, i):
+            return t[:i]
+    return s
 
 
 def _marcadores_enfase(a):
     """(itálicos, negritos): conta sequências de * ou _ que podem abrir/fechar ênfase."""
     s = _RE_URL.sub(" ", a.sem_destinos)
-    s = _RE_SLUG_FINAL.sub("", s)
+    s = _sem_slug_final(s)
     n = len(s)
     em = forte = 0
     i = 0
@@ -795,6 +852,7 @@ _FUNCOES = {
     "caracteres": _regra_caracteres,
     "vazio": _regra_vazio,
     "nao_traduzivel": _regra_nao_traduzivel,
+    "aninhamento": _regra_aninhamento,
     "code_spans": _regra_code_spans,
     "links": _regra_links,
     "referencias": _regra_referencias,
@@ -991,6 +1049,8 @@ CASOS = [
     ("versoes", "erro", "Version 0.10.2 is out.", "A versão 0.10 saiu.", "três partes reduzida a duas"),
     ("versoes", "erro", "Version 1.0.0-beta.1 is out.", "A versão 1.0.0 saiu.", "pré-lançamento omitido"),
     ("versoes", "aviso", "Version 0.10 is out.", "A versão 0.10 (antes 0.8) saiu.", "versão antiga sobrando no msgstr"),
+    ("versoes", None, "That is 10,800 seconds.", "São 10.800 segundos.", "separador de milhar do português não é versão"),
+    ("versoes", "aviso", "That is 10 seconds.", "São 10.800 segundos.", "10.800 sem '10,800' no msgid continua aviso"),
     # slug
     ("slug", None, "Installation", "Instalação {#installation}", "slug no fim"),
     ("slug", None, "Installation", "Instalação", "sem slug"),
@@ -1003,7 +1063,7 @@ CASOS = [
     ("slug", "erro", "Installation", "Instalação {#a} {#b}", "dois slugs"),
     ("slug", "aviso", "This is a sentence that is plainly not a heading.", "Esta é uma frase que claramente não é um título. {#frase}", "slug em frase"),
     # caracteres
-    ("caracteres", None, "Hello there, friend.", "Olá 😀, amigo.\tcom tab\ne quebra.", "emoji, tab e quebra de linha são válidos"),
+    ("caracteres", None, "Hello there, friend.", "Olá \U0001f600, amigo.\tcom tab\ne quebra.", "emoji, tab e quebra de linha são válidos"),
     ("caracteres", None, "Hello there, friend.", "Olá, amigo. ‘aspas’ “curvas” — ç ã é.", "Unicode comum"),
     ("caracteres", "erro", "Hello there, friend.", "Olá \ud800 amigo.", "surrogate isolado (emoji cortado)"),
     ("caracteres", "erro", "Hello there, friend.", "Olá \udc00 amigo.", "surrogate baixo isolado"),
@@ -1012,9 +1072,9 @@ CASOS = [
     ("caracteres", "erro", "Hello there, friend.", "Olá \x1b[0m amigo.", "ESC"),
     ("caracteres", "erro", "Hello there, friend.", "Olá \x7f amigo.", "DEL"),
     ("caracteres", "erro", "Hello there, friend.", "Olá \x85 amigo.", "NEL (controle C1)"),
-    ("caracteres", "erro", "Hello there, friend.", "Olá   amigo.", "separador de linha Unicode"),
+    ("caracteres", "erro", "Hello there, friend.", "Olá \u2028 amigo.", "separador de linha Unicode"),
     ("caracteres", "erro", "Hello there, friend.", "Olá\r\namigo.", "retorno de carro"),
-    ("caracteres", "erro", "Hello there, friend.", "Ol� amigo.", "caractere de substituição"),
+    ("caracteres", "erro", "Hello there, friend.", "Ol\ufffd amigo.", "caractere de substituição"),
     # identico
     ("identico", "aviso", "This sentence was left in English by mistake.", "This sentence was left in English by mistake.", "prosa idêntica"),
     ("identico", None, "This sentence was left in English by mistake.", "Esta frase foi traduzida.", "prosa traduzida"),
@@ -1028,6 +1088,11 @@ CASOS = [
     ("enfase", "aviso", "This is _very_ good.", "Isto é muito bom.", "itálico removido"),
     ("enfase", "aviso", "This is good.", "Isto é **muito** bom.", "negrito inventado"),
     ("enfase", "aviso", "This is **very** good.", "Isto é _muito_ bom.", "negrito virou itálico"),
+    # aninhamento
+    ("aninhamento", None, "See [a [b [c]]] now.", "Veja [a [b [c]]] agora.", "aninhamento normal"),
+    ("aninhamento", None, "See " + "[" * 20 + "x" + "]" * 20 + " now.", "Veja " + "[" * 20 + "x" + "]" * 20 + " agora.", "msgid já aninhado: o limite sobe"),
+    ("aninhamento", "erro", "Plain text here.", "Texto " + "[" * 17 + "x" + "]" * 17, "17 níveis"),
+    ("aninhamento", "erro", "Plain text here.", "[" * 1000 + "x" + "]" * 1000, "1000 níveis"),
     # diretivas
     ("diretivas", None, "Take {{#include a.rs}} now.", "Pegue {{#include a.rs}} agora.", "diretiva mantida"),
     ("diretivas", "erro", "Take {{#include a.rs}} now.", "Pegue {{#include b.rs}} agora.", "diretiva alterada"),
@@ -1076,7 +1141,7 @@ def _verifica_geral():
         except Exception as exc:                                  # pragma: no cover
             falhas.append(f"validar_par({a!r}, {b!r}) levantou {type(exc).__name__}")
     # mensagens nunca vazam marcadores internos, NUL nem surrogate
-    r = validar_par("Use `a` e `b` [x](y).", "Use \x00 \ud800  `c` [z](w).")
+    r = validar_par("Use `a` e `b` [x](y).", "Use \x00 \ud800 \ue100 `c` [z](w).")
     for _sev, msg in r:
         confere("mensagem sem caracteres perigosos", not _RE_CARACTERES_RUINS.search(msg)
                 and not _RE_PRIVADO.search(msg))
@@ -1087,7 +1152,7 @@ def _verifica_geral():
     confere("surrogate isolado vira erro 'caracteres'", ("erro" in [s for s, _ in r]))
     # caractere privado natural não confunde os marcadores
     confere("caractere privado no texto não quebra códigos",
-            not [1 for rg, sv, _ in _validar("Use `a`.", "Use  `a`.") if rg == "code_spans"])
+            not [1 for rg, sv, _ in _validar("Use `a`.", "Use \ue100 `a`.") if rg == "code_spans"])
     # fuzz determinístico: nunca levanta, sempre devolve pares (str, str)
     import random
     azar = random.Random(1)
@@ -1168,6 +1233,24 @@ def autoteste():
 # Linha de comando
 # --------------------------------------------------------------------------
 
+_TRADUCOES_ERRO = (
+    (re.compile(r"^unrecognized arguments: (.*)$", re.S), r"argumentos não reconhecidos: \1"),
+    (re.compile(r"^expected one argument$"), "esperava um argumento"),
+    (re.compile(r"^invalid (\w+) value: (.*)$", re.S), r"valor \1 inválido: \2"),
+    (re.compile(r"^ambiguous option: (.*) could match (.*)$", re.S), r"opção ambígua: \1 pode ser \2"),
+)
+
+
+def _traduz_erro(mensagem):
+    m = re.match(r"^argument (.*?): (.*)$", mensagem, re.S)
+    if m:
+        return f"argumento {m.group(1)}: {_traduz_erro(m.group(2))}"
+    for padrao, troca in _TRADUCOES_ERRO:
+        if padrao.match(mensagem):
+            return padrao.sub(troca, mensagem)
+    return mensagem
+
+
 class _Ajuda(argparse.HelpFormatter):
     def add_usage(self, usage, actions, groups, prefix=None):
         return super().add_usage(usage, actions, groups, prefix="uso: " if prefix is None else prefix)
@@ -1176,7 +1259,7 @@ class _Ajuda(argparse.HelpFormatter):
 class _Parser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
-        print(f"{self.prog}: erro: {message}", file=sys.stderr)
+        print(f"{self.prog}: erro: {_traduz_erro(message)}", file=sys.stderr)
         sys.exit(2)
 
 
@@ -1206,7 +1289,9 @@ def _varre_po(caminho, exemplos):
     ordem = {r: i for i, r in enumerate(REGRAS)}
     erros = 0
     for (regra, sev), itens in sorted(por_regra.items(), key=lambda kv: (kv[0][1] != "erro", ordem.get(kv[0][0], 99))):
-        print(f"\n{regra} [{sev}]: {len(itens)} achado(s)")
+        n_fuzzy = sum(1 for _e, fuzzy, _m in itens if fuzzy)
+        print(f"\n{regra} [{sev}]: {len(itens)} achado(s)"
+              + (f" ({n_fuzzy} em entradas fuzzy)" if n_fuzzy else ""))
         if sev == "erro":
             erros += len(itens)
         for e, fuzzy, msg in itens[:exemplos]:
