@@ -732,7 +732,7 @@ def _uma_requisicao(url, chave, dados):
             corpo_erro = b""
         finally:
             e.close()
-        _sobre_http(e.code, e.headers, corpo_erro)
+        _sobre_http(e.code, e.headers, corpo_erro)  # sempre levanta
     except urllib.error.URLError as e:
         r = e.reason
         if isinstance(r, ssl.SSLCertVerificationError):
@@ -756,8 +756,9 @@ def _uma_requisicao(url, chave, dados):
     if not isinstance(resposta, dict):
         raise _Retentavel("rede", "a resposta da API não é um objeto JSON")
     if resposta.get("type") == "error":
-        _sobre_http(500 if (resposta.get("error") or {}).get("type") == "overloaded_error" else 400,
-                    None, json.dumps(resposta).encode("utf-8"))
+        passageiro = (resposta.get("error") or {}).get("type") in (
+            "overloaded_error", "api_error", "rate_limit_error")
+        _sobre_http(500 if passageiro else 400, None, json.dumps(resposta).encode("utf-8"))
     return resposta
 
 
@@ -775,12 +776,12 @@ def chamar_api(chave, corpo):
             maximo = TENTATIVAS[e.tipo]
             if tentativa >= maximo:
                 if e.tipo == "http":
-                    raise ErroFatal(f"a API continuou respondendo {e.descricao} depois de "
-                                    f"{maximo} tentativas") from None
-                quem = "tempo esgotado" if e.tipo == "timeout" else "não consegui falar com a API"
-                raise ErroFatal(f"{quem} depois de {maximo} tentativas: {e.descricao}"
-                                if e.tipo == "rede" else
-                                f"{e.descricao} depois de {maximo} tentativas") from None
+                    msg = f"a API continuou respondendo {e.descricao}"
+                elif e.tipo == "timeout":
+                    msg = e.descricao
+                else:
+                    msg = f"não consegui falar com a API ({e.descricao})"
+                raise ErroFatal(f"{msg} depois de {maximo} tentativas") from None
             espera = max(ESPERAS[min(tentativa - 1, len(ESPERAS) - 1)], e.espera)
             _dizer(f"aviso: {e.descricao}; nova tentativa {tentativa + 1}/{maximo} em {espera:g} s")
             time.sleep(espera)
@@ -857,6 +858,9 @@ def traduzir_lote(ex, rotulo, cap, n, total, entradas, ignorar, salvar):
             for k, metade in enumerate((entradas[:meio], entradas[meio:]), 1):
                 problemas += traduzir_lote(ex, f"{rotulo}.{k}", cap, n, total, metade, ignorar, salvar)
             return problemas
+        if parou == "max_tokens":  # uma só entrada: repetir daria o mesmo corte
+            return [f"[{rotulo}] resposta cortada por max_tokens ({MAX_TOKENS}) com uma única "
+                    f"entrada: {ids[0]} ({_limpo(msgid_de[ids[0]], 50)})"]
         if parou == "refusal":
             return [f"o modelo recusou responder ({len(entradas)} entrada(s) sem tradução)"]
         lista, erro = extrair_lista(texto)
@@ -864,8 +868,6 @@ def traduzir_lote(ex, rotulo, cap, n, total, entradas, ignorar, salvar):
             novos, erros = {}, [erro]
         else:
             novos, erros = validar_itens(lista, ids, ignorar)
-        if parou == "max_tokens":
-            erros.append("a resposta foi cortada por max_tokens")
         validos.update(novos)  # a segunda tentativa vale mais que a primeira
         if novos:
             salvar(novos)
@@ -927,8 +929,8 @@ def _mesmo_arquivo(a, b):
     return Path(os.path.abspath(a)) == Path(os.path.abspath(b))
 
 
-def preparar_saida(saida, delta, simular):
-    """Valida --saida ANTES de qualquer requisição paga e cria os diretórios pai."""
+def validar_saida(saida, delta, simular):
+    """Valida --saida ANTES de qualquer requisição paga (sem tocar no disco)."""
     texto = str(saida)
     p = Path(saida)
     if texto.endswith(("/", os.sep)) or p.is_dir():
@@ -938,19 +940,21 @@ def preparar_saida(saida, delta, simular):
             raise ErroFatal(f"--saida é o mesmo arquivo de entrada ({outro}); escolha outro nome")
     if p.exists() and not p.is_file():
         raise ErroFatal(f"--saida existe e não é um arquivo comum: {saida}")
-    try:
-        p.parent.mkdir(parents=True, exist_ok=True)
-    except (FileExistsError, NotADirectoryError):
-        raise ErroFatal(f"o diretório pai de --saida não é um diretório gravável: {p.parent}") from None
-    except OSError as e:
-        raise ErroFatal(f"não consegui criar o diretório de --saida ({_limpo(e)}): {p.parent}") from None
-    if not os.access(p.parent, os.W_OK | os.X_OK):
-        raise ErroFatal(f"o diretório pai de --saida não é um diretório gravável: {p.parent}")
+    existente = p.parent  # o ancestral mais próximo que já existe precisa ser um diretório gravável
+    while not existente.exists() and existente != existente.parent:
+        existente = existente.parent
+    if not existente.is_dir() or not os.access(existente, os.W_OK | os.X_OK):
+        raise ErroFatal(f"o diretório pai de --saida não é um diretório gravável: {existente}")
 
 
 def apagar_saida_antiga(saida):
-    """Remove uma saída antiga (e seu .tmp) e testa a gravação, antes da primeira requisição."""
+    """Cria os diretórios pai, remove uma saída antiga (e seu .tmp) e testa a gravação,
+    tudo antes da primeira requisição."""
     p = Path(saida)
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        raise ErroFatal(f"não consegui criar o diretório de --saida ({_limpo(e)}): {p.parent}") from None
     tmp = p.with_name(p.name + ".tmp")
     for alvo in (p, tmp):
         try:
@@ -991,8 +995,12 @@ def _ler_simulacao(caminho):
 def imprimir_prompts(lotes, ex):
     """--imprimir-prompt: mostra o prompt de cada lote. SIGPIPE só aqui (`| head` encerra
     em silêncio); o handler anterior é restaurado ao sair."""
-    sigpipe = getattr(signal, "SIGPIPE", None)
-    antigo = signal.signal(sigpipe, signal.SIG_DFL) if sigpipe is not None else None
+    sigpipe, antigo = getattr(signal, "SIGPIPE", None), None
+    if sigpipe is not None:
+        try:
+            antigo = signal.signal(sigpipe, signal.SIG_DFL)
+        except ValueError:  # fora da thread principal
+            sigpipe = None
     try:
         for cap, n, total, entradas in lotes:
             r = f"{cap}, lote {n}/{total}"
@@ -1012,11 +1020,12 @@ def imprimir_prompts(lotes, ex):
 def executar(args):
     modelo = (args.modelo or os.environ.get("PTBR_MODELO_TRADUCAO") or MODELO_PADRAO).strip()
     if not args.imprimir_prompt:
-        preparar_saida(args.saida, args.delta, args.simular)
+        validar_saida(args.saida, args.delta, args.simular)
     delta = carregar_delta(args.delta)
     capitulos = escolher_capitulos(delta, args.capitulo)
     lotes = _lotes_do_escopo(delta, capitulos)
     ids_do_escopo = [e["id"] for c in capitulos for e in delta[c]]
+    ids_do_delta = frozenset(e["id"] for lista in delta.values() for e in lista)
 
     glossario = carregar_glossario()
     ex = Execucao(modelo, None, None, glossario, carregar_documentos())
@@ -1040,11 +1049,14 @@ def executar(args):
     try:
         for cap, n, total, entradas in lotes:
             meus = {e["id"] for e in entradas}
-            ignorar = frozenset(ids_do_escopo) - meus if ex.simulacao is not None else frozenset()
+            # Em --simular o mesmo texto vai a todos os lotes: ids de outros lotes/capítulos do
+            # delta são ignorados em silêncio; um id que não está no delta continua sendo erro.
+            ignorar = ids_do_delta - meus if ex.simulacao is not None else frozenset()
             problemas += traduzir_lote(ex, f"{cap} {n}/{total}", cap, n, total, entradas, ignorar, salvar)
     except ErroFatal as e:
+        _dizer(f"erro: {e}")
         _fechar(args.saida, resultados, ids_do_escopo, ex)
-        raise
+        return 2
     except KeyboardInterrupt:
         _fechar(args.saida, resultados, ids_do_escopo, ex)
         raise
@@ -1068,7 +1080,9 @@ def _fechar(saida, resultados, ids_do_escopo, ex, problemas=()):
     else:
         _dizer(f"nada a traduzir: lista vazia gravada em {saida}")
     if problemas:
-        _dizer(f"erro: {len(set(ids_do_escopo) - set(resultados))} entrada(s) ficaram sem tradução válida")
+        sem = len(set(ids_do_escopo) - set(resultados))
+        _dizer(f"erro: {sem} entrada(s) ficaram sem tradução válida" if sem else
+               "erro: as respostas tinham itens inválidos (acima); as traduções válidas ficaram gravadas")
 
 
 def main(argv=None):

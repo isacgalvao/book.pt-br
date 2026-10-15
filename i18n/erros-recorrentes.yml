@@ -103,7 +103,7 @@ erros:
 
   - id: portugues-em-code-span
     escopo: bruto
-    regex: '(?-i:(?<![^\s(\[“"_*—-])`[^`\n]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b|\bcrate\s+[a-z_]+\b)[^`\n]*`(?![^\s)\].,;:!?”"_*—-]))'
+    regex: '(?-i:(?<![^\s(\[“])`(?:crate\s+[a-z_]+[^`\n]*|[^`\n]*(?:[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]|\b(?:método|métodos|função|funções|arquivo|arquivos|biblioteca|módulo|em strings?)\b)[^`\n]*)`(?![^\s)\].,;:!?”]))'
     severidade: erro
     correcao: "só o identificador no code span: [método `expect`][expect], [crate `rand`][randcrate]"
     explicacao: >-
@@ -188,7 +188,7 @@ erros:
       Exchange” (SPDX), que a regex ignora.
 
   - id: fazer-o-build
-    regex: '(?i:\b(?:faz\w*|fiz\w*|fez|faça\w*)\s+(?:(?:o|um|seu|esse|este|do|de)\s+)?builds?\b)'
+    regex: '(?i:\b(?:faz\w*|fiz\w*|fez|faça\w*)\s+(?:(?:o|os|um|uns|seu|seus|esse|este|do|de)\s+)?builds?\b)'
     severidade: erro
     correcao: "compilar (o projeto), fazer a compilação"
     explicacao: >-

@@ -73,9 +73,9 @@ def run(ctx):
     achados = []
 
     for f in dados.get("faltando") or []:
-        e = ids.get(f.get("id")) if isinstance(f, dict) else None
         if not isinstance(f, dict):
             continue
+        e = ids.get(f.get("id"))
         if e is not None and not ctx.no_escopo(e):
             continue
         slug = f.get("slug")

@@ -219,7 +219,9 @@ compila_listing() {
   ( cd "$arvore" && GIT_CEILING_DIRECTORIES="$entrada" git apply -- "$patch" )
 
   echo "compilando mdbook-trpl-listing com os rótulos em português (uma vez só; cache: $entrada)..." >&2
+  # Sem debuginfo e sem incremental: o cache fica bem menor e o binário é igual.
   if ! ( cd "$RAIZ" && env -u CARGO_TARGET_DIR -u CARGO_BUILD_TARGET_DIR -u CARGO_BUILD_TARGET \
+          CARGO_INCREMENTAL=0 CARGO_PROFILE_DEV_DEBUG=0 \
           cargo build --quiet --manifest-path "$arvore/packages/mdbook-trpl/Cargo.toml" \
           --target-dir "$entrada/target" --bin mdbook-trpl-listing ) >"$log" 2>&1; then
     cat "$log" >&2
@@ -371,13 +373,18 @@ main() {
     erro "--po precisa de um arquivo."; exit 2
   fi
 
-  # Raiz do repositório a partir do caminho do próprio script (nunca do cwd).
-  RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-  export RAIZ
-
   # A trava precisa de realpath e git; sem eles ela não pode proteger nada.
   exige realpath "O realpath (coreutils) é usado pela trava de OUT."
   exige git "O git é usado pela trava de OUT e para aplicar o patch dos rótulos (git apply)."
+
+  # Raiz do repositório a partir do caminho do próprio script (nunca do cwd),
+  # seguindo links simbólicos: <raiz>/i18n/build.sh.
+  RAIZ="$(dirname "$(dirname "$(realpath -- "${BASH_SOURCE[0]}")")")"
+  export RAIZ
+  if [[ ! -f "$RAIZ/book.toml" || ! -f "$RAIZ/$PTBR_PATCH_REL" ]]; then
+    erro "não reconheço '$RAIZ' como a raiz do repositório do livro (esperava book.toml e $PTBR_PATCH_REL)."
+    exit 2
+  fi
 
   # ANTES DE QUALQUER OUTRA AÇÃO, em todos os modos: valida OUT. O caminho
   # relativo é resolvido a partir do diretório em que o script foi chamado.
