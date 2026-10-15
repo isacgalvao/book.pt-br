@@ -1,75 +1,107 @@
-# A Linguagem de Programação Rust — Tradução pt-BR
+# The Rust Programming Language
 
-[![Build Status](https://github.com/isacgalvao/book.pt-br/workflows/CI/badge.svg)](https://github.com/isacgalvao/book.pt-br/actions)
+![Build Status](https://github.com/rust-lang/book/workflows/CI/badge.svg)
 
-Este repositório contém a tradução para **português do Brasil** do livro
-["The Rust Programming Language"](https://doc.rust-lang.org/book/).
+This repository contains the source of "The Rust Programming Language" book.
 
-O livro original é mantido em [rust-lang/book](https://github.com/rust-lang/book)
-e publicado pela [No Starch Press](https://nostarch.com/rust-programming-language-2nd-edition).
+[The book is available in dead-tree form from No Starch Press][nostarch].
 
-## Status da tradução
+[nostarch]: https://nostarch.com/rust-programming-language-2nd-edition
 
-A tradução está em andamento. O progresso por capítulo é rastreado em
-[`translation/progress.yml`](translation/progress.yml).
+You can also read the book for free online. Please see the book as shipped with
+the latest [stable], [beta], or [nightly] Rust releases. Be aware that issues
+in those versions may have been fixed in this repository already, as those
+releases are updated less frequently.
 
-Para detalhes sobre o pipeline de tradução, consulte:
+[stable]: https://doc.rust-lang.org/stable/book/
+[beta]: https://doc.rust-lang.org/beta/book/
+[nightly]: https://doc.rust-lang.org/nightly/book/
 
-| Arquivo | Descrição |
-|---------|-----------|
-| [`translation/CLAUDE.md`](translation/CLAUDE.md) | Instruções para agentes de tradução |
-| [`translation/glossary.yml`](translation/glossary.yml) | Glossário de termos técnicos |
-| [`translation/style-guide.md`](translation/style-guide.md) | Guia de estilo pt-BR |
-| [`translation/config.yml`](translation/config.yml) | Configuração do pipeline |
+See the [releases] to download just the code of all the code listings that appear in the book.
 
-## Requisitos
+[releases]: https://github.com/rust-lang/book/releases
 
-Para compilar o livro é necessário o [mdBook], de preferência na mesma versão
-usada pelo rust-lang/rust em [este arquivo][rust-mdbook]:
+## Requirements
+
+Building the book requires [mdBook], ideally the same version that
+rust-lang/rust uses in [this file][rust-mdbook]. To get it:
 
 [mdBook]: https://github.com/rust-lang/mdBook
 [rust-mdbook]: https://github.com/rust-lang/rust/blob/HEAD/src/tools/rustbook/Cargo.toml
 
 ```bash
-$ cargo install mdbook --locked --version <versão>
+$ cargo install mdbook --locked --version <version_num>
 ```
 
-## Compilando
+## Building
+
+To build the book, type:
 
 ```bash
 $ mdbook build
 ```
 
-O resultado ficará no diretório `book`. Para visualizar:
+The output will be in the `book` subdirectory. To check it out, open it in
+your web browser.
+
+_Firefox:_
 
 ```bash
-$ firefox book/index.html        # Linux
-$ open -a "Firefox" book/index.html  # macOS
+$ firefox book/index.html                       # Linux
+$ open -a "Firefox" book/index.html             # OS X
+$ Start-Process "firefox.exe" .\book\index.html # Windows (PowerShell)
+$ start firefox.exe .\book\index.html           # Windows (Cmd)
 ```
 
-Para rodar os testes:
+_Chrome:_
 
 ```bash
-$ (cd packages/trpl && cargo build)
+$ google-chrome book/index.html                 # Linux
+$ open -a "Google Chrome" book/index.html       # OS X
+$ Start-Process "chrome.exe" .\book\index.html  # Windows (PowerShell)
+$ start chrome.exe .\book\index.html            # Windows (Cmd)
+```
+
+To run the tests:
+
+```bash
+$ cd packages/trpl
 $ mdbook test --library-path packages/trpl/target/debug/deps
 ```
 
-## Contribuindo
+## Contributing
 
-Contribuições são bem-vindas! Antes de traduzir, leia:
+We'd love your help! Please see [CONTRIBUTING.md][contrib] to learn about the
+kinds of contributions we're looking for.
 
-1. O [guia de estilo](translation/style-guide.md) para convenções linguísticas
-2. O [glossário](translation/glossary.yml) para termos técnicos
-3. O [progresso](translation/progress.yml) para ver quais capítulos estão disponíveis
+[contrib]: https://github.com/rust-lang/book/blob/main/CONTRIBUTING.md
 
-## Spellcheck
+Because the book is [printed][nostarch], and because we want
+to keep the online version of the book close to the print version when
+possible, it may take longer than you're used to for us to address your issue
+or pull request.
 
-Para verificar erros ortográficos nos arquivos fonte, use o script
-`ci/spellcheck.sh`. Ele utiliza o dicionário pt-BR do aspell com um dicionário
-personalizado em `ci/dictionary-ptbr.txt`. Se o script produzir um falso
-positivo, adicione a palavra ao dicionário (mantenha a ordem alfabética).
+So far, we've been doing a larger revision to coincide with [Rust Editions](https://doc.rust-lang.org/edition-guide/). Between those larger
+revisions, we will only be correcting errors. If your issue or pull request
+isn't strictly fixing an error, it might sit until the next time that we're
+working on a large revision: expect on the order of months or years. Thank you
+for your patience!
 
-## Licença
+### Translations
 
-Este projeto segue a mesma licença dupla do livro original:
-[MIT](LICENSE-MIT) / [Apache 2.0](LICENSE-APACHE).
+We'd love help translating the book! See the [Translations] label to join in
+efforts that are currently in progress. Open a new issue to start working on
+a new language! We're waiting on [mdbook support] for multiple languages
+before we merge any in, but feel free to start!
+
+[Translations]: https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations
+[mdbook support]: https://github.com/rust-lang/mdBook/issues/5
+
+## Spellchecking
+
+To scan source files for spelling errors, you can use the `spellcheck.sh`
+script available in the `ci` directory. It needs a dictionary of valid words,
+which is provided in `ci/dictionary.txt`. If the script produces a false
+positive (say, you used the word `BTreeMap` which the script considers invalid),
+you need to add this word to `ci/dictionary.txt` (keep the sorted order for
+consistency).
