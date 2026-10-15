@@ -70,12 +70,19 @@ def salvar(po, caminho=None):
     if shutil.which("msgcat") is None:
         raise RuntimeError("msgcat não encontrado: instale o pacote 'gettext'")
     tmp = caminho.with_name(f"{caminho.name}.{os.getpid()}.salvando")
+    fpath_antes = getattr(po, "fpath", None)
     try:
         po.save(str(tmp))
         normalizar(tmp)
         tmp.replace(caminho)  # troca atômica: o destino nunca fica pela metade
     finally:
+        # Com fpath vazio o polib aponta po.fpath para o temporário (que some
+        # logo depois): um `salvar(po)` seguinte gravaria um arquivo solto e
+        # deixaria o destino desatualizado, sem erro nenhum.
+        po.fpath = fpath_antes
         tmp.unlink(missing_ok=True)
+    if po.fpath is None:
+        po.fpath = str(caminho)  # como o `po.save(caminho)` de antes da troca atômica
 
 
 def _msgcat(texto):
