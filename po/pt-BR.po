@@ -301,23 +301,23 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch16-00-concurrency.md
 msgid "Fearless Concurrency"
-msgstr ""
+msgstr "Concorrência sem medo {#fearless-concurrency}"
 
 #: src/SUMMARY.md src/ch16-01-threads.md
 msgid "Using Threads to Run Code Simultaneously"
-msgstr ""
+msgstr "Usando threads para executar código simultaneamente {#using-threads-to-run-code-simultaneously}"
 
 #: src/SUMMARY.md src/ch16-02-message-passing.md
 msgid "Transfer Data Between Threads with Message Passing"
-msgstr ""
+msgstr "Transferindo dados entre threads com passagem de mensagens {#transfer-data-between-threads-with-message-passing}"
 
 #: src/SUMMARY.md src/ch16-03-shared-state.md
 msgid "Shared-State Concurrency"
-msgstr ""
+msgstr "Concorrência com estado compartilhado {#shared-state-concurrency}"
 
 #: src/SUMMARY.md src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Extensible Concurrency with `Send` and `Sync`"
-msgstr ""
+msgstr "Concorrência extensível com `Send` e `Sync` {#extensible-concurrency-with-send-and-sync}"
 
 #: src/SUMMARY.md src/ch17-00-async-await.md
 msgid "Fundamentals of Asynchronous Programming: Async, Await, Futures, and Streams"
@@ -16456,79 +16456,79 @@ msgstr ""
 
 #: src/ch16-00-concurrency.md
 msgid "Handling concurrent programming safely and efficiently is another of Rust’s major goals. _Concurrent programming_, in which different parts of a program execute independently, and _parallel programming_, in which different parts of a program execute at the same time, are becoming increasingly important as more computers take advantage of their multiple processors. Historically, programming in these contexts has been difficult and error-prone. Rust hopes to change that."
-msgstr ""
+msgstr "Lidar com a programação concorrente de forma segura e eficiente é outro dos grandes objetivos do Rust. A _programação concorrente_, na qual diferentes partes de um programa são executadas de forma independente, e a _programação paralela_, na qual diferentes partes de um programa são executadas ao mesmo tempo, estão se tornando cada vez mais importantes à medida que mais computadores aproveitam seus múltiplos processadores. Historicamente, programar nesses contextos tem sido difícil e sujeito a erros. O Rust pretende mudar isso."
 
 #: src/ch16-00-concurrency.md
 msgid "Initially, the Rust team thought that ensuring memory safety and preventing concurrency problems were two separate challenges to be solved with different methods. Over time, the team discovered that the ownership and type systems are a powerful set of tools to help manage memory safety _and_ concurrency problems! By leveraging ownership and type checking, many concurrency errors are compile-time errors in Rust rather than runtime errors. Therefore, rather than making you spend lots of time trying to reproduce the exact circumstances under which a runtime concurrency bug occurs, incorrect code will refuse to compile and present an error explaining the problem. As a result, you can fix your code while you’re working on it rather than potentially after it has been shipped to production. We’ve nicknamed this aspect of Rust _fearless concurrency_. Fearless concurrency allows you to write code that is free of subtle bugs and is easy to refactor without introducing new bugs."
-msgstr ""
+msgstr "Inicialmente, a equipe do Rust achava que garantir a segurança de memória e evitar problemas de concorrência eram dois desafios separados, a serem resolvidos com métodos diferentes. Com o tempo, a equipe descobriu que os sistemas de ownership e de tipos são um conjunto poderoso de ferramentas para ajudar a gerenciar a segurança de memória _e_ os problemas de concorrência! Ao aproveitar o ownership e a verificação de tipos, muitos erros de concorrência se tornam erros em tempo de compilação no Rust, em vez de erros em tempo de execução. Assim, em vez de fazer você gastar muito tempo tentando reproduzir as circunstâncias exatas em que um bug de concorrência em tempo de execução ocorre, o código incorreto se recusa a compilar e exibe um erro que explica o problema. Como resultado, você pode corrigir seu código enquanto está trabalhando nele, em vez de possivelmente depois de ele ter sido lançado em produção. Apelidamos este aspecto do Rust de _concorrência sem medo_. A concorrência sem medo permite que você escreva código livre de bugs sutis e fácil de refatorar sem introduzir novos bugs."
 
 #: src/ch16-00-concurrency.md
 msgid "Note: For simplicity’s sake, we’ll refer to many of the problems as _concurrent_ rather than being more precise by saying _concurrent and/or parallel_. For this chapter, please mentally substitute _concurrent and/or parallel_ whenever we use _concurrent_. In the next chapter, where the distinction matters more, we’ll be more specific."
-msgstr ""
+msgstr "Nota: por simplicidade, vamos nos referir a muitos dos problemas como _concorrentes_, em vez de sermos mais precisos e dizermos _concorrentes e/ou paralelos_. Neste capítulo, por favor, substitua mentalmente _concorrentes e/ou paralelos_ sempre que usarmos _concorrentes_. No próximo capítulo, em que a distinção importa mais, seremos mais específicos."
 
 #: src/ch16-00-concurrency.md
 msgid "Many languages are dogmatic about the solutions they offer for handling concurrent problems. For example, Erlang has elegant functionality for message-passing concurrency but has only obscure ways to share state between threads. Supporting only a subset of possible solutions is a reasonable strategy for higher-level languages because a higher-level language promises benefits from giving up some control to gain abstractions. However, lower-level languages are expected to provide the solution with the best performance in any given situation and have fewer abstractions over the hardware. Therefore, Rust offers a variety of tools for modeling problems in whatever way is appropriate for your situation and requirements."
-msgstr ""
+msgstr "Muitas linguagens são dogmáticas quanto às soluções que oferecem para lidar com problemas concorrentes. Por exemplo, o Erlang tem uma funcionalidade elegante para concorrência com passagem de mensagens, mas tem apenas maneiras obscuras de compartilhar estado entre threads. Oferecer apenas um subconjunto das soluções possíveis é uma estratégia razoável para linguagens de alto nível, porque uma linguagem de alto nível promete benefícios ao abrir mão de parte do controle em troca de abstrações. Já as linguagens de baixo nível devem oferecer a solução com o melhor desempenho em qualquer situação e ter menos abstrações sobre o hardware. Por isso, o Rust oferece uma variedade de ferramentas para modelar problemas da maneira mais adequada à sua situação e aos seus requisitos."
 
 #: src/ch16-00-concurrency.md
 msgid "Here are the topics we’ll cover in this chapter:"
-msgstr ""
+msgstr "Aqui estão os tópicos que vamos abordar neste capítulo:"
 
 #: src/ch16-00-concurrency.md
 msgid "How to create threads to run multiple pieces of code at the same time"
-msgstr ""
+msgstr "Como criar threads para executar vários trechos de código ao mesmo tempo"
 
 #: src/ch16-00-concurrency.md
 msgid "_Message-passing_ concurrency, where channels send messages between threads"
-msgstr ""
+msgstr "Concorrência com _passagem de mensagens_, em que canais enviam mensagens entre threads"
 
 #: src/ch16-00-concurrency.md
 msgid "_Shared-state_ concurrency, where multiple threads have access to some piece of data"
-msgstr ""
+msgstr "Concorrência com _estado compartilhado_, em que várias threads têm acesso a algum dado"
 
 #: src/ch16-00-concurrency.md
 msgid "The `Sync` and `Send` traits, which extend Rust’s concurrency guarantees to user-defined types as well as types provided by the standard library"
-msgstr ""
+msgstr "Os traits `Sync` e `Send`, que estendem as garantias de concorrência do Rust para tipos definidos pelo usuário, assim como para os tipos fornecidos pela biblioteca padrão"
 
 #: src/ch16-01-threads.md
 msgid "In most current operating systems, an executed program’s code is run in a _process_, and the operating system will manage multiple processes at once. Within a program, you can also have independent parts that run simultaneously. The features that run these independent parts are called _threads_. For example, a web server could have multiple threads so that it can respond to more than one request at the same time."
-msgstr ""
+msgstr "Na maioria dos sistemas operacionais atuais, o código de um programa em execução é executado em um _processo_, e o sistema operacional gerencia vários processos ao mesmo tempo. Dentro de um programa, você também pode ter partes independentes que são executadas simultaneamente. Os recursos que executam essas partes independentes são chamados de _threads_. Por exemplo, um servidor web pode ter várias threads para conseguir responder a mais de uma requisição ao mesmo tempo."
 
 #: src/ch16-01-threads.md
 msgid "Splitting the computation in your program into multiple threads to run multiple tasks at the same time can improve performance, but it also adds complexity. Because threads can run simultaneously, there’s no inherent guarantee about the order in which parts of your code on different threads will run. This can lead to problems, such as:"
-msgstr ""
+msgstr "Dividir o processamento do seu programa em várias threads para executar várias tarefas ao mesmo tempo pode melhorar o desempenho, mas também aumenta a complexidade. Como as threads podem ser executadas simultaneamente, não há nenhuma garantia inerente sobre a ordem em que as partes do seu código em threads diferentes serão executadas. Isso pode levar a problemas, como:"
 
 #: src/ch16-01-threads.md
 msgid "Race conditions, in which threads are accessing data or resources in an inconsistent order"
-msgstr ""
+msgstr "Condições de corrida, em que threads acessam dados ou recursos em uma ordem inconsistente"
 
 #: src/ch16-01-threads.md
 msgid "Deadlocks, in which two threads are waiting for each other, preventing both threads from continuing"
-msgstr ""
+msgstr "Deadlocks, em que duas threads ficam esperando uma pela outra, impedindo que ambas continuem"
 
 #: src/ch16-01-threads.md
 msgid "Bugs that only happen in certain situations and are hard to reproduce and fix reliably"
-msgstr ""
+msgstr "Bugs que acontecem apenas em certas situações e são difíceis de reproduzir e corrigir de forma confiável"
 
 #: src/ch16-01-threads.md
 msgid "Rust attempts to mitigate the negative effects of using threads, but programming in a multithreaded context still takes careful thought and requires a code structure that is different from that in programs running in a single thread."
-msgstr ""
+msgstr "O Rust tenta mitigar os efeitos negativos do uso de threads, mas programar em um contexto multithread ainda exige muito cuidado e uma estrutura de código diferente da usada em programas executados em uma única thread."
 
 #: src/ch16-01-threads.md
 msgid "Programming languages implement threads in a few different ways, and many operating systems provide an API the programming language can call for creating new threads. The Rust standard library uses a _1:1_ model of thread implementation, whereby a program uses one operating system thread per one language thread. There are crates that implement other models of threading that make different trade-offs to the 1:1 model. (Rust’s async system, which we will see in the next chapter, provides another approach to concurrency as well.)"
-msgstr ""
+msgstr "As linguagens de programação implementam threads de algumas maneiras diferentes, e muitos sistemas operacionais fornecem uma API que a linguagem de programação pode chamar para criar novas threads. A biblioteca padrão do Rust usa um modelo _1:1_ de implementação de threads, no qual um programa usa uma thread do sistema operacional para cada thread da linguagem. Existem crates que implementam outros modelos de threads, que fazem concessões diferentes em relação ao modelo 1:1. (O sistema assíncrono do Rust, que veremos no próximo capítulo, oferece outra abordagem para a concorrência também.)"
 
 #: src/ch16-01-threads.md
 msgid "Creating a New Thread with `spawn`"
-msgstr ""
+msgstr "Criando uma nova thread com `spawn` {#creating-a-new-thread-with-spawn}"
 
 #: src/ch16-01-threads.md
 msgid "To create a new thread, we call the `thread::spawn` function and pass it a closure (we talked about closures in Chapter 13) containing the code we want to run in the new thread. The example in Listing 16-1 prints some text from a main thread and other text from a new thread."
-msgstr ""
+msgstr "Para criar uma nova thread, chamamos a função `thread::spawn` e passamos para ela um closure (falamos sobre closures no Capítulo 13) contendo o código que queremos executar na nova thread. O exemplo da Listagem 16-1 imprime um texto na thread principal e outro texto em uma nova thread."
 
 #: src/ch16-01-threads.md
 msgid "<Listing number=\"16-1\" file-name=\"src/main.rs\" caption=\"Creating a new thread to print one thing while the main thread prints something else\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-1\" file-name=\"src/main.rs\" caption=\"Criando uma nova thread para imprimir uma coisa enquanto a thread principal imprime outra\">\n"
 
 #: src/ch16-01-threads.md
 msgid "\"hi number {i} from the spawned thread!\""
@@ -16540,7 +16540,7 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "Note that when the main thread of a Rust program completes, all spawned threads are shut down, whether or not they have finished running. The output from this program might be a little different every time, but it will look similar to the following:"
-msgstr ""
+msgstr "Observe que, quando a thread principal de um programa Rust termina, todas as threads criadas são encerradas, tenham ou não terminado de executar. A saída desse programa pode ser um pouco diferente a cada vez, mas vai se parecer com a seguinte:"
 
 #: src/ch16-01-threads.md src/ch16-02-message-passing.md
 #: src/ch16-03-shared-state.md src/ch17-02-concurrency-with-async.md
@@ -16552,11 +16552,11 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "The calls to `thread::sleep` force a thread to stop its execution for a short duration, allowing a different thread to run. The threads will probably take turns, but that isn’t guaranteed: It depends on how your operating system schedules the threads. In this run, the main thread printed first, even though the print statement from the spawned thread appears first in the code. And even though we told the spawned thread to print until `i` is `9`, it only got to `5` before the main thread shut down."
-msgstr ""
+msgstr "As chamadas a `thread::sleep` forçam uma thread a interromper sua execução por um curto período, permitindo que outra thread execute. As threads provavelmente vão se revezar, mas isso não é garantido: depende de como o seu sistema operacional escalona as threads. Nesta execução, a thread principal imprimiu primeiro, mesmo que a instrução de impressão da thread criada apareça primeiro no código. E, mesmo que tenhamos dito à thread criada para imprimir até que `i` seja `9`, ela só chegou a `5` antes de a thread principal ser encerrada."
 
 #: src/ch16-01-threads.md
 msgid "If you run this code and only see output from the main thread, or don’t see any overlap, try increasing the numbers in the ranges to create more opportunities for the operating system to switch between the threads."
-msgstr ""
+msgstr "Se você executar este código e vir apenas a saída da thread principal, ou não vir nenhuma sobreposição, tente aumentar os números nos intervalos para criar mais oportunidades para o sistema operacional alternar entre as threads."
 
 #: src/ch16-01-threads.md
 msgid "<a id=\"waiting-for-all-threads-to-finish-using-join-handles\"></a>"
@@ -16564,57 +16564,59 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "Waiting for All Threads to Finish"
-msgstr ""
+msgstr "Esperando todas as threads terminarem {#waiting-for-all-threads-to-finish}"
 
 #: src/ch16-01-threads.md
 msgid "The code in Listing 16-1 not only stops the spawned thread prematurely most of the time due to the main thread ending, but because there is no guarantee on the order in which threads run, we also can’t guarantee that the spawned thread will get to run at all!"
-msgstr ""
+msgstr "O código da Listagem 16-1 não só encerra a thread criada prematuramente na maior parte das vezes, por causa do término da thread principal, como também, já que não há garantia sobre a ordem em que as threads são executadas, não podemos garantir que a thread criada chegue a executar!"
 
 #: src/ch16-01-threads.md
 msgid "We can fix the problem of the spawned thread not running or of it ending prematurely by saving the return value of `thread::spawn` in a variable. The return type of `thread::spawn` is `JoinHandle<T>`. A `JoinHandle<T>` is an owned value that, when we call the `join` method on it, will wait for its thread to finish. Listing 16-2 shows how to use the `JoinHandle<T>` of the thread we created in Listing 16-1 and how to call `join` to make sure the spawned thread finishes before `main` exits."
-msgstr ""
+msgstr "Podemos resolver o problema de a thread criada não ser executada ou de ser encerrada prematuramente salvando o valor de retorno de `thread::spawn` em uma variável. O tipo de retorno de `thread::spawn` é `JoinHandle<T>`. Um `JoinHandle<T>` é um valor que você possui e que, quando chamamos o método `join` nele, espera a thread terminar. A Listagem 16-2 mostra como usar o `JoinHandle<T>` da thread que criamos na Listagem 16-1 e como chamar `join` para garantir que a thread criada termine antes que `main` termine."
 
 #: src/ch16-01-threads.md
 msgid "<Listing number=\"16-2\" file-name=\"src/main.rs\" caption=\"Saving a `JoinHandle<T>` from `thread::spawn` to guarantee the thread is run to completion\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-2\" file-name=\"src/main.rs\" caption=\"Salvando um `JoinHandle<T>` de `thread::spawn` para garantir que a thread seja executada até o fim\">\n"
 
 #: src/ch16-01-threads.md
 msgid "Calling `join` on the handle blocks the thread currently running until the thread represented by the handle terminates. _Blocking_ a thread means that thread is prevented from performing work or exiting. Because we’ve put the call to `join` after the main thread’s `for` loop, running Listing 16-2 should produce output similar to this:"
-msgstr ""
+msgstr "Chamar `join` no handle bloqueia a thread que está em execução até que a thread representada pelo handle termine. _Bloquear_ uma thread significa que essa thread fica impedida de realizar trabalho ou de encerrar. Como colocamos a chamada a `join` depois do loop `for` da thread principal, executar a Listagem 16-2 deve produzir uma saída parecida com esta:"
 
 #: src/ch16-01-threads.md
 msgid "The two threads continue alternating, but the main thread waits because of the call to `handle.join()` and does not end until the spawned thread is finished."
-msgstr ""
+msgstr "As duas threads continuam se revezando, mas a thread principal espera por causa da chamada a `handle.join()` e não termina até que a thread criada seja concluída."
 
 #: src/ch16-01-threads.md
 msgid "But let’s see what happens when we instead move `handle.join()` before the `for` loop in `main`, like this:"
-msgstr ""
+msgstr "Mas vamos ver o que acontece quando, em vez disso, movemos `handle.join()` para antes do loop `for` em `main`, desta forma:"
 
 #: src/ch16-01-threads.md
 msgid "The main thread will wait for the spawned thread to finish and then run its `for` loop, so the output won’t be interleaved anymore, as shown here:"
-msgstr ""
+msgstr "A thread principal vai esperar a thread criada terminar e então executar o seu loop `for`, de modo que a saída não vai mais ficar intercalada, como mostrado aqui:"
 
 #: src/ch16-01-threads.md
 msgid "Small details, such as where `join` is called, can affect whether or not your threads run at the same time."
-msgstr ""
+msgstr "Pequenos detalhes, como onde `join` é chamado, podem afetar se as suas threads vão ser executadas ao mesmo tempo ou não."
 
 #: src/ch16-01-threads.md
 msgid "Using `move` Closures with Threads"
-msgstr ""
+msgstr "Usando closures `move` com threads {#using-move-closures-with-threads}"
 
 #: src/ch16-01-threads.md
 msgid ""
 "We’ll often use the `move` keyword with closures passed to `thread::spawn` because the closure will then take ownership of the values it uses from the environment, thus transferring ownership of those values from one thread to another. In [“Capturing References or Moving Ownership”](ch13-01-closures.html#capturing-references-or-moving-ownership)<!-- ignore\n"
 "--> in Chapter 13, we discussed `move` in the context of closures. Now we’ll concentrate more on the interaction between `move` and `thread::spawn`."
 msgstr ""
+"Com frequência vamos usar a palavra-chave `move` com os closures passados para `thread::spawn`, porque o closure vai então assumir o ownership dos valores que ele usa do ambiente, transferindo assim o ownership desses valores de uma thread para outra. Na seção [“Capturando referências ou movendo o ownership”](ch13-01-closures.html#capturing-references-or-moving-ownership)<!-- ignore\n"
+"--> do Capítulo 13, discutimos `move` no contexto de closures. Agora vamos nos concentrar mais na interação entre `move` e `thread::spawn`."
 
 #: src/ch16-01-threads.md
 msgid "Notice in Listing 16-1 that the closure we pass to `thread::spawn` takes no arguments: We’re not using any data from the main thread in the spawned thread’s code. To use data from the main thread in the spawned thread, the spawned thread’s closure must capture the values it needs. Listing 16-3 shows an attempt to create a vector in the main thread and use it in the spawned thread. However, this won’t work yet, as you’ll see in a moment."
-msgstr ""
+msgstr "Observe na Listagem 16-1 que o closure que passamos para `thread::spawn` não recebe argumentos: não estamos usando nenhum dado da thread principal no código da thread criada. Para usar dados da thread principal na thread criada, o closure da thread criada precisa capturar os valores de que precisa. A Listagem 16-3 mostra uma tentativa de criar um vetor na thread principal e usá-lo na thread criada. No entanto, isso ainda não vai funcionar, como você vai ver daqui a pouco."
 
 #: src/ch16-01-threads.md
 msgid "<Listing number=\"16-3\" file-name=\"src/main.rs\" caption=\"Attempting to use a vector created by the main thread in another thread\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-3\" file-name=\"src/main.rs\" caption=\"Tentando usar um vetor criado pela thread principal em outra thread\">\n"
 
 #: src/ch16-01-threads.md
 msgid "\"Here's a vector: {v:?}\""
@@ -16622,7 +16624,7 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "The closure uses `v`, so it will capture `v` and make it part of the closure’s environment. Because `thread::spawn` runs this closure in a new thread, we should be able to access `v` inside that new thread. But when we compile this example, we get the following error:"
-msgstr ""
+msgstr "O closure usa `v`, então ele vai capturar `v` e torná-lo parte do ambiente do closure. Como `thread::spawn` executa esse closure em uma nova thread, deveríamos conseguir acessar `v` dentro dessa nova thread. Mas, quando compilamos este exemplo, recebemos o seguinte erro:"
 
 #: src/ch16-01-threads.md
 msgid ""
@@ -16657,15 +16659,15 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "Rust _infers_ how to capture `v`, and because `println!` only needs a reference to `v`, the closure tries to borrow `v`. However, there’s a problem: Rust can’t tell how long the spawned thread will run, so it doesn’t know whether the reference to `v` will always be valid."
-msgstr ""
+msgstr "O Rust _infere_ como capturar `v`, e, como `println!` só precisa de uma referência a `v`, o closure tenta pegar `v` emprestado. No entanto, há um problema: o Rust não consegue saber por quanto tempo a thread criada vai executar, então não sabe se a referência a `v` sempre será válida."
 
 #: src/ch16-01-threads.md
 msgid "Listing 16-4 provides a scenario that’s more likely to have a reference to `v` that won’t be valid."
-msgstr ""
+msgstr "A Listagem 16-4 apresenta um cenário com mais chances de ter uma referência a `v` que não seja válida."
 
 #: src/ch16-01-threads.md
 msgid "<Listing number=\"16-4\" file-name=\"src/main.rs\" caption=\"A thread with a closure that attempts to capture a reference to `v` from a main thread that drops `v`\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-4\" file-name=\"src/main.rs\" caption=\"Uma thread com um closure que tenta capturar uma referência a `v` de uma thread principal que descarta `v`\">\n"
 
 #: src/ch16-01-threads.md
 msgid "// oh no!\n"
@@ -16673,11 +16675,11 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "If Rust allowed us to run this code, there’s a possibility that the spawned thread would be immediately put in the background without running at all. The spawned thread has a reference to `v` inside, but the main thread immediately drops `v`, using the `drop` function we discussed in Chapter 15. Then, when the spawned thread starts to execute, `v` is no longer valid, so a reference to it is also invalid. Oh no!"
-msgstr ""
+msgstr "Se o Rust nos permitisse executar este código, haveria a possibilidade de a thread criada ser imediatamente colocada em segundo plano sem executar nada. A thread criada tem dentro de si uma referência a `v`, mas a thread principal descarta `v` imediatamente, usando a função `drop` que discutimos no Capítulo 15. Então, quando a thread criada começa a executar, `v` não é mais válido e, portanto, uma referência a ele também é inválida. Ah, não!"
 
 #: src/ch16-01-threads.md
 msgid "To fix the compiler error in Listing 16-3, we can use the error message’s advice:"
-msgstr ""
+msgstr "Para corrigir o erro de compilação na Listagem 16-3, podemos usar a sugestão da mensagem de erro:"
 
 #: src/ch16-01-threads.md
 msgid ""
@@ -16688,15 +16690,15 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "By adding the `move` keyword before the closure, we force the closure to take ownership of the values it’s using rather than allowing Rust to infer that it should borrow the values. The modification to Listing 16-3 shown in Listing 16-5 will compile and run as we intend."
-msgstr ""
+msgstr "Ao adicionar a palavra-chave `move` antes do closure, forçamos o closure a assumir o ownership dos valores que ele está usando, em vez de permitir que o Rust infira que ele deve pegar os valores emprestados. A modificação da Listagem 16-3 mostrada na Listagem 16-5 vai compilar e executar como pretendemos."
 
 #: src/ch16-01-threads.md
 msgid "<Listing number=\"16-5\" file-name=\"src/main.rs\" caption=\"Using the `move` keyword to force a closure to take ownership of the values it uses\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-5\" file-name=\"src/main.rs\" caption=\"Usando a palavra-chave `move` para forçar um closure a assumir o ownership dos valores que ele usa\">\n"
 
 #: src/ch16-01-threads.md
 msgid "We might be tempted to try the same thing to fix the code in Listing 16-4 where the main thread called `drop` by using a `move` closure. However, this fix will not work because what Listing 16-4 is trying to do is disallowed for a different reason. If we added `move` to the closure, we would move `v` into the closure’s environment, and we could no longer call `drop` on it in the main thread. We would get this compiler error instead:"
-msgstr ""
+msgstr "Podemos ser tentados a fazer a mesma coisa para corrigir o código da Listagem 16-4, em que a thread principal chamou `drop`, usando um closure `move`. No entanto, essa correção não vai funcionar, porque o que a Listagem 16-4 tenta fazer é proibido por outro motivo. Se adicionássemos `move` ao closure, moveríamos `v` para o ambiente do closure e não poderíamos mais chamar `drop` nele na thread principal. Em vez disso, receberíamos este erro de compilação:"
 
 #: src/ch16-01-threads.md
 msgid ""
@@ -16731,11 +16733,11 @@ msgstr ""
 
 #: src/ch16-01-threads.md
 msgid "Rust’s ownership rules have saved us again! We got an error from the code in Listing 16-3 because Rust was being conservative and only borrowing `v` for the thread, which meant the main thread could theoretically invalidate the spawned thread’s reference. By telling Rust to move ownership of `v` to the spawned thread, we’re guaranteeing to Rust that the main thread won’t use `v` anymore. If we change Listing 16-4 in the same way, we’re then violating the ownership rules when we try to use `v` in the main thread. The `move` keyword overrides Rust’s conservative default of borrowing; it doesn’t let us violate the ownership rules."
-msgstr ""
+msgstr "As regras de ownership do Rust nos salvaram mais uma vez! Recebemos um erro do código da Listagem 16-3 porque o Rust estava sendo conservador e só pegava `v` emprestado para a thread, o que significava que a thread principal poderia, teoricamente, invalidar a referência da thread criada. Ao dizer ao Rust para mover o ownership de `v` para a thread criada, estamos garantindo ao Rust que a thread principal não vai mais usar `v`. Se alterarmos a Listagem 16-4 da mesma forma, estaremos violando as regras de ownership quando tentarmos usar `v` na thread principal. A palavra-chave `move` substitui o padrão conservador do Rust de pegar valores emprestados; ela não nos permite violar as regras de ownership."
 
 #: src/ch16-01-threads.md
 msgid "Now that we’ve covered what threads are and the methods supplied by the thread API, let’s look at some situations in which we can use threads."
-msgstr ""
+msgstr "Agora que já vimos o que são threads e os métodos fornecidos pela API de threads, vamos olhar algumas situações em que podemos usar threads."
 
 #: src/ch16-02-message-passing.md
 msgid "<a id=\"using-message-passing-to-transfer-data-between-threads\"></a>"
@@ -16743,63 +16745,63 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "One increasingly popular approach to ensuring safe concurrency is message passing, where threads or actors communicate by sending each other messages containing data. Here’s the idea in a slogan from [the Go language documentation](https://golang.org/doc/effective_go.html#concurrency): “Do not communicate by sharing memory; instead, share memory by communicating.”"
-msgstr ""
+msgstr "Uma abordagem cada vez mais popular para garantir uma concorrência segura é a passagem de mensagens, em que threads ou atores se comunicam enviando uns aos outros mensagens que contêm dados. Aqui está a ideia, em forma de slogan, da [documentação da linguagem Go](https://golang.org/doc/effective_go.html#concurrency): “Não se comunique compartilhando memória; em vez disso, compartilhe memória comunicando-se.”"
 
 #: src/ch16-02-message-passing.md
 msgid "To accomplish message-sending concurrency, Rust’s standard library provides an implementation of channels. A _channel_ is a general programming concept by which data is sent from one thread to another."
-msgstr ""
+msgstr "Para realizar a concorrência com passagem de mensagens, a biblioteca padrão do Rust fornece uma implementação de canais. Um _canal_ é um conceito geral de programação pelo qual dados são enviados de uma thread para outra."
 
 #: src/ch16-02-message-passing.md
 msgid "You can imagine a channel in programming as being like a directional channel of water, such as a stream or a river. If you put something like a rubber duck into a river, it will travel downstream to the end of the waterway."
-msgstr ""
+msgstr "Você pode imaginar um canal de programação como um canal de água com sentido definido, como um riacho ou um rio. Se você colocar algo, como um patinho de borracha, em um rio, ele vai descer a correnteza até o fim do curso d’água."
 
 #: src/ch16-02-message-passing.md
 msgid "A channel has two halves: a transmitter and a receiver. The transmitter half is the upstream location where you put the rubber duck into the river, and the receiver half is where the rubber duck ends up downstream. One part of your code calls methods on the transmitter with the data you want to send, and another part checks the receiving end for arriving messages. A channel is said to be _closed_ if either the transmitter or receiver half is dropped."
-msgstr ""
+msgstr "Um canal tem duas metades: um transmissor e um receptor. A metade transmissora é o ponto rio acima onde você coloca o patinho de borracha no rio, e a metade receptora é onde o patinho de borracha termina, rio abaixo. Uma parte do seu código chama métodos no transmissor com os dados que você quer enviar, e outra parte verifica a extremidade receptora em busca de mensagens que chegam. Diz-se que um canal está _fechado_ se a metade transmissora ou a metade receptora for descartada."
 
 #: src/ch16-02-message-passing.md
 msgid "Here, we’ll work up to a program that has one thread to generate values and send them down a channel, and another thread that will receive the values and print them out. We’ll be sending simple values between threads using a channel to illustrate the feature. Once you’re familiar with the technique, you could use channels for any threads that need to communicate with each other, such as a chat system or a system where many threads perform parts of a calculation and send the parts to one thread that aggregates the results."
-msgstr ""
+msgstr "Aqui, vamos chegar a um programa que tem uma thread para gerar valores e enviá-los por um canal, e outra thread que vai receber os valores e imprimi-los. Vamos enviar valores simples entre threads usando um canal para ilustrar o recurso. Assim que você se familiarizar com a técnica, poderá usar canais em quaisquer threads que precisem se comunicar entre si, como um sistema de chat ou um sistema em que muitas threads executam partes de um cálculo e enviam as partes para uma thread que agrega os resultados."
 
 #: src/ch16-02-message-passing.md
 msgid "First, in Listing 16-6, we’ll create a channel but not do anything with it. Note that this won’t compile yet because Rust can’t tell what type of values we want to send over the channel."
-msgstr ""
+msgstr "Primeiro, na Listagem 16-6, vamos criar um canal, mas não vamos fazer nada com ele. Observe que isso ainda não vai compilar, porque o Rust não consegue saber que tipo de valores queremos enviar pelo canal."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-6\" file-name=\"src/main.rs\" caption=\"Creating a channel and assigning the two halves to `tx` and `rx`\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-6\" file-name=\"src/main.rs\" caption=\"Criando um canal e atribuindo as duas metades a `tx` e `rx`\">\n"
 
 #: src/ch16-02-message-passing.md
 msgid "We create a new channel using the `mpsc::channel` function; `mpsc` stands for _multiple producer, single consumer_. In short, the way Rust’s standard library implements channels means a channel can have multiple _sending_ ends that produce values but only one _receiving_ end that consumes those values. Imagine multiple streams flowing together into one big river: Everything sent down any of the streams will end up in one river at the end. We’ll start with a single producer for now, but we’ll add multiple producers when we get this example working."
-msgstr ""
+msgstr "Criamos um novo canal usando a função `mpsc::channel`; `mpsc` significa _múltiplos produtores, consumidor único_. Em resumo, a forma como a biblioteca padrão do Rust implementa canais faz com que um canal possa ter várias extremidades _de envio_ que produzem valores, mas apenas uma extremidade _de recebimento_ que consome esses valores. Imagine vários riachos fluindo juntos para formar um grande rio: tudo o que for enviado por qualquer um dos riachos vai acabar em um único rio no fim. Vamos começar com um único produtor por enquanto, mas vamos adicionar vários produtores quando esse exemplo estiver funcionando."
 
 #: src/ch16-02-message-passing.md
 msgid "The `mpsc::channel` function returns a tuple, the first element of which is the sending end—the transmitter—and the second element of which is the receiving end—the receiver. The abbreviations `tx` and `rx` are traditionally used in many fields for _transmitter_ and _receiver_, respectively, so we name our variables as such to indicate each end. We’re using a `let` statement with a pattern that destructures the tuples; we’ll discuss the use of patterns in `let` statements and destructuring in Chapter 19. For now, know that using a `let` statement in this way is a convenient approach to extract the pieces of the tuple returned by `mpsc::channel`."
-msgstr ""
+msgstr "A função `mpsc::channel` retorna uma tupla, cujo primeiro elemento é a extremidade de envio—o transmissor—e cujo segundo elemento é a extremidade de recebimento—o receptor. As abreviações `tx` e `rx` são tradicionalmente usadas em muitas áreas para _transmissor_ e _receptor_, respectivamente, então nomeamos nossas variáveis dessa forma para indicar cada extremidade. Estamos usando uma instrução `let` com um padrão que desestrutura as tuplas; vamos discutir o uso de padrões em instruções `let` e a desestruturação no Capítulo 19. Por enquanto, saiba que usar uma instrução `let` dessa forma é uma abordagem conveniente para extrair as partes da tupla retornada por `mpsc::channel`."
 
 #: src/ch16-02-message-passing.md
 msgid "Let’s move the transmitting end into a spawned thread and have it send one string so that the spawned thread is communicating with the main thread, as shown in Listing 16-7. This is like putting a rubber duck in the river upstream or sending a chat message from one thread to another."
-msgstr ""
+msgstr "Vamos mover a extremidade transmissora para uma thread criada e fazer com que ela envie uma string, de modo que a thread criada se comunique com a thread principal, como mostrado na Listagem 16-7. Isso é como colocar um patinho de borracha no rio, rio acima, ou enviar uma mensagem de chat de uma thread para outra."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-7\" file-name=\"src/main.rs\" caption='Moving `tx` to a spawned thread and sending `\"hi\"`'>\n"
-msgstr ""
+msgstr "<Listing number=\"16-7\" file-name=\"src/main.rs\" caption='Movendo `tx` para uma thread criada e enviando `\"hi\"`'>\n"
 
 #: src/ch16-02-message-passing.md
 msgid "Again, we’re using `thread::spawn` to create a new thread and then using `move` to move `tx` into the closure so that the spawned thread owns `tx`. The spawned thread needs to own the transmitter to be able to send messages through the channel."
-msgstr ""
+msgstr "Mais uma vez, estamos usando `thread::spawn` para criar uma nova thread e, em seguida, usando `move` para mover `tx` para o closure, de modo que a thread criada tenha o ownership de `tx`. A thread criada precisa ter o ownership do transmissor para conseguir enviar mensagens pelo canal."
 
 #: src/ch16-02-message-passing.md
 msgid "The transmitter has a `send` method that takes the value we want to send. The `send` method returns a `Result<T, E>` type, so if the receiver has already been dropped and there’s nowhere to send a value, the send operation will return an error. In this example, we’re calling `unwrap` to panic in case of an error. But in a real application, we would handle it properly: Return to Chapter 9 to review strategies for proper error handling."
-msgstr ""
+msgstr "O transmissor tem um método `send` que recebe o valor que queremos enviar. O método `send` retorna um tipo `Result<T, E>`, então, se o receptor já tiver sido descartado e não houver para onde enviar um valor, a operação de envio vai retornar um erro. Neste exemplo, estamos chamando `unwrap` para entrar em pânico caso haja um erro. Mas, em uma aplicação real, trataríamos isso de forma adequada: volte ao Capítulo 9 para revisar as estratégias de tratamento adequado de erros."
 
 #: src/ch16-02-message-passing.md
 msgid "In Listing 16-8, we’ll get the value from the receiver in the main thread. This is like retrieving the rubber duck from the water at the end of the river or receiving a chat message."
-msgstr ""
+msgstr "Na Listagem 16-8, vamos obter o valor do receptor na thread principal. Isso é como tirar o patinho de borracha da água no fim do rio ou receber uma mensagem de chat."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-8\" file-name=\"src/main.rs\" caption='Receiving the value `\"hi\"` in the main thread and printing it'>\n"
-msgstr ""
+msgstr "<Listing number=\"16-8\" file-name=\"src/main.rs\" caption='Recebendo o valor `\"hi\"` na thread principal e imprimindo-o'>\n"
 
 #: src/ch16-02-message-passing.md
 msgid "\"Got: {received}\""
@@ -16807,23 +16809,23 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "The receiver has two useful methods: `recv` and `try_recv`. We’re using `recv`, short for _receive_, which will block the main thread’s execution and wait until a value is sent down the channel. Once a value is sent, `recv` will return it in a `Result<T, E>`. When the transmitter closes, `recv` will return an error to signal that no more values will be coming."
-msgstr ""
+msgstr "O receptor tem dois métodos úteis: `recv` e `try_recv`. Estamos usando `recv`, abreviação de _receive_, que vai bloquear a execução da thread principal e esperar até que um valor seja enviado pelo canal. Assim que um valor for enviado, `recv` o retornará em um `Result<T, E>`. Quando o transmissor fechar, `recv` vai retornar um erro para sinalizar que não virão mais valores."
 
 #: src/ch16-02-message-passing.md
 msgid "The `try_recv` method doesn’t block, but will instead return a `Result<T, E>` immediately: an `Ok` value holding a message if one is available and an `Err` value if there aren’t any messages this time. Using `try_recv` is useful if this thread has other work to do while waiting for messages: We could write a loop that calls `try_recv` every so often, handles a message if one is available, and otherwise does other work for a little while until checking again."
-msgstr ""
+msgstr "O método `try_recv` não bloqueia, mas retorna imediatamente um `Result<T, E>`: um valor `Ok` contendo uma mensagem, se houver uma disponível, e um valor `Err`, se não houver nenhuma mensagem neste momento. Usar `try_recv` é útil se esta thread tiver outro trabalho a fazer enquanto espera por mensagens: podemos escrever um loop que chama `try_recv` de tempos em tempos, trata uma mensagem se houver uma disponível e, caso contrário, faz outro trabalho por um tempo até verificar novamente."
 
 #: src/ch16-02-message-passing.md
 msgid "We’ve used `recv` in this example for simplicity; we don’t have any other work for the main thread to do other than wait for messages, so blocking the main thread is appropriate."
-msgstr ""
+msgstr "Usamos `recv` neste exemplo por simplicidade: não temos nenhum outro trabalho para a thread principal fazer além de esperar por mensagens, então bloquear a thread principal é apropriado."
 
 #: src/ch16-02-message-passing.md
 msgid "When we run the code in Listing 16-8, we’ll see the value printed from the main thread:"
-msgstr ""
+msgstr "Quando executarmos o código da Listagem 16-8, vamos ver o valor impresso pela thread principal:"
 
 #: src/ch16-02-message-passing.md
 msgid "Perfect!"
-msgstr ""
+msgstr "Perfeito!"
 
 #: src/ch16-02-message-passing.md
 msgid "<a id=\"channels-and-ownership-transference\"></a>"
@@ -16831,15 +16833,15 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "Transferring Ownership Through Channels"
-msgstr ""
+msgstr "Transferindo o ownership pelos canais {#transferring-ownership-through-channels}"
 
 #: src/ch16-02-message-passing.md
 msgid "The ownership rules play a vital role in message sending because they help you write safe, concurrent code. Preventing errors in concurrent programming is the advantage of thinking about ownership throughout your Rust programs. Let’s do an experiment to show how channels and ownership work together to prevent problems: We’ll try to use a `val` value in the spawned thread _after_ we’ve sent it down the channel. Try compiling the code in Listing 16-9 to see why this code isn’t allowed."
-msgstr ""
+msgstr "As regras de ownership desempenham um papel fundamental no envio de mensagens, porque ajudam você a escrever código seguro e concorrente. Prevenir erros na programação concorrente é a vantagem de pensar no ownership ao longo dos seus programas Rust. Vamos fazer um experimento para mostrar como canais e ownership trabalham juntos para evitar problemas: vamos tentar usar um valor `val` na thread criada _depois_ de termos enviado esse valor pelo canal. Tente compilar o código da Listagem 16-9 para ver por que este código não é permitido."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-9\" file-name=\"src/main.rs\" caption=\"Attempting to use `val` after we’ve sent it down the channel\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-9\" file-name=\"src/main.rs\" caption=\"Tentando usar `val` depois de enviá-lo pelo canal\">\n"
 
 #: src/ch16-02-message-passing.md
 msgid "\"val is {val}\""
@@ -16847,7 +16849,7 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "Here, we try to print `val` after we’ve sent it down the channel via `tx.send`. Allowing this would be a bad idea: Once the value has been sent to another thread, that thread could modify or drop it before we try to use the value again. Potentially, the other thread’s modifications could cause errors or unexpected results due to inconsistent or nonexistent data. However, Rust gives us an error if we try to compile the code in Listing 16-9:"
-msgstr ""
+msgstr "Aqui, tentamos imprimir `val` depois de termos enviado esse valor pelo canal, por meio de `tx.send`. Permitir isso seria uma má ideia: depois que o valor tiver sido enviado a outra thread, essa thread poderia modificá-lo ou descartá-lo antes de tentarmos usar o valor de novo. Potencialmente, as modificações da outra thread poderiam causar erros ou resultados inesperados devido a dados inconsistentes ou inexistentes. No entanto, o Rust nos dá um erro se tentarmos compilar o código da Listagem 16-9:"
 
 #: src/ch16-02-message-passing.md
 msgid ""
@@ -16871,7 +16873,7 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "Our concurrency mistake has caused a compile-time error. The `send` function takes ownership of its parameter, and when the value is moved the receiver takes ownership of it. This stops us from accidentally using the value again after sending it; the ownership system checks that everything is okay."
-msgstr ""
+msgstr "Nosso erro de concorrência causou um erro em tempo de compilação. A função `send` assume o ownership do seu parâmetro e, quando o valor é movido, o receptor assume o ownership dele. Isso nos impede de usar o valor novamente, por acidente, depois de enviá-lo; o sistema de ownership verifica se está tudo certo."
 
 #: src/ch16-02-message-passing.md
 msgid "<a id=\"sending-multiple-values-and-seeing-the-receiver-waiting\"></a>"
@@ -16879,19 +16881,19 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "Sending Multiple Values"
-msgstr ""
+msgstr "Enviando vários valores {#sending-multiple-values}"
 
 #: src/ch16-02-message-passing.md
 msgid "The code in Listing 16-8 compiled and ran, but it didn’t clearly show us that two separate threads were talking to each other over the channel."
-msgstr ""
+msgstr "O código da Listagem 16-8 compilou e executou, mas não mostrou claramente que duas threads separadas estavam conversando entre si pelo canal."
 
 #: src/ch16-02-message-passing.md
 msgid "In Listing 16-10, we’ve made some modifications that will prove the code in Listing 16-8 is running concurrently: The spawned thread will now send multiple messages and pause for a second between each message."
-msgstr ""
+msgstr "Na Listagem 16-10, fizemos algumas modificações que vão comprovar que o código da Listagem 16-8 está sendo executado de forma concorrente: a thread criada agora enviará várias mensagens e fará uma pausa de um segundo entre cada mensagem."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-10\" file-name=\"src/main.rs\" caption=\"Sending multiple messages and pausing between each one\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-10\" file-name=\"src/main.rs\" caption=\"Enviando várias mensagens e pausando entre cada uma\">\n"
 
 #: src/ch16-02-message-passing.md src/ch17-02-concurrency-with-async.md
 #: src/ch17-05-traits-for-async.md
@@ -16909,19 +16911,19 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "This time, the spawned thread has a vector of strings that we want to send to the main thread. We iterate over them, sending each individually, and pause between each by calling the `thread::sleep` function with a `Duration` value of one second."
-msgstr ""
+msgstr "Desta vez, a thread criada tem um vetor de strings que queremos enviar à thread principal. Iteramos sobre ele, enviando cada uma individualmente, e fazemos uma pausa entre elas chamando a função `thread::sleep` com um valor `Duration` de um segundo."
 
 #: src/ch16-02-message-passing.md
 msgid "In the main thread, we’re not calling the `recv` function explicitly anymore: Instead, we’re treating `rx` as an iterator. For each value received, we’re printing it. When the channel is closed, iteration will end."
-msgstr ""
+msgstr "Na thread principal, não estamos mais chamando a função `recv` explicitamente: em vez disso, estamos tratando `rx` como um iterador. Para cada valor recebido, nós o imprimimos. Quando o canal for fechado, a iteração terminará."
 
 #: src/ch16-02-message-passing.md
 msgid "When running the code in Listing 16-10, you should see the following output with a one-second pause in between each line:"
-msgstr ""
+msgstr "Ao executar o código da Listagem 16-10, você deve ver a seguinte saída, com uma pausa de um segundo entre cada linha:"
 
 #: src/ch16-02-message-passing.md
 msgid "Because we don’t have any code that pauses or delays in the `for` loop in the main thread, we can tell that the main thread is waiting to receive values from the spawned thread."
-msgstr ""
+msgstr "Como não há nenhum código que faça pausas ou atrasos no loop `for` da thread principal, podemos perceber que a thread principal está esperando para receber valores da thread criada."
 
 #: src/ch16-02-message-passing.md
 msgid "<a id=\"creating-multiple-producers-by-cloning-the-transmitter\"></a>"
@@ -16929,15 +16931,15 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "Creating Multiple Producers"
-msgstr ""
+msgstr "Criando vários produtores {#creating-multiple-producers}"
 
 #: src/ch16-02-message-passing.md
 msgid "Earlier we mentioned that `mpsc` was an acronym for _multiple producer, single consumer_. Let’s put `mpsc` to use and expand the code in Listing 16-10 to create multiple threads that all send values to the same receiver. We can do so by cloning the transmitter, as shown in Listing 16-11."
-msgstr ""
+msgstr "Anteriormente, mencionamos que `mpsc` era uma sigla para _múltiplos produtores, consumidor único_. Vamos colocar o `mpsc` em uso e expandir o código da Listagem 16-10 para criar várias threads que todas enviam valores para o mesmo receptor. Podemos fazer isso clonando o transmissor, como mostrado na Listagem 16-11."
 
 #: src/ch16-02-message-passing.md
 msgid "<Listing number=\"16-11\" file-name=\"src/main.rs\" caption=\"Sending multiple messages from multiple producers\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-11\" file-name=\"src/main.rs\" caption=\"Enviando várias mensagens de vários produtores\">\n"
 
 #: src/ch16-02-message-passing.md src/ch17-02-concurrency-with-async.md
 #: src/ch17-05-traits-for-async.md
@@ -16961,31 +16963,31 @@ msgstr ""
 
 #: src/ch16-02-message-passing.md
 msgid "This time, before we create the first spawned thread, we call `clone` on the transmitter. This will give us a new transmitter we can pass to the first spawned thread. We pass the original transmitter to a second spawned thread. This gives us two threads, each sending different messages to the one receiver."
-msgstr ""
+msgstr "Desta vez, antes de criarmos a primeira thread, chamamos `clone` no transmissor. Isso nos dará um novo transmissor, que podemos passar para a primeira thread criada. Passamos o transmissor original para uma segunda thread criada. Assim, temos duas threads, cada uma enviando mensagens diferentes para o único receptor."
 
 #: src/ch16-02-message-passing.md
 msgid "When you run the code, your output should look something like this:"
-msgstr ""
+msgstr "Quando você executar o código, a sua saída deve ficar parecida com isto:"
 
 #: src/ch16-02-message-passing.md
 msgid "You might see the values in another order, depending on your system. This is what makes concurrency interesting as well as difficult. If you experiment with `thread::sleep`, giving it various values in the different threads, each run will be more nondeterministic and create different output each time."
-msgstr ""
+msgstr "Você pode ver os valores em outra ordem, dependendo do seu sistema. É isso que torna a concorrência interessante e também difícil. Se você fizer experimentos com `thread::sleep`, dando a ela valores diferentes nas diferentes threads, cada execução será menos determinística e produzirá uma saída diferente a cada vez."
 
 #: src/ch16-02-message-passing.md
 msgid "Now that we’ve looked at how channels work, let’s look at a different method of concurrency."
-msgstr ""
+msgstr "Agora que vimos como os canais funcionam, vamos ver um método diferente de concorrência."
 
 #: src/ch16-03-shared-state.md
 msgid "Message passing is a fine way to handle concurrency, but it’s not the only way. Another method would be for multiple threads to access the same shared data. Consider this part of the slogan from the Go language documentation again: “Do not communicate by sharing memory.”"
-msgstr ""
+msgstr "A passagem de mensagens é uma boa maneira de tratar a concorrência, mas não é a única. Outro método seria várias threads acessarem os mesmos dados compartilhados. Considere novamente esta parte do slogan da documentação da linguagem Go: “Não se comunique compartilhando memória.”"
 
 #: src/ch16-03-shared-state.md
 msgid "What would communicating by sharing memory look like? In addition, why would message-passing enthusiasts caution not to use memory sharing?"
-msgstr ""
+msgstr "Como seria se comunicar compartilhando memória? Além disso, por que os entusiastas da passagem de mensagens alertariam contra o uso de compartilhamento de memória?"
 
 #: src/ch16-03-shared-state.md
 msgid "In a way, channels in any programming language are similar to single ownership because once you transfer a value down a channel, you should no longer use that value. Shared-memory concurrency is like multiple ownership: Multiple threads can access the same memory location at the same time. As you saw in Chapter 15, where smart pointers made multiple ownership possible, multiple ownership can add complexity because these different owners need managing. Rust’s type system and ownership rules greatly assist in getting this management correct. For an example, let’s look at mutexes, one of the more common concurrency primitives for shared memory."
-msgstr ""
+msgstr "De certa forma, os canais em qualquer linguagem de programação são semelhantes ao ownership único, porque, depois que você transfere um valor por um canal, não deve mais usar esse valor. A concorrência com memória compartilhada é como ter ownership múltiplo: várias threads podem acessar a mesma posição de memória ao mesmo tempo. Como você viu no Capítulo 15, em que os ponteiros inteligentes tornaram possível o ownership múltiplo, o ownership múltiplo pode adicionar complexidade, porque esses diferentes donos precisam ser gerenciados. O sistema de tipos e as regras de ownership do Rust ajudam muito a fazer esse gerenciamento corretamente. Como exemplo, vamos ver os mutexes, uma das primitivas de concorrência mais comuns para memória compartilhada."
 
 #: src/ch16-03-shared-state.md
 msgid "<a id=\"using-mutexes-to-allow-access-to-data-from-one-thread-at-a-time\"></a>"
@@ -16993,43 +16995,43 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "Controlling Access with Mutexes"
-msgstr ""
+msgstr "Controlando o acesso com mutexes {#controlling-access-with-mutexes}"
 
 #: src/ch16-03-shared-state.md
 msgid "_Mutex_ is an abbreviation for _mutual exclusion_, as in a mutex allows only one thread to access some data at any given time. To access the data in a mutex, a thread must first signal that it wants access by asking to acquire the mutex’s lock. The _lock_ is a data structure that is part of the mutex that keeps track of who currently has exclusive access to the data. Therefore, the mutex is described as _guarding_ the data it holds via the locking system."
-msgstr ""
+msgstr "_Mutex_ é uma abreviação de _exclusão mútua_, no sentido de que um mutex permite que apenas uma thread acesse alguns dados em qualquer momento. Para acessar os dados de um mutex, uma thread deve primeiro sinalizar que quer acesso, pedindo para adquirir o lock do mutex. O _lock_ é uma estrutura de dados que faz parte do mutex e registra quem tem acesso exclusivo aos dados no momento. Por isso, diz-se que o mutex _protege_ os dados que contém, por meio do sistema de locks."
 
 #: src/ch16-03-shared-state.md
 msgid "Mutexes have a reputation for being difficult to use because you have to remember two rules:"
-msgstr ""
+msgstr "Os mutexes têm a reputação de ser difíceis de usar, porque você precisa lembrar de duas regras:"
 
 #: src/ch16-03-shared-state.md
 msgid "You must attempt to acquire the lock before using the data."
-msgstr ""
+msgstr "Você deve tentar adquirir o lock antes de usar os dados."
 
 #: src/ch16-03-shared-state.md
 msgid "When you’re done with the data that the mutex guards, you must unlock the data so that other threads can acquire the lock."
-msgstr ""
+msgstr "Quando terminar de usar os dados que o mutex protege, você deve desbloquear os dados para que outras threads possam adquirir o lock."
 
 #: src/ch16-03-shared-state.md
 msgid "For a real-world metaphor for a mutex, imagine a panel discussion at a conference with only one microphone. Before a panelist can speak, they have to ask or signal that they want to use the microphone. When they get the microphone, they can talk for as long as they want to and then hand the microphone to the next panelist who requests to speak. If a panelist forgets to hand the microphone off when they’re finished with it, no one else is able to speak. If management of the shared microphone goes wrong, the panel won’t work as planned!"
-msgstr ""
+msgstr "Para uma metáfora do mundo real sobre um mutex, imagine um painel de discussão numa conferência com apenas um microfone. Antes que um painelista possa falar, ele precisa pedir ou sinalizar que quer usar o microfone. Quando ele pega o microfone, pode falar pelo tempo que quiser e, então, passar o microfone para o próximo painelista que pedir para falar. Se um painelista esquecer de passar o microfone adiante quando terminar de usá-lo, ninguém mais consegue falar. Se o gerenciamento do microfone compartilhado der errado, o painel não funcionará como planejado!"
 
 #: src/ch16-03-shared-state.md
 msgid "Management of mutexes can be incredibly tricky to get right, which is why so many people are enthusiastic about channels. However, thanks to Rust’s type system and ownership rules, you can’t get locking and unlocking wrong."
-msgstr ""
+msgstr "O gerenciamento de mutexes pode ser incrivelmente difícil de acertar, e é por isso que tantas pessoas são entusiastas dos canais. No entanto, graças ao sistema de tipos e às regras de ownership do Rust, você não tem como errar na hora de bloquear e desbloquear."
 
 #: src/ch16-03-shared-state.md
 msgid "The API of `Mutex<T>`"
-msgstr ""
+msgstr "A API de `Mutex<T>` {#the-api-of-mutext}"
 
 #: src/ch16-03-shared-state.md
 msgid "As an example of how to use a mutex, let’s start by using a mutex in a single-threaded context, as shown in Listing 16-12."
-msgstr ""
+msgstr "Como exemplo de como usar um mutex, vamos começar usando um mutex em um contexto de thread única, como mostrado na Listagem 16-12."
 
 #: src/ch16-03-shared-state.md
 msgid "<Listing number=\"16-12\" file-name=\"src/main.rs\" caption=\"Exploring the API of `Mutex<T>` in a single-threaded context for simplicity\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-12\" file-name=\"src/main.rs\" caption=\"Explorando a API de `Mutex<T>` em um contexto de thread única, por simplicidade\">\n"
 
 #: src/ch16-03-shared-state.md
 msgid "\"m = {m:?}\""
@@ -17037,23 +17039,23 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "As with many types, we create a `Mutex<T>` using the associated function `new`. To access the data inside the mutex, we use the `lock` method to acquire the lock. This call will block the current thread so that it can’t do any work until it’s our turn to have the lock."
-msgstr ""
+msgstr "Assim como acontece com muitos tipos, criamos um `Mutex<T>` usando a função associada `new`. Para acessar os dados dentro do mutex, usamos o método `lock` para adquirir o lock. Essa chamada vai bloquear a thread atual, para que ela não possa fazer nenhum trabalho até que seja a nossa vez de ter o lock."
 
 #: src/ch16-03-shared-state.md
 msgid "The call to `lock` would fail if another thread holding the lock panicked. In that case, no one would ever be able to get the lock, so we’ve chosen to `unwrap` and have this thread panic if we’re in that situation."
-msgstr ""
+msgstr "A chamada a `lock` falharia se outra thread que estivesse com o lock tivesse entrado em pânico. Nesse caso, ninguém jamais conseguiria obter o lock, então optamos por usar `unwrap` e fazer esta thread entrar em pânico se estivermos nessa situação."
 
 #: src/ch16-03-shared-state.md
 msgid "After we’ve acquired the lock, we can treat the return value, named `num` in this case, as a mutable reference to the data inside. The type system ensures that we acquire a lock before using the value in `m`. The type of `m` is `Mutex<i32>`, not `i32`, so we _must_ call `lock` to be able to use the `i32` value. We can’t forget; the type system won’t let us access the inner `i32` otherwise."
-msgstr ""
+msgstr "Depois de adquirirmos o lock, podemos tratar o valor de retorno, chamado aqui de `num`, como uma referência mutável para os dados internos. O sistema de tipos garante que adquirimos um lock antes de usar o valor em `m`. O tipo de `m` é `Mutex<i32>`, não `i32`, então _precisamos_ chamar `lock` para poder usar o valor `i32`. Não podemos esquecer; caso contrário, o sistema de tipos não nos deixa acessar o `i32` interno."
 
 #: src/ch16-03-shared-state.md
 msgid "The call to `lock` returns a type called `MutexGuard`, wrapped in a `LockResult` that we handled with the call to `unwrap`. The `MutexGuard` type implements `Deref` to point at our inner data; the type also has a `Drop` implementation that releases the lock automatically when a `MutexGuard` goes out of scope, which happens at the end of the inner scope. As a result, we don’t risk forgetting to release the lock and blocking the mutex from being used by other threads because the lock release happens automatically."
-msgstr ""
+msgstr "A chamada a `lock` retorna um tipo chamado `MutexGuard`, envolvido em um `LockResult`, que tratamos com a chamada a `unwrap`. O tipo `MutexGuard` implementa `Deref` para apontar para os nossos dados internos; o tipo também tem uma implementação de `Drop` que libera o lock automaticamente quando um `MutexGuard` sai do escopo, o que acontece no fim do escopo interno. Como resultado, não corremos o risco de esquecer de liberar o lock e, com isso, impedir que o mutex seja usado por outras threads, porque a liberação do lock acontece automaticamente."
 
 #: src/ch16-03-shared-state.md
 msgid "After dropping the lock, we can print the mutex value and see that we were able to change the inner `i32` to `6`."
-msgstr ""
+msgstr "Depois de descartarmos o lock, podemos imprimir o valor do mutex e ver que conseguimos alterar o `i32` interno para `6`."
 
 #: src/ch16-03-shared-state.md
 msgid "<a id=\"sharing-a-mutext-between-multiple-threads\"></a>"
@@ -17061,15 +17063,15 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "Shared Access to `Mutex<T>`"
-msgstr ""
+msgstr "Acesso compartilhado a `Mutex<T>` {#shared-access-to-mutext}"
 
 #: src/ch16-03-shared-state.md
 msgid "Now let’s try to share a value between multiple threads using `Mutex<T>`. We’ll spin up 10 threads and have them each increment a counter value by 1, so the counter goes from 0 to 10. The example in Listing 16-13 will have a compiler error, and we’ll use that error to learn more about using `Mutex<T>` and how Rust helps us use it correctly."
-msgstr ""
+msgstr "Agora, vamos tentar compartilhar um valor entre várias threads usando `Mutex<T>`. Vamos criar 10 threads e fazer cada uma incrementar um contador em 1, de modo que o contador vá de 0 a 10. O exemplo da Listagem 16-13 terá um erro de compilação, e vamos usar esse erro para aprender mais sobre como usar `Mutex<T>` e como o Rust nos ajuda a usá-lo corretamente."
 
 #: src/ch16-03-shared-state.md
 msgid "<Listing number=\"16-13\" file-name=\"src/main.rs\" caption=\"Ten threads, each incrementing a counter guarded by a `Mutex<T>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-13\" file-name=\"src/main.rs\" caption=\"Dez threads, cada uma incrementando um contador protegido por um `Mutex<T>`\">\n"
 
 #: src/ch16-03-shared-state.md
 msgid "\"Result: {}\""
@@ -17077,15 +17079,15 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "We create a `counter` variable to hold an `i32` inside a `Mutex<T>`, as we did in Listing 16-12. Next, we create 10 threads by iterating over a range of numbers. We use `thread::spawn` and give all the threads the same closure: one that moves the counter into the thread, acquires a lock on the `Mutex<T>` by calling the `lock` method, and then adds 1 to the value in the mutex. When a thread finishes running its closure, `num` will go out of scope and release the lock so that another thread can acquire it."
-msgstr ""
+msgstr "Criamos uma variável `counter` para armazenar um `i32` dentro de um `Mutex<T>`, como fizemos na Listagem 16-12. Em seguida, criamos 10 threads iterando sobre um intervalo de números. Usamos `thread::spawn` e damos a todas as threads o mesmo closure: um que move o contador para dentro da thread, adquire um lock no `Mutex<T>` chamando o método `lock` e, depois, adiciona 1 ao valor no mutex. Quando uma thread termina de executar seu closure, `num` sai do escopo e libera o lock para que outra thread possa adquiri-lo."
 
 #: src/ch16-03-shared-state.md
 msgid "In the main thread, we collect all the join handles. Then, as we did in Listing 16-2, we call `join` on each handle to make sure all the threads finish. At that point, the main thread will acquire the lock and print the result of this program."
-msgstr ""
+msgstr "Na thread principal, coletamos todos os handles de join. Depois, como fizemos na Listagem 16-2, chamamos `join` em cada handle para garantir que todas as threads terminem. Nesse momento, a thread principal vai adquirir o lock e imprimir o resultado deste programa."
 
 #: src/ch16-03-shared-state.md
 msgid "We hinted that this example wouldn’t compile. Now let’s find out why!"
-msgstr ""
+msgstr "Sugerimos que este exemplo não compilaria. Agora, vamos descobrir por quê!"
 
 #: src/ch16-03-shared-state.md
 msgid ""
@@ -17113,23 +17115,23 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "The error message states that the `counter` value was moved in the previous iteration of the loop. Rust is telling us that we can’t move the ownership of lock `counter` into multiple threads. Let’s fix the compiler error with the multiple-ownership method we discussed in Chapter 15."
-msgstr ""
+msgstr "A mensagem de erro informa que o valor de `counter` foi movido na iteração anterior do loop. O Rust está nos dizendo que não podemos mover o ownership do lock `counter` para várias threads. Vamos corrigir o erro de compilação com o método de ownership múltiplo que discutimos no Capítulo 15."
 
 #: src/ch16-03-shared-state.md
 msgid "Multiple Ownership with Multiple Threads"
-msgstr ""
+msgstr "Ownership múltiplo com múltiplas threads {#multiple-ownership-with-multiple-threads}"
 
 #: src/ch16-03-shared-state.md
 msgid "In Chapter 15, we gave a value to multiple owners by using the smart pointer `Rc<T>` to create a reference-counted value. Let’s do the same here and see what happens. We’ll wrap the `Mutex<T>` in `Rc<T>` in Listing 16-14 and clone the `Rc<T>` before moving ownership to the thread."
-msgstr ""
+msgstr "No Capítulo 15, demos um valor a vários donos usando o ponteiro inteligente `Rc<T>` para criar um valor com contagem de referências. Vamos fazer o mesmo aqui e ver o que acontece. Vamos envolver o `Mutex<T>` em `Rc<T>` na Listagem 16-14 e clonar o `Rc<T>` antes de mover o ownership para a thread."
 
 #: src/ch16-03-shared-state.md
 msgid "<Listing number=\"16-14\" file-name=\"src/main.rs\" caption=\"Attempting to use `Rc<T>` to allow multiple threads to own the `Mutex<T>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-14\" file-name=\"src/main.rs\" caption=\"Tentando usar `Rc<T>` para permitir que várias threads sejam donas do `Mutex<T>`\">\n"
 
 #: src/ch16-03-shared-state.md
 msgid "Once again, we compile and get... different errors! The compiler is teaching us a lot:"
-msgstr ""
+msgstr "Mais uma vez, compilamos e obtemos... erros diferentes! O compilador está nos ensinando muito:"
 
 #: src/ch16-03-shared-state.md
 msgid ""
@@ -17167,39 +17169,39 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "Wow, that error message is very wordy! Here’s the important part to focus on: `` `Rc<Mutex<i32>>` cannot be sent between threads safely ``. The compiler is also telling us the reason why: `` the trait `Send` is not implemented for `Rc<Mutex<i32>>` ``. We’ll talk about `Send` in the next section: It’s one of the traits that ensures that the types we use with threads are meant for use in concurrent situations."
-msgstr ""
+msgstr "Uau, essa mensagem de erro é muito verbosa! Aqui está a parte importante em que focar: `` `Rc<Mutex<i32>>` cannot be sent between threads safely ``. O compilador também nos diz o motivo: `` the trait `Send` is not implemented for `Rc<Mutex<i32>>` ``. Vamos falar sobre `Send` na próxima seção: ele é um dos traits que garantem que os tipos que usamos com threads são destinados a uso em situações concorrentes."
 
 #: src/ch16-03-shared-state.md
 msgid "Unfortunately, `Rc<T>` is not safe to share across threads. When `Rc<T>` manages the reference count, it adds to the count for each call to `clone` and subtracts from the count when each clone is dropped. But it doesn’t use any concurrency primitives to make sure that changes to the count can’t be interrupted by another thread. This could lead to wrong counts—subtle bugs that could in turn lead to memory leaks or a value being dropped before we’re done with it. What we need is a type that is exactly like `Rc<T>`, but that makes changes to the reference count in a thread-safe way."
-msgstr ""
+msgstr "Infelizmente, `Rc<T>` não é seguro para compartilhar entre threads. Quando `Rc<T>` gerencia a contagem de referências, ele soma à contagem a cada chamada a `clone` e subtrai dela quando cada clone é descartado. Mas ele não usa nenhuma primitiva de concorrência para garantir que as alterações na contagem não possam ser interrompidas por outra thread. Isso pode levar a contagens incorretas — bugs sutis que, por sua vez, podem causar vazamentos de memória ou um valor descartado antes de terminarmos de usá-lo. O que precisamos é de um tipo exatamente igual a `Rc<T>`, mas que faça alterações na contagem de referências de forma segura para threads."
 
 #: src/ch16-03-shared-state.md
 msgid "Atomic Reference Counting with `Arc<T>`"
-msgstr ""
+msgstr "Contagem atômica de referências com `Arc<T>` {#atomic-reference-counting-with-arct}"
 
 #: src/ch16-03-shared-state.md
 msgid "Fortunately, `Arc<T>` _is_ a type like `Rc<T>` that is safe to use in concurrent situations. The _a_ stands for _atomic_, meaning it’s an _atomically reference-counted_ type. Atomics are an additional kind of concurrency primitive that we won’t cover in detail here: See the standard library documentation for [`std::sync::atomic`](../std/sync/atomic/index.html)<!-- ignore --> for more details. At this point, you just need to know that atomics work like primitive types but are safe to share across threads."
-msgstr ""
+msgstr "Felizmente, `Arc<T>` _é_ um tipo parecido com `Rc<T>` que é seguro para usar em situações concorrentes. O _a_ vem de _atomic_, o que significa que é um tipo _com contagem atômica de referências_. Os atômicos são uma categoria adicional de primitiva de concorrência que não vamos abordar em detalhes aqui: veja a documentação da biblioteca padrão para [`std::sync::atomic`](../std/sync/atomic/index.html)<!-- ignore --> para mais detalhes. Neste momento, você só precisa saber que os atômicos funcionam como tipos primitivos, mas são seguros para compartilhar entre threads."
 
 #: src/ch16-03-shared-state.md
 msgid "You might then wonder why all primitive types aren’t atomic and why standard library types aren’t implemented to use `Arc<T>` by default. The reason is that thread safety comes with a performance penalty that you only want to pay when you really need to. If you’re just performing operations on values within a single thread, your code can run faster if it doesn’t have to enforce the guarantees atomics provide."
-msgstr ""
+msgstr "Você pode, então, se perguntar por que nem todos os tipos primitivos são atômicos e por que os tipos da biblioteca padrão não são implementados para usar `Arc<T>` por padrão. O motivo é que a segurança para threads tem um custo de desempenho que você só quer pagar quando realmente precisa. Se você estiver apenas realizando operações com valores dentro de uma única thread, seu código pode ser executado mais rápido se não precisar impor as garantias que os atômicos oferecem."
 
 #: src/ch16-03-shared-state.md
 msgid "Let’s return to our example: `Arc<T>` and `Rc<T>` have the same API, so we fix our program by changing the `use` line, the call to `new`, and the call to `clone`. The code in Listing 16-15 will finally compile and run."
-msgstr ""
+msgstr "Vamos voltar ao nosso exemplo: `Arc<T>` e `Rc<T>` têm a mesma API, então corrigimos nosso programa trocando a linha `use`, a chamada a `new` e a chamada a `clone`. O código da Listagem 16-15 finalmente vai compilar e executar."
 
 #: src/ch16-03-shared-state.md
 msgid "<Listing number=\"16-15\" file-name=\"src/main.rs\" caption=\"Using an `Arc<T>` to wrap the `Mutex<T>` to be able to share ownership across multiple threads\">\n"
-msgstr ""
+msgstr "<Listing number=\"16-15\" file-name=\"src/main.rs\" caption=\"Usando um `Arc<T>` para envolver o `Mutex<T>` e poder compartilhar o ownership entre várias threads\">\n"
 
 #: src/ch16-03-shared-state.md
 msgid "We did it! We counted from 0 to 10, which may not seem very impressive, but it did teach us a lot about `Mutex<T>` and thread safety. You could also use this program’s structure to do more complicated operations than just incrementing a counter. Using this strategy, you can divide a calculation into independent parts, split those parts across threads, and then use a `Mutex<T>` to have each thread update the final result with its part."
-msgstr ""
+msgstr "Conseguimos! Contamos de 0 a 10, o que pode não parecer muito impressionante, mas nos ensinou muito sobre `Mutex<T>` e segurança para threads. Você também poderia usar a estrutura deste programa para fazer operações mais complicadas do que apenas incrementar um contador. Com essa estratégia, você pode dividir um cálculo em partes independentes, distribuir essas partes entre threads e, então, usar um `Mutex<T>` para que cada thread atualize o resultado final com a sua parte."
 
 #: src/ch16-03-shared-state.md
 msgid "Note that if you are doing simple numerical operations, there are types simpler than `Mutex<T>` types provided by the [`std::sync::atomic` module of the standard library](../std/sync/atomic/index.html)<!-- ignore -->. These types provide safe, concurrent, atomic access to primitive types. We chose to use `Mutex<T>` with a primitive type for this example so that we could concentrate on how `Mutex<T>` works."
-msgstr ""
+msgstr "Observe que, se você estiver fazendo operações numéricas simples, existem tipos mais simples do que os tipos `Mutex<T>`, fornecidos pelo [módulo `std::sync::atomic` da biblioteca padrão](../std/sync/atomic/index.html)<!-- ignore -->. Esses tipos oferecem acesso seguro, concorrente e atômico a tipos primitivos. Escolhemos usar `Mutex<T>` com um tipo primitivo neste exemplo para que pudéssemos nos concentrar em como o `Mutex<T>` funciona."
 
 #: src/ch16-03-shared-state.md
 msgid "<a id=\"similarities-between-refcelltrct-and-mutextarct\"></a>"
@@ -17207,19 +17209,19 @@ msgstr ""
 
 #: src/ch16-03-shared-state.md
 msgid "Comparing `RefCell<T>`/`Rc<T>` and `Mutex<T>`/`Arc<T>`"
-msgstr ""
+msgstr "Comparando `RefCell<T>`/`Rc<T>` e `Mutex<T>`/`Arc<T>` {#comparing-refcelltrct-and-mutextarct}"
 
 #: src/ch16-03-shared-state.md
 msgid "You might have noticed that `counter` is immutable but that we could get a mutable reference to the value inside it; this means `Mutex<T>` provides interior mutability, as the `Cell` family does. In the same way we used `RefCell<T>` in Chapter 15 to allow us to mutate contents inside an `Rc<T>`, we use `Mutex<T>` to mutate contents inside an `Arc<T>`."
-msgstr ""
+msgstr "Talvez você tenha notado que `counter` é imutável, mas que podemos obter uma referência mutável para o valor dentro dele; isso significa que o `Mutex<T>` oferece mutabilidade interior, assim como a família `Cell` faz. Da mesma forma que usamos `RefCell<T>` no Capítulo 15 para permitir alterar conteúdos dentro de um `Rc<T>`, usamos `Mutex<T>` para alterar conteúdos dentro de um `Arc<T>`."
 
 #: src/ch16-03-shared-state.md
 msgid "Another detail to note is that Rust can’t protect you from all kinds of logic errors when you use `Mutex<T>`. Recall from Chapter 15 that using `Rc<T>` came with the risk of creating reference cycles, where two `Rc<T>` values refer to each other, causing memory leaks. Similarly, `Mutex<T>` comes with the risk of creating _deadlocks_. These occur when an operation needs to lock two resources and two threads have each acquired one of the locks, causing them to wait for each other forever. If you’re interested in deadlocks, try creating a Rust program that has a deadlock; then, research deadlock mitigation strategies for mutexes in any language and have a go at implementing them in Rust. The standard library API documentation for `Mutex<T>` and `MutexGuard` offers useful information."
-msgstr ""
+msgstr "Outro detalhe a observar é que o Rust não consegue proteger você de todos os tipos de erros de lógica ao usar `Mutex<T>`. Lembre-se de que, no Capítulo 15, usar `Rc<T>` trazia o risco de criar ciclos de referências, em que dois valores `Rc<T>` se referem um ao outro, causando vazamentos de memória. Da mesma forma, `Mutex<T>` traz o risco de criar _deadlocks_. Eles ocorrem quando uma operação precisa bloquear dois recursos e duas threads adquiriram, cada uma, um dos locks, fazendo com que esperem uma pela outra para sempre. Se você tiver interesse em deadlocks, tente criar um programa Rust que tenha um deadlock; depois, pesquise estratégias de mitigação de deadlocks para mutexes em qualquer linguagem e tente implementá-las no Rust. A documentação da API da biblioteca padrão para `Mutex<T>` e `MutexGuard` oferece informações úteis."
 
 #: src/ch16-03-shared-state.md
 msgid "We’ll round out this chapter by talking about the `Send` and `Sync` traits and how we can use them with custom types."
-msgstr ""
+msgstr "Vamos encerrar este capítulo falando sobre os traits `Send` e `Sync` e como podemos usá-los com tipos personalizados."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "<a id=\"extensible-concurrency-with-the-sync-and-send-traits\"></a> <a id=\"extensible-concurrency-with-the-send-and-sync-traits\"></a>"
@@ -17227,11 +17229,11 @@ msgstr ""
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Interestingly, almost every concurrency feature we’ve talked about so far in this chapter has been part of the standard library, not the language. Your options for handling concurrency are not limited to the language or the standard library; you can write your own concurrency features or use those written by others."
-msgstr ""
+msgstr "Curiosamente, quase todo recurso de concorrência sobre o qual falamos até agora neste capítulo faz parte da biblioteca padrão, e não da linguagem. Suas opções para tratar a concorrência não se limitam à linguagem nem à biblioteca padrão; você pode escrever seus próprios recursos de concorrência ou usar aqueles escritos por outras pessoas."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "However, among the key concurrency concepts that are embedded in the language rather than the standard library are the `std::marker` traits `Send` and `Sync`."
-msgstr ""
+msgstr "No entanto, entre os principais conceitos de concorrência embutidos na linguagem, e não na biblioteca padrão, estão os traits marcadores `Send` e `Sync`, do `std::marker`."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "<a id=\"allowing-transference-of-ownership-between-threads-with-send\"></a>"
@@ -17239,19 +17241,19 @@ msgstr ""
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Transferring Ownership Between Threads"
-msgstr ""
+msgstr "Transferindo o ownership entre threads {#transferring-ownership-between-threads}"
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "The `Send` marker trait indicates that ownership of values of the type implementing `Send` can be transferred between threads. Almost every Rust type implements `Send`, but there are some exceptions, including `Rc<T>`: This cannot implement `Send` because if you cloned an `Rc<T>` value and tried to transfer ownership of the clone to another thread, both threads might update the reference count at the same time. For this reason, `Rc<T>` is implemented for use in single-threaded situations where you don’t want to pay the thread-safe performance penalty."
-msgstr ""
+msgstr "O trait marcador `Send` indica que o ownership de valores do tipo que implementa `Send` pode ser transferido entre threads. Quase todo tipo Rust implementa `Send`, mas há algumas exceções, incluindo `Rc<T>`: ele não pode implementar `Send` porque, se você clonasse um valor `Rc<T>` e tentasse transferir o ownership do clone para outra thread, as duas threads poderiam atualizar a contagem de referências ao mesmo tempo. Por essa razão, `Rc<T>` é implementado para uso em situações de thread única, nas quais você não quer pagar o custo de desempenho da segurança para threads."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Therefore, Rust’s type system and trait bounds ensure that you can never accidentally send an `Rc<T>` value across threads unsafely. When we tried to do this in Listing 16-14, we got the error `` the trait `Send` is not implemented for `Rc<Mutex<i32>>` ``. When we switched to `Arc<T>`, which does implement `Send`, the code compiled."
-msgstr ""
+msgstr "Portanto, o sistema de tipos e os limites de trait do Rust garantem que você nunca consiga enviar, por acidente, um valor `Rc<T>` entre threads de forma insegura. Quando tentamos fazer isso na Listagem 16-14, recebemos o erro `` the trait `Send` is not implemented for `Rc<Mutex<i32>>` ``. Quando trocamos para `Arc<T>`, que implementa `Send`, o código compilou."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Any type composed entirely of `Send` types is automatically marked as `Send` as well. Almost all primitive types are `Send`, aside from raw pointers, which we’ll discuss in Chapter 20."
-msgstr ""
+msgstr "Qualquer tipo composto inteiramente de tipos `Send` também é automaticamente marcado como `Send`. Quase todos os tipos primitivos são `Send`, com exceção dos ponteiros brutos, que vamos discutir no Capítulo 20."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "<a id=\"allowing-access-from-multiple-threads-with-sync\"></a>"
@@ -17259,39 +17261,39 @@ msgstr ""
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Accessing from Multiple Threads"
-msgstr ""
+msgstr "Acessando a partir de múltiplas threads {#accessing-from-multiple-threads}"
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "The `Sync` marker trait indicates that it is safe for the type implementing `Sync` to be referenced from multiple threads. In other words, any type `T` implements `Sync` if `&T` (an immutable reference to `T`) implements `Send`, meaning the reference can be sent safely to another thread. Similar to `Send`, primitive types all implement `Sync`, and types composed entirely of types that implement `Sync` also implement `Sync`."
-msgstr ""
+msgstr "O trait marcador `Sync` indica que é seguro que o tipo que implementa `Sync` seja referenciado a partir de várias threads. Em outras palavras, qualquer tipo `T` implementa `Sync` se `&T` (uma referência imutável a `T`) implementar `Send`, o que significa que a referência pode ser enviada com segurança para outra thread. Semelhante a `Send`, todos os tipos primitivos implementam `Sync`, e os tipos compostos inteiramente de tipos que implementam `Sync` também implementam `Sync`."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "The smart pointer `Rc<T>` also doesn’t implement `Sync` for the same reasons that it doesn’t implement `Send`. The `RefCell<T>` type (which we talked about in Chapter 15) and the family of related `Cell<T>` types don’t implement `Sync`. The implementation of borrow checking that `RefCell<T>` does at runtime is not thread-safe. The smart pointer `Mutex<T>` implements `Sync` and can be used to share access with multiple threads, as you saw in [“Shared Access to `Mutex<T>`”](ch16-03-shared-state.html#shared-access-to-mutext)<!-- ignore -->."
-msgstr ""
+msgstr "O ponteiro inteligente `Rc<T>` também não implementa `Sync` pelos mesmos motivos pelos quais não implementa `Send`. O tipo `RefCell<T>` (sobre o qual falamos no Capítulo 15) e a família de tipos `Cell<T>` relacionados não implementam `Sync`. A implementação da verificação de empréstimos que o `RefCell<T>` faz em tempo de execução não é segura para threads. O ponteiro inteligente `Mutex<T>` implementa `Sync` e pode ser usado para compartilhar acesso com várias threads, como você viu em [“Acesso compartilhado a `Mutex<T>`”](ch16-03-shared-state.html#shared-access-to-mutext)<!-- ignore -->."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Implementing `Send` and `Sync` Manually Is Unsafe"
-msgstr ""
+msgstr "Implementar `Send` e `Sync` manualmente é inseguro {#implementing-send-and-sync-manually-is-unsafe}"
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Because types composed entirely of other types that implement the `Send` and `Sync` traits also automatically implement `Send` and `Sync`, we don’t have to implement those traits manually. As marker traits, they don’t even have any methods to implement. They’re just useful for enforcing invariants related to concurrency."
-msgstr ""
+msgstr "Como os tipos compostos inteiramente por outros tipos que implementam os traits `Send` e `Sync` também implementam automaticamente `Send` e `Sync`, não precisamos implementar esses traits manualmente. Por serem traits marcadores, eles nem têm métodos para implementar. Eles só são úteis para garantir invariantes relacionadas à concorrência."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "Manually implementing these traits involves implementing unsafe Rust code. We’ll talk about using unsafe Rust code in Chapter 20; for now, the important information is that building new concurrent types not made up of `Send` and `Sync` parts requires careful thought to uphold the safety guarantees. [“The Rustonomicon”](../nomicon/index.html) has more information about these guarantees and how to uphold them."
-msgstr ""
+msgstr "Implementar esses traits manualmente envolve escrever código Rust inseguro. Vamos falar sobre como usar código Rust inseguro no Capítulo 20; por enquanto, a informação importante é que criar novos tipos concorrentes que não sejam compostos apenas de partes `Send` e `Sync` exige muita atenção para manter as garantias de segurança. [“The Rustonomicon”](../nomicon/index.html) tem mais informações sobre essas garantias e sobre como mantê-las."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "This isn’t the last you’ll see of concurrency in this book: The next chapter focuses on async programming, and the project in Chapter 21 will use the concepts in this chapter in a more realistic situation than the smaller examples discussed here."
-msgstr ""
+msgstr "Essa não é a última vez que você vai ver a concorrência neste livro: o próximo capítulo se concentra na programação assíncrona, e o projeto do Capítulo 21 vai usar os conceitos deste capítulo em uma situação mais realista do que os exemplos menores discutidos aqui."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "As mentioned earlier, because very little of how Rust handles concurrency is part of the language, many concurrency solutions are implemented as crates. These evolve more quickly than the standard library, so be sure to search online for the current, state-of-the-art crates to use in multithreaded situations."
-msgstr ""
+msgstr "Como mencionamos antes, muito pouco do modo como o Rust lida com concorrência faz parte da linguagem; por isso, muitas soluções de concorrência são implementadas como crates. Elas evoluem mais rápido do que a biblioteca padrão, então não deixe de pesquisar na internet pelos crates mais atuais e avançados para usar em situações multithread."
 
 #: src/ch16-04-extensible-concurrency-sync-and-send.md
 msgid "The Rust standard library provides channels for message passing and smart pointer types, such as `Mutex<T>` and `Arc<T>`, that are safe to use in concurrent contexts. The type system and the borrow checker ensure that the code using these solutions won’t end up with data races or invalid references. Once you get your code to compile, you can rest assured that it will happily run on multiple threads without the kinds of hard-to-track-down bugs common in other languages. Concurrent programming is no longer a concept to be afraid of: Go forth and make your programs concurrent, fearlessly!"
-msgstr ""
+msgstr "A biblioteca padrão do Rust oferece canais para passagem de mensagens e tipos de ponteiros inteligentes, como `Mutex<T>` e `Arc<T>`, que são seguros para uso em contextos concorrentes. O sistema de tipos e o verificador de empréstimos garantem que o código que usa essas soluções não vai ter corridas de dados nem referências inválidas. Quando você conseguir fazer o seu código compilar, pode ficar tranquilo: ele vai executar sem problemas em várias threads, livre dos tipos de bugs difíceis de rastrear que são comuns em outras linguagens. A programação concorrente deixou de ser um conceito a ser temido: vá em frente e torne os seus programas concorrentes, sem medo!"
 
 #: src/ch17-00-async-await.md
 msgid "Many operations we ask the computer to do can take a while to finish. It would be nice if we could do something else while we’re waiting for those long-running processes to complete. Modern computers offer two techniques for working on more than one operation at a time: parallelism and concurrency. Our programs’ logic, however, is written in a mostly linear fashion. We’d like to be able to specify the operations a program should perform and points at which a function could pause and some other part of the program could run instead, without needing to specify up front exactly the order and manner in which each bit of code should run. _Asynchronous programming_ is an abstraction that lets us express our code in terms of potential pausing points and eventual results that takes care of the details of coordination for us."
