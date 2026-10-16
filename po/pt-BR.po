@@ -185,19 +185,19 @@ msgstr "Validando referências com tempos de vida {#validating-references-with-l
 
 #: src/SUMMARY.md src/ch11-00-testing.md
 msgid "Writing Automated Tests"
-msgstr ""
+msgstr "Escrevendo testes automatizados {#writing-automated-tests}"
 
 #: src/SUMMARY.md src/ch11-01-writing-tests.md
 msgid "How to Write Tests"
-msgstr ""
+msgstr "Como escrever testes {#how-to-write-tests}"
 
 #: src/SUMMARY.md src/ch11-02-running-tests.md
 msgid "Controlling How Tests Are Run"
-msgstr ""
+msgstr "Controlando como os testes são executados {#controlling-how-tests-are-run}"
 
 #: src/SUMMARY.md src/ch11-03-test-organization.md
 msgid "Test Organization"
-msgstr ""
+msgstr "Organização dos testes {#test-organization}"
 
 #: src/SUMMARY.md src/ch12-00-an-io-project.md
 msgid "An I/O Project: Building a Command Line Program"
@@ -10364,43 +10364,43 @@ msgstr "Acredite ou não, há muito mais a aprender sobre os tópicos que discut
 
 #: src/ch11-00-testing.md
 msgid "In his 1972 essay “The Humble Programmer,” Edsger W. Dijkstra said that “program testing can be a very effective way to show the presence of bugs, but it is hopelessly inadequate for showing their absence.” That doesn’t mean we shouldn’t try to test as much as we can!"
-msgstr ""
+msgstr "Em seu ensaio de 1972 “The Humble Programmer”, Edsger W. Dijkstra disse que “o teste de programas pode ser uma forma muito eficaz de mostrar a presença de bugs, mas é irremediavelmente inadequado para mostrar a ausência deles.” Isso não significa que não devemos tentar testar o máximo que pudermos!"
 
 #: src/ch11-00-testing.md
 msgid "_Correctness_ in our programs is the extent to which our code does what we intend it to do. Rust is designed with a high degree of concern about the correctness of programs, but correctness is complex and not easy to prove. Rust’s type system shoulders a huge part of this burden, but the type system cannot catch everything. As such, Rust includes support for writing automated software tests."
-msgstr ""
+msgstr "_Corretude_ nos nossos programas é o grau em que nosso código faz o que pretendemos que ele faça. O Rust é projetado com um alto grau de preocupação com a corretude dos programas, mas a corretude é complexa e não é fácil de provar. O sistema de tipos do Rust assume uma parte enorme desse fardo, mas o sistema de tipos não consegue detectar tudo. Por isso, o Rust inclui suporte à escrita de testes automatizados de software."
 
 #: src/ch11-00-testing.md
 msgid "Say we write a function `add_two` that adds 2 to whatever number is passed to it. This function’s signature accepts an integer as a parameter and returns an integer as a result. When we implement and compile that function, Rust does all the type checking and borrow checking that you’ve learned so far to ensure that, for instance, we aren’t passing a `String` value or an invalid reference to this function. But Rust _can’t_ check that this function will do precisely what we intend, which is return the parameter plus 2 rather than, say, the parameter plus 10 or the parameter minus 50! That’s where tests come in."
-msgstr ""
+msgstr "Digamos que escrevamos uma função `add_two` que soma 2 a qualquer número que seja passado para ela. A assinatura dessa função aceita um inteiro como parâmetro e retorna um inteiro como resultado. Quando implementamos e compilamos essa função, o Rust faz toda a verificação de tipos e a verificação de empréstimos que você aprendeu até agora para garantir que, por exemplo, não estejamos passando a ela um valor `String` ou uma referência inválida. Mas o Rust _não consegue_ verificar que essa função vai fazer exatamente o que pretendemos, que é retornar o parâmetro mais 2, e não, digamos, o parâmetro mais 10 ou o parâmetro menos 50! É aí que entram os testes."
 
 #: src/ch11-00-testing.md
 msgid "We can write tests that assert, for example, that when we pass `3` to the `add_two` function, the returned value is `5`. We can run these tests whenever we make changes to our code to make sure any existing correct behavior has not changed."
-msgstr ""
+msgstr "Podemos escrever testes que verificam, por exemplo, que, ao passar `3` para a função `add_two`, o valor retornado é `5`. Podemos executar esses testes sempre que fizermos alterações no nosso código, para garantir que qualquer comportamento correto já existente não tenha mudado."
 
 #: src/ch11-00-testing.md
 msgid "Testing is a complex skill: Although we can’t cover in one chapter every detail about how to write good tests, in this chapter we will discuss the mechanics of Rust’s testing facilities. We’ll talk about the annotations and macros available to you when writing your tests, the default behavior and options provided for running your tests, and how to organize tests into unit tests and integration tests."
-msgstr ""
+msgstr "Escrever testes é uma habilidade complexa: embora não possamos cobrir em um único capítulo todos os detalhes sobre como escrever bons testes, neste capítulo vamos discutir a mecânica dos recursos de teste do Rust. Vamos falar sobre as anotações e as macros disponíveis para você ao escrever seus testes, sobre o comportamento padrão e as opções oferecidas para executar seus testes e sobre como organizar os testes em testes unitários e testes de integração."
 
 #: src/ch11-01-writing-tests.md
 msgid "_Tests_ are Rust functions that verify that the non-test code is functioning in the expected manner. The bodies of test functions typically perform these three actions:"
-msgstr ""
+msgstr "_Testes_ são funções do Rust que verificam se o código que não é de teste funciona da maneira esperada. Os corpos das funções de teste normalmente executam estas três ações:"
 
 #: src/ch11-01-writing-tests.md
 msgid "Set up any needed data or state."
-msgstr ""
+msgstr "Preparar quaisquer dados ou estados necessários."
 
 #: src/ch11-01-writing-tests.md
 msgid "Run the code you want to test."
-msgstr ""
+msgstr "Executar o código que você quer testar."
 
 #: src/ch11-01-writing-tests.md
 msgid "Assert that the results are what you expect."
-msgstr ""
+msgstr "Verificar se os resultados são os que você espera."
 
 #: src/ch11-01-writing-tests.md
 msgid "Let’s look at the features Rust provides specifically for writing tests that take these actions, which include the `test` attribute, a few macros, and the `should_panic` attribute."
-msgstr ""
+msgstr "Vamos ver os recursos que o Rust oferece especificamente para escrever testes que realizam essas ações, que incluem o atributo `test`, algumas macros e o atributo `should_panic`."
 
 #: src/ch11-01-writing-tests.md
 msgid "<a id=\"the-anatomy-of-a-test-function\"></a>"
@@ -10408,31 +10408,31 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Structuring Test Functions"
-msgstr ""
+msgstr "Estruturando funções de teste {#structuring-test-functions}"
 
 #: src/ch11-01-writing-tests.md
 msgid "At its simplest, a test in Rust is a function that’s annotated with the `test` attribute. Attributes are metadata about pieces of Rust code; one example is the `derive` attribute we used with structs in Chapter 5. To change a function into a test function, add `#[test]` on the line before `fn`. When you run your tests with the `cargo test` command, Rust builds a test runner binary that runs the annotated functions and reports on whether each test function passes or fails."
-msgstr ""
+msgstr "Em sua forma mais simples, um teste no Rust é uma função anotada com o atributo `test`. Atributos são metadados sobre partes do código Rust; um exemplo é o atributo `derive` que usamos com structs no Capítulo 5. Para transformar uma função em uma função de teste, adicione `#[test]` na linha antes de `fn`. Quando você executa seus testes com o comando `cargo test`, o Rust compila um binário executor de testes que executa as funções anotadas e informa se cada função de teste passa ou falha."
 
 #: src/ch11-01-writing-tests.md
 msgid "Whenever we make a new library project with Cargo, a test module with a test function in it is automatically generated for us. This module gives you a template for writing your tests so that you don’t have to look up the exact structure and syntax every time you start a new project. You can add as many additional test functions and as many test modules as you want!"
-msgstr ""
+msgstr "Sempre que criamos um novo projeto de biblioteca com o Cargo, um módulo de teste com uma função de teste dentro dele é gerado automaticamente para nós. Esse módulo oferece um modelo para escrever seus testes, para que você não precise consultar a estrutura e a sintaxe exatas toda vez que começar um novo projeto. Você pode adicionar quantas funções de teste adicionais e quantos módulos de teste quiser!"
 
 #: src/ch11-01-writing-tests.md
 msgid "We’ll explore some aspects of how tests work by experimenting with the template test before we actually test any code. Then, we’ll write some real-world tests that call some code that we’ve written and assert that its behavior is correct."
-msgstr ""
+msgstr "Vamos explorar alguns aspectos de como os testes funcionam, experimentando com o teste modelo antes de testar qualquer código de fato. Depois, vamos escrever alguns testes do mundo real que chamam um código que escrevemos e verificam se o comportamento dele está correto."
 
 #: src/ch11-01-writing-tests.md
 msgid "Let’s create a new library project called `adder` that will add two numbers:"
-msgstr ""
+msgstr "Vamos criar um novo projeto de biblioteca chamado `adder`, que vai somar dois números:"
 
 #: src/ch11-01-writing-tests.md
 msgid "The contents of the _src/lib.rs_ file in your `adder` library should look like Listing 11-1."
-msgstr ""
+msgstr "O conteúdo do arquivo _src/lib.rs_ na sua biblioteca `adder` deve ficar como na Listagem 11-1."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-1\" file-name=\"src/lib.rs\" caption=\"The code generated automatically by `cargo new`\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-1\" file-name=\"src/lib.rs\" caption=\"O código gerado automaticamente pelo `cargo new`\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10450,23 +10450,23 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "The file starts with an example `add` function so that we have something to test."
-msgstr ""
+msgstr "O arquivo começa com uma função `add` de exemplo, para que tenhamos algo para testar."
 
 #: src/ch11-01-writing-tests.md
 msgid "For now, let’s focus solely on the `it_works` function. Note the `#[test]` annotation: This attribute indicates this is a test function, so the test runner knows to treat this function as a test. We might also have non-test functions in the `tests` module to help set up common scenarios or perform common operations, so we always need to indicate which functions are tests."
-msgstr ""
+msgstr "Por enquanto, vamos nos concentrar apenas na função `it_works`. Observe a anotação `#[test]`: esse atributo indica que esta é uma função de teste, para que o executor de testes saiba tratar essa função como um teste. Também podemos ter funções que não são de teste no módulo `tests`, para ajudar a preparar cenários comuns ou realizar operações comuns, por isso sempre precisamos indicar quais funções são testes."
 
 #: src/ch11-01-writing-tests.md
 msgid "The example function body uses the `assert_eq!` macro to assert that `result`, which contains the result of calling `add` with 2 and 2, equals 4. This assertion serves as an example of the format for a typical test. Let’s run it to see that this test passes."
-msgstr ""
+msgstr "O corpo da função de exemplo usa a macro `assert_eq!` para verificar que `result`, que contém o resultado de chamar `add` com 2 e 2, é igual a 4. Essa asserção serve de exemplo do formato de um teste típico. Vamos executá-lo para ver que esse teste passa."
 
 #: src/ch11-01-writing-tests.md
 msgid "The `cargo test` command runs all tests in our project, as shown in Listing 11-2."
-msgstr ""
+msgstr "O comando `cargo test` executa todos os testes do nosso projeto, como mostrado na Listagem 11-2."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-2\" caption=\"The output from running the automatically generated test\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-2\" caption=\"A saída da execução do teste gerado automaticamente\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10492,32 +10492,32 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Cargo compiled and ran the test. We see the line `running 1 test`. The next line shows the name of the generated test function, called `tests::it_works`, and that the result of running that test is `ok`. The overall summary `test result: ok.` means that all the tests passed, and the portion that reads `1 passed; 0 failed` totals the number of tests that passed or failed."
-msgstr ""
+msgstr "O Cargo compilou e executou o teste. Vemos a linha `running 1 test`. A linha seguinte mostra o nome da função de teste gerada, chamada `tests::it_works`, e que o resultado da execução desse teste é `ok`. O resumo geral `test result: ok.` significa que todos os testes passaram, e o trecho que diz `1 passed; 0 failed` totaliza o número de testes que passaram ou falharam."
 
 #: src/ch11-01-writing-tests.md
 msgid "It’s possible to mark a test as ignored so that it doesn’t run in a particular instance; we’ll cover that in the [“Ignoring Tests Unless Specifically Requested”](ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested)<!-- ignore --> section later in this chapter. Because we haven’t done that here, the summary shows `0 ignored`. We can also pass an argument to the `cargo test` command to run only tests whose name matches a string; this is called _filtering_, and we’ll cover it in the [“Running a Subset of Tests by Name”](ch11-02-running-tests.html#running-a-subset-of-tests-by-name)<!-- ignore --> section. Here, we haven’t filtered the tests being run, so the end of the summary shows `0 filtered out`."
-msgstr ""
+msgstr "É possível marcar um teste como ignorado para que ele não seja executado em um caso específico; vamos ver isso na seção [“Ignorando testes a menos que sejam solicitados especificamente”](ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested)<!-- ignore --> mais adiante neste capítulo. Como não fizemos isso aqui, o resumo mostra `0 ignored`. Também podemos passar um argumento para o comando `cargo test` para executar somente os testes cujo nome corresponda a uma string; isso é chamado de _filtragem_, e vamos abordá-la na seção [“Executando um subconjunto de testes pelo nome”](ch11-02-running-tests.html#running-a-subset-of-tests-by-name)<!-- ignore -->. Aqui, não filtramos os testes executados, então o final do resumo mostra `0 filtered out`."
 
 #: src/ch11-01-writing-tests.md
 msgid "The `0 measured` statistic is for benchmark tests that measure performance. Benchmark tests are, as of this writing, only available in nightly Rust. See [the documentation about benchmark tests](../unstable-book/library-features/test.html) to learn more."
-msgstr ""
+msgstr "A estatística `0 measured` é para testes de benchmark, que medem o desempenho. Os testes de benchmark são, no momento em que escrevemos este texto, disponíveis apenas no Rust nightly. Veja [a documentação sobre testes de benchmark](../unstable-book/library-features/test.html) para saber mais."
 
 #: src/ch11-01-writing-tests.md
 msgid "The next part of the test output starting at `Doc-tests adder` is for the results of any documentation tests. We don’t have any documentation tests yet, but Rust can compile any code examples that appear in our API documentation. This feature helps keep your docs and your code in sync! We’ll discuss how to write documentation tests in the [“Documentation Comments as Tests”](ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests)<!-- ignore --> section of Chapter 14. For now, we’ll ignore the `Doc-tests` output."
-msgstr ""
+msgstr "A próxima parte da saída do teste, começando em `Doc-tests adder`, traz os resultados de quaisquer testes de documentação. Ainda não temos testes de documentação, mas o Rust consegue compilar quaisquer exemplos de código que aparecem na documentação da nossa API. Esse recurso ajuda a manter sua documentação e seu código sincronizados! Vamos discutir como escrever testes de documentação na seção [“Comentários de documentação como testes”](ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests)<!-- ignore --> do Capítulo 14. Por enquanto, vamos ignorar a saída de `Doc-tests`."
 
 #: src/ch11-01-writing-tests.md
 msgid "Let’s start to customize the test to our own needs. First, change the name of the `it_works` function to a different name, such as `exploration`, like so:"
-msgstr ""
+msgstr "Vamos começar a personalizar o teste de acordo com as nossas necessidades. Primeiro, mude o nome da função `it_works` para outro nome, como `exploration`, assim:"
 
 #: src/ch11-01-writing-tests.md src/ch11-02-running-tests.md
 #: src/ch11-03-test-organization.md
 msgid "<span class=\"filename\">Filename: src/lib.rs</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: src/lib.rs</span>"
 
 #: src/ch11-01-writing-tests.md
 msgid "Then, run `cargo test` again. The output now shows `exploration` instead of `it_works`:"
-msgstr ""
+msgstr "Em seguida, execute `cargo test` novamente. A saída agora mostra `exploration` em vez de `it_works`:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10543,11 +10543,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Now we’ll add another test, but this time we’ll make a test that fails! Tests fail when something in the test function panics. Each test is run in a new thread, and when the main thread sees that a test thread has died, the test is marked as failed. In Chapter 9, we talked about how the simplest way to panic is to call the `panic!` macro. Enter the new test as a function named `another`, so your _src/lib.rs_ file looks like Listing 11-3."
-msgstr ""
+msgstr "Agora vamos adicionar outro teste, mas desta vez vamos criar um teste que falha! Os testes falham quando algo na função de teste entra em pânico. Cada teste é executado em uma nova thread e, quando a thread principal percebe que a thread de um teste terminou de forma inesperada, o teste é marcado como falho. No Capítulo 9, falamos sobre como a forma mais simples de entrar em pânico é chamar a macro `panic!`. Insira o novo teste como uma função chamada `another`, para que o seu arquivo _src/lib.rs_ fique como na Listagem 11-3."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-3\" file-name=\"src/lib.rs\" caption=\"Adding a second test that will fail because we call the `panic!` macro\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-3\" file-name=\"src/lib.rs\" caption=\"Adicionando um segundo teste que vai falhar porque chamamos a macro `panic!`\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "\"Make this test fail\""
@@ -10555,11 +10555,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Run the tests again using `cargo test`. The output should look like Listing 11-4, which shows that our `exploration` test passed and `another` failed."
-msgstr ""
+msgstr "Execute os testes novamente usando `cargo test`. A saída deve ficar como a da Listagem 11-4, que mostra que nosso teste `exploration` passou e que `another` falhou."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-4\" caption=\"Test results when one test passes and one test fails\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-4\" caption=\"Resultados dos testes quando um teste passa e outro falha\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10601,15 +10601,15 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Instead of `ok`, the line `test tests::another` shows `FAILED`. Two new sections appear between the individual results and the summary: The first displays the detailed reason for each test failure. In this case, we get the details that `tests::another` failed because it panicked with the message `Make this test fail` on line 17 in the _src/lib.rs_ file. The next section lists just the names of all the failing tests, which is useful when there are lots of tests and lots of detailed failing test output. We can use the name of a failing test to run just that test to debug it more easily; we’ll talk more about ways to run tests in the [“Controlling How Tests Are Run”](ch11-02-running-tests.html#controlling-how-tests-are-run)<!-- ignore --> section."
-msgstr ""
+msgstr "Em vez de `ok`, a linha `test tests::another` mostra `FAILED`. Duas novas seções aparecem entre os resultados individuais e o resumo: a primeira exibe o motivo detalhado de cada falha de teste. Neste caso, obtemos os detalhes de que `tests::another` falhou porque entrou em pânico com a mensagem `Make this test fail` na linha 17 do arquivo _src/lib.rs_. A seção seguinte lista apenas os nomes de todos os testes que falharam, o que é útil quando há muitos testes e muita saída detalhada de falhas. Podemos usar o nome de um teste que falhou para executar somente esse teste e depurá-lo com mais facilidade; vamos falar mais sobre as formas de executar testes na seção [“Controlando como os testes são executados”](ch11-02-running-tests.html#controlling-how-tests-are-run)<!-- ignore -->."
 
 #: src/ch11-01-writing-tests.md
 msgid "The summary line displays at the end: Overall, our test result is `FAILED`. We had one test pass and one test fail."
-msgstr ""
+msgstr "A linha de resumo aparece no final: no geral, o resultado dos nossos testes é `FAILED`. Tivemos um teste que passou e um que falhou."
 
 #: src/ch11-01-writing-tests.md
 msgid "Now that you’ve seen what the test results look like in different scenarios, let’s look at some macros other than `panic!` that are useful in tests."
-msgstr ""
+msgstr "Agora que você viu como são os resultados dos testes em diferentes cenários, vamos conhecer algumas macros além de `panic!` que são úteis em testes."
 
 #: src/ch11-01-writing-tests.md
 msgid "<a id=\"checking-results-with-the-assert-macro\"></a>"
@@ -10617,35 +10617,35 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Checking Results with `assert!`"
-msgstr ""
+msgstr "Verificando resultados com `assert!` {#checking-results-with-assert}"
 
 #: src/ch11-01-writing-tests.md
 msgid "The `assert!` macro, provided by the standard library, is useful when you want to ensure that some condition in a test evaluates to `true`. We give the `assert!` macro an argument that evaluates to a Boolean. If the value is `true`, nothing happens and the test passes. If the value is `false`, the `assert!` macro calls `panic!` to cause the test to fail. Using the `assert!` macro helps us check that our code is functioning in the way we intend."
-msgstr ""
+msgstr "A macro `assert!`, fornecida pela biblioteca padrão, é útil quando você quer garantir que alguma condição em um teste seja avaliada como `true`. Passamos para a macro `assert!` um argumento que é avaliado como um booleano. Se o valor for `true`, nada acontece e o teste passa. Se o valor for `false`, a macro `assert!` chama `panic!` para fazer o teste falhar. Usar a macro `assert!` nos ajuda a verificar se nosso código está funcionando da maneira que pretendemos."
 
 #: src/ch11-01-writing-tests.md
 msgid "In Chapter 5, Listing 5-15, we used a `Rectangle` struct and a `can_hold` method, which are repeated here in Listing 11-5. Let’s put this code in the _src/lib.rs_ file, then write some tests for it using the `assert!` macro."
-msgstr ""
+msgstr "No Capítulo 5, Listagem 5-15, usamos um struct `Rectangle` e um método `can_hold`, que são repetidos aqui na Listagem 11-5. Vamos colocar esse código no arquivo _src/lib.rs_ e, em seguida, escrever alguns testes para ele usando a macro `assert!`."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-5\" file-name=\"src/lib.rs\" caption=\"The `Rectangle` struct and its `can_hold` method from Chapter 5\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-5\" file-name=\"src/lib.rs\" caption=\"O struct `Rectangle` e o seu método `can_hold` do Capítulo 5\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "The `can_hold` method returns a Boolean, which means it’s a perfect use case for the `assert!` macro. In Listing 11-6, we write a test that exercises the `can_hold` method by creating a `Rectangle` instance that has a width of 8 and a height of 7 and asserting that it can hold another `Rectangle` instance that has a width of 5 and a height of 1."
-msgstr ""
+msgstr "O método `can_hold` retorna um booleano, o que significa que ele é um caso de uso perfeito para a macro `assert!`. Na Listagem 11-6, escrevemos um teste que exercita o método `can_hold` criando uma instância de `Rectangle` que tem largura 8 e altura 7 e verificando que ela pode conter outra instância de `Rectangle` que tem largura 5 e altura 1."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-6\" file-name=\"src/lib.rs\" caption=\"A test for `can_hold` that checks whether a larger rectangle can indeed hold a smaller rectangle\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-6\" file-name=\"src/lib.rs\" caption=\"Um teste para `can_hold` que verifica se um retângulo maior realmente pode conter um retângulo menor\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "Note the `use super::*;` line inside the `tests` module. The `tests` module is a regular module that follows the usual visibility rules we covered in Chapter 7 in the [“Paths for Referring to an Item in the Module Tree”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> section. Because the `tests` module is an inner module, we need to bring the code under test in the outer module into the scope of the inner module. We use a glob here, so anything we define in the outer module is available to this `tests` module."
-msgstr ""
+msgstr "Observe a linha `use super::*;` dentro do módulo `tests`. O módulo `tests` é um módulo comum que segue as regras usuais de visibilidade que vimos no Capítulo 7, na seção [“Caminhos para referenciar um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore -->. Como o módulo `tests` é um módulo interno, precisamos trazer para o escopo do módulo interno o código sob teste que está no módulo externo. Usamos um glob aqui, então tudo o que definirmos no módulo externo fica disponível para este módulo `tests`."
 
 #: src/ch11-01-writing-tests.md
 msgid "We’ve named our test `larger_can_hold_smaller`, and we’ve created the two `Rectangle` instances that we need. Then, we called the `assert!` macro and passed it the result of calling `larger.can_hold(&smaller)`. This expression is supposed to return `true`, so our test should pass. Let’s find out!"
-msgstr ""
+msgstr "Nomeamos nosso teste `larger_can_hold_smaller` e criamos as duas instâncias de `Rectangle` de que precisamos. Depois, chamamos a macro `assert!` e passamos a ela o resultado da chamada de `larger.can_hold(&smaller)`. Essa expressão deve retornar `true`, então nosso teste deve passar. Vamos descobrir!"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10671,11 +10671,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "It does pass! Let’s add another test, this time asserting that a smaller rectangle cannot hold a larger rectangle:"
-msgstr ""
+msgstr "Ele realmente passa! Vamos adicionar outro teste, desta vez verificando que um retângulo menor não pode conter um retângulo maior:"
 
 #: src/ch11-01-writing-tests.md
 msgid "Because the correct result of the `can_hold` function in this case is `false`, we need to negate that result before we pass it to the `assert!` macro. As a result, our test will pass if `can_hold` returns `false`:"
-msgstr ""
+msgstr "Como o resultado correto da função `can_hold` neste caso é `false`, precisamos negar esse resultado antes de passá-lo para a macro `assert!`. Assim, nosso teste vai passar se `can_hold` retornar `false`:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10702,11 +10702,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Two tests that pass! Now let’s see what happens to our test results when we introduce a bug in our code. We’ll change the implementation of the `can_hold` method by replacing the greater-than sign (`>`) with a less-than sign (`<`) when it compares the widths:"
-msgstr ""
+msgstr "Dois testes que passam! Agora vamos ver o que acontece com os resultados dos nossos testes quando introduzimos um bug no nosso código. Vamos mudar a implementação do método `can_hold`, substituindo o sinal de maior que (`>`) por um sinal de menor que (`<`) quando ele compara as larguras:"
 
 #: src/ch11-01-writing-tests.md
 msgid "Running the tests now produces the following:"
-msgstr ""
+msgstr "Executar os testes agora produz o seguinte:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10740,7 +10740,7 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Our tests caught the bug! Because `larger.width` is `8` and `smaller.width` is `5`, the comparison of the widths in `can_hold` now returns `false`: 8 is not less than 5."
-msgstr ""
+msgstr "Nossos testes detectaram o bug! Como `larger.width` é `8` e `smaller.width` é `5`, a comparação das larguras em `can_hold` agora retorna `false`: 8 não é menor que 5."
 
 #: src/ch11-01-writing-tests.md
 msgid "<a id=\"testing-equality-with-the-assert_eq-and-assert_ne-macros\"></a>"
@@ -10748,23 +10748,23 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Testing Equality with `assert_eq!` and `assert_ne!`"
-msgstr ""
+msgstr "Testando igualdade com `assert_eq!` e `assert_ne!` {#testing-equality-with-assert_eq-and-assert_ne}"
 
 #: src/ch11-01-writing-tests.md
 msgid "A common way to verify functionality is to test for equality between the result of the code under test and the value you expect the code to return. You could do this by using the `assert!` macro and passing it an expression using the `==` operator. However, this is such a common test that the standard library provides a pair of macros—`assert_eq!` and `assert_ne!`—to perform this test more conveniently. These macros compare two arguments for equality or inequality, respectively. They’ll also print the two values if the assertion fails, which makes it easier to see _why_ the test failed; conversely, the `assert!` macro only indicates that it got a `false` value for the `==` expression, without printing the values that led to the `false` value."
-msgstr ""
+msgstr "Uma forma comum de verificar a funcionalidade é testar a igualdade entre o resultado do código sob teste e o valor que você espera que o código retorne. Você poderia fazer isso usando a macro `assert!` e passando para ela uma expressão com o operador `==`. No entanto, esse é um teste tão comum que a biblioteca padrão oferece um par de macros—`assert_eq!` e `assert_ne!`—para executar esse teste de forma mais conveniente. Essas macros comparam dois argumentos quanto à igualdade ou à desigualdade, respectivamente. Elas também imprimem os dois valores se a asserção falhar, o que facilita ver _por que_ o teste falhou; por outro lado, a macro `assert!` apenas indica que recebeu um valor `false` para a expressão `==`, sem imprimir os valores que levaram a esse valor `false`."
 
 #: src/ch11-01-writing-tests.md
 msgid "In Listing 11-7, we write a function named `add_two` that adds `2` to its parameter, and then we test this function using the `assert_eq!` macro."
-msgstr ""
+msgstr "Na Listagem 11-7, escrevemos uma função chamada `add_two` que soma `2` ao seu parâmetro e, em seguida, testamos essa função usando a macro `assert_eq!`."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-7\" file-name=\"src/lib.rs\" caption=\"Testing the function `add_two` using the `assert_eq!` macro\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-7\" file-name=\"src/lib.rs\" caption=\"Testando a função `add_two` usando a macro `assert_eq!`\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "Let’s check that it passes!"
-msgstr ""
+msgstr "Vamos verificar se ele passa!"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10790,15 +10790,15 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "We create a variable named `result` that holds the result of calling `add_two(2)`. Then, we pass `result` and `4` as the arguments to the `assert_eq!` macro. The output line for this test is `test tests::it_adds_two ... ok`, and the `ok` text indicates that our test passed!"
-msgstr ""
+msgstr "Criamos uma variável chamada `result` que armazena o resultado da chamada de `add_two(2)`. Depois, passamos `result` e `4` como argumentos para a macro `assert_eq!`. A linha de saída desse teste é `test tests::it_adds_two ... ok`, e o texto `ok` indica que nosso teste passou!"
 
 #: src/ch11-01-writing-tests.md
 msgid "Let’s introduce a bug into our code to see what `assert_eq!` looks like when it fails. Change the implementation of the `add_two` function to instead add `3`:"
-msgstr ""
+msgstr "Vamos introduzir um bug no nosso código para ver como é o `assert_eq!` quando ele falha. Mude a implementação da função `add_two` para somar `3`:"
 
 #: src/ch11-01-writing-tests.md
 msgid "Run the tests again:"
-msgstr ""
+msgstr "Execute os testes novamente:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10833,33 +10833,35 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Our test caught the bug! The `tests::it_adds_two` test failed, and the message tells us that the assertion that failed was `left == right` and what the `left` and `right` values are. This message helps us start debugging: The `left` argument, where we had the result of calling `add_two(2)`, was `5`, but the `right` argument was `4`. You can imagine that this would be especially helpful when we have a lot of tests going on."
-msgstr ""
+msgstr "Nosso teste detectou o bug! O teste `tests::it_adds_two` falhou, e a mensagem nos diz que a asserção que falhou foi `left == right` e quais são os valores de `left` e `right`. Essa mensagem ajuda a começar a depurar: o argumento `left`, onde tínhamos o resultado da chamada de `add_two(2)`, era `5`, mas o argumento `right` era `4`. Dá para imaginar como isso seria especialmente útil quando temos muitos testes em andamento."
 
 #: src/ch11-01-writing-tests.md
 msgid "Note that in some languages and test frameworks, the parameters to equality assertion functions are called `expected` and `actual`, and the order in which we specify the arguments matters. However, in Rust, they’re called `left` and `right`, and the order in which we specify the value we expect and the value the code produces doesn’t matter. We could write the assertion in this test as `assert_eq!(4, result)`, which would result in the same failure message that displays ``assertion `left == right` failed``."
-msgstr ""
+msgstr "Observe que, em algumas linguagens e frameworks de teste, os parâmetros das funções de asserção de igualdade são chamados de `expected` e `actual`, e a ordem em que especificamos os argumentos importa. No entanto, no Rust eles são chamados de `left` e `right`, e a ordem em que especificamos o valor que esperamos e o valor produzido pelo código não importa. Poderíamos escrever a asserção deste teste como `assert_eq!(4, result)`, o que resultaria na mesma mensagem de falha, que exibe ``assertion `left == right` failed``."
 
 #: src/ch11-01-writing-tests.md
 msgid "The `assert_ne!` macro will pass if the two values we give it are not equal and will fail if they are equal. This macro is most useful for cases when we’re not sure what a value _will_ be, but we know what the value definitely _shouldn’t_ be. For example, if we’re testing a function that is guaranteed to change its input in some way, but the way in which the input is changed depends on the day of the week that we run our tests, the best thing to assert might be that the output of the function is not equal to the input."
-msgstr ""
+msgstr "A macro `assert_ne!` passa se os dois valores que damos a ela não forem iguais e falha se forem iguais. Essa macro é mais útil nos casos em que não temos certeza de qual _será_ o valor, mas sabemos qual valor definitivamente _não deveria_ ser. Por exemplo, se estivermos testando uma função que tem a garantia de alterar sua entrada de alguma forma, mas a maneira como a entrada é alterada depende do dia da semana em que executamos os testes, a melhor coisa a verificar pode ser que a saída da função não seja igual à entrada."
 
 #: src/ch11-01-writing-tests.md
 msgid "Under the surface, the `assert_eq!` and `assert_ne!` macros use the operators `==` and `!=`, respectively. When the assertions fail, these macros print their arguments using debug formatting, which means the values being compared must implement the `PartialEq` and `Debug` traits. All primitive types and most of the standard library types implement these traits. For structs and enums that you define yourself, you’ll need to implement `PartialEq` to assert equality of those types. You’ll also need to implement `Debug` to print the values when the assertion fails. Because both traits are derivable traits, as mentioned in Listing 5-12 in Chapter 5, this is usually as straightforward as adding the `#[derive(PartialEq, Debug)]` annotation to your struct or enum definition. See Appendix C, [“Derivable Traits,”](appendix-03-derivable-traits.html)<!-- ignore --> for more details about these and other derivable traits."
-msgstr ""
+msgstr "Por baixo dos panos, as macros `assert_eq!` e `assert_ne!` usam os operadores `==` e `!=`, respectivamente. Quando as asserções falham, essas macros imprimem seus argumentos usando formatação de depuração, o que significa que os valores comparados precisam implementar os traits `PartialEq` e `Debug`. Todos os tipos primitivos e a maioria dos tipos da biblioteca padrão implementam esses traits. Para structs e enums que você mesmo define, você vai precisar implementar `PartialEq` para verificar a igualdade desses tipos. Você também vai precisar implementar `Debug` para imprimir os valores quando a asserção falhar. Como ambos os traits são traits deriváveis, como mencionado na Listagem 5-12 do Capítulo 5, isso geralmente é tão simples quanto adicionar a anotação `#[derive(PartialEq, Debug)]` à definição do seu struct ou enum. Veja o Apêndice C, [“Traits deriváveis”](appendix-03-derivable-traits.html)<!-- ignore -->, para mais detalhes sobre esses e outros traits deriváveis."
 
 #: src/ch11-01-writing-tests.md
 msgid "Adding Custom Failure Messages"
-msgstr ""
+msgstr "Adicionando mensagens de falha personalizadas {#adding-custom-failure-messages}"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
 "You can also add a custom message to be printed with the failure message as optional arguments to the `assert!`, `assert_eq!`, and `assert_ne!` macros. Any arguments specified after the required arguments are passed along to the `format!` macro (discussed in [“Concatenating with `+` or `format!`”](ch08-02-strings.html#concatenating-with--or-format)<!--\n"
 "ignore --> in Chapter 8), so you can pass a format string that contains `{}` placeholders and values to go in those placeholders. Custom messages are useful for documenting what an assertion means; when a test fails, you’ll have a better idea of what the problem is with the code."
 msgstr ""
+"Você também pode adicionar uma mensagem personalizada, a ser impressa junto com a mensagem de falha, como argumentos opcionais das macros `assert!`, `assert_eq!` e `assert_ne!`. Quaisquer argumentos especificados depois dos argumentos obrigatórios são repassados para a macro `format!` (discutida em [“Concatenando com `+` ou `format!`”](ch08-02-strings.html#concatenating-with--or-format)<!--\n"
+"ignore --> no Capítulo 8), então você pode passar uma string de formato que contém espaços reservados `{}` e os valores que vão nesses espaços reservados. Mensagens personalizadas são úteis para documentar o que uma asserção significa; quando um teste falha, você terá uma ideia melhor do problema no código."
 
 #: src/ch11-01-writing-tests.md
 msgid "For example, let’s say we have a function that greets people by name and we want to test that the name we pass into the function appears in the output:"
-msgstr ""
+msgstr "Por exemplo, digamos que temos uma função que cumprimenta as pessoas pelo nome e queremos testar se o nome que passamos para a função aparece na saída:"
 
 #: src/ch11-01-writing-tests.md
 msgid "\"Hello {name}!\""
@@ -10871,11 +10873,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "The requirements for this program haven’t been agreed upon yet, and we’re pretty sure the `Hello` text at the beginning of the greeting will change. We decided we don’t want to have to update the test when the requirements change, so instead of checking for exact equality to the value returned from the `greeting` function, we’ll just assert that the output contains the text of the input parameter."
-msgstr ""
+msgstr "Os requisitos deste programa ainda não foram definidos, e temos bastante certeza de que o texto `Hello` no início da saudação vai mudar. Decidimos que não queremos ter de atualizar o teste quando os requisitos mudarem; então, em vez de verificar a igualdade exata com o valor retornado pela função `greeting`, vamos apenas verificar que a saída contém o texto do parâmetro de entrada."
 
 #: src/ch11-01-writing-tests.md
 msgid "Now let’s introduce a bug into this code by changing `greeting` to exclude `name` to see what the default test failure looks like:"
-msgstr ""
+msgstr "Agora vamos introduzir um bug neste código, alterando `greeting` para não incluir `name`, para ver como é a falha padrão do teste:"
 
 #: src/ch11-01-writing-tests.md src/ch19-03-pattern-syntax.md
 msgid "\"Hello!\""
@@ -10883,7 +10885,7 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Running this test produces the following:"
-msgstr ""
+msgstr "Executar este teste produz o seguinte:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10916,7 +10918,7 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "This result just indicates that the assertion failed and which line the assertion is on. A more useful failure message would print the value from the `greeting` function. Let’s add a custom failure message composed of a format string with a placeholder filled in with the actual value we got from the `greeting` function:"
-msgstr ""
+msgstr "Esse resultado apenas indica que a asserção falhou e em qual linha ela está. Uma mensagem de falha mais útil imprimiria o valor obtido da função `greeting`. Vamos adicionar uma mensagem de falha personalizada, composta de uma string de formato com um espaço reservado preenchido com o valor real que obtivemos da função `greeting`:"
 
 #: src/ch11-01-writing-tests.md
 msgid "\"Greeting did not contain name, value was `{result}`\""
@@ -10924,7 +10926,7 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Now when we run the test, we’ll get a more informative error message:"
-msgstr ""
+msgstr "Agora, quando executarmos o teste, teremos uma mensagem de erro mais informativa:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -10957,31 +10959,31 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "We can see the value we actually got in the test output, which would help us debug what happened instead of what we were expecting to happen."
-msgstr ""
+msgstr "Podemos ver o valor que realmente obtivemos na saída do teste, o que nos ajudaria a depurar o que aconteceu, em vez do que esperávamos que acontecesse."
 
 #: src/ch11-01-writing-tests.md
 msgid "Checking for Panics with `should_panic`"
-msgstr ""
+msgstr "Verificando pânicos com `should_panic` {#checking-for-panics-with-should_panic}"
 
 #: src/ch11-01-writing-tests.md
 msgid "In addition to checking return values, it’s important to check that our code handles error conditions as we expect. For example, consider the `Guess` type that we created in Chapter 9, Listing 9-13. Other code that uses `Guess` depends on the guarantee that `Guess` instances will contain only values between 1 and 100. We can write a test that ensures that attempting to create a `Guess` instance with a value outside that range panics."
-msgstr ""
+msgstr "Além de verificar valores de retorno, é importante checar se o nosso código trata as condições de erro como esperamos. Por exemplo, considere o tipo `Guess` que criamos no Capítulo 9, Listagem 9-13. Outros códigos que usam `Guess` dependem da garantia de que as instâncias de `Guess` vão conter apenas valores entre 1 e 100. Podemos escrever um teste que garanta que a tentativa de criar uma instância de `Guess` com um valor fora desse intervalo entre em pânico."
 
 #: src/ch11-01-writing-tests.md
 msgid "We do this by adding the attribute `should_panic` to our test function. The test passes if the code inside the function panics; the test fails if the code inside the function doesn’t panic."
-msgstr ""
+msgstr "Fazemos isso adicionando o atributo `should_panic` à nossa função de teste. O teste passa se o código dentro da função entra em pânico; o teste falha se o código dentro da função não entra em pânico."
 
 #: src/ch11-01-writing-tests.md
 msgid "Listing 11-8 shows a test that checks that the error conditions of `Guess::new` happen when we expect them to."
-msgstr ""
+msgstr "A Listagem 11-8 mostra um teste que verifica se as condições de erro de `Guess::new` ocorrem quando esperamos que ocorram."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-8\" file-name=\"src/lib.rs\" caption=\"Testing that a condition will cause a `panic!`\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-8\" file-name=\"src/lib.rs\" caption=\"Testando se uma condição causa um `panic!`\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "We place the `#[should_panic]` attribute after the `#[test]` attribute and before the test function it applies to. Let’s look at the result when this test passes:"
-msgstr ""
+msgstr "Colocamos o atributo `#[should_panic]` depois do atributo `#[test]` e antes da função de teste à qual ele se aplica. Vamos ver o resultado quando este teste passa:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -11007,11 +11009,11 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "Looks good! Now let’s introduce a bug in our code by removing the condition that the `new` function will panic if the value is greater than 100:"
-msgstr ""
+msgstr "Parece bom! Agora vamos introduzir um bug no nosso código removendo a condição que faz a função `new` entrar em pânico se o valor for maior que 100:"
 
 #: src/ch11-01-writing-tests.md
 msgid "When we run the test in Listing 11-8, it will fail:"
-msgstr ""
+msgstr "Quando executamos o teste da Listagem 11-8, ele vai falhar:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -11040,15 +11042,15 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "We don’t get a very helpful message in this case, but when we look at the test function, we see that it’s annotated with `#[should_panic]`. The failure we got means that the code in the test function did not cause a panic."
-msgstr ""
+msgstr "Nesse caso, não recebemos uma mensagem muito útil, mas, ao olharmos a função de teste, vemos que ela está anotada com `#[should_panic]`. A falha que obtivemos significa que o código da função de teste não causou um pânico."
 
 #: src/ch11-01-writing-tests.md
 msgid "Tests that use `should_panic` can be imprecise. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting. To make `should_panic` tests more precise, we can add an optional `expected` parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text. For example, consider the modified code for `Guess` in Listing 11-9 where the `new` function panics with different messages depending on whether the value is too small or too large."
-msgstr ""
+msgstr "Testes que usam `should_panic` podem ser imprecisos. Um teste `should_panic` passaria mesmo que o teste entrasse em pânico por um motivo diferente daquele que esperávamos. Para tornar os testes `should_panic` mais precisos, podemos adicionar um parâmetro opcional `expected` ao atributo `should_panic`. O executor de testes vai garantir que a mensagem de falha contenha o texto fornecido. Por exemplo, considere o código modificado de `Guess` na Listagem 11-9, em que a função `new` entra em pânico com mensagens diferentes, dependendo de o valor ser pequeno ou grande demais."
 
 #: src/ch11-01-writing-tests.md
 msgid "<Listing number=\"11-9\" file-name=\"src/lib.rs\" caption=\"Testing for a `panic!` with a panic message containing a specified substring\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-9\" file-name=\"src/lib.rs\" caption=\"Testando um `panic!` com uma mensagem de pânico contendo uma substring especificada\">\n"
 
 #: src/ch11-01-writing-tests.md
 msgid "\"Guess value must be greater than or equal to 1, got {value}.\""
@@ -11064,15 +11066,15 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "This test will pass because the value we put in the `should_panic` attribute’s `expected` parameter is a substring of the message that the `Guess::new` function panics with. We could have specified the entire panic message that we expect, which in this case would be `Guess value must be less than or equal to 100, got 200`. What you choose to specify depends on how much of the panic message is unique or dynamic and how precise you want your test to be. In this case, a substring of the panic message is enough to ensure that the code in the test function executes the `else if value > 100` case."
-msgstr ""
+msgstr "Este teste vai passar porque o valor que colocamos no parâmetro `expected` do atributo `should_panic` é uma substring da mensagem com que a função `Guess::new` entra em pânico. Poderíamos ter especificado a mensagem de pânico inteira que esperamos, que, neste caso, seria `Guess value must be less than or equal to 100, got 200`. O que você escolhe especificar depende de quanto da mensagem de pânico é único ou dinâmico e de quão preciso você quer que o seu teste seja. Neste caso, uma substring da mensagem de pânico basta para garantir que o código da função de teste execute o caso `else if value > 100`."
 
 #: src/ch11-01-writing-tests.md
 msgid "To see what happens when a `should_panic` test with an `expected` message fails, let’s again introduce a bug into our code by swapping the bodies of the `if value < 1` and the `else if value > 100` blocks:"
-msgstr ""
+msgstr "Para ver o que acontece quando um teste `should_panic` com uma mensagem `expected` falha, vamos introduzir novamente um bug no nosso código trocando os corpos dos blocos `if value < 1` e `else if value > 100`:"
 
 #: src/ch11-01-writing-tests.md
 msgid "This time when we run the `should_panic` test, it will fail:"
-msgstr ""
+msgstr "Desta vez, quando executarmos o teste `should_panic`, ele vai falhar:"
 
 #: src/ch11-01-writing-tests.md
 msgid ""
@@ -11107,15 +11109,15 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "The failure message indicates that this test did indeed panic as we expected, but the panic message did not include the expected string `less than or equal to 100`. The panic message that we did get in this case was `Guess value must be greater than or equal to 1, got 200`. Now we can start figuring out where our bug is!"
-msgstr ""
+msgstr "A mensagem de falha indica que esse teste de fato entrou em pânico, como esperávamos, mas a mensagem de pânico não incluía a string esperada `less than or equal to 100`. A mensagem de pânico que obtivemos neste caso foi `Guess value must be greater than or equal to 1, got 200`. Agora podemos começar a descobrir onde está o nosso bug!"
 
 #: src/ch11-01-writing-tests.md
 msgid "Using `Result<T, E>` in Tests"
-msgstr ""
+msgstr "Usando `Result<T, E>` em testes {#using-resultt-e-in-tests}"
 
 #: src/ch11-01-writing-tests.md
 msgid "All of our tests so far panic when they fail. We can also write tests that use `Result<T, E>`! Here’s the test from Listing 11-1, rewritten to use `Result<T, E>` and return an `Err` instead of panicking:"
-msgstr ""
+msgstr "Até agora, todos os nossos testes entram em pânico quando falham. Também podemos escrever testes que usam `Result<T, E>`! Aqui está o teste da Listagem 11-1, reescrito para usar `Result<T, E>` e retornar um `Err` em vez de entrar em pânico:"
 
 #: src/ch11-01-writing-tests.md
 msgid "\"two plus two does not equal four\""
@@ -11123,63 +11125,63 @@ msgstr ""
 
 #: src/ch11-01-writing-tests.md
 msgid "The `it_works` function now has the `Result<(), String>` return type. In the body of the function, rather than calling the `assert_eq!` macro, we return `Ok(())` when the test passes and an `Err` with a `String` inside when the test fails."
-msgstr ""
+msgstr "A função `it_works` agora tem o tipo de retorno `Result<(), String>`. No corpo da função, em vez de chamar a macro `assert_eq!`, retornamos `Ok(())` quando o teste passa e um `Err` com uma `String` dentro quando o teste falha."
 
 #: src/ch11-01-writing-tests.md
 msgid "Writing tests so that they return a `Result<T, E>` enables you to use the question mark operator in the body of tests, which can be a convenient way to write tests that should fail if any operation within them returns an `Err` variant."
-msgstr ""
+msgstr "Escrever testes que retornam um `Result<T, E>` permite usar o operador ponto de interrogação no corpo dos testes, o que pode ser uma forma prática de escrever testes que devem falhar se qualquer operação dentro deles retornar uma variante `Err`."
 
 #: src/ch11-01-writing-tests.md
 msgid "You can’t use the `#[should_panic]` annotation on tests that use `Result<T, E>`. To assert that an operation returns an `Err` variant, _don’t_ use the question mark operator on the `Result<T, E>` value. Instead, use `assert!(value.is_err())`."
-msgstr ""
+msgstr "Você não pode usar a anotação `#[should_panic]` em testes que usam `Result<T, E>`. Para verificar se uma operação retorna a variante `Err`, _não_ use o operador ponto de interrogação sobre o valor `Result<T, E>`. Em vez disso, use `assert!(value.is_err())`."
 
 #: src/ch11-01-writing-tests.md
 msgid "Now that you know several ways to write tests, let’s look at what is happening when we run our tests and explore the different options we can use with `cargo test`."
-msgstr ""
+msgstr "Agora que você conhece várias formas de escrever testes, vamos ver o que acontece quando executamos nossos testes e explorar as diferentes opções que podemos usar com `cargo test`."
 
 #: src/ch11-02-running-tests.md
 msgid "Just as `cargo run` compiles your code and then runs the resultant binary, `cargo test` compiles your code in test mode and runs the resultant test binary. The default behavior of the binary produced by `cargo test` is to run all the tests in parallel and capture output generated during test runs, preventing the output from being displayed and making it easier to read the output related to the test results. You can, however, specify command line options to change this default behavior."
-msgstr ""
+msgstr "Assim como `cargo run` compila o seu código e depois executa o binário resultante, `cargo test` compila o seu código no modo de teste e executa o binário de teste resultante. O comportamento padrão do binário produzido por `cargo test` é executar todos os testes em paralelo e capturar a saída gerada durante as execuções dos testes, impedindo que essa saída seja exibida e facilitando a leitura da saída relacionada aos resultados dos testes. Você pode, porém, especificar opções de linha de comando para alterar esse comportamento padrão."
 
 #: src/ch11-02-running-tests.md
 msgid "Some command line options go to `cargo test`, and some go to the resultant test binary. To separate these two types of arguments, you list the arguments that go to `cargo test` followed by the separator `--` and then the ones that go to the test binary. Running `cargo test --help` displays the options you can use with `cargo test`, and running `cargo test -- --help` displays the options you can use after the separator. These options are also documented in [the “Tests” section of _The `rustc` Book_](https://doc.rust-lang.org/rustc/tests/index.html)."
-msgstr ""
+msgstr "Algumas opções de linha de comando vão para o `cargo test`, e outras vão para o binário de teste resultante. Para separar esses dois tipos de argumentos, você lista os argumentos que vão para o `cargo test`, seguidos do separador `--`, e depois os que vão para o binário de teste. Executar `cargo test --help` exibe as opções que você pode usar com o `cargo test`, e executar `cargo test -- --help` exibe as opções que você pode usar depois do separador. Essas opções também estão documentadas na [seção “Tests” de _The `rustc` Book_](https://doc.rust-lang.org/rustc/tests/index.html)."
 
 #: src/ch11-02-running-tests.md
 msgid "Running Tests in Parallel or Consecutively"
-msgstr ""
+msgstr "Executando testes em paralelo ou sequencialmente {#running-tests-in-parallel-or-consecutively}"
 
 #: src/ch11-02-running-tests.md
 msgid "When you run multiple tests, by default they run in parallel using threads, meaning they finish running more quickly and you get feedback sooner. Because the tests are running at the same time, you must make sure your tests don’t depend on each other or on any shared state, including a shared environment, such as the current working directory or environment variables."
-msgstr ""
+msgstr "Quando você executa vários testes, por padrão eles são executados em paralelo usando threads, o que significa que terminam mais rápido e você recebe um retorno mais cedo. Como os testes são executados ao mesmo tempo, você precisa garantir que eles não dependam uns dos outros nem de nenhum estado compartilhado, incluindo um ambiente compartilhado, como o diretório de trabalho atual ou as variáveis de ambiente."
 
 #: src/ch11-02-running-tests.md
 msgid "For example, say each of your tests runs some code that creates a file on disk named _test-output.txt_ and writes some data to that file. Then, each test reads the data in that file and asserts that the file contains a particular value, which is different in each test. Because the tests run at the same time, one test might overwrite the file in the time between when another test is writing and reading the file. The second test will then fail, not because the code is incorrect but because the tests have interfered with each other while running in parallel. One solution is to make sure each test writes to a different file; another solution is to run the tests one at a time."
-msgstr ""
+msgstr "Por exemplo, suponha que cada um dos seus testes execute um código que cria no disco um arquivo chamado _test-output.txt_ e escreve alguns dados nesse arquivo. Depois, cada teste lê os dados desse arquivo e verifica se ele contém um valor específico, que é diferente em cada teste. Como os testes são executados ao mesmo tempo, um teste pode sobrescrever o arquivo no intervalo entre o momento em que outro teste está escrevendo nele e o momento em que o lê. Nesse caso, o segundo teste vai falhar, não porque o código esteja incorreto, mas porque os testes interferiram uns nos outros durante a execução em paralelo. Uma solução é garantir que cada teste escreva em um arquivo diferente; outra solução é executar os testes um de cada vez."
 
 #: src/ch11-02-running-tests.md
 msgid "If you don’t want to run the tests in parallel or if you want more fine-grained control over the number of threads used, you can send the `--test-threads` flag and the number of threads you want to use to the test binary. Take a look at the following example:"
-msgstr ""
+msgstr "Se você não quiser executar os testes em paralelo ou se quiser um controle mais refinado sobre o número de threads usadas, pode passar a flag `--test-threads` e o número de threads que deseja usar para o binário de teste. Veja o exemplo a seguir:"
 
 #: src/ch11-02-running-tests.md
 msgid "We set the number of test threads to `1`, telling the program not to use any parallelism. Running the tests using one thread will take longer than running them in parallel, but the tests won’t interfere with each other if they share state."
-msgstr ""
+msgstr "Definimos o número de threads de teste como `1`, dizendo ao programa para não usar nenhum paralelismo. Executar os testes com uma thread vai levar mais tempo do que executá-los em paralelo, mas os testes não vão interferir uns nos outros se compartilharem estado."
 
 #: src/ch11-02-running-tests.md
 msgid "Showing Function Output"
-msgstr ""
+msgstr "Exibindo a saída de funções {#showing-function-output}"
 
 #: src/ch11-02-running-tests.md
 msgid "By default, if a test passes, Rust’s test library captures anything printed to standard output. For example, if we call `println!` in a test and the test passes, we won’t see the `println!` output in the terminal; we’ll see only the line that indicates the test passed. If a test fails, we’ll see whatever was printed to standard output with the rest of the failure message."
-msgstr ""
+msgstr "Por padrão, se um teste passa, a biblioteca de testes do Rust captura tudo o que for impresso na saída padrão. Por exemplo, se chamarmos `println!` em um teste e o teste passar, não veremos a saída do `println!` no terminal; veremos apenas a linha que indica que o teste passou. Se um teste falhar, veremos tudo o que foi impresso na saída padrão junto com o restante da mensagem de falha."
 
 #: src/ch11-02-running-tests.md
 msgid "As an example, Listing 11-10 has a silly function that prints the value of its parameter and returns 10, as well as a test that passes and a test that fails."
-msgstr ""
+msgstr "Como exemplo, a Listagem 11-10 tem uma função boba que imprime o valor do seu parâmetro e retorna 10, além de um teste que passa e um teste que falha."
 
 #: src/ch11-02-running-tests.md
 msgid "<Listing number=\"11-10\" file-name=\"src/lib.rs\" caption=\"Tests for a function that calls `println!`\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-10\" file-name=\"src/lib.rs\" caption=\"Testes para uma função que chama `println!`\">\n"
 
 #: src/ch11-02-running-tests.md
 msgid "\"I got the value {a}\""
@@ -11187,7 +11189,7 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "When we run these tests with `cargo test`, we’ll see the following output:"
-msgstr ""
+msgstr "Quando executamos esses testes com `cargo test`, vamos ver a seguinte saída:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11224,15 +11226,15 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "Note that nowhere in this output do we see `I got the value 4`, which is printed when the test that passes runs. That output has been captured. The output from the test that failed, `I got the value 8`, appears in the section of the test summary output, which also shows the cause of the test failure."
-msgstr ""
+msgstr "Observe que em nenhum lugar dessa saída vemos `I got the value 4`, que é impresso quando o teste que passa é executado. Essa saída foi capturada. A saída do teste que falhou, `I got the value 8`, aparece na seção do resumo da saída dos testes, que também mostra a causa da falha do teste."
 
 #: src/ch11-02-running-tests.md
 msgid "If we want to see printed values for passing tests as well, we can tell Rust to also show the output of successful tests with `--show-output`:"
-msgstr ""
+msgstr "Se quisermos ver os valores impressos também para os testes que passam, podemos pedir ao Rust que mostre também a saída dos testes bem-sucedidos com `--show-output`:"
 
 #: src/ch11-02-running-tests.md
 msgid "When we run the tests in Listing 11-10 again with the `--show-output` flag, we see the following output:"
-msgstr ""
+msgstr "Quando executamos novamente os testes da Listagem 11-10 com a flag `--show-output`, vemos a seguinte saída:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11278,23 +11280,23 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "Running a Subset of Tests by Name"
-msgstr ""
+msgstr "Executando um subconjunto de testes pelo nome {#running-a-subset-of-tests-by-name}"
 
 #: src/ch11-02-running-tests.md
 msgid "Running a full test suite can sometimes take a long time. If you’re working on code in a particular area, you might want to run only the tests pertaining to that code. You can choose which tests to run by passing `cargo test` the name or names of the test(s) you want to run as an argument."
-msgstr ""
+msgstr "Executar um conjunto completo de testes pode, às vezes, levar muito tempo. Se você estiver trabalhando em código de uma área específica, talvez queira executar apenas os testes relacionados a esse código. Você pode escolher quais testes executar passando para o `cargo test` o nome ou os nomes do(s) teste(s) que deseja executar como argumento."
 
 #: src/ch11-02-running-tests.md
 msgid "To demonstrate how to run a subset of tests, we’ll first create three tests for our `add_two` function, as shown in Listing 11-11, and choose which ones to run."
-msgstr ""
+msgstr "Para demonstrar como executar um subconjunto de testes, primeiro vamos criar três testes para a nossa função `add_two`, como mostrado na Listagem 11-11, e escolher quais deles executar."
 
 #: src/ch11-02-running-tests.md
 msgid "<Listing number=\"11-11\" file-name=\"src/lib.rs\" caption=\"Three tests with three different names\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-11\" file-name=\"src/lib.rs\" caption=\"Três testes com três nomes diferentes\">\n"
 
 #: src/ch11-02-running-tests.md
 msgid "If we run the tests without passing any arguments, as we saw earlier, all the tests will run in parallel:"
-msgstr ""
+msgstr "Se executarmos os testes sem passar nenhum argumento, como vimos antes, todos os testes vão ser executados em paralelo:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11322,11 +11324,11 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "Running Single Tests"
-msgstr ""
+msgstr "Executando testes individuais {#running-single-tests}"
 
 #: src/ch11-02-running-tests.md
 msgid "We can pass the name of any test function to `cargo test` to run only that test:"
-msgstr ""
+msgstr "Podemos passar o nome de qualquer função de teste para o `cargo test` para executar apenas esse teste:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11346,19 +11348,19 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "Only the test with the name `one_hundred` ran; the other two tests didn’t match that name. The test output lets us know we had more tests that didn’t run by displaying `2 filtered out` at the end."
-msgstr ""
+msgstr "Apenas o teste com o nome `one_hundred` foi executado; os outros dois testes não correspondiam a esse nome. A saída dos testes informa que tínhamos mais testes que não foram executados, exibindo `2 filtered out` no final."
 
 #: src/ch11-02-running-tests.md
 msgid "We can’t specify the names of multiple tests in this way; only the first value given to `cargo test` will be used. But there is a way to run multiple tests."
-msgstr ""
+msgstr "Não podemos especificar os nomes de vários testes dessa forma; apenas o primeiro valor passado para o `cargo test` será usado. Mas há uma maneira de executar vários testes."
 
 #: src/ch11-02-running-tests.md
 msgid "Filtering to Run Multiple Tests"
-msgstr ""
+msgstr "Filtrando para executar vários testes {#filtering-to-run-multiple-tests}"
 
 #: src/ch11-02-running-tests.md
 msgid "We can specify part of a test name, and any test whose name matches that value will be run. For example, because two of our tests’ names contain `add`, we can run those two by running `cargo test add`:"
-msgstr ""
+msgstr "Podemos especificar parte do nome de um teste, e qualquer teste cujo nome corresponda a esse valor será executado. Por exemplo, como os nomes de dois dos nossos testes contêm `add`, podemos executar esses dois testes com o comando `cargo test add`:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11379,7 +11381,7 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "This command ran all tests with `add` in the name and filtered out the test named `one_hundred`. Also note that the module in which a test appears becomes part of the test’s name, so we can run all the tests in a module by filtering on the module’s name."
-msgstr ""
+msgstr "Este comando executou todos os testes com `add` no nome e deixou de fora o teste chamado `one_hundred`. Observe também que o módulo em que um teste aparece passa a fazer parte do nome do teste; por isso, podemos executar todos os testes de um módulo filtrando pelo nome do módulo."
 
 #: src/ch11-02-running-tests.md
 msgid "<a id=\"ignoring-some-tests-unless-specifically-requested\"></a>"
@@ -11387,11 +11389,11 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "Ignoring Tests Unless Specifically Requested"
-msgstr ""
+msgstr "Ignorando testes a menos que sejam solicitados especificamente {#ignoring-tests-unless-specifically-requested}"
 
 #: src/ch11-02-running-tests.md
 msgid "Sometimes a few specific tests can be very time-consuming to execute, so you might want to exclude them during most runs of `cargo test`. Rather than listing as arguments all tests you do want to run, you can instead annotate the time-consuming tests using the `ignore` attribute to exclude them, as shown here:"
-msgstr ""
+msgstr "Às vezes, alguns testes específicos podem ser muito demorados para executar, então você pode querer excluí-los da maioria das execuções de `cargo test`. Em vez de listar como argumentos todos os testes que você quer executar, você pode anotar os testes demorados com o atributo `ignore` para excluí-los, como mostrado aqui:"
 
 #: src/ch11-02-running-tests.md
 msgid "// code that takes an hour to run\n"
@@ -11399,7 +11401,7 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "After `#[test]`, we add the `#[ignore]` line to the test we want to exclude. Now when we run our tests, `it_works` runs, but `expensive_test` doesn’t:"
-msgstr ""
+msgstr "Depois de `#[test]`, adicionamos a linha `#[ignore]` ao teste que queremos excluir. Agora, quando executamos nossos testes, `it_works` é executado, mas `expensive_test` não:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11426,7 +11428,7 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "The `expensive_test` function is listed as `ignored`. If we want to run only the ignored tests, we can use `cargo test -- --ignored`:"
-msgstr ""
+msgstr "A função `expensive_test` aparece listada como `ignored`. Se quisermos executar apenas os testes ignorados, podemos usar `cargo test -- --ignored`:"
 
 #: src/ch11-02-running-tests.md
 msgid ""
@@ -11452,39 +11454,39 @@ msgstr ""
 
 #: src/ch11-02-running-tests.md
 msgid "By controlling which tests run, you can make sure your `cargo test` results will be returned quickly. When you’re at a point where it makes sense to check the results of the `ignored` tests and you have time to wait for the results, you can run `cargo test -- --ignored` instead. If you want to run all tests whether they’re ignored or not, you can run `cargo test -- --include-ignored`."
-msgstr ""
+msgstr "Ao controlar quais testes são executados, você pode garantir que os resultados do `cargo test` sejam retornados rapidamente. Quando você estiver em um ponto em que faça sentido verificar os resultados dos testes `ignored` e tiver tempo para esperar por eles, pode executar `cargo test -- --ignored` em vez disso. Se quiser executar todos os testes, estejam eles ignorados ou não, pode executar `cargo test -- --include-ignored`."
 
 #: src/ch11-03-test-organization.md
 msgid "As mentioned at the start of the chapter, testing is a complex discipline, and different people use different terminology and organization. The Rust community thinks about tests in terms of two main categories: unit tests and integration tests. _Unit tests_ are small and more focused, testing one module in isolation at a time, and can test private interfaces. _Integration tests_ are entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test."
-msgstr ""
+msgstr "Como mencionado no início do capítulo, testar é uma disciplina complexa, e pessoas diferentes usam terminologias e organizações diferentes. A comunidade Rust pensa nos testes em termos de duas categorias principais: testes unitários e testes de integração. _Testes unitários_ são pequenos e mais focados, testam um módulo isolado por vez e podem testar interfaces privadas. _Testes de integração_ são totalmente externos à sua biblioteca e usam o seu código da mesma forma que qualquer outro código externo usaria, utilizando apenas a interface pública e potencialmente exercitando vários módulos por teste."
 
 #: src/ch11-03-test-organization.md
 msgid "Writing both kinds of tests is important to ensure that the pieces of your library are doing what you expect them to, separately and together."
-msgstr ""
+msgstr "Escrever os dois tipos de teste é importante para garantir que as partes da sua biblioteca façam o que você espera que façam, separadamente e em conjunto."
 
 #: src/ch11-03-test-organization.md
 msgid "Unit Tests"
-msgstr ""
+msgstr "Testes unitários {#unit-tests}"
 
 #: src/ch11-03-test-organization.md
 msgid "The purpose of unit tests is to test each unit of code in isolation from the rest of the code to quickly pinpoint where code is and isn’t working as expected. You’ll put unit tests in the _src_ directory in each file with the code that they’re testing. The convention is to create a module named `tests` in each file to contain the test functions and to annotate the module with `cfg(test)`."
-msgstr ""
+msgstr "O objetivo dos testes unitários é testar cada unidade de código isoladamente do restante do código, para identificar rapidamente onde o código funciona e onde não funciona como esperado. Você vai colocar os testes unitários no diretório _src_, em cada arquivo com o código que eles testam. A convenção é criar um módulo chamado `tests` em cada arquivo para conter as funções de teste e anotar o módulo com `cfg(test)`."
 
 #: src/ch11-03-test-organization.md
 msgid "The `tests` Module and `#[cfg(test)]`"
-msgstr ""
+msgstr "O módulo `tests` e `#[cfg(test)]` {#the-tests-module-and-cfgtest}"
 
 #: src/ch11-03-test-organization.md
 msgid "The `#[cfg(test)]` annotation on the `tests` module tells Rust to compile and run the test code only when you run `cargo test`, not when you run `cargo build`. This saves compile time when you only want to build the library and saves space in the resultant compiled artifact because the tests are not included. You’ll see that because integration tests go in a different directory, they don’t need the `#[cfg(test)]` annotation. However, because unit tests go in the same files as the code, you’ll use `#[cfg(test)]` to specify that they shouldn’t be included in the compiled result."
-msgstr ""
+msgstr "A anotação `#[cfg(test)]` no módulo `tests` diz ao Rust para compilar e executar o código de teste apenas quando você executa `cargo test`, e não quando você executa `cargo build`. Isso economiza tempo de compilação quando você só quer compilar a biblioteca e economiza espaço no artefato compilado resultante, porque os testes não são incluídos. Você vai ver que, como os testes de integração ficam em um diretório diferente, eles não precisam da anotação `#[cfg(test)]`. No entanto, como os testes unitários ficam nos mesmos arquivos que o código, você vai usar `#[cfg(test)]` para especificar que eles não devem ser incluídos no resultado da compilação."
 
 #: src/ch11-03-test-organization.md
 msgid "Recall that when we generated the new `adder` project in the first section of this chapter, Cargo generated this code for us:"
-msgstr ""
+msgstr "Lembre-se de que, quando geramos o novo projeto `adder` na primeira seção deste capítulo, o Cargo gerou este código para nós:"
 
 #: src/ch11-03-test-organization.md
 msgid "On the automatically generated `tests` module, the attribute `cfg` stands for _configuration_ and tells Rust that the following item should only be included given a certain configuration option. In this case, the configuration option is `test`, which is provided by Rust for compiling and running tests. By using the `cfg` attribute, Cargo compiles our test code only if we actively run the tests with `cargo test`. This includes any helper functions that might be within this module, in addition to the functions annotated with `#[test]`."
-msgstr ""
+msgstr "No módulo `tests` gerado automaticamente, o atributo `cfg` significa _configuração_ e diz ao Rust que o item seguinte só deve ser incluído se uma determinada opção de configuração estiver presente. Neste caso, a opção de configuração é `test`, que o Rust fornece para compilar e executar testes. Ao usar o atributo `cfg`, o Cargo compila o nosso código de teste somente se executarmos de fato os testes com `cargo test`. Isso inclui quaisquer funções auxiliares que possam estar dentro desse módulo, além das funções anotadas com `#[test]`."
 
 #: src/ch11-03-test-organization.md
 msgid "<a id=\"testing-private-functions\"></a>"
@@ -11492,55 +11494,55 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "Private Function Tests"
-msgstr ""
+msgstr "Testes de funções privadas {#private-function-tests}"
 
 #: src/ch11-03-test-organization.md
 msgid "There’s debate within the testing community about whether or not private functions should be tested directly, and other languages make it difficult or impossible to test private functions. Regardless of which testing ideology you adhere to, Rust’s privacy rules do allow you to test private functions. Consider the code in Listing 11-12 with the private function `internal_adder`."
-msgstr ""
+msgstr "Há um debate dentro da comunidade de testes sobre se funções privadas devem ser testadas diretamente, e outras linguagens dificultam ou tornam impossível testar funções privadas. Independentemente da linha de pensamento sobre testes que você adota, as regras de privacidade do Rust permitem testar funções privadas. Considere o código da Listagem 11-12, com a função privada `internal_adder`."
 
 #: src/ch11-03-test-organization.md
 msgid "<Listing number=\"11-12\" file-name=\"src/lib.rs\" caption=\"Testing a private function\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-12\" file-name=\"src/lib.rs\" caption=\"Testando uma função privada\">\n"
 
 #: src/ch11-03-test-organization.md
 msgid "Note that the `internal_adder` function is not marked as `pub`. Tests are just Rust code, and the `tests` module is just another module. As we discussed in [“Paths for Referring to an Item in the Module Tree”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore -->, items in child modules can use the items in their ancestor modules. In this test, we bring all of the items belonging to the `tests` module’s parent into scope with `use super::*`, and then the test can call `internal_adder`. If you don’t think private functions should be tested, there’s nothing in Rust that will compel you to do so."
-msgstr ""
+msgstr "Observe que a função `internal_adder` não está marcada como `pub`. Testes são apenas código Rust, e o módulo `tests` é só mais um módulo. Como discutimos em [“Caminhos para referenciar um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore -->, itens de módulos filhos podem usar os itens dos seus módulos ancestrais. Neste teste, trazemos todos os itens pertencentes ao módulo pai de `tests` para o escopo com `use super::*`, e então o teste pode chamar `internal_adder`. Se você acha que funções privadas não devem ser testadas, não há nada no Rust que obrigue você a fazer isso."
 
 #: src/ch11-03-test-organization.md
 msgid "Integration Tests"
-msgstr ""
+msgstr "Testes de integração {#integration-tests}"
 
 #: src/ch11-03-test-organization.md
 msgid "In Rust, integration tests are entirely external to your library. They use your library in the same way any other code would, which means they can only call functions that are part of your library’s public API. Their purpose is to test whether many parts of your library work together correctly. Units of code that work correctly on their own could have problems when integrated, so test coverage of the integrated code is important as well. To create integration tests, you first need a _tests_ directory."
-msgstr ""
+msgstr "No Rust, os testes de integração são totalmente externos à sua biblioteca. Eles usam a sua biblioteca da mesma forma que qualquer outro código usaria, o que significa que só podem chamar funções que fazem parte da API pública da sua biblioteca. O objetivo deles é testar se muitas partes da sua biblioteca funcionam bem juntas. Unidades de código que funcionam corretamente sozinhas podem apresentar problemas quando integradas, por isso a cobertura de testes do código integrado também é importante. Para criar testes de integração, você primeiro precisa de um diretório _tests_."
 
 #: src/ch11-03-test-organization.md
 msgid "The _tests_ Directory"
-msgstr ""
+msgstr "O diretório _tests_ {#the-tests-directory}"
 
 #: src/ch11-03-test-organization.md
 msgid "We create a _tests_ directory at the top level of our project directory, next to _src_. Cargo knows to look for integration test files in this directory. We can then make as many test files as we want, and Cargo will compile each of the files as an individual crate."
-msgstr ""
+msgstr "Criamos um diretório _tests_ no nível superior do diretório do projeto, ao lado de _src_. O Cargo sabe que deve procurar arquivos de teste de integração nesse diretório. Podemos então criar quantos arquivos de teste quisermos, e o Cargo vai compilar cada um dos arquivos como um crate individual."
 
 #: src/ch11-03-test-organization.md
 msgid "Let’s create an integration test. With the code in Listing 11-12 still in the _src/lib.rs_ file, make a _tests_ directory, and create a new file named _tests/integration_test.rs_. Your directory structure should look like this:"
-msgstr ""
+msgstr "Vamos criar um teste de integração. Com o código da Listagem 11-12 ainda no arquivo _src/lib.rs_, crie um diretório _tests_ e um novo arquivo chamado _tests/integration_test.rs_. A sua estrutura de diretórios deve ficar assim:"
 
 #: src/ch11-03-test-organization.md
 msgid "Enter the code in Listing 11-13 into the _tests/integration_test.rs_ file."
-msgstr ""
+msgstr "Digite o código da Listagem 11-13 no arquivo _tests/integration_test.rs_."
 
 #: src/ch11-03-test-organization.md
 msgid "<Listing number=\"11-13\" file-name=\"tests/integration_test.rs\" caption=\"An integration test of a function in the `adder` crate\">\n"
-msgstr ""
+msgstr "<Listing number=\"11-13\" file-name=\"tests/integration_test.rs\" caption=\"Um teste de integração de uma função no crate `adder`\">\n"
 
 #: src/ch11-03-test-organization.md
 msgid "Each file in the _tests_ directory is a separate crate, so we need to bring our library into each test crate’s scope. For that reason, we add `use adder::add_two;` at the top of the code, which we didn’t need in the unit tests."
-msgstr ""
+msgstr "Cada arquivo do diretório _tests_ é um crate separado, então precisamos trazer a nossa biblioteca para o escopo de cada crate de teste. Por isso, adicionamos `use adder::add_two;` no início do código, o que não era necessário nos testes unitários."
 
 #: src/ch11-03-test-organization.md
 msgid "We don’t need to annotate any code in _tests/integration_test.rs_ with `#[cfg(test)]`. Cargo treats the _tests_ directory specially and compiles files in this directory only when we run `cargo test`. Run `cargo test` now:"
-msgstr ""
+msgstr "Não precisamos anotar nenhum código em _tests/integration_test.rs_ com `#[cfg(test)]`. O Cargo trata o diretório _tests_ de forma especial e compila os arquivos desse diretório somente quando executamos `cargo test`. Execute `cargo test` agora:"
 
 #: src/ch11-03-test-organization.md
 msgid ""
@@ -11573,23 +11575,23 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "The three sections of output include the unit tests, the integration test, and the doc tests. Note that if any test in a section fails, the following sections will not be run. For example, if a unit test fails, there won’t be any output for integration and doc tests, because those tests will only be run if all unit tests are passing."
-msgstr ""
+msgstr "As três seções da saída incluem os testes unitários, o teste de integração e os testes de documentação. Observe que, se algum teste de uma seção falhar, as seções seguintes não serão executadas. Por exemplo, se um teste unitário falhar, não haverá nenhuma saída para os testes de integração e de documentação, porque esses testes só serão executados se todos os testes unitários estiverem passando."
 
 #: src/ch11-03-test-organization.md
 msgid "The first section for the unit tests is the same as we’ve been seeing: one line for each unit test (one named `internal` that we added in Listing 11-12) and then a summary line for the unit tests."
-msgstr ""
+msgstr "A primeira seção, a dos testes unitários, é igual à que temos visto: uma linha para cada teste unitário (um chamado `internal`, que adicionamos na Listagem 11-12) e depois uma linha de resumo dos testes unitários."
 
 #: src/ch11-03-test-organization.md
 msgid "The integration tests section starts with the line `Running tests/integration_test.rs`. Next, there is a line for each test function in that integration test and a summary line for the results of the integration test just before the `Doc-tests adder` section starts."
-msgstr ""
+msgstr "A seção dos testes de integração começa com a linha `Running tests/integration_test.rs`. Em seguida, há uma linha para cada função de teste desse teste de integração e uma linha de resumo dos resultados do teste de integração, logo antes de começar a seção `Doc-tests adder`."
 
 #: src/ch11-03-test-organization.md
 msgid "Each integration test file has its own section, so if we add more files in the _tests_ directory, there will be more integration test sections."
-msgstr ""
+msgstr "Cada arquivo de teste de integração tem a sua própria seção; assim, se adicionarmos mais arquivos no diretório _tests_, haverá mais seções de testes de integração."
 
 #: src/ch11-03-test-organization.md
 msgid "We can still run a particular integration test function by specifying the test function’s name as an argument to `cargo test`. To run all the tests in a particular integration test file, use the `--test` argument of `cargo test` followed by the name of the file:"
-msgstr ""
+msgstr "Ainda podemos executar uma função de teste de integração específica informando o nome dela como argumento para `cargo test`. Para executar todos os testes de um arquivo de teste de integração específico, use o argumento `--test` de `cargo test` seguido do nome do arquivo:"
 
 #: src/ch11-03-test-organization.md
 msgid ""
@@ -11609,23 +11611,23 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "This command runs only the tests in the _tests/integration_test.rs_ file."
-msgstr ""
+msgstr "Este comando executa apenas os testes do arquivo _tests/integration_test.rs_."
 
 #: src/ch11-03-test-organization.md
 msgid "Submodules in Integration Tests"
-msgstr ""
+msgstr "Submódulos em testes de integração {#submodules-in-integration-tests}"
 
 #: src/ch11-03-test-organization.md
 msgid "As you add more integration tests, you might want to make more files in the _tests_ directory to help organize them; for example, you can group the test functions by the functionality they’re testing. As mentioned earlier, each file in the _tests_ directory is compiled as its own separate crate, which is useful for creating separate scopes to more closely imitate the way end users will be using your crate. However, this means files in the _tests_ directory don’t share the same behavior as files in _src_ do, as you learned in Chapter 7 regarding how to separate code into modules and files."
-msgstr ""
+msgstr "À medida que você adiciona mais testes de integração, pode querer criar mais arquivos no diretório _tests_ para ajudar a organizá-los; por exemplo, você pode agrupar as funções de teste de acordo com a funcionalidade que elas testam. Como mencionado antes, cada arquivo do diretório _tests_ é compilado como um crate separado, o que é útil para criar escopos separados e imitar com mais fidelidade a forma como os usuários finais vão usar o seu crate. No entanto, isso significa que os arquivos do diretório _tests_ não compartilham o mesmo comportamento dos arquivos em _src_, como você aprendeu no Capítulo 7 sobre como separar código em módulos e arquivos."
 
 #: src/ch11-03-test-organization.md
 msgid "The different behavior of _tests_ directory files is most noticeable when you have a set of helper functions to use in multiple integration test files, and you try to follow the steps in the [“Separating Modules into Different Files”](ch07-05-separating-modules-into-different-files.html)<!-- ignore --> section of Chapter 7 to extract them into a common module. For example, if we create _tests/common.rs_ and place a function named `setup` in it, we can add some code to `setup` that we want to call from multiple test functions in multiple test files:"
-msgstr ""
+msgstr "O comportamento diferente dos arquivos do diretório _tests_ é mais perceptível quando você tem um conjunto de funções auxiliares para usar em vários arquivos de teste de integração e tenta seguir os passos da seção [“Separando módulos em arquivos diferentes”](ch07-05-separating-modules-into-different-files.html)<!-- ignore --> do Capítulo 7 para extraí-las para um módulo comum. Por exemplo, se criarmos _tests/common.rs_ e colocarmos nele uma função chamada `setup`, podemos acrescentar algum código a `setup` que queremos chamar a partir de várias funções de teste em vários arquivos de teste:"
 
 #: src/ch11-03-test-organization.md
 msgid "<span class=\"filename\">Filename: tests/common.rs</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: tests/common.rs</span>"
 
 #: src/ch11-03-test-organization.md
 msgid "// setup code specific to your library's tests would go here\n"
@@ -11633,7 +11635,7 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "When we run the tests again, we’ll see a new section in the test output for the _common.rs_ file, even though this file doesn’t contain any test functions nor did we call the `setup` function from anywhere:"
-msgstr ""
+msgstr "Quando executarmos os testes novamente, vamos ver uma nova seção na saída dos testes referente ao arquivo _common.rs_, embora esse arquivo não contenha nenhuma função de teste nem tenhamos chamado a função `setup` em nenhum lugar:"
 
 #: src/ch11-03-test-organization.md
 msgid ""
@@ -11672,43 +11674,43 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "Having `common` appear in the test results with `running 0 tests` displayed for it is not what we wanted. We just wanted to share some code with the other integration test files. To avoid having `common` appear in the test output, instead of creating _tests/common.rs_, we’ll create _tests/common/mod.rs_. The project directory now looks like this:"
-msgstr ""
+msgstr "Ter `common` aparecendo nos resultados dos testes, com `running 0 tests` exibido para ele, não é o que queríamos. Só queríamos compartilhar algum código com os outros arquivos de teste de integração. Para evitar que `common` apareça na saída dos testes, em vez de criar _tests/common.rs_, vamos criar _tests/common/mod.rs_. O diretório do projeto agora está assim:"
 
 #: src/ch11-03-test-organization.md
 msgid "This is the older naming convention that Rust also understands that we mentioned in [“Alternate File Paths”](ch07-05-separating-modules-into-different-files.html#alternate-file-paths)<!-- ignore --> in Chapter 7. Naming the file this way tells Rust not to treat the `common` module as an integration test file. When we move the `setup` function code into _tests/common/mod.rs_ and delete the _tests/common.rs_ file, the section in the test output will no longer appear. Files in subdirectories of the _tests_ directory don’t get compiled as separate crates or have sections in the test output."
-msgstr ""
+msgstr "Esta é a convenção de nomes mais antiga, que o Rust também entende e que mencionamos em [“Caminhos de arquivo alternativos”](ch07-05-separating-modules-into-different-files.html#alternate-file-paths)<!-- ignore --> no Capítulo 7. Dar esse nome ao arquivo diz ao Rust para não tratar o módulo `common` como um arquivo de teste de integração. Quando movermos o código da função `setup` para _tests/common/mod.rs_ e apagarmos o arquivo _tests/common.rs_, a seção na saída dos testes não vai mais aparecer. Arquivos em subdiretórios do diretório _tests_ não são compilados como crates separados nem têm seções na saída dos testes."
 
 #: src/ch11-03-test-organization.md
 msgid "After we’ve created _tests/common/mod.rs_, we can use it from any of the integration test files as a module. Here’s an example of calling the `setup` function from the `it_adds_two` test in _tests/integration_test.rs_:"
-msgstr ""
+msgstr "Depois de criarmos _tests/common/mod.rs_, podemos usá-lo, como um módulo, em qualquer um dos arquivos de teste de integração. Aqui está um exemplo de chamada da função `setup` a partir do teste `it_adds_two` em _tests/integration_test.rs_:"
 
 #: src/ch11-03-test-organization.md
 msgid "<span class=\"filename\">Filename: tests/integration_test.rs</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: tests/integration_test.rs</span>"
 
 #: src/ch11-03-test-organization.md
 msgid "Note that the `mod common;` declaration is the same as the module declaration we demonstrated in Listing 7-21. Then, in the test function, we can call the `common::setup()` function."
-msgstr ""
+msgstr "Observe que a declaração `mod common;` é igual à declaração de módulo que demonstramos na Listagem 7-21. Então, na função de teste, podemos chamar a função `common::setup()`."
 
 #: src/ch11-03-test-organization.md
 msgid "Integration Tests for Binary Crates"
-msgstr ""
+msgstr "Testes de integração para crates binários {#integration-tests-for-binary-crates}"
 
 #: src/ch11-03-test-organization.md
 msgid "If our project is a binary crate that only contains a _src/main.rs_ file and doesn’t have a _src/lib.rs_ file, we can’t create integration tests in the _tests_ directory and bring functions defined in the _src/main.rs_ file into scope with a `use` statement. Only library crates expose functions that other crates can use; binary crates are meant to be run on their own."
-msgstr ""
+msgstr "Se o nosso projeto é um crate binário que contém apenas um arquivo _src/main.rs_ e não tem um arquivo _src/lib.rs_, não podemos criar testes de integração no diretório _tests_ e trazer para o escopo, com uma instrução `use`, as funções definidas no arquivo _src/main.rs_. Apenas crates de biblioteca expõem funções que outros crates podem usar; crates binários são feitos para ser executados por conta própria."
 
 #: src/ch11-03-test-organization.md
 msgid "This is one of the reasons Rust projects that provide a binary have a straightforward _src/main.rs_ file that calls logic that lives in the _src/lib.rs_ file. Using that structure, integration tests _can_ test the library crate with `use` to make the important functionality available. If the important functionality works, the small amount of code in the _src/main.rs_ file will work as well, and that small amount of code doesn’t need to be tested."
-msgstr ""
+msgstr "Esta é uma das razões pelas quais os projetos Rust que fornecem um binário têm um arquivo _src/main.rs_ simples, que chama a lógica que está no arquivo _src/lib.rs_. Com essa estrutura, os testes de integração _podem_ testar o crate de biblioteca com `use` para deixar a funcionalidade importante disponível. Se a funcionalidade importante funciona, a pequena quantidade de código no arquivo _src/main.rs_ também vai funcionar, e essa pequena quantidade de código não precisa ser testada."
 
 #: src/ch11-03-test-organization.md
 msgid "Rust’s testing features provide a way to specify how code should function to ensure that it continues to work as you expect, even as you make changes. Unit tests exercise different parts of a library separately and can test private implementation details. Integration tests check that many parts of the library work together correctly, and they use the library’s public API to test the code in the same way external code will use it. Even though Rust’s type system and ownership rules help prevent some kinds of bugs, tests are still important to reduce logic bugs having to do with how your code is expected to behave."
-msgstr ""
+msgstr "Os recursos de testes do Rust oferecem uma forma de especificar como o código deve funcionar para garantir que ele continue funcionando como você espera, mesmo quando você faz alterações. Testes unitários exercitam partes diferentes de uma biblioteca separadamente e podem testar detalhes de implementação privados. Testes de integração verificam se muitas partes da biblioteca funcionam corretamente em conjunto, e usam a API pública da biblioteca para testar o código da mesma forma que um código externo vai usá-la. Embora o sistema de tipos e as regras de ownership do Rust ajudem a evitar alguns tipos de bugs, os testes continuam sendo importantes para reduzir bugs de lógica relacionados ao comportamento esperado do seu código."
 
 #: src/ch11-03-test-organization.md
 msgid "Let’s combine the knowledge you learned in this chapter and in previous chapters to work on a project!"
-msgstr ""
+msgstr "Vamos combinar os conhecimentos que você aprendeu neste capítulo e nos anteriores para trabalhar em um projeto!"
 
 #: src/ch12-00-an-io-project.md
 msgid "This chapter is a recap of the many skills you’ve learned so far and an exploration of a few more standard library features. We’ll build a command line tool that interacts with file and command line input/output to practice some of the Rust concepts you now have under your belt."
