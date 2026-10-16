@@ -1,0 +1,1120 @@
+# ptbr-sync.yml: sincroniza o fork com o rust-lang/book e porta o delta da tradução.
+#
+# Desenho: auditoria de outubro de 2026 (final.sync_design) e i18n/CONTRATO.md §6.
+# Quatro jobs, em ordem, mais um de saúde:
+#   preparar  sem segredos e sem escrita: busca o upstream, faz o merge num branch local,
+#             roda atualiza_po.sh, autoport.py, slugs.py e delta.py, aplica a guarda de
+#             reestruturação e publica os artefatos (delta.json, PO, bundle git, sha256).
+#   traduzir  permissions: {}; o único job com ANTHROPIC_API_KEY; um job por capítulo do
+#             delta com traduz_delta.py (chamada à API sem ferramentas, git nem shell).
+#   montar    sem token de escrita: recria o branch a partir do bundle, aplica as traduções
+#             (apply.py --modo sync), roda slugs.py e check.py e monta o corpo do PR.
+#   publicar  o ÚNICO job com escrita (token do GitHub App). Não executa código do
+#             repositório nem do upstream: só git e gh sobre artefatos conferidos por
+#             sha256. Recalcula o merge por conta própria e só aceita, depois dele,
+#             commits que mexem apenas em po/pt-BR.po; faz push de sync/upstream com
+#             --force-with-lease e abre ou atualiza UM PR "Sync upstream <sha7>".
+#   sync-quebrado  em falha (ou alarme de atraso) abre ou comenta a issue "sync-quebrado".
+#
+# O preparar e o montar executam código do upstream (o build compila os preprocessors de
+# packages/mdbook-trpl e o book.toml manda rodá-los). Por isso nenhum dos dois tem token de
+# escrita nem segredo, e o cache só é salvo antes do merge. A lista de commits, os msgid e
+# as respostas da IA são dados não confiáveis: vão escapados para o corpo do PR.
+#
+# CONFIGURAÇÃO (feita pelo mantenedor; até lá o workflow termina sem fazer nada)
+#   - GitHub App instalado só neste repositório, com permissões de repositório
+#     Contents: read and write, Pull requests: read and write, Workflows: read and write
+#     (todo "Update to Rust X" do upstream altera .github/workflows/main.yml) e
+#     Issues: read and write (issue sync-quebrado).
+#   - Variável de repositório PTBR_APP_ID (ID do App). Enquanto ela não existir, as
+#     execuções agendadas terminam sem fazer nada (só o dry_run manual roda).
+#   - Segredo PTBR_APP_PRIVATE_KEY (chave privada .pem do App).
+#   - Segredo ANTHROPIC_API_KEY (usado só no job traduzir).
+#   - Variável opcional PTBR_MODELO_TRADUCAO (modelo do traduz_delta.py; padrão
+#     claude-haiku-5-5).
+#   - Issues habilitadas e a label "sync-quebrado" criada (sem a label a issue é aberta
+#     sem ela). O ruleset da main não pode bloquear o push do App em sync/*. O Pages não
+#     é usado aqui (é do ptbr-deploy.yml). Como o PR é aberto pelo App, e não pelo
+#     GITHUB_TOKEN, os workflows de CI rodam nele.
+#
+# KEEP-ALIVE: o GitHub desativa workflows agendados depois de 60 dias sem atividade no
+# repositório. Cada PR de sync conta como atividade, mas um upstream parado por 2 meses
+# desliga o agendamento. Para reativar:
+#   gh workflow enable ptbr-sync.yml   (ou: gh api -X PUT repos/OWNER/REPO/actions/workflows/ptbr-sync.yml/enable)
+#
+# OPERAÇÃO
+#   - Execução manual: workflow_dispatch com upstream_ref (branch, tag ou sha completo do
+#     rust-lang/book; padrão main) e dry_run (prepara, traduz e monta, mas não faz push,
+#     PR nem issue).
+#   - Sem mudança no upstream (ou com o PR de sync já atualizado) termina em poucos minutos.
+#   - O PR acumula: cada execução refaz o branch a partir da main com o upstream mais novo.
+#     Um commit manual no branch sync/upstream nunca é sobrescrito: o publicar recusa e
+#     abre a issue. Para refazer um PR, feche-o (ou apague o branch) e rode de novo.
+#   - Alarme de atraso: upstream mais de 21 dias à frente do merge-base sem PR sync/*
+#     aberto. O alarme não impede o PR (senão o sync nunca se recuperaria): o job
+#     sync-quebrado abre a issue e marca a execução como falha.
+#   - Guarda de reestruturação: capítulo com mais de 10% das mensagens fuzzy, novas ou
+#     removidas (e no mínimo 5) fica fora da IA e o PR vai como rascunho.
+#   - O PR também vai como rascunho se o check.py falhar ou se a tradução falhar.
+
+name: ptbr-sync
+
+on:
+  schedule:
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: 'Branch, tag ou sha completo do rust-lang/book a mesclar'
+        type: string
+        required: false
+        default: main
+      dry_run:
+        description: 'Ensaio: prepara, traduz e monta, sem push, PR nem issue'
+        type: boolean
+        required: false
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: po-main
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  UPSTREAM_URL: https://github.com/rust-lang/book
+  UPSTREAM_REF: ${{ inputs.upstream_ref || 'main' }}
+  RAMO_BASE: main
+  RAMO_SYNC: sync/upstream
+  BOT_NOME: github-actions[bot]
+  BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+  MDBOOK_VERSION: 0.5.1
+  I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+  ATRASO_MAX_DIAS: 21
+  GUARDA_PCT: 10
+  GUARDA_MINIMO: 5
+  PYTHONDONTWRITEBYTECODE: 1
+
+jobs:
+  preparar:
+    name: Prepara o merge e o delta (sem segredos)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      pull-requests: read   # só para listar os PRs sync/* abertos (alarme de atraso)
+    outputs:
+      has_changes: ${{ steps.decisao.outputs.has_changes }}
+      chapters: ${{ steps.guarda.outputs.chapters }}
+      draft: ${{ steps.guarda.outputs.draft }}
+      alarme_atraso: ${{ steps.decisao.outputs.alarme_atraso }}
+      dias_atraso: ${{ steps.decisao.outputs.dias_atraso }}
+      main_sha: ${{ steps.upstream.outputs.main_sha }}
+      upstream_sha: ${{ steps.upstream.outputs.upstream_sha }}
+      merge_sha: ${{ steps.merge.outputs.merge_sha }}
+      sha_lista: ${{ steps.artefato.outputs.sha_lista }}
+    steps:
+      - name: Checkout da main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RAMO_BASE }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Confere a configuração
+        id: config
+        env:
+          APP_ID: ${{ vars.PTBR_APP_ID }}
+          DRY_RUN: ${{ inputs.dry_run == true }}
+        run: |
+          if [[ -z "$APP_ID" && "$DRY_RUN" != true ]]; then
+            echo "::notice title=Sync desligado::defina a variável PTBR_APP_ID e os segredos (veja o topo do ptbr-sync.yml)"
+            echo "ativo=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ativo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Busca o upstream e valida as referências
+        id: upstream
+        if: steps.config.outputs.ativo == 'true'
+        run: |
+          # Branch ou tag do rust-lang/book, ou um sha completo.
+          if [[ ! "$UPSTREAM_REF" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$ || "$UPSTREAM_REF" == *..* ]]; then
+            echo "::error title=upstream_ref inválido::use um nome de branch ou tag do rust-lang/book, ou um sha completo"
+            exit 1
+          fi
+          git fetch --no-tags "$UPSTREAM_URL" "$UPSTREAM_REF"
+          upstream_sha=$(git rev-parse --verify --end-of-options 'FETCH_HEAD^{commit}')
+          main_sha=$(git rev-parse --verify --end-of-options 'HEAD^{commit}')
+          if ! base_sha=$(git merge-base "$main_sha" "$upstream_sha"); then
+            echo "::error title=Sem ancestral comum::a main e o upstream_ref não têm merge-base (é mesmo um commit do rust-lang/book?)"
+            exit 1
+          fi
+          git cat-file -e "${base_sha}^{commit}"
+          git update-ref refs/remotes/upstream/main "$upstream_sha"
+          echo "main ${main_sha:0:7}, upstream ${upstream_sha:0:7}, merge-base ${base_sha:0:7}"
+          {
+            echo "main_sha=$main_sha"
+            echo "upstream_sha=$upstream_sha"
+            echo "base_sha=$base_sha"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Lista os PRs de sync abertos
+        id: prs
+        if: steps.config.outputs.ativo == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prs=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 100 \
+            --json number,headRefName,isCrossRepository \
+            --jq '[.[] | select((.isCrossRepository | not) and (.headRefName | startswith("sync/")))]')
+          abertos=$(jq 'length' <<< "$prs")
+          pr_sync=$(jq -r --arg r "$RAMO_SYNC" 'map(select(.headRefName == $r)) | .[0].number // empty' <<< "$prs")
+          echo "PRs sync/* abertos: $abertos${pr_sync:+ (#$pr_sync em $RAMO_SYNC)}"
+          {
+            echo "abertos=$abertos"
+            echo "pr_sync=$pr_sync"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Decide se há o que sincronizar (no-op e alarme de atraso)
+        id: decisao
+        if: steps.config.outputs.ativo == 'true'
+        env:
+          MAIN_SHA: ${{ steps.upstream.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ steps.upstream.outputs.upstream_sha }}
+          BASE_SHA: ${{ steps.upstream.outputs.base_sha }}
+          PRS_ABERTOS: ${{ steps.prs.outputs.abertos }}
+          PR_SYNC: ${{ steps.prs.outputs.pr_sync }}
+        run: |
+          has_changes=true
+          alarme=false
+          dias=0
+          remoto=$(git rev-parse --verify -q "refs/remotes/origin/$RAMO_SYNC" || true)
+          if git merge-base --is-ancestor "$UPSTREAM_SHA" "$MAIN_SHA"; then
+            has_changes=false
+            motivo="o upstream ${UPSTREAM_SHA:0:7} já está na main"
+          elif [[ -n "$PR_SYNC" && -n "$remoto" ]] \
+            && git merge-base --is-ancestor "$UPSTREAM_SHA" "$remoto" \
+            && git merge-base --is-ancestor "$MAIN_SHA" "$remoto"; then
+            has_changes=false
+            motivo="o PR #$PR_SYNC já contém o upstream ${UPSTREAM_SHA:0:7} e a main atual"
+          else
+            motivo="upstream ${UPSTREAM_SHA:0:7} ainda não está na main"
+            t_upstream=$(git log -1 --format=%ct "$UPSTREAM_SHA")
+            t_base=$(git log -1 --format=%ct "$BASE_SHA")
+            dias=$(( (t_upstream - t_base) / 86400 ))
+            if (( dias > ATRASO_MAX_DIAS && PRS_ABERTOS == 0 )); then
+              alarme=true
+              echo "::error title=Sync atrasado::o upstream está $dias dias à frente do merge-base e não há PR sync/* aberto"
+            fi
+          fi
+          echo "$motivo"
+          {
+            echo "has_changes=$has_changes"
+            echo "alarme_atraso=$alarme"
+            echo "dias_atraso=$dias"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### ptbr-sync: preparar"
+            echo "- upstream \`$UPSTREAM_REF\` = \`${UPSTREAM_SHA:0:7}\`; main = \`${MAIN_SHA:0:7}\`; merge-base = \`${BASE_SHA:0:7}\`"
+            echo "- decisão: $motivo"
+            if [[ "$alarme" == true ]]; then
+              echo "- **alarme de atraso**: $dias dias sem PR sync/* aberto"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Instala o Python
+        if: steps.decisao.outputs.has_changes == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Instala gettext, polib e PyYAML
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gettext
+          python3 -m pip install --disable-pip-version-check -q polib==1.1.1 PyYAML==6.0.2
+
+      - name: Instala o mdbook
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz --directory="$RUNNER_TEMP/bin"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Restaura o mdbook-i18n-helpers do cache
+        id: cache-i18n
+        if: steps.decisao.outputs.has_changes == 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.local/i18n-helpers
+          key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Compila o mdbook-i18n-helpers fixado
+        if: steps.decisao.outputs.has_changes == 'true' && steps.cache-i18n.outputs.cache-hit != 'true'
+        working-directory: ${{ runner.temp }}
+        run: |
+          cargo install --locked --root "$HOME/.local/i18n-helpers" \
+            --git https://github.com/google/mdbook-i18n-helpers --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
+
+      # Salvo aqui, antes do merge: depois dele roda código do upstream, que não pode
+      # envenenar um cache lido por outros workflows.
+      - name: Salva o mdbook-i18n-helpers no cache
+        if: steps.decisao.outputs.has_changes == 'true' && steps.cache-i18n.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.local/i18n-helpers
+          key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Põe as ferramentas no PATH
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          echo "$HOME/.local/i18n-helpers/bin" >> "$GITHUB_PATH"
+
+      # O job traduzir não faz checkout: recebe daqui, da main ainda sem o merge, o script
+      # e os arquivos de contexto do prompt.
+      - name: Separa as ferramentas do job traduzir
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          F="$RUNNER_TEMP/artefato/ferramentas"
+          mkdir -p "$F/i18n/tools"
+          cp AGENTS.md "$F/"
+          cp i18n/GUIA-DE-ESTILO.md i18n/glossario.yml "$F/i18n/"
+          cp i18n/tools/traduz_delta.py "$F/i18n/tools/"
+
+      - name: Faz o merge do upstream num branch local
+        id: merge
+        if: steps.decisao.outputs.has_changes == 'true'
+        env:
+          UPSTREAM_SHA: ${{ steps.upstream.outputs.upstream_sha }}
+        run: |
+          git switch -c "$RAMO_SYNC"
+          msg="Merge upstream rust-lang/book ${UPSTREAM_SHA:0:7} ($UPSTREAM_REF)"
+          if ! git -c user.name="$BOT_NOME" -c user.email="$BOT_EMAIL" \
+              merge --no-ff --no-edit -m "$msg" "$UPSTREAM_SHA"; then
+            echo "::error title=Conflito no merge do upstream::alguém editou um caminho do upstream no fork (veja a lista no resumo)"
+            {
+              echo "### Conflito no merge do upstream"
+              echo "O fork só muda caminhos próprios (po/, i18n/, AGENTS.md, ...); estes arquivos conflitaram:"
+              git diff --name-only --diff-filter=U | sed 's/^/    /'
+            } >> "$GITHUB_STEP_SUMMARY"
+            git diff --name-only --diff-filter=U | sed 's/^/  conflito: /'
+            git merge --abort || true
+            exit 1
+          fi
+          echo "merge_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Instala o Rust do rust-toolchain mesclado
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          rustup self update
+          rustup set profile minimal
+          rustup toolchain install
+          rustc --version
+
+      - name: Atualiza o PO com o POT novo (atualiza_po.sh)
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/po"
+          cp po/pt-BR.po "$RUNNER_TEMP/po/antes.po"
+          bash i18n/tools/atualiza_po.sh
+          cp po/pt-BR.po "$RUNNER_TEMP/po/mesclado.po"
+
+      - name: Porta as trocas de versão sem IA (autoport.py)
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          python3 i18n/tools/autoport.py
+
+      - name: Compila o livro em inglês e acerta os slugs (slugs.py)
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          i18n/build.sh en "$RUNNER_TEMP/en"
+          rc=0
+          python3 i18n/tools/slugs.py --en "$RUNNER_TEMP/en" || rc=$?
+          if (( rc >= 2 )); then
+            exit "$rc"
+          elif (( rc == 1 )); then
+            echo "::warning title=slugs.py::há títulos sem entrada ou páginas puladas (o check.py do job montar detalha)"
+          fi
+
+      - name: Gera o delta (delta.py)
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          python3 i18n/tools/delta.py --saida "$RUNNER_TEMP/delta" --po-anterior "$RUNNER_TEMP/po/antes.po"
+
+      - name: Guarda de reestruturação e relatório do autoport
+        id: guarda
+        if: steps.decisao.outputs.has_changes == 'true'
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          sys.path.insert(0, "i18n/tools")
+          import po_util
+
+          T = Path(os.environ["RUNNER_TEMP"])
+          A = T / "artefato"
+          limite, minimo = float(os.environ["GUARDA_PCT"]), int(os.environ["GUARDA_MINIMO"])
+
+          def contaveis(po):
+              return [e for e in po if not e.obsolete and po_util.traduzivel(e)
+                      and not po_util.sem_texto(e) and e.msgid not in po_util.SEMPRE_VAZIAS]
+
+          antes = po_util.carregar(T / "po" / "antes.po")        # main, antes do msgmerge
+          mesclado = po_util.carregar(T / "po" / "mesclado.po")  # depois do msgmerge
+          depois = po_util.carregar("po/pt-BR.po")               # depois do autoport e do slugs
+          delta = json.loads((T / "delta" / "delta.json").read_text(encoding="utf-8"))["capitulos"]
+
+          vivas_antes = {e.msgid for e in antes if not e.obsolete}
+          vivas_depois = {e.msgid: e for e in depois if not e.obsolete}
+          # Mensagem que o msgmerge casou como fuzzy é "alterada", não nova + removida
+          # (inclusive as que o autoport já resolveu, que nem contam).
+          fuzzy_mescladas = [e for e in mesclado if not e.obsolete and "fuzzy" in e.flags]
+          casadas_novas = {e.msgid for e in fuzzy_mescladas}
+          casadas_antigas = {e.previous_msgid for e in fuzzy_mescladas if e.previous_msgid}
+          stats = {}
+          def conta(cap):
+              return stats.setdefault(cap, {"total": 0, "fuzzy": 0, "novas": 0, "removidas": 0})
+          for e in contaveis(depois):
+              s = conta(po_util.capitulo(e))
+              s["total"] += 1
+              if "fuzzy" in e.flags:
+                  s["fuzzy"] += 1
+              elif e.msgid not in vivas_antes and e.msgid not in casadas_novas:
+                  s["novas"] += 1
+          for e in contaveis(antes):
+              if e.msgid not in vivas_depois and e.msgid not in casadas_antigas:
+                  conta(po_util.capitulo(e))["removidas"] += 1
+
+          capitulos, excluidos, relatorio = [], [], {}
+          for cap in po_util.CAPITULOS:
+              if not delta.get(cap):
+                  continue
+              s = conta(cap)
+              mudou = s["fuzzy"] + s["novas"] + s["removidas"]
+              s["pct"] = round(100.0 * mudou / max(s["total"], 1), 1)
+              s["excluido"] = mudou >= minimo and s["pct"] > limite
+              relatorio[cap] = s
+              (excluidos if s["excluido"] else capitulos).append(cap)
+              print(f"{cap:<11} total {s['total']:>4}  fuzzy {s['fuzzy']:>3}  novas {s['novas']:>3}  "
+                    f"removidas {s['removidas']:>3}  {s['pct']:>5}%" + ("  FORA DA IA" if s["excluido"] else ""))
+
+          # Entradas que o autoport portou sem IA: fuzzy depois do msgmerge, traduzidas agora.
+          portadas = []
+          for e in mesclado:
+              n = vivas_depois.get(e.msgid)
+              if e.obsolete or "fuzzy" not in e.flags or n is None or not po_util.traduzida(n):
+                  continue
+              portadas.append({"id": po_util.entry_id(e), "capitulo": po_util.capitulo(e),
+                               "msgid_anterior": e.previous_msgid, "msgid": e.msgid,
+                               "msgstr_antigo": e.msgstr, "msgstr_novo": n.msgstr})
+
+          A.mkdir(parents=True, exist_ok=True)
+          guarda = {"limite_pct": limite, "minimo": minimo, "capitulos": relatorio, "excluidos": excluidos}
+          (A / "guarda.json").write_text(json.dumps(guarda, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          (A / "portadas.json").write_text(json.dumps(portadas, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"autoport: {len(portadas)} entrada(s); para a IA: {capitulos or 'nenhum capítulo'}; "
+                f"fora da IA: {excluidos or 'nenhum'}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"chapters={json.dumps(capitulos)}\n")
+              out.write(f"draft={'true' if excluidos else 'false'}\n")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+              out.write(f"- autoport: {len(portadas)} entrada(s); capítulos para a IA: {', '.join(capitulos) or 'nenhum'}\n")
+              if excluidos:
+                  out.write(f"- **guarda de reestruturação**: fora da IA (PR em rascunho): {', '.join(excluidos)}\n")
+          PY
+
+      - name: Empacota os artefatos (bundle e sha256)
+        id: artefato
+        if: steps.decisao.outputs.has_changes == 'true'
+        env:
+          MAIN_SHA: ${{ steps.upstream.outputs.main_sha }}
+        run: |
+          A="$RUNNER_TEMP/artefato"
+          cp "$RUNNER_TEMP/delta/delta.json" "$A/delta.json"
+          cp po/pt-BR.po "$A/pt-BR.po"
+          git bundle create "$A/sync.bundle" "refs/heads/$RAMO_SYNC" "^$MAIN_SHA"
+          git bundle verify "$A/sync.bundle"
+          cd "$A"
+          find . -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/SHA256SUMS.preparar"
+          mv "$RUNNER_TEMP/SHA256SUMS.preparar" SHA256SUMS
+          cat SHA256SUMS
+          echo "sha_lista=$(sha256sum SHA256SUMS | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Publica os artefatos do preparar
+        if: steps.decisao.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: preparar
+          path: ${{ runner.temp }}/artefato
+          if-no-files-found: error
+          retention-days: 7
+
+  traduzir:
+    name: Traduz o delta (${{ matrix.capitulo }})
+    needs: preparar
+    if: needs.preparar.outputs.has_changes == 'true' && needs.preparar.outputs.chapters != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions: {}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        capitulo: ${{ fromJSON(needs.preparar.outputs.chapters) }}
+    steps:
+      - name: Baixa os artefatos do preparar
+        uses: actions/download-artifact@v4
+        with:
+          name: preparar
+          path: ${{ runner.temp }}/preparar
+
+      - name: Confere os artefatos (sha256)
+        env:
+          SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
+        run: |
+          cd "$RUNNER_TEMP/preparar"
+          echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
+          sha256sum -c --quiet SHA256SUMS
+
+      - name: Instala o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Instala o PyYAML
+        run: |
+          python3 -m pip install --disable-pip-version-check -q PyYAML==6.0.2
+
+      - name: Traduz (traduz_delta.py)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PTBR_MODELO_TRADUCAO: ${{ vars.PTBR_MODELO_TRADUCAO }}
+          CAPITULO: ${{ matrix.capitulo }}
+        run: |
+          P="$RUNNER_TEMP/preparar"
+          S="$RUNNER_TEMP/trad"
+          mkdir -p "$S"
+          python3 "$P/ferramentas/i18n/tools/traduz_delta.py" --delta "$P/delta.json" \
+            --capitulo "$CAPITULO" --saida "$S/trad-$CAPITULO.json" 2>&1 | tee "$S/log-$CAPITULO.txt"
+
+      - name: Calcula o sha256 das traduções
+        if: always()
+        env:
+          CAPITULO: ${{ matrix.capitulo }}
+        run: |
+          S="$RUNNER_TEMP/trad"
+          mkdir -p "$S"
+          cd "$S"
+          find . -type f -name "*-$CAPITULO.*" ! -name '*.sha256' -print0 | sort -z \
+            | xargs -0 -r sha256sum > "trad-$CAPITULO.sha256"
+          cat "trad-$CAPITULO.sha256"
+
+      - name: Publica as traduções
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trad-${{ matrix.capitulo }}
+          path: ${{ runner.temp }}/trad
+          if-no-files-found: ignore
+          retention-days: 7
+
+  montar:
+    name: Monta o branch (apply.py e check.py, sem escrita)
+    needs: [preparar, traduzir]
+    if: ${{ !cancelled() && needs.preparar.result == 'success' && needs.preparar.outputs.has_changes == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      tip_sha: ${{ steps.commit.outputs.tip_sha }}
+      draft: ${{ steps.corpo.outputs.draft }}
+      check_ok: ${{ steps.check.outputs.check_ok }}
+      sha_lista: ${{ steps.artefato.outputs.sha_lista }}
+    steps:
+      - name: Checkout da main usada no preparar
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preparar.outputs.main_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Baixa os artefatos do preparar
+        uses: actions/download-artifact@v4
+        with:
+          name: preparar
+          path: ${{ runner.temp }}/preparar
+
+      - name: Baixa as traduções
+        if: needs.traduzir.result != 'skipped'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: trad-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/trad
+
+      - name: Confere os artefatos (sha256)
+        env:
+          SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
+        run: |
+          cd "$RUNNER_TEMP/preparar"
+          echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
+          sha256sum -c --quiet SHA256SUMS
+          mkdir -p "$RUNNER_TEMP/trad"
+          cd "$RUNNER_TEMP/trad"
+          shopt -s nullglob
+          for lista in *.sha256; do
+            sha256sum -c --quiet "$lista"
+          done
+
+      - name: Instala o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Instala gettext, polib e PyYAML
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gettext
+          python3 -m pip install --disable-pip-version-check -q polib==1.1.1 PyYAML==6.0.2
+
+      - name: Instala o mdbook
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz --directory="$RUNNER_TEMP/bin"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Restaura o mdbook-i18n-helpers do cache
+        id: cache-i18n
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.local/i18n-helpers
+          key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
+
+      # Sem salvar: este job roda código do upstream (o preparar já salvou o cache).
+      - name: Compila o mdbook-i18n-helpers fixado (cache ausente)
+        if: steps.cache-i18n.outputs.cache-hit != 'true'
+        working-directory: ${{ runner.temp }}
+        run: |
+          cargo install --locked --root "$HOME/.local/i18n-helpers" \
+            --git https://github.com/google/mdbook-i18n-helpers --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
+
+      - name: Põe as ferramentas no PATH
+        run: |
+          echo "$HOME/.local/i18n-helpers/bin" >> "$GITHUB_PATH"
+
+      - name: Recria o branch a partir do bundle
+        env:
+          MERGE_SHA: ${{ needs.preparar.outputs.merge_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+        run: |
+          B="$RUNNER_TEMP/preparar/sync.bundle"
+          git bundle verify "$B"
+          git fetch --no-tags "$B" "refs/heads/$RAMO_SYNC:refs/heads/$RAMO_SYNC"
+          tip=$(git rev-parse --verify --end-of-options "refs/heads/$RAMO_SYNC^{commit}")
+          if [[ "$tip" != "$MERGE_SHA" ]]; then
+            echo "::error title=Bundle inesperado::o bundle aponta para ${tip:0:7}, não para o merge ${MERGE_SHA:0:7} do preparar"
+            exit 1
+          fi
+          git switch "$RAMO_SYNC"
+          git update-ref refs/remotes/upstream/main "$UPSTREAM_SHA"
+          cp "$RUNNER_TEMP/preparar/pt-BR.po" po/pt-BR.po
+
+      - name: Instala o Rust do rust-toolchain mesclado
+        run: |
+          rustup self update
+          rustup set profile minimal
+          rustup toolchain install
+          rustc --version
+
+      - name: Compila o livro em inglês
+        run: |
+          i18n/build.sh en "$RUNNER_TEMP/en"
+
+      - name: Aplica as traduções (apply.py --modo sync)
+        run: |
+          M="$RUNNER_TEMP/montar"
+          mkdir -p "$M"
+          shopt -s nullglob
+          trads=("$RUNNER_TEMP"/trad/trad-*.json)
+          if (( ${#trads[@]} == 0 )); then
+            echo "nenhuma tradução por IA para aplicar"
+            echo '{"aplicadas": 0, "rejeitadas": [], "avisos": []}' > "$M/aplicado.json"
+            exit 0
+          fi
+          rc=0
+          python3 i18n/tools/apply.py --po po/pt-BR.po --traducoes "${trads[@]}" \
+            --modo sync --delta "$RUNNER_TEMP/preparar/delta.json" \
+            --relatorio "$M/aplicado.json" > /dev/null || rc=$?
+          if (( rc >= 2 )); then
+            exit "$rc"
+          elif (( rc == 1 )); then
+            echo "::warning title=apply.py::algumas traduções foram rejeitadas e ficam fuzzy ou vazias (o livro mostra o inglês)"
+          fi
+
+      - name: Acerta os slugs dos títulos traduzidos (slugs.py)
+        run: |
+          rc=0
+          python3 i18n/tools/slugs.py --en "$RUNNER_TEMP/en" || rc=$?
+          if (( rc >= 2 )); then
+            exit "$rc"
+          elif (( rc == 1 )); then
+            echo "::warning title=slugs.py::há títulos sem entrada ou páginas puladas (veja o check.py)"
+          fi
+
+      - name: Compila o livro em pt-BR e roda o check.py
+        id: check
+        run: |
+          M="$RUNNER_TEMP/montar"
+          i18n/build.sh pt "$RUNNER_TEMP/pt"
+          rc=0
+          python3 i18n/tools/check.py --en "$RUNNER_TEMP/en" --pt "$RUNNER_TEMP/pt" \
+            --upstream-ref upstream/main --json "$M/check.json" > "$M/check.txt" 2>&1 || rc=$?
+          cat "$M/check.txt"
+          if (( rc >= 2 )); then
+            exit "$rc"
+          fi
+          if (( rc == 0 )); then
+            echo "check_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning title=check.py::o check encontrou erros; o PR vai como rascunho"
+            echo "check_ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Faz o commit do PO
+        id: commit
+        env:
+          MERGE_SHA: ${{ needs.preparar.outputs.merge_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+        run: |
+          git add -- po/pt-BR.po
+          if git diff --cached --quiet; then
+            echo "o PO não mudou: o branch fica só com o merge"
+          else
+            git -c user.name="$BOT_NOME" -c user.email="$BOT_EMAIL" commit --no-verify -q \
+              -m "i18n: sync upstream ${UPSTREAM_SHA:0:7} (msgmerge, autoport, slugs e IA)"
+          fi
+          tip=$(git rev-parse HEAD)
+          fora=$(git diff --name-only "$MERGE_SHA" "$tip" | grep -vx 'po/pt-BR.po' || true)
+          if [[ -n "$fora" ]]; then
+            echo "::error title=Arquivo inesperado::o commit do sync só pode mudar po/pt-BR.po"
+            exit 1
+          fi
+          echo "tip_sha=$tip" >> "$GITHUB_OUTPUT"
+
+      - name: Monta o corpo do PR
+        id: corpo
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+          DRAFT_PREPARAR: ${{ needs.preparar.outputs.draft }}
+          CHECK_OK: ${{ steps.check.outputs.check_ok }}
+          TRADUZIR_RESULT: ${{ needs.traduzir.result }}
+        run: |
+          python3 - <<'PY'
+          import html, json, os, re, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, "i18n/tools")
+          import po_util
+
+          T = Path(os.environ["RUNNER_TEMP"])
+          P, M, TR = T / "preparar", T / "montar", T / "trad"
+          main_sha, up_sha = os.environ["MAIN_SHA"], os.environ["UPSTREAM_SHA"]
+          LIMITE_CORPO = 60000   # bytes; o GitHub aceita até 65536 caracteres
+
+          def tam(texto):
+              return len(texto.encode("utf-8"))
+          ESPECIAIS = set("&<>|\\`*_[]#@$~")   # sem < e [ não se formam tags nem links
+
+          def ler(caminho, padrao):
+              try:
+                  return json.loads(caminho.read_text(encoding="utf-8"))
+              except (OSError, ValueError):
+                  return padrao
+
+          def neutro(texto):
+              # @mencao e #123 viram texto: nada de notificar pessoas nem citar issues.
+              return texto.replace("@", "@​").replace("#", "#​")
+
+          def cel(texto, limite=400):
+              """Texto não confiável (upstream, IA) -> célula de tabela inerte."""
+              if texto is None or texto == "":
+                  return "—"
+              texto = str(texto)
+              if len(texto) > limite:
+                  texto = texto[:limite] + "…"
+              texto = "".join(f"&#{ord(c)};" if c in ESPECIAIS else c for c in neutro(texto))
+              return texto.replace("\r", "").replace("\n", "<br>")
+
+          motivos = []
+          if os.environ.get("DRAFT_PREPARAR") == "true":
+              motivos.append("a guarda de reestruturação tirou capítulos da IA")
+          if os.environ.get("CHECK_OK") != "true":
+              motivos.append("o check.py encontrou erros")
+          if os.environ.get("TRADUZIR_RESULT") not in ("success", "skipped"):
+              motivos.append(f"a tradução por IA não terminou bem ({os.environ.get('TRADUZIR_RESULT')})")
+
+          delta = ler(P / "delta.json", {}).get("capitulos", {})
+          guarda = ler(P / "guarda.json", {})
+          excluidos = set(guarda.get("excluidos", []))
+          portadas = ler(P / "portadas.json", [])
+          aplicado = ler(M / "aplicado.json", {})
+          rejeitadas = {r.get("id"): r.get("motivos", []) for r in aplicado.get("rejeitadas", [])}
+          check = ler(M / "check.json", {})
+          trad = {}
+          for arq in sorted(TR.glob("trad-*.json")):
+              itens = ler(arq, [])
+              for it in itens if isinstance(itens, list) else []:
+                  if isinstance(it, dict) and isinstance(it.get("id"), str):
+                      trad[it["id"]] = it
+          tok_in = tok_out = 0
+          for arq in sorted(TR.glob("log-*.txt")):
+              for m in re.finditer(r"tokens: (\d+) de entrada e (\d+) de saída",
+                                   arq.read_text(encoding="utf-8", errors="replace")):
+                  tok_in, tok_out = tok_in + int(m.group(1)), tok_out + int(m.group(2))
+          final = po_util.mapa_ids(po_util.carregar("po/pt-BR.po"))
+
+          # Prioridade na tabela (se faltar espaço, cortam-se as últimas): o que mudou
+          # (autoport, IA, rejeitada), depois fuzzy sem tradução, por fim novas sem tradução.
+          linhas = []
+          for p in portadas:
+              linhas.append((0, len(linhas), (p["capitulo"], p["id"], p["msgid_anterior"], p["msgid"],
+                             p["msgstr_antigo"], p["msgstr_novo"], "autoport", "—")))
+          n_ia = n_sem = 0
+          for cap in po_util.CAPITULOS:
+              for item in delta.get(cap, []):
+                  ident = item["id"]
+                  e = final.get(ident)
+                  novo = e.msgstr if e is not None and po_util.traduzida(e) else ""
+                  t = trad.get(ident, {})
+                  if cap in excluidos:
+                      origem = "fora da IA (reestruturação)"
+                  elif ident in rejeitadas:
+                      origem = "IA, rejeitada pelo apply.py: " + "; ".join(map(str, rejeitadas[ident]))
+                  elif t and novo:
+                      origem, n_ia = "IA", n_ia + 1
+                  else:
+                      origem = "sem tradução"
+                  if not novo:
+                      n_sem += 1
+                  if t.get("notas"):
+                      origem += " — nota: " + str(t["notas"])
+                  fuzzy = item.get("tipo") == "fuzzy"
+                  prio = 0 if (novo or ident in rejeitadas) else (1 if fuzzy else 2)
+                  linhas.append((prio, len(linhas), (cap, ident, item.get("msgid_anterior") if fuzzy else None,
+                                 item.get("msgid"), item.get("msgstr_atual"),
+                                 novo or "(fuzzy ou vazia: o livro mostra o inglês)",
+                                 origem, t.get("confianca") or "—")))
+          linhas = [l for _p, _i, l in sorted(linhas)]
+
+          def git(*args):
+              return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
+
+          n_commits = int(git("rev-list", "--count", "--no-merges", f"{main_sha}..{up_sha}").strip())
+          commits = git("log", "--no-merges", "-n", "300", "--date=short",
+                        "--format=%h %ad %an: %s", f"{main_sha}..{up_sha}")
+
+          up7 = up_sha[:7]
+          resumo = check.get("resumo", {})
+          partes = [f"## Sync upstream {up7}\n",
+                    f"Mescla o `rust-lang/book` (`{up7}`) na main (`{main_sha[:7]}`), atualiza o "
+                    "`po/pt-BR.po` (msgmerge --previous), porta sem IA as trocas de versão (autoport), "
+                    "acerta os `{#slug}` e aplica o porte por IA do delta (`apply.py --modo sync`). "
+                    "O que ficar fuzzy ou vazio aparece em inglês no livro.\n"]
+          if motivos:
+              partes.append("> [!WARNING]\n> PR em rascunho: " + "; ".join(motivos) + ".\n")
+          partes += ["### Resumo\n", "| item | valor |", "| --- | --- |",
+                     f"| entradas no delta | {sum(len(v) for v in delta.values())} |",
+                     f"| portadas pelo autoport | {len(portadas)} |",
+                     f"| traduzidas por IA e aceitas | {n_ia} (apply.py: {aplicado.get('aplicadas', 0)} aplicadas) |",
+                     f"| rejeitadas pelo apply.py | {len(rejeitadas)} |",
+                     f"| ainda fuzzy ou vazias | {n_sem} |",
+                     f"| capítulos fora da IA (guarda) | {', '.join(sorted(excluidos)) or 'nenhum'} |",
+                     f"| check.py | {resumo.get('erros', '?')} erro(s), {resumo.get('avisos', '?')} aviso(s) |",
+                     f"| tokens da API | {tok_in} de entrada, {tok_out} de saída |", ""]
+          tabela = ["### Entradas\n",
+                    "| cap. | id | EN antigo | EN novo | PT antigo | PT novo | origem | confiança |",
+                    "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+          erros = [a for a in check.get("achados", []) if a.get("severidade") == "erro"]
+          fim = ["", "### check.py\n",
+                 f"<details><summary>{len(erros)} erro(s), {resumo.get('avisos', '?')} aviso(s)</summary>\n"]
+          fim += [f"- {cel(a.get('check'), 40)}: {cel(a.get('mensagem'), 300)}" for a in erros[:40]]
+          fim += ["", "</details>\n", "### Commits do upstream (dados não confiáveis, só para contexto)\n"]
+          lista = html.escape(neutro(commits.strip()))
+          if tam(lista) > LIMITE_CORPO // 3:
+              fim.append(f"{n_commits} commit(s); a lista é grande demais para o PR.\n")
+          else:
+              fim += [f"<details><summary>{n_commits} commit(s)" + (", mostrando 300" if n_commits > 300 else "")
+                      + "</summary>\n", "<pre>", lista, "</pre>", "</details>\n"]
+          fim.append(f"Gerado pelo ptbr-sync.yml: {os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+                     f"/actions/runs/{os.environ['GITHUB_RUN_ID']}")
+
+          corpo = "\n".join(partes + tabela)
+          resto = "\n".join(fim)
+          omitidas = 0
+          for i, l in enumerate(linhas):
+              linha = "| " + " | ".join([cel(l[0], 20), f"`{l[1]}`"] + [cel(x) for x in l[2:]]) + " |"
+              if tam(corpo) + tam(linha) + tam(resto) + 200 > LIMITE_CORPO:
+                  omitidas = len(linhas) - i
+                  break
+              corpo += "\n" + linha
+          if omitidas:
+              corpo += f"\n\n… e mais {omitidas} entrada(s): veja o artifact `montar` desta execução."
+          corpo += "\n" + resto + "\n"
+          (M / "pr-body.md").write_text(corpo, encoding="utf-8")
+          print(f"corpo do PR: {tam(corpo)} bytes, {len(linhas) - omitidas} linha(s) na tabela")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"draft={'true' if motivos else 'false'}\n")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+              out.write(corpo)
+          PY
+
+      - name: Empacota os artefatos (bundle e sha256)
+        id: artefato
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+        run: |
+          M="$RUNNER_TEMP/montar"
+          cp po/pt-BR.po "$M/pt-BR.po"
+          git bundle create "$M/sync.bundle" "refs/heads/$RAMO_SYNC" "^$MAIN_SHA"
+          git bundle verify "$M/sync.bundle"
+          cd "$M"
+          find . -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/SHA256SUMS.montar"
+          mv "$RUNNER_TEMP/SHA256SUMS.montar" SHA256SUMS
+          cat SHA256SUMS
+          echo "sha_lista=$(sha256sum SHA256SUMS | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Publica os artefatos do montar
+        uses: actions/upload-artifact@v4
+        with:
+          name: montar
+          path: ${{ runner.temp }}/montar
+          if-no-files-found: error
+          retention-days: 14
+
+  publicar:
+    name: Publica o PR (único job com escrita; não roda código do repositório)
+    needs: [preparar, montar]
+    if: ${{ !cancelled() && needs.preparar.result == 'success' && needs.montar.result == 'success' && inputs.dry_run != true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - name: Gera o token do GitHub App
+        id: app
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PTBR_APP_ID }}
+          private-key: ${{ secrets.PTBR_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-workflows: write
+
+      # Só git: nenhum script, build ou action do repositório roda neste job.
+      - name: Checkout da main (só para o git)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RAMO_BASE }}
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
+
+      - name: Baixa os artefatos do preparar
+        uses: actions/download-artifact@v4
+        with:
+          name: preparar
+          path: ${{ runner.temp }}/preparar
+
+      - name: Baixa os artefatos do montar
+        uses: actions/download-artifact@v4
+        with:
+          name: montar
+          path: ${{ runner.temp }}/montar
+
+      - name: Confere os artefatos (sha256)
+        env:
+          SHA_PREPARAR: ${{ needs.preparar.outputs.sha_lista }}
+          SHA_MONTAR: ${{ needs.montar.outputs.sha_lista }}
+        run: |
+          cd "$RUNNER_TEMP/preparar"
+          echo "$SHA_PREPARAR  SHA256SUMS" | sha256sum -c --quiet
+          sha256sum -c --quiet SHA256SUMS
+          cd "$RUNNER_TEMP/montar"
+          echo "$SHA_MONTAR  SHA256SUMS" | sha256sum -c --quiet
+          sha256sum -c --quiet SHA256SUMS
+
+      - name: Confere se a main não mudou desde o preparar
+        id: base
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+        run: |
+          atual=$(git ls-remote origin "refs/heads/$RAMO_BASE" | cut -f1)
+          if [[ "$atual" != "$MAIN_SHA" ]]; then
+            echo "::warning title=A main mudou durante o sync::main agora em ${atual:0:7} (o preparar usou ${MAIN_SHA:0:7}); nada é publicado, a próxima execução refaz o sync"
+            echo "mudou=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "mudou=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Não confia no montar (que rodou código do upstream): recalcula o merge e só
+      # aceita, depois dele, commits simples que mexem apenas em po/pt-BR.po.
+      - name: Confere o branch montado
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+          MERGE_SHA: ${{ needs.preparar.outputs.merge_sha }}
+          TIP_SHA: ${{ needs.montar.outputs.tip_sha }}
+        run: |
+          recusa() {
+            echo "::error title=Branch montado recusado::$1"
+            exit 1
+          }
+          B="$RUNNER_TEMP/montar/sync.bundle"
+          git bundle verify "$B"
+          git fetch --no-tags "$B" "refs/heads/$RAMO_SYNC:refs/ptbr/montado"
+          tip=$(git rev-parse --verify --end-of-options 'refs/ptbr/montado^{commit}')
+          [[ "$tip" == "$TIP_SHA" ]] || recusa "o bundle aponta para ${tip:0:7}, não para ${TIP_SHA:0:7}"
+          read -r -a pais <<< "$(git rev-list --parents -n 1 "$MERGE_SHA")"
+          if (( ${#pais[@]} != 3 )) || [[ "${pais[1]}" != "$MAIN_SHA" || "${pais[2]}" != "$UPSTREAM_SHA" ]]; then
+            recusa "o commit de merge não tem como pais a main e o upstream"
+          fi
+          # Sem o cabeçalho com o token do App que o checkout gravou para github.com.
+          git -c 'http.https://github.com/.extraheader=' fetch --no-tags "$UPSTREAM_URL" "$UPSTREAM_REF"
+          git merge-base --is-ancestor "$UPSTREAM_SHA" FETCH_HEAD \
+            || recusa "${UPSTREAM_SHA:0:7} não pertence ao histórico de $UPSTREAM_REF do rust-lang/book"
+          arvore=$(git merge-tree --write-tree --no-messages "$MAIN_SHA" "$UPSTREAM_SHA") \
+            || recusa "o merge recalculado aqui tem conflito"
+          [[ "$arvore" == "$(git rev-parse "$MERGE_SHA^{tree}")" ]] \
+            || recusa "a árvore do merge não é o merge limpo da main com o upstream"
+          git merge-base --is-ancestor "$MERGE_SHA" "$tip" || recusa "o branch não parte do merge"
+          [[ -z "$(git rev-list --min-parents=2 "$MERGE_SHA..$tip")" ]] \
+            || recusa "há merges depois do merge do upstream"
+          fora=$(git diff --name-only "$MERGE_SHA" "$tip" | grep -vx 'po/pt-BR.po' || true)
+          [[ -z "$fora" ]] || recusa "depois do merge só po/pt-BR.po pode mudar"
+          echo "branch conferido: merge ${MERGE_SHA:0:7} + $(git rev-list --count "$MERGE_SHA..$tip") commit(s) só no PO"
+
+      - name: Protege commits manuais no branch de sync
+        id: remoto
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+        run: |
+          remoto=$(git ls-remote origin "refs/heads/$RAMO_SYNC" | cut -f1)
+          if [[ -n "$remoto" ]]; then
+            git fetch --no-tags origin "+refs/heads/$RAMO_SYNC:refs/ptbr/remoto"
+            alheios=$(git log --first-parent --format='%h %ce' refs/ptbr/remoto "^$MAIN_SHA" \
+              | awk -v bot="$BOT_EMAIL" '$2 != bot')
+            if [[ -n "$alheios" ]]; then
+              while read -r linha; do
+                echo "  commit de outra pessoa: $linha"
+              done <<< "$alheios"
+              echo "::error title=Commits manuais em $RAMO_SYNC::o branch tem commits que não são do bot; mescle ou feche o PR (e apague o branch) antes do próximo sync"
+              exit 1
+            fi
+          fi
+          echo "remoto=$remoto" >> "$GITHUB_OUTPUT"
+
+      - name: Faz push de sync/upstream (force-with-lease)
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          TIP_SHA: ${{ needs.montar.outputs.tip_sha }}
+          REMOTO: ${{ steps.remoto.outputs.remoto }}
+        run: |
+          git push --force-with-lease="refs/heads/$RAMO_SYNC:$REMOTO" origin "$TIP_SHA:refs/heads/$RAMO_SYNC"
+
+      - name: Abre ou atualiza o PR
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+          DRAFT: ${{ needs.montar.outputs.draft }}
+        run: |
+          titulo="Sync upstream ${UPSTREAM_SHA:0:7}"
+          corpo="$RUNNER_TEMP/montar/pr-body.md"
+          if (( $(wc -c < "$corpo") > 65000 )); then
+            corpo="$RUNNER_TEMP/pr-body-curto.md"
+            echo "O corpo completo passou do limite do GitHub: veja o artifact \`montar\` da execução $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID." > "$corpo"
+          fi
+          num=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$RAMO_SYNC" --base "$RAMO_BASE" \
+            --state open --json number --jq '.[0].number // empty')
+          if [[ -n "$num" ]]; then
+            gh pr edit "$num" --repo "$GITHUB_REPOSITORY" --title "$titulo" --body-file "$corpo"
+            rascunho=$(gh pr view "$num" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')
+            if [[ "$DRAFT" == true && "$rascunho" != true ]]; then
+              gh pr ready "$num" --repo "$GITHUB_REPOSITORY" --undo
+            elif [[ "$DRAFT" != true && "$rascunho" == true ]]; then
+              gh pr ready "$num" --repo "$GITHUB_REPOSITORY"
+            fi
+            url=$(gh pr view "$num" --repo "$GITHUB_REPOSITORY" --json url --jq '.url')
+          else
+            args=(--repo "$GITHUB_REPOSITORY" --base "$RAMO_BASE" --head "$RAMO_SYNC"
+                  --title "$titulo" --body-file "$corpo")
+            if [[ "$DRAFT" == true ]]; then
+              args+=(--draft)
+            fi
+            url=$(gh pr create "${args[@]}")
+          fi
+          echo "PR: $url"
+          echo "### ptbr-sync: PR $url" >> "$GITHUB_STEP_SUMMARY"
+
+  sync-quebrado:
+    name: Abre ou atualiza a issue sync-quebrado
+    needs: [preparar, traduzir, montar, publicar]
+    if: ${{ !cancelled() && inputs.dry_run != true && vars.PTBR_APP_ID != '' && (failure() || needs.preparar.outputs.alarme_atraso == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - name: Gera o token do GitHub App
+        id: app
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PTBR_APP_ID }}
+          private-key: ${{ secrets.PTBR_APP_PRIVATE_KEY }}
+          permission-issues: write
+
+      - name: Abre ou comenta a issue
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          R_PREPARAR: ${{ needs.preparar.result }}
+          R_TRADUZIR: ${{ needs.traduzir.result }}
+          R_MONTAR: ${{ needs.montar.result }}
+          R_PUBLICAR: ${{ needs.publicar.result }}
+          ALARME: ${{ needs.preparar.outputs.alarme_atraso }}
+          DIAS: ${{ needs.preparar.outputs.dias_atraso }}
+        run: |
+          execucao="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          corpo="$RUNNER_TEMP/issue.md"
+          {
+            echo "O ptbr-sync precisa de atenção ($(date -u '+%Y-%m-%d %H:%M UTC')): $execucao"
+            echo
+            echo "| job | resultado |"
+            echo "| --- | --- |"
+            echo "| preparar | $R_PREPARAR |"
+            echo "| traduzir | $R_TRADUZIR |"
+            echo "| montar | $R_MONTAR |"
+            echo "| publicar | $R_PUBLICAR |"
+            if [[ "$ALARME" == true ]]; then
+              echo
+              echo "**Alarme de atraso:** o upstream está $DIAS dias à frente do merge-base e não havia PR sync/* aberto."
+            fi
+          } > "$corpo"
+          num=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == "sync-quebrado")) | .[0].number // empty')
+          if [[ -n "$num" ]]; then
+            gh issue comment "$num" --repo "$GITHUB_REPOSITORY" --body-file "$corpo"
+          elif ! gh issue create --repo "$GITHUB_REPOSITORY" --title sync-quebrado --label sync-quebrado --body-file "$corpo"; then
+            gh issue create --repo "$GITHUB_REPOSITORY" --title sync-quebrado --body-file "$corpo"
+          fi
+          if [[ "$ALARME" == true ]]; then
+            echo "::error title=Sync atrasado::alarme de atraso registrado na issue sync-quebrado"
+            exit 1
+          fi
