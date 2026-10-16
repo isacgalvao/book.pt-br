@@ -1268,7 +1268,8 @@ jobs:
             echo "O corpo completo passou do limite do GitHub: veja o artifact \`montar\` da execução $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID." > "$corpo"
           fi
           num=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$RAMO_SYNC" --base "$RAMO_BASE" \
-            --state open --json number --jq '.[0].number // empty')
+            --state open --json number,isCrossRepository \
+            --jq 'map(select(.isCrossRepository | not)) | .[0].number // empty')
           if [[ -n "$num" ]]; then
             gh pr edit "$num" --repo "$GITHUB_REPOSITORY" --title "$titulo" --body-file "$corpo"
             rascunho=$(gh pr view "$num" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')
