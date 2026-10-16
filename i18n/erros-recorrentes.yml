@@ -16,8 +16,11 @@
 #     capítulo (E4) e o CI. O apply.py NÃO lê este arquivo (só aplica validar_par: estrutura),
 #     então o tradutor e o revisor precisam conferir antes; o erro só aparece depois de gravado.
 #     aviso = suspeita (a forma também tem uso legítimo): um revisor decide.
-#   - Formas que o `evitar` do glossario.yml já cobre com a mesma regex (nightly “noturno”,
-#     stable “Rust estável”) não se repetem aqui: cada regra mora num lugar só.
+#   - O `evitar` do glossario.yml e as regras daqui podem coincidir de propósito nos termos
+#     decididos: o glossário dá o aviso do termo e este arquivo acrescenta o erro com contexto
+#     (`rust-noturno`, `genero-enum`, `genero-struct`, `package-em-ingles`, `fazer-o-build`).
+#     Só não se repete aqui a regex idêntica à do `evitar` (nightly “noturno” solto, stable
+#     “Rust estável”): essa mora só no glossário.
 #   - Código, URLs e comandos ficam fora do texto avaliado.
 #
 # Para propor uma entrada: escreva a regex, rode-a sobre o msgstr de po/pt-BR.po e sobre prosa
@@ -60,7 +63,7 @@ erros:
   - id: idiomas-rust
     regex: '(?i:\bidiomas?\s+(?:d[oae]s?\s+)?(?:Rust|edição)\b)'
     severidade: erro
-    correcao: "expressões idiomáticas (ou padrões idiomáticos) do Rust"
+    correcao: "expressões idiomáticas do Rust"
     explicacao: >-
       “Idiom” é uma forma típica de escrever em uma linguagem, não um idioma natural. Apareceu
       como “os idiomas da Edição Rust 2024” (página de rosto) e “os idiomas do Rust” (capítulo 0).
@@ -113,18 +116,20 @@ erros:
     explicacao: "O rótulo é sempre “Nome do arquivo:”, com “do” e “arquivo” em minúscula."
 
   - id: listing-em-ingles
-    regex: '(?-i:\bListing\s+\d)'
+    regex: '(?-i:\bListings?\s+\d)'
     severidade: erro
-    correcao: "Listagem N-M"
-    explicacao: "Referências a listagens usam “Listagem 2-1”, igual ao rótulo que o build gera."
+    correcao: "Listagem N-M, Listagens N-M"
+    explicacao: >-
+      Referências a listagens usam “Listagem 2-1”, igual ao rótulo que o build gera, e, no plural,
+      “Listagens 10-17 e 10-18” (o livro tem 4 mensagens com “Listings”).
 
   - id: listagem-formato
-    regex: '(?-i:\bListagem\s+\d+(?:\.|–|—)\d+|\blistagem\s+\d)'
+    regex: '(?-i:\bListag(?:em|ens)\s+\d+(?:\.|–|—)\d+|\blistag(?:em|ens)\s+\d)'
     severidade: aviso
-    correcao: "Listagem 2-1 (maiúscula, hífen comum)"
+    correcao: "Listagem 2-1, Listagens 10-17 e 10-18 (maiúscula, hífen comum)"
     explicacao: >-
-      O número da listagem é copiado do original com hífen comum e a palavra “Listagem” leva
-      maiúscula, igual ao rótulo gerado pelo build.
+      O número da listagem é copiado do original com hífen comum e a palavra “Listagem” (ou
+      “Listagens”) leva maiúscula, igual ao rótulo gerado pelo build.
 
   - id: figure-em-ingles
     regex: '(?-i:\bFigure\s+\d)'
@@ -136,15 +141,18 @@ erros:
       27 referências na prosa e 25 legendas (`<span class="caption">` e `<figcaption>`).
 
   - id: table-em-ingles
-    regex: '(?-i:\bTable\s+\d)'
+    regex: '(?-i:\bTables?\s+(?:[A-Z]-)?\d)'
     severidade: erro
-    correcao: "Tabela N-M"
-    explicacao: "“Table 3-1” vira “Tabela 3-1”, como “Listing 3-1” vira “Listagem 3-1”."
+    correcao: "Tabela N-M, Tabela B-N"
+    explicacao: >-
+      “Table 3-1” vira “Tabela 3-1” e “Table B-1” vira “Tabela B-1”, como “Listing 3-1” vira
+      “Listagem 3-1”. O livro tem 24 mensagens com “Table”: 4 com número de capítulo e 20 do
+      Apêndice B (10 legendas e 10 referências na prosa), que levam letra.
 
   - id: figura-tabela-formato
-    regex: '(?-i:\b(?:figura|tabela)\s+\d|\b(?:Figura|Tabela)\s+\d+(?:\.|–|—)\d+)'
+    regex: '(?-i:\b(?:figuras?|tabelas?)\s+(?:[A-Z]-)?\d|\b(?:Figuras?|Tabelas?)\s+(?:[A-Z]-)?\d+(?:\.|–|—)\d+|\b(?:Figuras?|Tabelas?)\s+[A-Z](?:\.|–|—)\d)'
     severidade: aviso
-    correcao: "Figura 4-1, Tabela 3-1 (maiúscula, hífen comum)"
+    correcao: "Figura 4-1, Tabela 3-1, Tabela B-1 (maiúscula, hífen comum)"
     explicacao: >-
       O número vem copiado do original com hífen comum e a palavra leva maiúscula, como em
       “Listagem 2-1”.
@@ -243,6 +251,18 @@ erros:
     explicacao: >-
       “A jornada do Rust tem sido uma de colaboração” copia o inglês “has been one of
       collaboration”. Em português, reescreva a frase.
+
+  - id: aportuguesamento-de-verbos
+    regex: '(?i:\b(?:deploy|push|pull|commit|merge|rebase|fetch|stash|hack|patch)(?:e?ar(?:am|em|ei|ão|á)?|e?ando|e?ad[oa]s?|e?amos|e?ou)\b)'
+    severidade: aviso
+    correcao: "implantar, enviar, confirmar (commit), mesclar; ou reescreva a frase com o verbo português"
+    explicacao: >-
+      Não aportuguese verbos ingleses (“deployar”, “pushar”, “commitar”, “mergear”, “hackear”,
+      “patchar”): use o verbo português (“implantar”, “enviar”, “confirmar as alterações”,
+      “mesclar”). É aviso porque o verbo certo depende do contexto e o glossário pode já ter
+      decidido o termo; confira lá. Os verbos que o glossário proíbe um a um (`buildar`, “pinar”,
+      “pollar”, “crashar”, “spawnar”, “debugar”) seguem nas entradas deles; só `buildar` também
+      está aqui, como erro. Os substantivos (“o commit anterior”, “o patch aplicado”) ficam fora.
 
   - id: construir-sobre
     regex: '(?i:\bconstr(?:oem|ói|uímos|uiremos|uirá|uirão|uir|uindo|uiu|uíram|uíd[oa]s?|ua|uam)\s+sobre\b)'
@@ -351,7 +371,7 @@ erros:
       neste teste.
 
   - id: maiuscula-apos-dois-pontos
-    regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Rustacean|Rustaceans|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
+    regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
     severidade: aviso
     correcao: "minúscula depois de dois-pontos, salvo nome próprio"
     explicacao: >-
