@@ -149,7 +149,17 @@ Regras principais:
   que vêm do upstream (`src/`, `listings/`, `book.toml` e outros). Para corrigir o texto em
   inglês, abra a contribuição em [rust-lang/book](https://github.com/rust-lang/book).
 - **Âncoras de títulos** (` {#id-em-inglês}` no fim do `msgstr`) são postas pelo `slugs.py`;
-  não escreva nem apague à mão.
+  não escreva nem apague à mão. Depois de traduzir títulos, compile o livro em inglês num
+  diretório novo e rode o `slugs.py` apontando para ele (ele grava o `po/pt-BR.po` do seu
+  branch; com `--check` só confere, sem gravar, e sai com código 1 se faltar alguma âncora):
+
+  ```console
+  $ i18n/build.sh en ~/livro-rust-en
+  $ python3 i18n/tools/slugs.py --en ~/livro-rust-en
+  $ python3 i18n/tools/slugs.py --en ~/livro-rust-en --check
+  ```
+
+  Os ids vêm sempre da compilação em inglês, nunca são calculados à mão.
 - **O glossário só é editado pelo mantenedor.** Se faltar um termo, use a melhor opção e proponha
   o termo na descrição do PR.
 - Se editar o PO com outro programa, normalize o arquivo em seguida:
@@ -179,6 +189,7 @@ Ferramentas principais, todas com `--help` em português:
 | `i18n/build.sh` | compila o livro (`en`, `pot` ou `pt`), com trava no diretório de saída |
 | `i18n/tools/status.py` | progresso por capítulo e registro da revisão |
 | `i18n/tools/check.py` | portão único de qualidade da tradução |
+| `i18n/tools/slugs.py` | põe as âncoras ` {#id-em-inglês}` nos títulos traduzidos (precisa de `--en DIR`) |
 | `i18n/tools/normaliza_po.py` | normaliza o formato do PO |
 
 As demais ferramentas de `i18n/tools/` (lotes, aplicação de traduções, sincronização com o
