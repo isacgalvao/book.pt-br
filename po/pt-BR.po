@@ -201,19 +201,19 @@ msgstr "Organização dos testes {#test-organization}"
 
 #: src/SUMMARY.md src/ch12-00-an-io-project.md
 msgid "An I/O Project: Building a Command Line Program"
-msgstr ""
+msgstr "Um projeto de E/S: construindo um programa de linha de comando {#an-io-project-building-a-command-line-program}"
 
 #: src/SUMMARY.md src/ch12-01-accepting-command-line-arguments.md
 msgid "Accepting Command Line Arguments"
-msgstr ""
+msgstr "Aceitando argumentos de linha de comando {#accepting-command-line-arguments}"
 
 #: src/SUMMARY.md src/ch12-02-reading-a-file.md
 msgid "Reading a File"
-msgstr ""
+msgstr "Lendo um arquivo {#reading-a-file}"
 
 #: src/SUMMARY.md src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Refactoring to Improve Modularity and Error Handling"
-msgstr ""
+msgstr "Refatorando para melhorar a modularidade e o tratamento de erros {#refactoring-to-improve-modularity-and-error-handling}"
 
 #: src/SUMMARY.md
 msgid "Adding Functionality with Test Driven Development"
@@ -221,11 +221,11 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch12-05-working-with-environment-variables.md
 msgid "Working with Environment Variables"
-msgstr ""
+msgstr "Trabalhando com variáveis de ambiente {#working-with-environment-variables}"
 
 #: src/SUMMARY.md src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Redirecting Errors to Standard Error"
-msgstr ""
+msgstr "Redirecionando erros para a saída de erro padrão {#redirecting-errors-to-standard-error}"
 
 #: src/SUMMARY.md src/ch13-00-functional-features.md
 msgid "Functional Language Features: Iterators and Closures"
@@ -11714,97 +11714,99 @@ msgstr "Vamos combinar os conhecimentos que você aprendeu neste capítulo e nos
 
 #: src/ch12-00-an-io-project.md
 msgid "This chapter is a recap of the many skills you’ve learned so far and an exploration of a few more standard library features. We’ll build a command line tool that interacts with file and command line input/output to practice some of the Rust concepts you now have under your belt."
-msgstr ""
+msgstr "Este capítulo é uma recapitulação das muitas habilidades que você aprendeu até agora e uma exploração de alguns recursos adicionais da biblioteca padrão. Vamos criar uma ferramenta de linha de comando que interage com a entrada e a saída de arquivos e da linha de comando, para praticar alguns dos conceitos do Rust que você já domina."
 
 #: src/ch12-00-an-io-project.md
 msgid "Rust’s speed, safety, single binary output, and cross-platform support make it an ideal language for creating command line tools, so for our project, we’ll make our own version of the classic command line search tool `grep` (**g**lobally search a **r**egular **e**xpression and **p**rint). In the simplest use case, `grep` searches a specified file for a specified string. To do so, `grep` takes as its arguments a file path and a string. Then, it reads the file, finds lines in that file that contain the string argument, and prints those lines."
-msgstr ""
+msgstr "A velocidade, a segurança, a geração de um único binário e o suporte multiplataforma do Rust fazem dele uma linguagem ideal para criar ferramentas de linha de comando. Por isso, no nosso projeto, vamos criar a nossa própria versão da clássica ferramenta de busca de linha de comando `grep` (**g**lobally search a **r**egular **e**xpression and **p**rint). No caso de uso mais simples, o `grep` procura uma string especificada em um arquivo especificado. Para isso, o `grep` recebe como argumentos um caminho de arquivo e uma string. Depois, ele lê o arquivo, encontra as linhas desse arquivo que contêm a string passada como argumento e imprime essas linhas."
 
 #: src/ch12-00-an-io-project.md
 msgid "Along the way, we’ll show how to make our command line tool use the terminal features that many other command line tools use. We’ll read the value of an environment variable to allow the user to configure the behavior of our tool. We’ll also print error messages to the standard error console stream (`stderr`) instead of standard output (`stdout`) so that, for example, the user can redirect successful output to a file while still seeing error messages onscreen."
-msgstr ""
+msgstr "Ao longo do caminho, vamos mostrar como fazer a nossa ferramenta de linha de comando usar os recursos de terminal que muitas outras ferramentas de linha de comando usam. Vamos ler o valor de uma variável de ambiente para permitir que o usuário configure o comportamento da nossa ferramenta. Também vamos imprimir as mensagens de erro no stream do console da saída de erro padrão (`stderr`), em vez da saída padrão (`stdout`), para que, por exemplo, o usuário possa redirecionar a saída bem-sucedida para um arquivo e, ao mesmo tempo, continuar vendo as mensagens de erro na tela."
 
 #: src/ch12-00-an-io-project.md
 msgid "One Rust community member, Andrew Gallant, has already created a fully featured, very fast version of `grep`, called `ripgrep`. By comparison, our version will be fairly simple, but this chapter will give you some of the background knowledge you need to understand a real-world project such as `ripgrep`."
-msgstr ""
+msgstr "Um membro da comunidade Rust, Andrew Gallant, já criou uma versão do `grep` com todos os recursos e muito rápida, chamada `ripgrep`. Em comparação, a nossa versão será bem simples, mas este capítulo vai dar a você parte do conhecimento de base de que precisa para entender um projeto do mundo real, como o `ripgrep`."
 
 #: src/ch12-00-an-io-project.md
 msgid "Our `grep` project will combine a number of concepts you’ve learned so far:"
-msgstr ""
+msgstr "Nosso projeto `grep` vai combinar vários conceitos que você aprendeu até agora:"
 
 #: src/ch12-00-an-io-project.md
 msgid "Organizing code ([Chapter 7](ch07-00-managing-growing-projects-with-packages-crates-and-modules.html)<!-- ignore -->)"
-msgstr ""
+msgstr "Organizando código ([Capítulo 7](ch07-00-managing-growing-projects-with-packages-crates-and-modules.html)<!-- ignore -->)"
 
 #: src/ch12-00-an-io-project.md
 msgid "Using vectors and strings ([Chapter 8](ch08-00-common-collections.html)<!-- ignore -->)"
-msgstr ""
+msgstr "Usando vetores e strings ([Capítulo 8](ch08-00-common-collections.html)<!-- ignore -->)"
 
 #: src/ch12-00-an-io-project.md
 msgid "Handling errors ([Chapter 9](ch09-00-error-handling.html)<!-- ignore -->)"
-msgstr ""
+msgstr "Tratando erros ([Capítulo 9](ch09-00-error-handling.html)<!-- ignore -->)"
 
 #: src/ch12-00-an-io-project.md
 msgid "Using traits and lifetimes where appropriate ([Chapter 10](ch10-00-generics.html)<!-- ignore -->)"
-msgstr ""
+msgstr "Usando traits e tempos de vida quando apropriado ([Capítulo 10](ch10-00-generics.html)<!-- ignore -->)"
 
 #: src/ch12-00-an-io-project.md
 msgid "Writing tests ([Chapter 11](ch11-00-testing.html)<!-- ignore -->)"
-msgstr ""
+msgstr "Escrevendo testes ([Capítulo 11](ch11-00-testing.html)<!-- ignore -->)"
 
 #: src/ch12-00-an-io-project.md
 msgid "We’ll also briefly introduce closures, iterators, and trait objects, which [Chapter 13](ch13-00-functional-features.html)<!-- ignore --> and [Chapter 18](ch18-00-oop.html)<!-- ignore --> will cover in detail."
-msgstr ""
+msgstr "Também vamos apresentar brevemente os closures, os iteradores e os objetos de trait, que o [Capítulo 13](ch13-00-functional-features.html)<!-- ignore --> e o [Capítulo 18](ch18-00-oop.html)<!-- ignore --> vão abordar em detalhes."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Let’s create a new project with, as always, `cargo new`. We’ll call our project `minigrep` to distinguish it from the `grep` tool that you might already have on your system:"
-msgstr ""
+msgstr "Vamos criar um novo projeto com, como sempre, `cargo new`. Vamos chamar nosso projeto de `minigrep` para diferenciá-lo da ferramenta `grep` que você talvez já tenha no seu sistema:"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "The first task is to make `minigrep` accept its two command line arguments: the file path and a string to search for. That is, we want to be able to run our program with `cargo run`, two hyphens to indicate the following arguments are for our program rather than for `cargo`, a string to search for, and a path to a file to search in, like so:"
-msgstr ""
+msgstr "A primeira tarefa é fazer o `minigrep` aceitar seus dois argumentos de linha de comando: o caminho do arquivo e uma string a ser pesquisada. Ou seja, queremos poder executar nosso programa com `cargo run`, dois hífens para indicar que os argumentos seguintes são para o nosso programa, e não para o `cargo`, uma string a ser pesquisada e o caminho de um arquivo em que a busca será feita, assim:"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Right now, the program generated by `cargo new` cannot process arguments we give it. Some existing libraries on [crates.io](https://crates.io/) can help with writing a program that accepts command line arguments, but because you’re just learning this concept, let’s implement this capability ourselves."
-msgstr ""
+msgstr "Neste momento, o programa gerado por `cargo new` não consegue processar os argumentos que fornecemos a ele. Algumas bibliotecas existentes no [crates.io](https://crates.io/) podem ajudar a escrever um programa que aceita argumentos de linha de comando, mas, como você está apenas começando a aprender este conceito, vamos implementar essa capacidade por conta própria."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Reading the Argument Values"
-msgstr ""
+msgstr "Lendo os valores dos argumentos {#reading-the-argument-values}"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid ""
 "To enable `minigrep` to read the values of command line arguments we pass to it, we’ll need the `std::env::args` function provided in Rust’s standard library. This function returns an iterator of the command line arguments passed to `minigrep`. We’ll cover iterators fully in [Chapter 13](ch13-00-functional-features.html)<!-- ignore\n"
 "-->. For now, you only need to know two details about iterators: Iterators produce a series of values, and we can call the `collect` method on an iterator to turn it into a collection, such as a vector, which contains all the elements the iterator produces."
 msgstr ""
+"Para que o `minigrep` leia os valores dos argumentos de linha de comando que passamos a ele, vamos precisar da função `std::env::args`, fornecida pela biblioteca padrão do Rust. Essa função retorna um iterador com os argumentos de linha de comando passados para o `minigrep`. Vamos abordar os iteradores em detalhes no [Capítulo 13](ch13-00-functional-features.html)<!-- ignore\n"
+"-->. Por enquanto, você só precisa saber dois detalhes sobre iteradores: iteradores produzem uma série de valores, e podemos chamar o método `collect` em um iterador para transformá-lo em uma coleção, como um vetor, que contém todos os elementos que o iterador produz."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "The code in Listing 12-1 allows your `minigrep` program to read any command line arguments passed to it and then collect the values into a vector."
-msgstr ""
+msgstr "O código da Listagem 12-1 permite que o seu programa `minigrep` leia quaisquer argumentos de linha de comando passados para ele e, em seguida, reúna os valores em um vetor."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "<Listing number=\"12-1\" file-name=\"src/main.rs\" caption=\"Collecting the command line arguments into a vector and printing them\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-1\" file-name=\"src/main.rs\" caption=\"Reunindo os argumentos de linha de comando em um vetor e imprimindo-os\">\n"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "First, we bring the `std::env` module into scope with a `use` statement so that we can use its `args` function. Notice that the `std::env::args` function is nested in two levels of modules. As we discussed in [Chapter 7](ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#creating-idiomatic-use-paths)<!-- ignore -->, in cases where the desired function is nested in more than one module, we’ve chosen to bring the parent module into scope rather than the function. By doing so, we can easily use other functions from `std::env`. It’s also less ambiguous than adding `use std::env::args` and then calling the function with just `args`, because `args` might easily be mistaken for a function that’s defined in the current module."
-msgstr ""
+msgstr "Primeiro, trazemos o módulo `std::env` para o escopo com uma instrução `use`, para que possamos usar a função `args` dele. Observe que a função `std::env::args` está aninhada em dois níveis de módulos. Como discutimos no [Capítulo 7](ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#creating-idiomatic-use-paths)<!-- ignore -->, nos casos em que a função desejada está aninhada em mais de um módulo, optamos por trazer o módulo pai para o escopo, em vez da função. Ao fazer isso, podemos usar facilmente outras funções de `std::env`. Também é menos ambíguo do que adicionar `use std::env::args` e depois chamar a função apenas com `args`, porque o nome `args` pode facilmente ser confundido com uma função definida no módulo atual."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "The `args` Function and Invalid Unicode"
-msgstr ""
+msgstr "A função `args` e o Unicode inválido {#the-args-function-and-invalid-unicode}"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Note that `std::env::args` will panic if any argument contains invalid Unicode. If your program needs to accept arguments containing invalid Unicode, use `std::env::args_os` instead. That function returns an iterator that produces `OsString` values instead of `String` values. We’ve chosen to use `std::env::args` here for simplicity because `OsString` values differ per platform and are more complex to work with than `String` values."
-msgstr ""
+msgstr "Observe que `std::env::args` vai entrar em pânico se algum argumento contiver Unicode inválido. Se o seu programa precisar aceitar argumentos que contenham Unicode inválido, use `std::env::args_os` em vez disso. Essa função retorna um iterador que produz valores `OsString` em vez de valores `String`. Optamos por usar `std::env::args` aqui por simplicidade, porque os valores `OsString` variam de uma plataforma para outra e são mais complexos de trabalhar do que os valores `String`."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "On the first line of `main`, we call `env::args`, and we immediately use `collect` to turn the iterator into a vector containing all the values produced by the iterator. We can use the `collect` function to create many kinds of collections, so we explicitly annotate the type of `args` to specify that we want a vector of strings. Although you very rarely need to annotate types in Rust, `collect` is one function you do often need to annotate because Rust isn’t able to infer the kind of collection you want."
-msgstr ""
+msgstr "Na primeira linha de `main`, chamamos `env::args` e usamos imediatamente `collect` para transformar o iterador em um vetor que contém todos os valores produzidos pelo iterador. Podemos usar a função `collect` para criar vários tipos de coleções; por isso, anotamos explicitamente o tipo de `args` para especificar que queremos um vetor de strings. Embora você raramente precise anotar tipos no Rust, `collect` é uma das funções que você costuma precisar anotar, porque o Rust não consegue inferir o tipo de coleção que você quer."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Finally, we print the vector using the debug macro. Let’s try running the code first with no arguments and then with two arguments:"
-msgstr ""
+msgstr "Por fim, imprimimos o vetor usando a macro de depuração. Vamos executar o código primeiro sem argumentos e depois com dois argumentos:"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid ""
@@ -11836,19 +11838,19 @@ msgstr ""
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Notice that the first value in the vector is `\"target/debug/minigrep\"`, which is the name of our binary. This matches the behavior of the arguments list in C, letting programs use the name by which they were invoked in their execution. It’s often convenient to have access to the program name in case you want to print it in messages or change the behavior of the program based on what command line alias was used to invoke the program. But for the purposes of this chapter, we’ll ignore it and save only the two arguments we need."
-msgstr ""
+msgstr "Observe que o primeiro valor do vetor é `\"target/debug/minigrep\"`, que é o nome do nosso binário. Isso corresponde ao comportamento da lista de argumentos em C, que permite aos programas usar o nome pelo qual foram invocados durante a execução. Muitas vezes é conveniente ter acesso ao nome do programa, caso você queira imprimi-lo em mensagens ou mudar o comportamento do programa com base no alias de linha de comando usado para invocá-lo. Mas, para os fins deste capítulo, vamos ignorá-lo e salvar apenas os dois argumentos de que precisamos."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Saving the Argument Values in Variables"
-msgstr ""
+msgstr "Salvando os valores dos argumentos em variáveis {#saving-the-argument-values-in-variables}"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "The program is currently able to access the values specified as command line arguments. Now we need to save the values of the two arguments in variables so that we can use the values throughout the rest of the program. We do that in Listing 12-2."
-msgstr ""
+msgstr "Atualmente, o programa consegue acessar os valores especificados como argumentos de linha de comando. Agora, precisamos salvar os valores dos dois argumentos em variáveis para que possamos usar esses valores em todo o restante do programa. Fazemos isso na Listagem 12-2."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "<Listing number=\"12-2\" file-name=\"src/main.rs\" caption=\"Creating variables to hold the query argument and file path argument\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-2\" file-name=\"src/main.rs\" caption=\"Criando variáveis para armazenar o argumento de consulta e o argumento do caminho do arquivo\">\n"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 #: src/ch12-02-reading-a-file.md
@@ -11864,11 +11866,11 @@ msgstr ""
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "As we saw when we printed the vector, the program’s name takes up the first value in the vector at `args[0]`, so we’re starting arguments at index 1. The first argument `minigrep` takes is the string we’re searching for, so we put a reference to the first argument in the variable `query`. The second argument will be the file path, so we put a reference to the second argument in the variable `file_path`."
-msgstr ""
+msgstr "Como vimos ao imprimir o vetor, o nome do programa ocupa o primeiro valor do vetor em `args[0]`, então os argumentos começam no índice 1. O primeiro argumento que o `minigrep` recebe é a string que estamos procurando, então colocamos uma referência ao primeiro argumento na variável `query`. O segundo argumento será o caminho do arquivo, então colocamos uma referência ao segundo argumento na variável `file_path`."
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "We temporarily print the values of these variables to prove that the code is working as we intend. Let’s run this program again with the arguments `test` and `sample.txt`:"
-msgstr ""
+msgstr "Imprimimos temporariamente os valores dessas variáveis para provar que o código está funcionando como pretendemos. Vamos executar este programa novamente com os argumentos `test` e `sample.txt`:"
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid ""
@@ -11884,23 +11886,23 @@ msgstr ""
 
 #: src/ch12-01-accepting-command-line-arguments.md
 msgid "Great, the program is working! The values of the arguments we need are being saved into the right variables. Later we’ll add some error handling to deal with certain potential erroneous situations, such as when the user provides no arguments; for now, we’ll ignore that situation and work on adding file-reading capabilities instead."
-msgstr ""
+msgstr "Ótimo, o programa está funcionando! Os valores dos argumentos de que precisamos estão sendo salvos nas variáveis certas. Mais tarde, vamos adicionar algum tratamento de erros para lidar com certas situações de erro potenciais, como quando o usuário não fornece argumento algum; por enquanto, vamos ignorar essa situação e trabalhar na adição da capacidade de leitura de arquivos."
 
 #: src/ch12-02-reading-a-file.md
 msgid "Now we’ll add functionality to read the file specified in the `file_path` argument. First, we need a sample file to test it with: We’ll use a file with a small amount of text over multiple lines with some repeated words. Listing 12-3 has an Emily Dickinson poem that will work well! Create a file called _poem.txt_ at the root level of your project, and enter the poem “I’m Nobody! Who are you?”"
-msgstr ""
+msgstr "Agora vamos adicionar a funcionalidade de ler o arquivo especificado no argumento `file_path`. Primeiro, precisamos de um arquivo de exemplo para testá-la: vamos usar um arquivo com um pequeno texto distribuído em várias linhas e com algumas palavras repetidas. A Listagem 12-3 traz um poema de Emily Dickinson que vai funcionar bem! Crie um arquivo chamado _poem.txt_ na raiz do seu projeto e digite o poema “I’m Nobody! Who are you?”"
 
 #: src/ch12-02-reading-a-file.md
 msgid "<Listing number=\"12-3\" file-name=\"poem.txt\" caption=\"A poem by Emily Dickinson makes a good test case.\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-3\" file-name=\"poem.txt\" caption=\"Um poema de Emily Dickinson é um bom caso de teste.\">\n"
 
 #: src/ch12-02-reading-a-file.md
 msgid "With the text in place, edit _src/main.rs_ and add code to read the file, as shown in Listing 12-4."
-msgstr ""
+msgstr "Com o texto já no lugar, edite _src/main.rs_ e adicione código para ler o arquivo, como mostrado na Listagem 12-4."
 
 #: src/ch12-02-reading-a-file.md
 msgid "<Listing number=\"12-4\" file-name=\"src/main.rs\" caption=\"Reading the contents of the file specified by the second argument\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-4\" file-name=\"src/main.rs\" caption=\"Lendo o conteúdo do arquivo especificado pelo segundo argumento\">\n"
 
 #: src/ch12-02-reading-a-file.md
 #: src/ch12-03-improving-error-handling-and-modularity.md
@@ -11914,19 +11916,19 @@ msgstr ""
 
 #: src/ch12-02-reading-a-file.md
 msgid "First, we bring in a relevant part of the standard library with a `use` statement: We need `std::fs` to handle files."
-msgstr ""
+msgstr "Primeiro, trazemos uma parte relevante da biblioteca padrão com uma instrução `use`: precisamos de `std::fs` para lidar com arquivos."
 
 #: src/ch12-02-reading-a-file.md
 msgid "In `main`, the new statement `fs::read_to_string` takes the `file_path`, opens that file, and returns a value of type `std::io::Result<String>` that contains the file’s contents."
-msgstr ""
+msgstr "Em `main`, a nova instrução `fs::read_to_string` recebe o `file_path`, abre esse arquivo e retorna um valor do tipo `std::io::Result<String>` que contém o conteúdo do arquivo."
 
 #: src/ch12-02-reading-a-file.md
 msgid "After that, we again add a temporary `println!` statement that prints the value of `contents` after the file is read so that we can check that the program is working so far."
-msgstr ""
+msgstr "Depois disso, adicionamos novamente uma instrução `println!` temporária que imprime o valor de `contents` depois que o arquivo é lido, para que possamos verificar se o programa está funcionando até aqui."
 
 #: src/ch12-02-reading-a-file.md
 msgid "Let’s run this code with any string as the first command line argument (because we haven’t implemented the searching part yet) and the _poem.txt_ file as the second argument:"
-msgstr ""
+msgstr "Vamos executar este código com qualquer string como primeiro argumento de linha de comando (porque ainda não implementamos a parte de busca) e o arquivo _poem.txt_ como segundo argumento:"
 
 #: src/ch12-02-reading-a-file.md
 msgid ""
@@ -11953,27 +11955,27 @@ msgstr ""
 
 #: src/ch12-02-reading-a-file.md
 msgid "Great! The code read and then printed the contents of the file. But the code has a few flaws. At the moment, the `main` function has multiple responsibilities: Generally, functions are clearer and easier to maintain if each function is responsible for only one idea. The other problem is that we’re not handling errors as well as we could. The program is still small, so these flaws aren’t a big problem, but as the program grows, it will be harder to fix them cleanly. It’s a good practice to begin refactoring early on when developing a program because it’s much easier to refactor smaller amounts of code. We’ll do that next."
-msgstr ""
+msgstr "Ótimo! O código leu e depois imprimiu o conteúdo do arquivo. Mas o código tem algumas falhas. No momento, a função `main` tem várias responsabilidades: em geral, as funções são mais claras e mais fáceis de manter quando cada uma é responsável por apenas uma ideia. O outro problema é que não estamos tratando os erros tão bem quanto poderíamos. O programa ainda é pequeno, então essas falhas não são um grande problema, mas, à medida que o programa cresce, vai ficar mais difícil corrigi-las de forma limpa. É uma boa prática começar a refatorar cedo ao desenvolver um programa, porque é muito mais fácil refatorar pequenos trechos de código. Vamos fazer isso a seguir."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "To improve our program, we’ll fix four problems that have to do with the program’s structure and how it’s handling potential errors. First, our `main` function now performs two tasks: It parses arguments and reads files. As our program grows, the number of separate tasks the `main` function handles will increase. As a function gains responsibilities, it becomes more difficult to reason about, harder to test, and harder to change without breaking one of its parts. It’s best to separate functionality so that each function is responsible for one task."
-msgstr ""
+msgstr "Para melhorar nosso programa, vamos corrigir quatro problemas relacionados à estrutura do programa e à forma como ele está tratando possíveis erros. Primeiro, a nossa função `main` agora executa duas tarefas: ela analisa argumentos e lê arquivos. À medida que o programa cresce, o número de tarefas separadas que a função `main` trata vai aumentar. Conforme uma função ganha responsabilidades, fica mais difícil de entender, mais difícil de testar e mais difícil de alterar sem quebrar uma de suas partes. O melhor é separar as funcionalidades, para que cada função seja responsável por uma tarefa."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "This issue also ties into the second problem: Although `query` and `file_path` are configuration variables to our program, variables like `contents` are used to perform the program’s logic. The longer `main` becomes, the more variables we’ll need to bring into scope; the more variables we have in scope, the harder it will be to keep track of the purpose of each. It’s best to group the configuration variables into one structure to make their purpose clear."
-msgstr ""
+msgstr "Esse problema também está ligado ao segundo: embora `query` e `file_path` sejam variáveis de configuração do nosso programa, variáveis como `contents` são usadas para executar a lógica do programa. Quanto mais `main` cresce, mais variáveis vamos precisar trazer para o escopo; quanto mais variáveis temos no escopo, mais difícil fica acompanhar a finalidade de cada uma. O melhor é agrupar as variáveis de configuração em um struct, para deixar clara a finalidade delas."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The third problem is that we’ve used `expect` to print an error message when reading the file fails, but the error message just prints `Should have been able to read the file`. Reading a file can fail in a number of ways: For example, the file could be missing, or we might not have permission to open it. Right now, regardless of the situation, we’d print the same error message for everything, which wouldn’t give the user any information!"
-msgstr ""
+msgstr "O terceiro problema é que usamos `expect` para imprimir uma mensagem de erro quando a leitura do arquivo falha, mas a mensagem de erro apenas imprime `Should have been able to read the file`. Ler um arquivo pode falhar de várias maneiras: por exemplo, o arquivo pode estar ausente, ou podemos não ter permissão para abri-lo. Neste momento, independentemente da situação, imprimiríamos a mesma mensagem de erro para tudo, o que não daria nenhuma informação ao usuário!"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Fourth, we use `expect` to handle an error, and if the user runs our program without specifying enough arguments, they’ll get an `index out of bounds` error from Rust that doesn’t clearly explain the problem. It would be best if all the error-handling code were in one place so that future maintainers had only one place to consult the code if the error-handling logic needed to change. Having all the error-handling code in one place will also ensure that we’re printing messages that will be meaningful to our end users."
-msgstr ""
+msgstr "Em quarto lugar, usamos `expect` para tratar um erro e, se o usuário executar nosso programa sem especificar argumentos suficientes, ele vai receber um erro `index out of bounds` do Rust, que não explica com clareza o problema. Seria melhor se todo o código de tratamento de erros estivesse em um só lugar, para que os futuros mantenedores tivessem apenas um lugar para consultar o código caso a lógica de tratamento de erros precisasse mudar. Ter todo o código de tratamento de erros em um só lugar também vai garantir que estejamos imprimindo mensagens que serão significativas para os nossos usuários finais."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Let’s address these four problems by refactoring our project."
-msgstr ""
+msgstr "Vamos resolver esses quatro problemas refatorando nosso projeto."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<a id=\"separation-of-concerns-for-binary-projects\"></a>"
@@ -11981,87 +11983,87 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Separating Concerns in Binary Projects"
-msgstr ""
+msgstr "Separando responsabilidades em projetos binários {#separating-concerns-in-binary-projects}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The organizational problem of allocating responsibility for multiple tasks to the `main` function is common to many binary projects. As a result, many Rust programmers find it useful to split up the separate concerns of a binary program when the `main` function starts getting large. This process has the following steps:"
-msgstr ""
+msgstr "O problema organizacional de atribuir responsabilidades por várias tarefas à função `main` é comum a muitos projetos binários. Por isso, muitos programadores Rust consideram útil dividir as responsabilidades separadas de um programa binário quando a função `main` começa a ficar grande. Este processo tem as seguintes etapas:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Split your program into a _main.rs_ file and a _lib.rs_ file and move your program’s logic to _lib.rs_."
-msgstr ""
+msgstr "Divida seu programa em um arquivo _main.rs_ e um arquivo _lib.rs_ e mova a lógica do seu programa para _lib.rs_."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "As long as your command line parsing logic is small, it can remain in the `main` function."
-msgstr ""
+msgstr "Contanto que a lógica de análise da linha de comando seja pequena, ela pode permanecer na função `main`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "When the command line parsing logic starts getting complicated, extract it from the `main` function into other functions or types."
-msgstr ""
+msgstr "Quando a lógica de análise da linha de comando começar a ficar complicada, extraia-a da função `main` para outras funções ou tipos."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The responsibilities that remain in the `main` function after this process should be limited to the following:"
-msgstr ""
+msgstr "As responsabilidades que permanecem na função `main` depois desse processo devem se limitar às seguintes:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Calling the command line parsing logic with the argument values"
-msgstr ""
+msgstr "Chamando a lógica de análise da linha de comando com os valores dos argumentos"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Setting up any other configuration"
-msgstr ""
+msgstr "Configurando quaisquer outras configurações"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Calling a `run` function in _lib.rs_"
-msgstr ""
+msgstr "Chamando uma função `run` em _lib.rs_"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Handling the error if `run` returns an error"
-msgstr ""
+msgstr "Tratando o erro caso `run` retorne um erro"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "This pattern is about separating concerns: _main.rs_ handles running the program and _lib.rs_ handles all the logic of the task at hand. Because you can’t test the `main` function directly, this structure lets you test all of your program’s logic by moving it out of the `main` function. The code that remains in the `main` function will be small enough to verify its correctness by reading it. Let’s rework our program by following this process."
-msgstr ""
+msgstr "Esse padrão diz respeito à separação de responsabilidades: _main.rs_ cuida de executar o programa, e _lib.rs_ cuida de toda a lógica da tarefa em questão. Como você não pode testar a função `main` diretamente, essa estrutura permite testar toda a lógica do programa, movendo-a para fora da função `main`. O código que permanece na função `main` será pequeno o bastante para verificar se está correto apenas lendo-o. Vamos refatorar nosso programa seguindo esse processo."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Extracting the Argument Parser"
-msgstr ""
+msgstr "Extraindo o analisador de argumentos {#extracting-the-argument-parser}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ll extract the functionality for parsing arguments into a function that `main` will call. Listing 12-5 shows the new start of the `main` function that calls a new function `parse_config`, which we’ll define in _src/main.rs_."
-msgstr ""
+msgstr "Vamos extrair a funcionalidade de análise dos argumentos para uma função que `main` vai chamar. A Listagem 12-5 mostra o novo começo da função `main`, que chama uma nova função `parse_config`, que vamos definir em _src/main.rs_."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-5\" file-name=\"src/main.rs\" caption=\"Extracting a `parse_config` function from `main`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-5\" file-name=\"src/main.rs\" caption=\"Extraindo uma função `parse_config` de `main`\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’re still collecting the command line arguments into a vector, but instead of assigning the argument value at index 1 to the variable `query` and the argument value at index 2 to the variable `file_path` within the `main` function, we pass the whole vector to the `parse_config` function. The `parse_config` function then holds the logic that determines which argument goes in which variable and passes the values back to `main`. We still create the `query` and `file_path` variables in `main`, but `main` no longer has the responsibility of determining how the command line arguments and variables correspond."
-msgstr ""
+msgstr "Ainda estamos reunindo os argumentos de linha de comando em um vetor, mas, em vez de atribuir o valor do argumento no índice 1 à variável `query` e o valor do argumento no índice 2 à variável `file_path` dentro da função `main`, passamos o vetor inteiro para a função `parse_config`. A função `parse_config` então contém a lógica que determina qual argumento vai para qual variável e retorna os valores para `main`. Ainda criamos as variáveis `query` e `file_path` em `main`, mas `main` não tem mais a responsabilidade de determinar como os argumentos de linha de comando e as variáveis se correspondem."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "This rework may seem like overkill for our small program, but we’re refactoring in small, incremental steps. After making this change, run the program again to verify that the argument parsing still works. It’s good to check your progress often, to help identify the cause of problems when they occur."
-msgstr ""
+msgstr "Essa refatoração pode parecer exagero para o nosso programa pequeno, mas estamos refatorando em pequenos passos incrementais. Depois de fazer essa mudança, execute o programa novamente para verificar se a análise dos argumentos ainda funciona. É bom verificar o seu progresso com frequência, para ajudar a identificar a causa dos problemas quando eles ocorrem."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Grouping Configuration Values"
-msgstr ""
+msgstr "Agrupando valores de configuração {#grouping-configuration-values}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We can take another small step to improve the `parse_config` function further. At the moment, we’re returning a tuple, but then we immediately break that tuple into individual parts again. This is a sign that perhaps we don’t have the right abstraction yet."
-msgstr ""
+msgstr "Podemos dar mais um pequeno passo para melhorar ainda mais a função `parse_config`. No momento, estamos retornando uma tupla, mas logo em seguida desmembramos essa tupla novamente em partes individuais. Isso é um sinal de que talvez ainda não tenhamos a abstração certa."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Another indicator that shows there’s room for improvement is the `config` part of `parse_config`, which implies that the two values we return are related and are both part of one configuration value. We’re not currently conveying this meaning in the structure of the data other than by grouping the two values into a tuple; we’ll instead put the two values into one struct and give each of the struct fields a meaningful name. Doing so will make it easier for future maintainers of this code to understand how the different values relate to each other and what their purpose is."
-msgstr ""
+msgstr "Outro indicador de que há espaço para melhoria é a parte `config` de `parse_config`, que sugere que os dois valores que retornamos estão relacionados e são ambos parte de um único valor de configuração. No momento, não estamos transmitindo esse significado na estrutura dos dados, a não ser pelo agrupamento dos dois valores em uma tupla; em vez disso, vamos colocar os dois valores em um único struct e dar a cada um dos campos do struct um nome significativo. Fazer isso vai facilitar para os futuros mantenedores deste código entender como os diferentes valores se relacionam entre si e qual é a finalidade de cada um."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Listing 12-6 shows the improvements to the `parse_config` function."
-msgstr ""
+msgstr "A Listagem 12-6 mostra as melhorias na função `parse_config`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-6\" file-name=\"src/main.rs\" caption=\"Refactoring `parse_config` to return an instance of a `Config` struct\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-6\" file-name=\"src/main.rs\" caption=\"Refatorando `parse_config` para retornar uma instância de um struct `Config`\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "\"Searching for {}\""
@@ -12073,55 +12075,55 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve added a struct named `Config` defined to have fields named `query` and `file_path`. The signature of `parse_config` now indicates that it returns a `Config` value. In the body of `parse_config`, where we used to return string slices that reference `String` values in `args`, we now define `Config` to contain owned `String` values. The `args` variable in `main` is the owner of the argument values and is only letting the `parse_config` function borrow them, which means we’d violate Rust’s borrowing rules if `Config` tried to take ownership of the values in `args`."
-msgstr ""
+msgstr "Adicionamos um struct chamado `Config`, definido para ter os campos `query` e `file_path`. A assinatura de `parse_config` agora indica que ela retorna um valor `Config`. No corpo de `parse_config`, onde antes retornávamos slices de string que faziam referência a valores `String` em `args`, agora definimos `Config` para conter valores `String` próprios. A variável `args` em `main` é a dona dos valores dos argumentos e só permite que a função `parse_config` os pegue emprestados, o que significa que violaríamos as regras de empréstimo do Rust se `Config` tentasse assumir o ownership dos valores em `args`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "There are a number of ways we could manage the `String` data; the easiest, though somewhat inefficient, route is to call the `clone` method on the values. This will make a full copy of the data for the `Config` instance to own, which takes more time and memory than storing a reference to the string data. However, cloning the data also makes our code very straightforward because we don’t have to manage the lifetimes of the references; in this circumstance, giving up a little performance to gain simplicity is a worthwhile trade-off."
-msgstr ""
+msgstr "Há várias maneiras de gerenciar os dados `String`; a opção mais fácil, embora um tanto ineficiente, é chamar o método `clone` nos valores. Isso vai criar uma cópia completa dos dados para que a instância de `Config` seja dona deles, o que consome mais tempo e memória do que armazenar uma referência aos dados da string. No entanto, clonar os dados também deixa nosso código bem direto, porque não precisamos gerenciar os tempos de vida das referências; nesta circunstância, abrir mão de um pouco de desempenho para ganhar simplicidade é uma concessão que vale a pena."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The Trade-Offs of Using `clone`"
-msgstr ""
+msgstr "Os prós e contras de usar `clone` {#the-trade-offs-of-using-clone}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "There’s a tendency among many Rustaceans to avoid using `clone` to fix ownership problems because of its runtime cost. In [Chapter 13](ch13-00-functional-features.html)<!-- ignore -->, you’ll learn how to use more efficient methods in this type of situation. But for now, it’s okay to copy a few strings to continue making progress because you’ll make these copies only once and your file path and query string are very small. It’s better to have a working program that’s a bit inefficient than to try to hyperoptimize code on your first pass. As you become more experienced with Rust, it’ll be easier to start with the most efficient solution, but for now, it’s perfectly acceptable to call `clone`."
-msgstr ""
+msgstr "Há uma tendência entre muitos rustáceos de evitar o uso de `clone` para resolver problemas de ownership, por causa do seu custo em tempo de execução. No [Capítulo 13](ch13-00-functional-features.html)<!-- ignore -->, você vai aprender a usar métodos mais eficientes nesse tipo de situação. Mas, por enquanto, é aceitável copiar algumas strings para continuar avançando, porque você vai fazer essas cópias só uma vez, e o seu caminho de arquivo e a sua string de consulta são muito pequenos. É melhor ter um programa funcionando, ainda que um pouco ineficiente, do que tentar hiperotimizar o código na primeira versão. À medida que você ganhar experiência com o Rust, vai ficar mais fácil começar pela solução mais eficiente, mas, por enquanto, é perfeitamente aceitável chamar `clone`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve updated `main` so that it places the instance of `Config` returned by `parse_config` into a variable named `config`, and we updated the code that previously used the separate `query` and `file_path` variables so that it now uses the fields on the `Config` struct instead."
-msgstr ""
+msgstr "Atualizamos `main` para que ela coloque a instância de `Config` retornada por `parse_config` em uma variável chamada `config`, e atualizamos o código que antes usava as variáveis separadas `query` e `file_path` para que agora use os campos do struct `Config`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Now our code more clearly conveys that `query` and `file_path` are related and that their purpose is to configure how the program will work. Any code that uses these values knows to find them in the `config` instance in the fields named for their purpose."
-msgstr ""
+msgstr "Agora nosso código deixa mais claro que `query` e `file_path` estão relacionados e que a finalidade deles é configurar como o programa vai funcionar. Qualquer código que use esses valores sabe que deve encontrá-los na instância `config`, nos campos nomeados de acordo com a finalidade deles."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Creating a Constructor for `Config`"
-msgstr ""
+msgstr "Criando um construtor para `Config` {#creating-a-constructor-for-config}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "So far, we’ve extracted the logic responsible for parsing the command line arguments from `main` and placed it in the `parse_config` function. Doing so helped us see that the `query` and `file_path` values were related, and that relationship should be conveyed in our code. We then added a `Config` struct to name the related purpose of `query` and `file_path` and to be able to return the values’ names as struct field names from the `parse_config` function."
-msgstr ""
+msgstr "Até agora, extraímos a lógica responsável por analisar os argumentos da linha de comando de `main` e a colocamos na função `parse_config`. Isso nos ajudou a perceber que os valores `query` e `file_path` estavam relacionados, e que essa relação deveria ser expressa no nosso código. Depois, adicionamos um struct `Config` para dar nome ao propósito que `query` e `file_path` têm em comum e para poder retornar os nomes dos valores como nomes de campos do struct a partir da função `parse_config`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "So, now that the purpose of the `parse_config` function is to create a `Config` instance, we can change `parse_config` from a plain function to a function named `new` that is associated with the `Config` struct. Making this change will make the code more idiomatic. We can create instances of types in the standard library, such as `String`, by calling `String::new`. Similarly, by changing `parse_config` into a `new` function associated with `Config`, we’ll be able to create instances of `Config` by calling `Config::new`. Listing 12-7 shows the changes we need to make."
-msgstr ""
+msgstr "Assim, agora que a finalidade da função `parse_config` é criar uma instância de `Config`, podemos mudar `parse_config` de uma função comum para uma função chamada `new` associada ao struct `Config`. Fazer essa mudança torna o código mais idiomático. Podemos criar instâncias de tipos da biblioteca padrão, como `String`, chamando `String::new`. De forma semelhante, ao transformar `parse_config` em uma função `new` associada a `Config`, vamos poder criar instâncias de `Config` chamando `Config::new`. A Listagem 12-7 mostra as mudanças que precisamos fazer."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-7\" file-name=\"src/main.rs\" caption=\"Changing `parse_config` into `Config::new`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-7\" file-name=\"src/main.rs\" caption=\"Transformando `parse_config` em `Config::new`\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve updated `main` where we were calling `parse_config` to instead call `Config::new`. We’ve changed the name of `parse_config` to `new` and moved it within an `impl` block, which associates the `new` function with `Config`. Try compiling this code again to make sure it works."
-msgstr ""
+msgstr "Atualizamos `main`, onde chamávamos `parse_config`, para que passe a chamar `Config::new`. Mudamos o nome de `parse_config` para `new` e o movemos para dentro de um bloco `impl`, o que associa a função `new` a `Config`. Tente compilar este código novamente para garantir que ele funciona."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Fixing the Error Handling"
-msgstr ""
+msgstr "Corrigindo o tratamento de erros {#fixing-the-error-handling}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Now we’ll work on fixing our error handling. Recall that attempting to access the values in the `args` vector at index 1 or index 2 will cause the program to panic if the vector contains fewer than three items. Try running the program without any arguments; it will look like this:"
-msgstr ""
+msgstr "Agora vamos trabalhar na correção do nosso tratamento de erros. Lembre-se de que tentar acessar os valores do vetor `args` no índice 1 ou no índice 2 fará o programa entrar em pânico se o vetor tiver menos de três itens. Tente executar o programa sem nenhum argumento; a saída vai ficar assim:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid ""
@@ -12139,19 +12141,19 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The line `index out of bounds: the len is 1 but the index is 1` is an error message intended for programmers. It won’t help our end users understand what they should do instead. Let’s fix that now."
-msgstr ""
+msgstr "A linha `index out of bounds: the len is 1 but the index is 1` é uma mensagem de erro destinada a programadores. Ela não vai ajudar nossos usuários finais a entender o que devem fazer em vez disso. Vamos corrigir isso agora."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Improving the Error Message"
-msgstr ""
+msgstr "Melhorando a mensagem de erro {#improving-the-error-message}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "In Listing 12-8, we add a check in the `new` function that will verify that the slice is long enough before accessing index 1 and index 2. If the slice isn’t long enough, the program panics and displays a better error message."
-msgstr ""
+msgstr "Na Listagem 12-8, adicionamos uma verificação na função `new` que confirma se a slice é longa o suficiente antes de acessar o índice 1 e o índice 2. Se a slice não for longa o suficiente, o programa entra em pânico e exibe uma mensagem de erro melhor."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-8\" file-name=\"src/main.rs\" caption=\"Adding a check for the number of arguments\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-8\" file-name=\"src/main.rs\" caption=\"Adicionando uma verificação do número de argumentos\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 #: src/ch12-05-working-with-environment-variables.md
@@ -12162,11 +12164,11 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "This code is similar to [the `Guess::new` function we wrote in Listing 9-13](ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation)<!-- ignore -->, where we called `panic!` when the `value` argument was out of the range of valid values. Instead of checking for a range of values here, we’re checking that the length of `args` is at least `3` and the rest of the function can operate under the assumption that this condition has been met. If `args` has fewer than three items, this condition will be `true`, and we call the `panic!` macro to end the program immediately."
-msgstr ""
+msgstr "Este código é semelhante à [função `Guess::new` que escrevemos na Listagem 9-13](ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation)<!-- ignore -->, em que chamamos `panic!` quando o argumento `value` estava fora do intervalo de valores válidos. Em vez de verificar um intervalo de valores aqui, estamos verificando se o comprimento de `args` é de pelo menos `3`, e o restante da função pode operar com a suposição de que essa condição foi satisfeita. Se `args` tiver menos de três itens, essa condição será `true`, e chamamos a macro `panic!` para encerrar o programa imediatamente."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "With these extra few lines of code in `new`, let’s run the program without any arguments again to see what the error looks like now:"
-msgstr ""
+msgstr "Com essas poucas linhas extras de código em `new`, vamos executar o programa sem nenhum argumento novamente para ver como fica o erro agora:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid ""
@@ -12184,7 +12186,7 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "This output is better: We now have a reasonable error message. However, we also have extraneous information we don’t want to give to our users. Perhaps the technique we used in Listing 9-13 isn’t the best one to use here: A call to `panic!` is more appropriate for a programming problem than a usage problem, [as discussed in Chapter 9](ch09-03-to-panic-or-not-to-panic.html#guidelines-for-error-handling)<!-- ignore -->. Instead, we’ll use the other technique you learned about in Chapter 9—[returning a `Result`](ch09-02-recoverable-errors-with-result.html)<!-- ignore --> that indicates either success or an error."
-msgstr ""
+msgstr "Esta saída é melhor: agora temos uma mensagem de erro razoável. No entanto, também temos informações desnecessárias que não queremos mostrar aos nossos usuários. Talvez a técnica que usamos na Listagem 9-13 não seja a melhor para usar aqui: uma chamada a `panic!` é mais adequada para um problema de programação do que para um problema de uso, [como discutido no Capítulo 9](ch09-03-to-panic-or-not-to-panic.html#guidelines-for-error-handling)<!-- ignore -->. Em vez disso, vamos usar a outra técnica que você aprendeu no Capítulo 9—[retornar um `Result`](ch09-02-recoverable-errors-with-result.html)<!-- ignore --> que indica sucesso ou erro."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<a id=\"returning-a-result-from-new-instead-of-calling-panic\"></a>"
@@ -12192,31 +12194,31 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Returning a `Result` Instead of Calling `panic!`"
-msgstr ""
+msgstr "Retornando um `Result` em vez de chamar `panic!` {#returning-a-result-instead-of-calling-panic}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We can instead return a `Result` value that will contain a `Config` instance in the successful case and will describe the problem in the error case. We’re also going to change the function name from `new` to `build` because many programmers expect `new` functions to never fail. When `Config::build` is communicating to `main`, we can use the `Result` type to signal there was a problem. Then, we can change `main` to convert an `Err` variant into a more practical error for our users without the surrounding text about `thread 'main'` and `RUST_BACKTRACE` that a call to `panic!` causes."
-msgstr ""
+msgstr "Em vez disso, podemos retornar um valor `Result` que vai conter uma instância de `Config` no caso de sucesso e vai descrever o problema no caso de erro. Também vamos mudar o nome da função de `new` para `build`, porque muitos programadores esperam que funções `new` nunca falhem. Quando `Config::build` se comunica com `main`, podemos usar o tipo `Result` para sinalizar que houve um problema. Depois, podemos alterar `main` para converter a variante `Err` em um erro mais prático para os nossos usuários, sem o texto adicional sobre `thread 'main'` e `RUST_BACKTRACE` que uma chamada a `panic!` causa."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Listing 12-9 shows the changes we need to make to the return value of the function we’re now calling `Config::build` and the body of the function needed to return a `Result`. Note that this won’t compile until we update `main` as well, which we’ll do in the next listing."
-msgstr ""
+msgstr "A Listagem 12-9 mostra as mudanças que precisamos fazer no valor de retorno da função que agora chamamos de `Config::build` e no corpo da função necessário para retornar um `Result`. Observe que isso não vai compilar até atualizarmos `main` também, o que faremos na próxima listagem."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-9\" file-name=\"src/main.rs\" caption=\"Returning a `Result` from `Config::build`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-9\" file-name=\"src/main.rs\" caption=\"Retornando um `Result` de `Config::build`\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Our `build` function returns a `Result` with a `Config` instance in the success case and a string literal in the error case. Our error values will always be string literals that have the `'static` lifetime."
-msgstr ""
+msgstr "Nossa função `build` retorna um `Result` com uma instância de `Config` no caso de sucesso e um literal de string no caso de erro. Nossos valores de erro serão sempre literais de string que têm o tempo de vida `'static`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve made two changes in the body of the function: Instead of calling `panic!` when the user doesn’t pass enough arguments, we now return an `Err` value, and we’ve wrapped the `Config` return value in an `Ok`. These changes make the function conform to its new type signature."
-msgstr ""
+msgstr "Fizemos duas mudanças no corpo da função: em vez de chamar `panic!` quando o usuário não passa argumentos suficientes, agora retornamos um valor `Err`, e envolvemos o valor de retorno `Config` em um `Ok`. Essas mudanças adequam a função à sua nova assinatura de tipo."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Returning an `Err` value from `Config::build` allows the `main` function to handle the `Result` value returned from the `build` function and exit the process more cleanly in the error case."
-msgstr ""
+msgstr "Retornar um valor `Err` de `Config::build` permite que a função `main` trate o valor `Result` retornado pela função `build` e encerre o processo de forma mais limpa no caso de erro."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<a id=\"calling-confignew-and-handling-errors\"></a>"
@@ -12224,15 +12226,15 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Calling `Config::build` and Handling Errors"
-msgstr ""
+msgstr "Chamando `Config::build` e tratando erros {#calling-configbuild-and-handling-errors}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "To handle the error case and print a user-friendly message, we need to update `main` to handle the `Result` being returned by `Config::build`, as shown in Listing 12-10. We’ll also take the responsibility of exiting the command line tool with a nonzero error code away from `panic!` and instead implement it by hand. A nonzero exit status is a convention to signal to the process that called our program that the program exited with an error state."
-msgstr ""
+msgstr "Para tratar o caso de erro e exibir uma mensagem amigável ao usuário, precisamos atualizar `main` para tratar o `Result` retornado por `Config::build`, como mostra a Listagem 12-10. Também vamos tirar de `panic!` a responsabilidade de encerrar a ferramenta de linha de comando com um código de erro diferente de zero e, em vez disso, vamos implementar isso manualmente. Um status de saída diferente de zero é uma convenção para sinalizar ao processo que chamou nosso programa que ele terminou em estado de erro."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-10\" file-name=\"src/main.rs\" caption=\"Exiting with an error code if building a `Config` fails\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-10\" file-name=\"src/main.rs\" caption=\"Encerrando com um código de erro se a criação de um `Config` falhar\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 #: src/ch12-05-working-with-environment-variables.md
@@ -12243,11 +12245,11 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "In this listing, we’ve used a method we haven’t covered in detail yet: `unwrap_or_else`, which is defined on `Result<T, E>` by the standard library. Using `unwrap_or_else` allows us to define some custom, non-`panic!` error handling. If the `Result` is an `Ok` value, this method’s behavior is similar to `unwrap`: It returns the inner value that `Ok` is wrapping. However, if the value is an `Err` value, this method calls the code in the closure, which is an anonymous function we define and pass as an argument to `unwrap_or_else`. We’ll cover closures in more detail in [Chapter 13](ch13-00-functional-features.html)<!-- ignore -->. For now, you just need to know that `unwrap_or_else` will pass the inner value of the `Err`, which in this case is the static string `\"not enough arguments\"` that we added in Listing 12-9, to our closure in the argument `err` that appears between the vertical pipes. The code in the closure can then use the `err` value when it runs."
-msgstr ""
+msgstr "Nesta listagem, usamos um método que ainda não abordamos em detalhes: `unwrap_or_else`, definido em `Result<T, E>` pela biblioteca padrão. Usar `unwrap_or_else` nos permite definir um tratamento de erro personalizado, que não depende de `panic!`. Se o `Result` for um valor `Ok`, o comportamento desse método é semelhante ao de `unwrap`: ele retorna o valor interno que `Ok` está envolvendo. No entanto, se o valor for um `Err`, esse método chama o código do closure, que é uma função anônima que definimos e passamos como argumento para `unwrap_or_else`. Vamos abordar closures com mais detalhes no [Capítulo 13](ch13-00-functional-features.html)<!-- ignore -->. Por enquanto, basta saber que `unwrap_or_else` vai passar o valor interno do `Err`, que neste caso é a string estática `\"not enough arguments\"` que adicionamos na Listagem 12-9, para o nosso closure, no argumento `err` que aparece entre as barras verticais. O código dentro do closure pode então usar o valor `err` quando for executado."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve added a new `use` line to bring `process` from the standard library into scope. The code in the closure that will be run in the error case is only two lines: We print the `err` value and then call `process::exit`. The `process::exit` function will stop the program immediately and return the number that was passed as the exit status code. This is similar to the `panic!`\\-based handling we used in Listing 12-8, but we no longer get all the extra output. Let’s try it:"
-msgstr ""
+msgstr "Adicionamos uma nova linha `use` para trazer `process` da biblioteca padrão para o escopo. O código do closure que será executado no caso de erro tem apenas duas linhas: imprimimos o valor `err` e depois chamamos `process::exit`. A função `process::exit` vai interromper o programa imediatamente e retornar o número que foi passado como código de status de saída. Isso é semelhante ao tratamento baseado em `panic!` que usamos na Listagem 12-8, mas agora não recebemos toda a saída extra. Vamos experimentar:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid ""
@@ -12262,7 +12264,7 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Great! This output is much friendlier for our users."
-msgstr ""
+msgstr "Ótimo! Esta saída é muito mais amigável para os nossos usuários."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<a id=\"extracting-logic-from-the-main-function\"></a>"
@@ -12270,23 +12272,23 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Extracting Logic from `main`"
-msgstr ""
+msgstr "Extraindo a lógica de `main` {#extracting-logic-from-main}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Now that we’ve finished refactoring the configuration parsing, let’s turn to the program’s logic. As we stated in [“Separating Concerns in Binary Projects”](#separation-of-concerns-for-binary-projects)<!-- ignore -->, we’ll extract a function named `run` that will hold all the logic currently in the `main` function that isn’t involved with setting up configuration or handling errors. When we’re done, the `main` function will be concise and easy to verify by inspection, and we’ll be able to write tests for all the other logic."
-msgstr ""
+msgstr "Agora que terminamos de refatorar a análise da configuração, vamos passar para a lógica do programa. Como dissemos em [“Separando responsabilidades em projetos binários”](#separation-of-concerns-for-binary-projects)<!-- ignore -->, vamos extrair uma função chamada `run` que vai conter toda a lógica que hoje está na função `main` e que não envolve a preparação da configuração nem o tratamento de erros. Quando terminarmos, a função `main` será concisa e fácil de verificar por inspeção, e poderemos escrever testes para toda a outra lógica."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Listing 12-11 shows the small, incremental improvement of extracting a `run` function."
-msgstr ""
+msgstr "A Listagem 12-11 mostra a pequena melhoria incremental de extrair uma função `run`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-11\" file-name=\"src/main.rs\" caption=\"Extracting a `run` function containing the rest of the program logic\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-11\" file-name=\"src/main.rs\" caption=\"Extraindo uma função `run` que contém o restante da lógica do programa\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The `run` function now contains all the remaining logic from `main`, starting from reading the file. The `run` function takes the `Config` instance as an argument."
-msgstr ""
+msgstr "A função `run` agora contém toda a lógica restante de `main`, começando pela leitura do arquivo. A função `run` recebe a instância de `Config` como argumento."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<a id=\"returning-errors-from-the-run-function\"></a>"
@@ -12294,35 +12296,35 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Returning Errors from `run`"
-msgstr ""
+msgstr "Retornando erros de `run` {#returning-errors-from-run}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "With the remaining program logic separated into the `run` function, we can improve the error handling, as we did with `Config::build` in Listing 12-9. Instead of allowing the program to panic by calling `expect`, the `run` function will return a `Result<T, E>` when something goes wrong. This will let us further consolidate the logic around handling errors into `main` in a user-friendly way. Listing 12-12 shows the changes we need to make to the signature and body of `run`."
-msgstr ""
+msgstr "Com a lógica restante do programa separada na função `run`, podemos melhorar o tratamento de erros, como fizemos com `Config::build` na Listagem 12-9. Em vez de deixar o programa entrar em pânico ao chamar `expect`, a função `run` vai retornar um `Result<T, E>` quando algo der errado. Isso nos permite consolidar ainda mais a lógica de tratamento de erros em `main`, de forma amigável para o usuário. A Listagem 12-12 mostra as mudanças que precisamos fazer na assinatura e no corpo de `run`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-12\" file-name=\"src/main.rs\" caption=\"Changing the `run` function to return `Result`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-12\" file-name=\"src/main.rs\" caption=\"Alterando a função `run` para retornar `Result`\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve made three significant changes here. First, we changed the return type of the `run` function to `Result<(), Box<dyn Error>>`. This function previously returned the unit type, `()`, and we keep that as the value returned in the `Ok` case."
-msgstr ""
+msgstr "Fizemos três mudanças significativas aqui. Primeiro, alteramos o tipo de retorno da função `run` para `Result<(), Box<dyn Error>>`. Essa função antes retornava o tipo unitário, `()`, e mantemos isso como o valor retornado no caso `Ok`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "For the error type, we used the trait object `Box<dyn Error>` (and we brought `std::error::Error` into scope with a `use` statement at the top). We’ll cover trait objects in [Chapter 18](ch18-00-oop.html)<!-- ignore -->. For now, just know that `Box<dyn Error>` means the function will return a type that implements the `Error` trait, but we don’t have to specify what particular type the return value will be. This gives us flexibility to return error values that may be of different types in different error cases. The `dyn` keyword is short for _dynamic_."
-msgstr ""
+msgstr "Para o tipo de erro, usamos o objeto de trait `Box<dyn Error>` (e trouxemos `std::error::Error` para o escopo com uma instrução `use` no início). Vamos abordar objetos de trait no [Capítulo 18](ch18-00-oop.html)<!-- ignore -->. Por enquanto, basta saber que `Box<dyn Error>` significa que a função vai retornar um tipo que implementa o trait `Error`, mas não precisamos especificar qual será o tipo exato do valor de retorno. Isso nos dá flexibilidade para retornar valores de erro que podem ser de tipos diferentes em casos de erro diferentes. A palavra-chave `dyn` é a abreviação de _dinâmico_."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Second, we’ve removed the call to `expect` in favor of the `?` operator, as we talked about in [Chapter 9](ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator)<!-- ignore -->. Rather than `panic!` on an error, `?` will return the error value from the current function for the caller to handle."
-msgstr ""
+msgstr "Segundo, removemos a chamada a `expect` e passamos a usar o operador `?`, como discutimos no [Capítulo 9](ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator)<!-- ignore -->. Em vez de chamar `panic!` quando há um erro, `?` vai retornar o valor do erro da função atual para que o chamador o trate."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Third, the `run` function now returns an `Ok` value in the success case. We’ve declared the `run` function’s success type as `()` in the signature, which means we need to wrap the unit type value in the `Ok` value. This `Ok(())` syntax might look a bit strange at first. But using `()` like this is the idiomatic way to indicate that we’re calling `run` for its side effects only; it doesn’t return a value we need."
-msgstr ""
+msgstr "Terceiro, a função `run` agora retorna um valor `Ok` no caso de sucesso. Declaramos o tipo de sucesso da função `run` como `()` na assinatura, o que significa que precisamos envolver o valor do tipo unitário no valor `Ok`. Essa sintaxe `Ok(())` pode parecer um pouco estranha no início. Mas usar `()` assim é a forma idiomática de indicar que estamos chamando `run` apenas pelos seus efeitos colaterais; ela não retorna um valor de que precisamos."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "When you run this code, it will compile but will display a warning:"
-msgstr ""
+msgstr "Quando você executar este código, ele vai compilar, mas vai exibir um aviso:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid ""
@@ -12363,15 +12365,15 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Rust tells us that our code ignored the `Result` value and the `Result` value might indicate that an error occurred. But we’re not checking to see whether or not there was an error, and the compiler reminds us that we probably meant to have some error-handling code here! Let’s rectify that problem now."
-msgstr ""
+msgstr "O Rust nos diz que nosso código ignorou o valor `Result`, e que o valor `Result` pode indicar que ocorreu um erro. Mas não estamos verificando se houve ou não um erro, e o compilador nos lembra de que provavelmente queríamos ter um código de tratamento de erros aqui! Vamos corrigir esse problema agora."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Handling Errors Returned from `run` in `main`"
-msgstr ""
+msgstr "Tratando os erros retornados por `run` em `main` {#handling-errors-returned-from-run-in-main}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ll check for errors and handle them using a technique similar to one we used with `Config::build` in Listing 12-10, but with a slight difference:"
-msgstr ""
+msgstr "Vamos verificar se há erros e tratá-los usando uma técnica semelhante à que usamos com `Config::build` na Listagem 12-10, mas com uma pequena diferença:"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 #: src/ch12-05-working-with-environment-variables.md
@@ -12382,43 +12384,43 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We use `if let` rather than `unwrap_or_else` to check whether `run` returns an `Err` value and to call `process::exit(1)` if it does. The `run` function doesn’t return a value that we want to `unwrap` in the same way that `Config::build` returns the `Config` instance. Because `run` returns `()` in the success case, we only care about detecting an error, so we don’t need `unwrap_or_else` to return the unwrapped value, which would only be `()`."
-msgstr ""
+msgstr "Usamos `if let` em vez de `unwrap_or_else` para verificar se `run` retorna um valor `Err` e para chamar `process::exit(1)` se for o caso. A função `run` não retorna um valor que queiramos extrair com `unwrap`, como acontece com `Config::build`, que retorna a instância de `Config`. Como `run` retorna `()` no caso de sucesso, só nos importa detectar um erro; por isso, não precisamos que `unwrap_or_else` retorne o valor extraído, que seria apenas `()`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "The bodies of the `if let` and the `unwrap_or_else` functions are the same in both cases: We print the error and exit."
-msgstr ""
+msgstr "Os corpos do `if let` e das funções `unwrap_or_else` são iguais nos dois casos: imprimimos o erro e encerramos o programa."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Splitting Code into a Library Crate"
-msgstr ""
+msgstr "Dividindo o código em um crate de biblioteca {#splitting-code-into-a-library-crate}"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Our `minigrep` project is looking good so far! Now we’ll split the _src/main.rs_ file and put some code into the _src/lib.rs_ file. That way, we can test the code and have a _src/main.rs_ file with fewer responsibilities."
-msgstr ""
+msgstr "O nosso projeto `minigrep` está indo bem até aqui! Agora vamos dividir o arquivo _src/main.rs_ e colocar parte do código no arquivo _src/lib.rs_. Assim, podemos testar o código e ter um arquivo _src/main.rs_ com menos responsabilidades."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Let’s define the code responsible for searching text in _src/lib.rs_ rather than in _src/main.rs_, which will let us (or anyone else using our `minigrep` library) call the searching function from more contexts than our `minigrep` binary."
-msgstr ""
+msgstr "Vamos definir o código responsável pela busca de texto em _src/lib.rs_, e não em _src/main.rs_, o que nos permitirá (ou a qualquer outra pessoa que use nossa biblioteca `minigrep`) chamar a função de busca a partir de mais contextos do que o nosso binário `minigrep`."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "First, let’s define the `search` function signature in _src/lib.rs_ as shown in Listing 12-13, with a body that calls the `unimplemented!` macro. We’ll explain the signature in more detail when we fill in the implementation."
-msgstr ""
+msgstr "Primeiro, vamos definir a assinatura da função `search` em _src/lib.rs_, como mostra a Listagem 12-13, com um corpo que chama a macro `unimplemented!`. Vamos explicar a assinatura com mais detalhes quando preenchermos a implementação."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-13\" file-name=\"src/lib.rs\" caption=\"Defining the `search` function in *src/lib.rs*\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-13\" file-name=\"src/lib.rs\" caption=\"Definindo a função `search` em *src/lib.rs*\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We’ve used the `pub` keyword on the function definition to designate `search` as part of our library crate’s public API. We now have a library crate that we can use from our binary crate and that we can test!"
-msgstr ""
+msgstr "Usamos a palavra-chave `pub` na definição da função para designar `search` como parte da API pública do nosso crate de biblioteca. Agora temos um crate de biblioteca que podemos usar a partir do nosso crate binário e que podemos testar!"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Now we need to bring the code defined in _src/lib.rs_ into the scope of the binary crate in _src/main.rs_ and call it, as shown in Listing 12-14."
-msgstr ""
+msgstr "Agora precisamos trazer o código definido em _src/lib.rs_ para o escopo do crate binário em _src/main.rs_ e chamá-lo, como mostra a Listagem 12-14."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "<Listing number=\"12-14\" file-name=\"src/main.rs\" caption=\"Using the `minigrep` library crate’s `search` function in *src/main.rs*\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-14\" file-name=\"src/main.rs\" caption=\"Usando a função `search` do crate de biblioteca `minigrep` em *src/main.rs*\">\n"
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 #: src/ch12-05-working-with-environment-variables.md
@@ -12429,19 +12431,19 @@ msgstr ""
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "We add a `use minigrep::search` line to bring the `search` function from the library crate into the binary crate’s scope. Then, in the `run` function, rather than printing out the contents of the file, we call the `search` function and pass the `config.query` value and `contents` as arguments. Then, `run` will use a `for` loop to print each line returned from `search` that matched the query. This is also a good time to remove the `println!` calls in the `main` function that displayed the query and the file path so that our program only prints the search results (if no errors occur)."
-msgstr ""
+msgstr "Adicionamos uma linha `use minigrep::search` para trazer a função `search` do crate de biblioteca para o escopo do crate binário. Depois, na função `run`, em vez de imprimir o conteúdo do arquivo, chamamos a função `search` e passamos o valor `config.query` e `contents` como argumentos. Em seguida, `run` vai usar um loop `for` para imprimir cada linha retornada por `search` que corresponda à consulta. Este também é um bom momento para remover as chamadas a `println!` na função `main` que exibiam a consulta e o caminho do arquivo, para que nosso programa imprima apenas os resultados da busca (se nenhum erro ocorrer)."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Note that the search function will be collecting all the results into a vector it returns before any printing happens. This implementation could be slow to display results when searching large files, because results aren’t printed as they’re found; we’ll discuss a possible way to fix this using iterators in Chapter 13."
-msgstr ""
+msgstr "Observe que a função de busca vai coletar todos os resultados em um vetor, que ela retorna antes de qualquer impressão acontecer. Essa implementação pode ser lenta para exibir resultados ao pesquisar arquivos grandes, porque os resultados não são impressos conforme são encontrados; vamos discutir uma possível forma de corrigir isso usando iteradores no Capítulo 13."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Whew! That was a lot of work, but we’ve set ourselves up for success in the future. Now it’s much easier to handle errors, and we’ve made the code more modular. Almost all of our work will be done in _src/lib.rs_ from here on out."
-msgstr ""
+msgstr "Ufa! Foi muito trabalho, mas preparamos o terreno para o sucesso no futuro. Agora é muito mais fácil tratar erros, e tornamos o código mais modular. Quase todo o nosso trabalho será feito em _src/lib.rs_ daqui em diante."
 
 #: src/ch12-03-improving-error-handling-and-modularity.md
 msgid "Let’s take advantage of this newfound modularity by doing something that would have been difficult with the old code but is easy with the new code: We’ll write some tests!"
-msgstr ""
+msgstr "Vamos aproveitar essa modularidade recém-descoberta fazendo algo que seria difícil com o código antigo, mas é fácil com o novo: vamos escrever alguns testes!"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<a id=\"developing-the-librarys-functionality-with-test-driven-development\"></a>"
@@ -12449,51 +12451,51 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Adding Functionality with Test-Driven Development"
-msgstr ""
+msgstr "Adicionando funcionalidade com desenvolvimento orientado a testes {#adding-functionality-with-test-driven-development}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Now that we have the search logic in _src/lib.rs_ separate from the `main` function, it’s much easier to write tests for the core functionality of our code. We can call functions directly with various arguments and check return values without having to call our binary from the command line."
-msgstr ""
+msgstr "Agora que temos a lógica de busca em _src/lib.rs_ separada da função `main`, é muito mais fácil escrever testes para a funcionalidade central do nosso código. Podemos chamar funções diretamente com vários argumentos e verificar valores de retorno sem precisar chamar nosso binário pela linha de comando."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "In this section, we’ll add the searching logic to the `minigrep` program using the test-driven development (TDD) process with the following steps:"
-msgstr ""
+msgstr "Nesta seção, vamos adicionar a lógica de busca ao programa `minigrep` usando o processo de desenvolvimento orientado a testes (TDD) com os seguintes passos:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Write a test that fails and run it to make sure it fails for the reason you expect."
-msgstr ""
+msgstr "Escreva um teste que falhe e execute-o para garantir que ele falhe pelo motivo que você espera."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Write or modify just enough code to make the new test pass."
-msgstr ""
+msgstr "Escreva ou modifique apenas o código necessário para fazer o novo teste passar."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Refactor the code you just added or changed and make sure the tests continue to pass."
-msgstr ""
+msgstr "Refatore o código que você acabou de adicionar ou alterar e garanta que os testes continuem passando."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Repeat from step 1!"
-msgstr ""
+msgstr "Repita a partir do passo 1!"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Though it’s just one of many ways to write software, TDD can help drive code design. Writing the test before you write the code that makes the test pass helps maintain high test coverage throughout the process."
-msgstr ""
+msgstr "Embora seja apenas uma das muitas maneiras de escrever software, o TDD pode ajudar a guiar o design do código. Escrever o teste antes de escrever o código que faz o teste passar ajuda a manter uma alta cobertura de testes ao longo de todo o processo."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "We’ll test-drive the implementation of the functionality that will actually do the searching for the query string in the file contents and produce a list of lines that match the query. We’ll add this functionality in a function called `search`."
-msgstr ""
+msgstr "Vamos usar o desenvolvimento orientado a testes na implementação da funcionalidade que de fato fará a busca pela string de consulta no conteúdo do arquivo e produzirá uma lista de linhas que correspondem à consulta. Vamos adicionar essa funcionalidade em uma função chamada `search`."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Writing a Failing Test"
-msgstr ""
+msgstr "Escrevendo um teste que falha {#writing-a-failing-test}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "In _src/lib.rs_, we’ll add a `tests` module with a test function, as we did in [Chapter 11](ch11-01-writing-tests.html#the-anatomy-of-a-test-function)<!-- ignore -->. The test function specifies the behavior we want the `search` function to have: It will take a query and the text to search, and it will return only the lines from the text that contain the query. Listing 12-15 shows this test."
-msgstr ""
+msgstr "Em _src/lib.rs_, vamos adicionar um módulo `tests` com uma função de teste, como fizemos no [Capítulo 11](ch11-01-writing-tests.html#the-anatomy-of-a-test-function)<!-- ignore -->. A função de teste especifica o comportamento que queremos que a função `search` tenha: ela vai receber uma consulta e o texto em que buscar, e vai retornar apenas as linhas do texto que contêm a consulta. A Listagem 12-15 mostra este teste."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<Listing number=\"12-15\" file-name=\"src/lib.rs\" caption=\"Creating a failing test for the `search` function for the functionality we wish we had\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-15\" file-name=\"src/lib.rs\" caption=\"Criando um teste que falha para a função `search`, para a funcionalidade que gostaríamos de ter\">\n"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 #: src/ch12-05-working-with-environment-variables.md
@@ -12517,15 +12519,15 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "This test searches for the string `\"duct\"`. The text we’re searching is three lines, only one of which contains `\"duct\"` (note that the backslash after the opening double quote tells Rust not to put a newline character at the beginning of the contents of this string literal). We assert that the value returned from the `search` function contains only the line we expect."
-msgstr ""
+msgstr "Este teste procura a string `\"duct\"`. O texto em que estamos buscando tem três linhas, e apenas uma delas contém `\"duct\"` (observe que a barra invertida depois das aspas duplas de abertura diz ao Rust para não colocar um caractere de quebra de linha no início do conteúdo deste literal de string). Afirmamos que o valor retornado pela função `search` contém apenas a linha que esperamos."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "If we run this test, it will currently fail because the `unimplemented!` macro panics with the message “not implemented”. In accordance with TDD principles, we’ll take a small step of adding just enough code to get the test to not panic when calling the function by defining the `search` function to always return an empty vector, as shown in Listing 12-16. Then, the test should compile and fail because an empty vector doesn’t match a vector containing the line `\"safe, fast, productive.\"`."
-msgstr ""
+msgstr "Se executarmos este teste, ele vai falhar por enquanto, porque a macro `unimplemented!` entra em pânico com a mensagem “not implemented”. De acordo com os princípios do TDD, vamos dar um pequeno passo, adicionando apenas o código suficiente para que o teste não entre em pânico ao chamar a função, definindo a função `search` para sempre retornar um vetor vazio, como mostrado na Listagem 12-16. Depois disso, o teste deve compilar e falhar, porque um vetor vazio não corresponde a um vetor que contém a linha `\"safe, fast, productive.\"`."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<Listing number=\"12-16\" file-name=\"src/lib.rs\" caption=\"Defining just enough of the `search` function so that calling it won’t panic\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-16\" file-name=\"src/lib.rs\" caption=\"Definindo apenas o suficiente da função `search` para que chamá-la não entre em pânico\">\n"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 #: src/ch13-03-improving-our-io-project.md
@@ -12538,15 +12540,15 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Now let’s discuss why we need to define an explicit lifetime `'a` in the signature of `search` and use that lifetime with the `contents` argument and the return value. Recall in [Chapter 10](ch10-03-lifetime-syntax.html)<!-- ignore --> that the lifetime parameters specify which argument lifetime is connected to the lifetime of the return value. In this case, we indicate that the returned vector should contain string slices that reference slices of the argument `contents` (rather than the argument `query`)."
-msgstr ""
+msgstr "Agora vamos discutir por que precisamos definir um tempo de vida explícito `'a` na assinatura de `search` e usar esse tempo de vida com o argumento `contents` e com o valor de retorno. Lembre que, no [Capítulo 10](ch10-03-lifetime-syntax.html)<!-- ignore -->, os parâmetros de tempo de vida especificam qual tempo de vida de argumento está conectado ao tempo de vida do valor de retorno. Neste caso, indicamos que o vetor retornado deve conter slices de string que referenciam slices do argumento `contents` (em vez do argumento `query`)."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "In other words, we tell Rust that the data returned by the `search` function will live as long as the data passed into the `search` function in the `contents` argument. This is important! The data referenced _by_ a slice needs to be valid for the reference to be valid; if the compiler assumes we’re making string slices of `query` rather than `contents`, it will do its safety checking incorrectly."
-msgstr ""
+msgstr "Em outras palavras, dizemos ao Rust que os dados retornados pela função `search` vão existir pelo mesmo tempo que os dados passados para a função `search` no argumento `contents`. Isso é importante! Os dados referenciados _por_ uma slice precisam ser válidos para que a referência seja válida; se o compilador presumir que estamos criando slices de string de `query` em vez de `contents`, ele fará a verificação de segurança de forma incorreta."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "If we forget the lifetime annotations and try to compile this function, we’ll get this error:"
-msgstr ""
+msgstr "Se esquecermos as anotações de tempo de vida e tentarmos compilar esta função, vamos receber este erro:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid ""
@@ -12572,55 +12574,55 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Rust can’t know which of the two parameters we need for the output, so we need to tell it explicitly. Note that the help text suggests specifying the same lifetime parameter for all the parameters and the output type, which is incorrect! Because `contents` is the parameter that contains all of our text and we want to return the parts of that text that match, we know `contents` is the only parameter that should be connected to the return value using the lifetime syntax."
-msgstr ""
+msgstr "O Rust não consegue saber de qual dos dois parâmetros precisamos para o valor de retorno, então precisamos dizer isso a ele explicitamente. Observe que o texto de ajuda sugere especificar o mesmo parâmetro de tempo de vida para todos os parâmetros e para o tipo de retorno, o que está incorreto! Como `contents` é o parâmetro que contém todo o nosso texto e queremos retornar as partes desse texto que correspondem, sabemos que `contents` é o único parâmetro que deve estar conectado ao valor de retorno pela sintaxe de tempo de vida."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Other programming languages don’t require you to connect arguments to return values in the signature, but this practice will get easier over time. You might want to compare this example with the examples in the [“Validating References with Lifetimes”](ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)<!-- ignore --> section in Chapter 10."
-msgstr ""
+msgstr "Outras linguagens de programação não exigem que você conecte argumentos a valores de retorno na assinatura, mas essa prática vai ficando mais fácil com o tempo. Talvez você queira comparar este exemplo com os exemplos da seção [“Validando referências com tempos de vida”](ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)<!-- ignore --> no Capítulo 10."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Writing Code to Pass the Test"
-msgstr ""
+msgstr "Escrevendo código para passar no teste {#writing-code-to-pass-the-test}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Currently, our test is failing because we always return an empty vector. To fix that and implement `search`, our program needs to follow these steps:"
-msgstr ""
+msgstr "Atualmente, nosso teste está falhando porque sempre retornamos um vetor vazio. Para corrigir isso e implementar `search`, nosso programa precisa seguir estes passos:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Iterate through each line of the contents."
-msgstr ""
+msgstr "Iterar sobre cada linha do conteúdo."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Check whether the line contains our query string."
-msgstr ""
+msgstr "Verificar se a linha contém nossa string de consulta."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "If it does, add it to the list of values we’re returning."
-msgstr ""
+msgstr "Se contiver, adicionar a linha à lista de valores que estamos retornando."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "If it doesn’t, do nothing."
-msgstr ""
+msgstr "Se não contiver, não fazer nada."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Return the list of results that match."
-msgstr ""
+msgstr "Retornar a lista de resultados que correspondem."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Let’s work through each step, starting with iterating through lines."
-msgstr ""
+msgstr "Vamos percorrer cada passo, começando por iterar sobre as linhas."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Iterating Through Lines with the `lines` Method"
-msgstr ""
+msgstr "Iterando sobre as linhas com o método `lines` {#iterating-through-lines-with-the-lines-method}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Rust has a helpful method to handle line-by-line iteration of strings, conveniently named `lines`, that works as shown in Listing 12-17. Note that this won’t compile yet."
-msgstr ""
+msgstr "O Rust tem um método útil para lidar com a iteração linha a linha sobre strings, convenientemente chamado `lines`, que funciona como mostrado na Listagem 12-17. Observe que isso ainda não vai compilar."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<Listing number=\"12-17\" file-name=\"src/lib.rs\" caption=\"Iterating through each line in `contents`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-17\" file-name=\"src/lib.rs\" caption=\"Iterando sobre cada linha de `contents`\">\n"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "// do something with line\n"
@@ -12628,39 +12630,39 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "The `lines` method returns an iterator. We’ll talk about iterators in depth in [Chapter 13](ch13-02-iterators.html)<!-- ignore -->. But recall that you saw this way of using an iterator in [Listing 3-5](ch03-05-control-flow.html#looping-through-a-collection-with-for)<!-- ignore -->, where we used a `for` loop with an iterator to run some code on each item in a collection."
-msgstr ""
+msgstr "O método `lines` retorna um iterador. Vamos falar sobre iteradores com mais detalhes no [Capítulo 13](ch13-02-iterators.html)<!-- ignore -->. Mas lembre que você já viu esse jeito de usar um iterador na [Listagem 3-5](ch03-05-control-flow.html#looping-through-a-collection-with-for)<!-- ignore -->, em que usamos um loop `for` com um iterador para executar algum código em cada item de uma coleção."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Searching Each Line for the Query"
-msgstr ""
+msgstr "Buscando a consulta em cada linha {#searching-each-line-for-the-query}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Next, we’ll check whether the current line contains our query string. Fortunately, strings have a helpful method named `contains` that does this for us! Add a call to the `contains` method in the `search` function, as shown in Listing 12-18. Note that this still won’t compile yet."
-msgstr ""
+msgstr "Em seguida, vamos verificar se a linha atual contém nossa string de consulta. Felizmente, as strings têm um método útil chamado `contains` que faz isso por nós! Adicione uma chamada ao método `contains` na função `search`, como mostrado na Listagem 12-18. Observe que isso ainda não vai compilar."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<Listing number=\"12-18\" file-name=\"src/lib.rs\" caption=\"Adding functionality to see whether the line contains the string in `query`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-18\" file-name=\"src/lib.rs\" caption=\"Adicionando funcionalidade para verificar se a linha contém a string em `query`\">\n"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "At the moment, we’re building up functionality. To get the code to compile, we need to return a value from the body as we indicated we would in the function signature."
-msgstr ""
+msgstr "No momento, estamos construindo a funcionalidade aos poucos. Para fazer o código compilar, precisamos retornar um valor do corpo da função, como indicamos que faríamos na assinatura da função."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Storing Matching Lines"
-msgstr ""
+msgstr "Armazenando as linhas correspondentes {#storing-matching-lines}"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "To finish this function, we need a way to store the matching lines that we want to return. For that, we can make a mutable vector before the `for` loop and call the `push` method to store a `line` in the vector. After the `for` loop, we return the vector, as shown in Listing 12-19."
-msgstr ""
+msgstr "Para terminar esta função, precisamos de uma forma de armazenar as linhas correspondentes que queremos retornar. Para isso, podemos criar um vetor mutável antes do loop `for` e chamar o método `push` para armazenar uma `line` no vetor. Depois do loop `for`, retornamos o vetor, como mostrado na Listagem 12-19."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "<Listing number=\"12-19\" file-name=\"src/lib.rs\" caption=\"Storing the lines that match so that we can return them\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-19\" file-name=\"src/lib.rs\" caption=\"Armazenando as linhas correspondentes para que possamos retorná-las\">\n"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Now the `search` function should return only the lines that contain `query`, and our test should pass. Let’s run the test:"
-msgstr ""
+msgstr "Agora a função `search` deve retornar apenas as linhas que contêm `query`, e nosso teste deve passar. Vamos executar o teste:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid ""
@@ -12692,15 +12694,15 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Our test passed, so we know it works!"
-msgstr ""
+msgstr "Nosso teste passou, então sabemos que ele funciona!"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "At this point, we could consider opportunities for refactoring the implementation of the search function while keeping the tests passing to maintain the same functionality. The code in the search function isn’t too bad, but it doesn’t take advantage of some useful features of iterators. We’ll return to this example in [Chapter 13](ch13-02-iterators.html)<!-- ignore -->, where we’ll explore iterators in detail, and look at how to improve it."
-msgstr ""
+msgstr "Neste ponto, poderíamos considerar oportunidades de refatorar a implementação da função search, mantendo os testes passando para preservar a mesma funcionalidade. O código da função search não está tão ruim, mas não aproveita alguns recursos úteis dos iteradores. Vamos voltar a este exemplo no [Capítulo 13](ch13-02-iterators.html)<!-- ignore -->, em que vamos explorar os iteradores em detalhes e ver como melhorá-lo."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Now the entire program should work! Let’s try it out, first with a word that should return exactly one line from the Emily Dickinson poem: _frog_."
-msgstr ""
+msgstr "Agora o programa inteiro deve funcionar! Vamos experimentar, primeiro com uma palavra que deve retornar exatamente uma linha do poema de Emily Dickinson: _frog_."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid ""
@@ -12715,7 +12717,7 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Cool! Now let’s try a word that will match multiple lines, like _body_:"
-msgstr ""
+msgstr "Legal! Agora vamos tentar uma palavra que vai corresponder a várias linhas, como _body_:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid ""
@@ -12732,7 +12734,7 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "And finally, let’s make sure that we don’t get any lines when we search for a word that isn’t anywhere in the poem, such as _monomorphization_:"
-msgstr ""
+msgstr "E, por fim, vamos garantir que não recebamos nenhuma linha quando buscarmos uma palavra que não aparece em nenhum lugar do poema, como _monomorphization_:"
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid ""
@@ -12746,15 +12748,15 @@ msgstr ""
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "Excellent! We’ve built our own mini version of a classic tool and learned a lot about how to structure applications. We’ve also learned a bit about file input and output, lifetimes, testing, and command line parsing."
-msgstr ""
+msgstr "Excelente! Criamos nossa própria versão mini de uma ferramenta clássica e aprendemos bastante sobre como estruturar aplicações. Também aprendemos um pouco sobre entrada e saída de arquivos, tempos de vida, testes e análise de argumentos de linha de comando."
 
 #: src/ch12-04-testing-the-librarys-functionality.md
 msgid "To round out this project, we’ll briefly demonstrate how to work with environment variables and how to print to standard error, both of which are useful when you’re writing command line programs."
-msgstr ""
+msgstr "Para encerrar este projeto, vamos demonstrar brevemente como trabalhar com variáveis de ambiente e como imprimir na saída de erro padrão, ambas úteis quando você está escrevendo programas de linha de comando."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We’ll improve the `minigrep` binary by adding an extra feature: an option for case-insensitive searching that the user can turn on via an environment variable. We could make this feature a command line option and require that users enter it each time they want it to apply, but by instead making it an environment variable, we allow our users to set the environment variable once and have all their searches be case insensitive in that terminal session."
-msgstr ""
+msgstr "Vamos melhorar o binário `minigrep` adicionando um recurso extra: uma opção de busca sem distinção de maiúsculas e minúsculas que o usuário pode ativar por meio de uma variável de ambiente. Poderíamos tornar esse recurso uma opção de linha de comando e exigir que os usuários a digitassem toda vez que quisessem que ela fosse aplicada, mas, ao torná-lo uma variável de ambiente, permitimos que nossos usuários definam a variável de ambiente uma única vez e façam com que todas as buscas sejam sem distinção de maiúsculas e minúsculas naquela sessão do terminal."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "<a id=\"writing-a-failing-test-for-the-case-insensitive-search-function\"></a>"
@@ -12762,15 +12764,15 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Writing a Failing Test for Case-Insensitive Search"
-msgstr ""
+msgstr "Escrevendo um teste que falha para a busca sem distinção de maiúsculas e minúsculas {#writing-a-failing-test-for-case-insensitive-search}"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We first add a new `search_case_insensitive` function to the `minigrep` library that will be called when the environment variable has a value. We’ll continue to follow the TDD process, so the first step is again to write a failing test. We’ll add a new test for the new `search_case_insensitive` function and rename our old test from `one_result` to `case_sensitive` to clarify the differences between the two tests, as shown in Listing 12-20."
-msgstr ""
+msgstr "Primeiro, adicionamos uma nova função `search_case_insensitive` à biblioteca `minigrep`, que será chamada quando a variável de ambiente tiver um valor. Vamos continuar seguindo o processo do TDD, então o primeiro passo é, mais uma vez, escrever um teste que falha. Vamos adicionar um novo teste para a nova função `search_case_insensitive` e renomear nosso teste antigo, de `one_result` para `case_sensitive`, para deixar clara a diferença entre os dois testes, como mostrado na Listagem 12-20."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "<Listing number=\"12-20\" file-name=\"src/lib.rs\" caption=\"Adding a new failing test for the case-insensitive function we’re about to add\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-20\" file-name=\"src/lib.rs\" caption=\"Adicionando um novo teste que falha para a função sem distinção de maiúsculas e minúsculas que estamos prestes a adicionar\">\n"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid ""
@@ -12807,23 +12809,23 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Note that we’ve edited the old test’s `contents` too. We’ve added a new line with the text `\"Duct tape.\"` using a capital _D_ that shouldn’t match the query `\"duct\"` when we’re searching in a case-sensitive manner. Changing the old test in this way helps ensure that we don’t accidentally break the case-sensitive search functionality that we’ve already implemented. This test should pass now and should continue to pass as we work on the case-insensitive search."
-msgstr ""
+msgstr "Observe que também editamos o `contents` do teste antigo. Adicionamos uma nova linha com o texto `\"Duct tape.\"`, usando um _D_ maiúsculo, que não deve corresponder à consulta `\"duct\"` quando estivermos buscando de forma sensível a maiúsculas e minúsculas. Alterar o teste antigo dessa forma ajuda a garantir que não quebremos, por acidente, a funcionalidade de busca sensível a maiúsculas e minúsculas que já implementamos. Este teste deve passar agora e deve continuar passando enquanto trabalhamos na busca sem distinção de maiúsculas e minúsculas."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "The new test for the case-_insensitive_ search uses `\"rUsT\"` as its query. In the `search_case_insensitive` function we’re about to add, the query `\"rUsT\"` should match the line containing `\"Rust:\"` with a capital _R_ and match the line `\"Trust me.\"` even though both have different casing from the query. This is our failing test, and it will fail to compile because we haven’t yet defined the `search_case_insensitive` function. Feel free to add a skeleton implementation that always returns an empty vector, similar to the way we did for the `search` function in Listing 12-16 to see the test compile and fail."
-msgstr ""
+msgstr "O novo teste para a busca sem _distinção_ de maiúsculas e minúsculas usa `\"rUsT\"` como consulta. Na função `search_case_insensitive` que estamos prestes a adicionar, a consulta `\"rUsT\"` deve corresponder à linha que contém `\"Rust:\"`, com um _R_ maiúsculo, e corresponder à linha `\"Trust me.\"`, mesmo que ambas tenham capitalização diferente da consulta. Este é o nosso teste que falha, e ele não vai compilar, porque ainda não definimos a função `search_case_insensitive`. Sinta-se à vontade para adicionar uma implementação esqueleto que sempre retorna um vetor vazio, de forma parecida com o que fizemos com a função `search` na Listagem 12-16, para ver o teste compilar e falhar."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Implementing the `search_case_insensitive` Function"
-msgstr ""
+msgstr "Implementando a função `search_case_insensitive` {#implementing-the-search_case_insensitive-function}"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "The `search_case_insensitive` function, shown in Listing 12-21, will be almost the same as the `search` function. The only difference is that we’ll lowercase the `query` and each `line` so that whatever the case of the input arguments, they’ll be the same case when we check whether the line contains the query."
-msgstr ""
+msgstr "A função `search_case_insensitive`, mostrada na Listagem 12-21, vai ser quase igual à função `search`. A única diferença é que vamos converter para minúsculas a `query` e cada `line`, para que, qualquer que seja a capitalização dos argumentos de entrada, eles tenham a mesma capitalização quando verificarmos se a linha contém a consulta."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "<Listing number=\"12-21\" file-name=\"src/lib.rs\" caption=\"Defining the `search_case_insensitive` function to lowercase the query and the line before comparing them\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-21\" file-name=\"src/lib.rs\" caption=\"Definindo a função `search_case_insensitive` para converter a consulta e a linha para minúsculas antes de compará-las\">\n"
 
 #: src/ch12-05-working-with-environment-variables.md
 #: src/ch13-03-improving-our-io-project.md
@@ -12847,19 +12849,19 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "First, we lowercase the `query` string and store it in a new variable with the same name, shadowing the original `query`. Calling `to_lowercase` on the query is necessary so that no matter whether the user’s query is `\"rust\"`, `\"RUST\"`, `\"Rust\"`, or `\"rUsT\"`, we’ll treat the query as if it were `\"rust\"` and be insensitive to the case. While `to_lowercase` will handle basic Unicode, it won’t be 100 percent accurate. If we were writing a real application, we’d want to do a bit more work here, but this section is about environment variables, not Unicode, so we’ll leave it at that here."
-msgstr ""
+msgstr "Primeiro, convertemos a string `query` para minúsculas e a armazenamos em uma nova variável com o mesmo nome, sombreando a `query` original. Chamar `to_lowercase` na consulta é necessário para que, não importa se a consulta do usuário é `\"rust\"`, `\"RUST\"`, `\"Rust\"` ou `\"rUsT\"`, tratemos a consulta como se fosse `\"rust\"` e sejamos insensíveis à capitalização. Embora `to_lowercase` trate Unicode básico, ele não será 100% preciso. Se estivéssemos escrevendo uma aplicação de verdade, gostaríamos de fazer um pouco mais de trabalho aqui, mas esta seção trata de variáveis de ambiente, não de Unicode, então vamos deixar isso assim por enquanto."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Note that `query` is now a `String` rather than a string slice because calling `to_lowercase` creates new data rather than referencing existing data. Say the query is `\"rUsT\"`, as an example: That string slice doesn’t contain a lowercase `u` or `t` for us to use, so we have to allocate a new `String` containing `\"rust\"`. When we pass `query` as an argument to the `contains` method now, we need to add an ampersand because the signature of `contains` is defined to take a string slice."
-msgstr ""
+msgstr "Observe que `query` agora é uma `String`, em vez de uma slice de string, porque chamar `to_lowercase` cria dados novos em vez de referenciar dados existentes. Digamos que a consulta seja `\"rUsT\"`, por exemplo: essa slice de string não contém um `u` ou um `t` minúsculos para usarmos, então precisamos alocar uma nova `String` contendo `\"rust\"`. Quando passamos `query` como argumento para o método `contains`, agora precisamos adicionar um e comercial, porque a assinatura de `contains` é definida para receber uma slice de string."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Next, we add a call to `to_lowercase` on each `line` to lowercase all characters. Now that we’ve converted `line` and `query` to lowercase, we’ll find matches no matter what the case of the query is."
-msgstr ""
+msgstr "Em seguida, adicionamos uma chamada a `to_lowercase` em cada `line`, para deixar todos os caracteres em minúsculas. Agora que convertemos `line` e `query` para minúsculas, vamos encontrar correspondências, não importa qual seja a capitalização da consulta."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Let’s see if this implementation passes the tests:"
-msgstr ""
+msgstr "Vamos ver se esta implementação passa nos testes:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid ""
@@ -12892,23 +12894,23 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Great! They passed. Now let’s call the new `search_case_insensitive` function from the `run` function. First, we’ll add a configuration option to the `Config` struct to switch between case-sensitive and case-insensitive search. Adding this field will cause compiler errors because we aren’t initializing this field anywhere yet:"
-msgstr ""
+msgstr "Ótimo! Eles passaram. Agora vamos chamar a nova função `search_case_insensitive` a partir da função `run`. Primeiro, vamos adicionar uma opção de configuração ao struct `Config`, para alternar entre a busca sensível a maiúsculas e minúsculas e a busca sem distinção de maiúsculas e minúsculas. Adicionar esse campo vai causar erros de compilação, porque ainda não estamos inicializando esse campo em lugar nenhum:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We added the `ignore_case` field that holds a Boolean. Next, we need the `run` function to check the `ignore_case` field’s value and use that to decide whether to call the `search` function or the `search_case_insensitive` function, as shown in Listing 12-22. This still won’t compile yet."
-msgstr ""
+msgstr "Adicionamos o campo `ignore_case`, que armazena um booleano. Em seguida, precisamos que a função `run` verifique o valor do campo `ignore_case` e use isso para decidir se chama a função `search` ou a função `search_case_insensitive`, como mostrado na Listagem 12-22. Isso ainda não vai compilar."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "<Listing number=\"12-22\" file-name=\"src/main.rs\" caption=\"Calling either `search` or `search_case_insensitive` based on the value in `config.ignore_case`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-22\" file-name=\"src/main.rs\" caption=\"Chamando `search` ou `search_case_insensitive`, de acordo com o valor em `config.ignore_case`\">\n"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Finally, we need to check for the environment variable. The functions for working with environment variables are in the `env` module in the standard library, which is already in scope at the top of _src/main.rs_. We’ll use the `var` function from the `env` module to check to see if any value has been set for an environment variable named `IGNORE_CASE`, as shown in Listing 12-23."
-msgstr ""
+msgstr "Por fim, precisamos verificar a variável de ambiente. As funções para trabalhar com variáveis de ambiente estão no módulo `env` da biblioteca padrão, que já está no escopo no topo de _src/main.rs_. Vamos usar a função `var` do módulo `env` para verificar se algum valor foi definido para uma variável de ambiente chamada `IGNORE_CASE`, como mostrado na Listagem 12-23."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "<Listing number=\"12-23\" file-name=\"src/main.rs\" caption=\"Checking for any value in an environment variable named `IGNORE_CASE`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-23\" file-name=\"src/main.rs\" caption=\"Verificando se há algum valor em uma variável de ambiente chamada `IGNORE_CASE`\">\n"
 
 #: src/ch12-05-working-with-environment-variables.md
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
@@ -12918,19 +12920,19 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Here, we create a new variable, `ignore_case`. To set its value, we call the `env::var` function and pass it the name of the `IGNORE_CASE` environment variable. The `env::var` function returns a `Result` that will be the successful `Ok` variant that contains the value of the environment variable if the environment variable is set to any value. It will return the `Err` variant if the environment variable is not set."
-msgstr ""
+msgstr "Aqui, criamos uma nova variável, `ignore_case`. Para definir o valor dela, chamamos a função `env::var` e passamos a ela o nome da variável de ambiente `IGNORE_CASE`. A função `env::var` retorna um `Result`, que será a variante `Ok` de sucesso, contendo o valor da variável de ambiente se ela estiver definida com qualquer valor. Ela vai retornar a variante `Err` se a variável de ambiente não estiver definida."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We’re using the `is_ok` method on the `Result` to check whether the environment variable is set, which means the program should do a case-insensitive search. If the `IGNORE_CASE` environment variable isn’t set to anything, `is_ok` will return `false` and the program will perform a case-sensitive search. We don’t care about the _value_ of the environment variable, just whether it’s set or unset, so we’re checking `is_ok` rather than using `unwrap`, `expect`, or any of the other methods we’ve seen on `Result`."
-msgstr ""
+msgstr "Estamos usando o método `is_ok` no `Result` para verificar se a variável de ambiente está definida, o que significa que o programa deve fazer uma busca sem distinção de maiúsculas e minúsculas. Se a variável de ambiente `IGNORE_CASE` não tiver nenhum valor definido, `is_ok` vai retornar `false` e o programa vai fazer uma busca sensível a maiúsculas e minúsculas. Não nos importamos com o _valor_ da variável de ambiente, apenas com o fato de ela estar definida ou não, então estamos verificando `is_ok` em vez de usar `unwrap`, `expect` ou qualquer outro dos métodos que vimos em `Result`."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We pass the value in the `ignore_case` variable to the `Config` instance so that the `run` function can read that value and decide whether to call `search_case_insensitive` or `search`, as we implemented in Listing 12-22."
-msgstr ""
+msgstr "Passamos o valor da variável `ignore_case` para a instância de `Config`, para que a função `run` possa ler esse valor e decidir se chama `search_case_insensitive` ou `search`, como implementamos na Listagem 12-22."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Let’s give it a try! First, we’ll run our program without the environment variable set and with the query `to`, which should match any line that contains the word _to_ in all lowercase:"
-msgstr ""
+msgstr "Vamos experimentar! Primeiro, vamos executar nosso programa sem a variável de ambiente definida e com a consulta `to`, que deve corresponder a qualquer linha que contenha a palavra _to_ em letras minúsculas:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid ""
@@ -12946,19 +12948,19 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Looks like that still works! Now let’s run the program with `IGNORE_CASE` set to `1` but with the same query `to`:"
-msgstr ""
+msgstr "Parece que isso ainda funciona! Agora vamos executar o programa com `IGNORE_CASE` definido como `1`, mas com a mesma consulta `to`:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "If you’re using PowerShell, you will need to set the environment variable and run the program as separate commands:"
-msgstr ""
+msgstr "Se você estiver usando o PowerShell, vai precisar definir a variável de ambiente e executar o programa em comandos separados:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "This will make `IGNORE_CASE` persist for the remainder of your shell session. It can be unset with the `Remove-Item` cmdlet:"
-msgstr ""
+msgstr "Isso faz com que `IGNORE_CASE` persista pelo restante da sua sessão do shell. A variável pode ser removida com o cmdlet `Remove-Item`:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "We should get lines that contain _to_ that might have uppercase letters:"
-msgstr ""
+msgstr "Devemos receber linhas que contêm _to_ e que podem ter letras maiúsculas:"
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid ""
@@ -12971,15 +12973,15 @@ msgstr ""
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Excellent, we also got lines containing _To_! Our `minigrep` program can now do case-insensitive searching controlled by an environment variable. Now you know how to manage options set using either command line arguments or environment variables."
-msgstr ""
+msgstr "Excelente, também recebemos linhas que contêm _To_! Nosso programa `minigrep` agora pode fazer buscas sem distinção de maiúsculas e minúsculas, controladas por uma variável de ambiente. Agora você sabe como gerenciar opções definidas por meio de argumentos de linha de comando ou de variáveis de ambiente."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "Some programs allow arguments _and_ environment variables for the same configuration. In those cases, the programs decide that one or the other takes precedence. For another exercise on your own, try controlling case sensitivity through either a command line argument or an environment variable. Decide whether the command line argument or the environment variable should take precedence if the program is run with one set to case sensitive and one set to ignore case."
-msgstr ""
+msgstr "Alguns programas aceitam argumentos _e_ variáveis de ambiente para a mesma configuração. Nesses casos, os programas decidem que um ou outro tem precedência. Como outro exercício por conta própria, tente controlar a sensibilidade a maiúsculas e minúsculas por meio de um argumento de linha de comando ou de uma variável de ambiente. Decida se o argumento de linha de comando ou a variável de ambiente deve ter precedência caso o programa seja executado com um deles definido como sensível a maiúsculas e minúsculas e o outro definido para ignorar maiúsculas e minúsculas."
 
 #: src/ch12-05-working-with-environment-variables.md
 msgid "The `std::env` module contains many more useful features for dealing with environment variables: Check out its documentation to see what is available."
-msgstr ""
+msgstr "O módulo `std::env` contém muitos outros recursos úteis para lidar com variáveis de ambiente: confira a documentação dele para ver o que está disponível."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "<a id=\"writing-error-messages-to-standard-error-instead-of-standard-output\"></a>"
@@ -12987,79 +12989,79 @@ msgstr ""
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "At the moment, we’re writing all of our output to the terminal using the `println!` macro. In most terminals, there are two kinds of output: _standard output_ (`stdout`) for general information and _standard error_ (`stderr`) for error messages. This distinction enables users to choose to direct the successful output of a program to a file but still print error messages to the screen."
-msgstr ""
+msgstr "No momento, estamos escrevendo toda a nossa saída no terminal usando a macro `println!`. Na maioria dos terminais, há dois tipos de saída: a _saída padrão_ (`stdout`), para informações gerais, e a _saída de erro padrão_ (`stderr`), para mensagens de erro. Essa distinção permite que os usuários escolham direcionar a saída bem-sucedida de um programa para um arquivo, mas ainda imprimir as mensagens de erro na tela."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "The `println!` macro is only capable of printing to standard output, so we have to use something else to print to standard error."
-msgstr ""
+msgstr "A macro `println!` só é capaz de imprimir na saída padrão, então precisamos usar outra coisa para imprimir na saída de erro padrão."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Checking Where Errors Are Written"
-msgstr ""
+msgstr "Verificando onde os erros são escritos {#checking-where-errors-are-written}"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "First, let’s observe how the content printed by `minigrep` is currently being written to standard output, including any error messages we want to write to standard error instead. We’ll do that by redirecting the standard output stream to a file while intentionally causing an error. We won’t redirect the standard error stream, so any content sent to standard error will continue to display on the screen."
-msgstr ""
+msgstr "Primeiro, vamos observar como o conteúdo impresso pelo `minigrep` está sendo escrito na saída padrão no momento, incluindo quaisquer mensagens de erro que queremos escrever na saída de erro padrão. Vamos fazer isso redirecionando o stream da saída padrão para um arquivo enquanto causamos um erro de propósito. Não vamos redirecionar o stream da saída de erro padrão, então qualquer conteúdo enviado para a saída de erro padrão continuará sendo exibido na tela."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Command line programs are expected to send error messages to the standard error stream so that we can still see error messages on the screen even if we redirect the standard output stream to a file. Our program is not currently well behaved: We’re about to see that it saves the error message output to a file instead!"
-msgstr ""
+msgstr "Espera-se que programas de linha de comando enviem mensagens de erro para o stream da saída de erro padrão, para que ainda possamos ver essas mensagens na tela mesmo que redirecionemos o stream da saída padrão para um arquivo. No momento, nosso programa não se comporta bem: estamos prestes a ver que ele salva a saída das mensagens de erro em um arquivo!"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "To demonstrate this behavior, we’ll run the program with `>` and the file path, _output.txt_, that we want to redirect the standard output stream to. We won’t pass any arguments, which should cause an error:"
-msgstr ""
+msgstr "Para demonstrar esse comportamento, vamos executar o programa com `>` e o caminho do arquivo, _output.txt_, para o qual queremos redirecionar o stream da saída padrão. Não vamos passar nenhum argumento, o que deve causar um erro:"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "The `>` syntax tells the shell to write the contents of standard output to _output.txt_ instead of the screen. We didn’t see the error message we were expecting printed to the screen, so that means it must have ended up in the file. This is what _output.txt_ contains:"
-msgstr ""
+msgstr "A sintaxe `>` diz ao shell para escrever o conteúdo da saída padrão em _output.txt_, em vez de na tela. Não vimos a mensagem de erro que esperávamos ver impressa na tela, então isso significa que ela deve ter ido parar no arquivo. Este é o conteúdo de _output.txt_:"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Yup, our error message is being printed to standard output. It’s much more useful for error messages like this to be printed to standard error so that only data from a successful run ends up in the file. We’ll change that."
-msgstr ""
+msgstr "Pois é, nossa mensagem de erro está sendo impressa na saída padrão. É muito mais útil que mensagens de erro como essa sejam impressas na saída de erro padrão, para que apenas os dados de uma execução bem-sucedida acabem no arquivo. Vamos mudar isso."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Printing Errors to Standard Error"
-msgstr ""
+msgstr "Imprimindo erros na saída de erro padrão {#printing-errors-to-standard-error}"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "We’ll use the code in Listing 12-24 to change how error messages are printed. Because of the refactoring we did earlier in this chapter, all the code that prints error messages is in one function, `main`. The standard library provides the `eprintln!` macro that prints to the standard error stream, so let’s change the two places we were calling `println!` to print errors to use `eprintln!` instead."
-msgstr ""
+msgstr "Vamos usar o código da Listagem 12-24 para mudar a forma como as mensagens de erro são impressas. Por causa da refatoração que fizemos antes neste capítulo, todo o código que imprime mensagens de erro está em uma única função, `main`. A biblioteca padrão oferece a macro `eprintln!`, que imprime no stream da saída de erro padrão, então vamos trocar os dois lugares em que chamávamos `println!` para imprimir erros, fazendo-os usar `eprintln!` no lugar."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "<Listing number=\"12-24\" file-name=\"src/main.rs\" caption=\"Writing error messages to standard error instead of standard output using `eprintln!`\">\n"
-msgstr ""
+msgstr "<Listing number=\"12-24\" file-name=\"src/main.rs\" caption=\"Escrevendo mensagens de erro na saída de erro padrão, em vez da saída padrão, usando `eprintln!`\">\n"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Let’s now run the program again in the same way, without any arguments and redirecting standard output with `>`:"
-msgstr ""
+msgstr "Vamos agora executar o programa novamente da mesma forma, sem argumentos e redirecionando a saída padrão com `>`:"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Now we see the error onscreen and _output.txt_ contains nothing, which is the behavior we expect of command line programs."
-msgstr ""
+msgstr "Agora vemos o erro na tela, e _output.txt_ não contém nada, que é o comportamento que esperamos de programas de linha de comando."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Let’s run the program again with arguments that don’t cause an error but still redirect standard output to a file, like so:"
-msgstr ""
+msgstr "Vamos executar o programa novamente com argumentos que não causam erro, mas que ainda redirecionam a saída padrão para um arquivo, assim:"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "We won’t see any output to the terminal, and _output.txt_ will contain our results:"
-msgstr ""
+msgstr "Não vamos ver nenhuma saída no terminal, e _output.txt_ vai conter nossos resultados:"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "<span class=\"filename\">Filename: output.txt</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: output.txt</span>"
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "This demonstrates that we’re now using standard output for successful output and standard error for error output as appropriate."
-msgstr ""
+msgstr "Isso demonstra que agora usamos a saída padrão para a saída bem-sucedida e a saída de erro padrão para a saída de erro, conforme o caso."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "This chapter recapped some of the major concepts you’ve learned so far and covered how to perform common I/O operations in Rust. By using command line arguments, files, environment variables, and the `eprintln!` macro for printing errors, you’re now prepared to write command line applications. Combined with the concepts in previous chapters, your code will be well organized, store data effectively in the appropriate data structures, handle errors nicely, and be well tested."
-msgstr ""
+msgstr "Este capítulo recapitulou alguns dos principais conceitos que você aprendeu até agora e abordou como realizar operações comuns de E/S no Rust. Usando argumentos de linha de comando, arquivos, variáveis de ambiente e a macro `eprintln!` para imprimir erros, você agora está preparado para escrever aplicações de linha de comando. Combinados com os conceitos dos capítulos anteriores, seu código será bem organizado, armazenará dados de forma eficaz nas estruturas de dados apropriadas, lidará bem com erros e será bem testado."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Next, we’ll explore some Rust features that were influenced by functional languages: closures and iterators."
-msgstr ""
+msgstr "Em seguida, vamos explorar alguns recursos do Rust que foram influenciados por linguagens funcionais: closures e iteradores."
 
 #: src/ch13-00-functional-features.md
 msgid "Rust’s design has taken inspiration from many existing languages and techniques, and one significant influence is _functional programming_. Programming in a functional style often includes using functions as values by passing them in arguments, returning them from other functions, assigning them to variables for later execution, and so forth."
