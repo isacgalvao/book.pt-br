@@ -63,7 +63,7 @@ msgstr "Fluxo de controle {#control-flow}"
 
 #: src/SUMMARY.md src/ch04-00-understanding-ownership.md
 msgid "Understanding Ownership"
-msgstr ""
+msgstr "Entendendo o ownership {#understanding-ownership}"
 
 #: src/SUMMARY.md
 msgid "What is Ownership?"
@@ -71,11 +71,11 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch04-02-references-and-borrowing.md
 msgid "References and Borrowing"
-msgstr ""
+msgstr "Referências e empréstimos {#references-and-borrowing}"
 
 #: src/SUMMARY.md src/ch04-03-slices.md
 msgid "The Slice Type"
-msgstr ""
+msgstr "O tipo slice {#the-slice-type}"
 
 #: src/SUMMARY.md src/ch05-00-structs.md
 msgid "Using Structs to Structure Related Data"
@@ -3887,87 +3887,87 @@ msgstr "Quando você estiver pronto para seguir em frente, vamos falar sobre um 
 
 #: src/ch04-00-understanding-ownership.md
 msgid "Ownership is Rust’s most unique feature and has deep implications for the rest of the language. It enables Rust to make memory safety guarantees without needing a garbage collector, so it’s important to understand how ownership works. In this chapter, we’ll talk about ownership as well as several related features: borrowing, slices, and how Rust lays data out in memory."
-msgstr ""
+msgstr "O ownership é o recurso mais exclusivo do Rust e tem implicações profundas para o restante da linguagem. Ele permite que o Rust ofereça garantias de segurança de memória sem precisar de um coletor de lixo, por isso é importante entender como o ownership funciona. Neste capítulo, vamos falar sobre o ownership, bem como sobre vários recursos relacionados: o empréstimo, as slices e como o Rust organiza os dados na memória."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "What Is Ownership?"
-msgstr ""
+msgstr "O que é ownership? {#what-is-ownership}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "_Ownership_ is a set of rules that govern how a Rust program manages memory. All programs have to manage the way they use a computer’s memory while running. Some languages have garbage collection that regularly looks for no-longer-used memory as the program runs; in other languages, the programmer must explicitly allocate and free the memory. Rust uses a third approach: Memory is managed through a system of ownership with a set of rules that the compiler checks. If any of the rules are violated, the program won’t compile. None of the features of ownership will slow down your program while it’s running."
-msgstr ""
+msgstr "_Ownership_ é um conjunto de regras que regem como um programa Rust gerencia a memória. Todos os programas precisam gerenciar a forma como usam a memória do computador durante a execução. Algumas linguagens têm coleta de lixo, que procura regularmente por memória que não está mais em uso enquanto o programa executa; em outras linguagens, o programador precisa alocar e liberar a memória explicitamente. O Rust usa uma terceira abordagem: a memória é gerenciada por meio de um sistema de ownership, com regras que o compilador verifica. Se alguma dessas regras for violada, o programa não compila. Nenhum dos recursos do ownership vai deixar o seu programa mais lento enquanto ele está em execução."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Because ownership is a new concept for many programmers, it does take some time to get used to. The good news is that the more experienced you become with Rust and the rules of the ownership system, the easier you’ll find it to naturally develop code that is safe and efficient. Keep at it!"
-msgstr ""
+msgstr "Como o ownership é um conceito novo para muitos programadores, ele leva, de fato, algum tempo para se acostumar. A boa notícia é que, quanto mais experiência você tiver com o Rust e com as regras do sistema de ownership, mais fácil você vai achar escrever código seguro e eficiente de forma natural. Continue praticando!"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When you understand ownership, you’ll have a solid foundation for understanding the features that make Rust unique. In this chapter, you’ll learn ownership by working through some examples that focus on a very common data structure: strings."
-msgstr ""
+msgstr "Quando você entender o ownership, terá uma base sólida para compreender os recursos que tornam o Rust único. Neste capítulo, você vai aprender o ownership trabalhando com alguns exemplos que se concentram em uma estrutura de dados muito comum: as strings."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The Stack and the Heap"
-msgstr ""
+msgstr "A pilha e o heap {#the-stack-and-the-heap}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Many programming languages don’t require you to think about the stack and the heap very often. But in a systems programming language like Rust, whether a value is on the stack or the heap affects how the language behaves and why you have to make certain decisions. Parts of ownership will be described in relation to the stack and the heap later in this chapter, so here is a brief explanation in preparation."
-msgstr ""
+msgstr "Muitas linguagens de programação não exigem que você pense com tanta frequência na pilha e no heap. Mas, em uma linguagem de programação de sistemas, como o Rust, o fato de um valor estar na pilha ou no heap afeta como a linguagem se comporta e por que você precisa tomar certas decisões. Partes do ownership serão descritas em relação à pilha e ao heap mais adiante neste capítulo, então aqui vai uma breve explicação preparatória."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Both the stack and the heap are parts of memory available to your code to use at runtime, but they are structured in different ways. The stack stores values in the order it gets them and removes the values in the opposite order. This is referred to as _last in, first out (LIFO)_. Think of a stack of plates: When you add more plates, you put them on top of the pile, and when you need a plate, you take one off the top. Adding or removing plates from the middle or bottom wouldn’t work as well! Adding data is called _pushing onto the stack_, and removing data is called _popping off the stack_. All data stored on the stack must have a known, fixed size. Data with an unknown size at compile time or a size that might change must be stored on the heap instead."
-msgstr ""
+msgstr "Tanto a pilha quanto o heap são partes da memória disponíveis para o seu código usar em tempo de execução, mas são estruturadas de maneiras diferentes. A pilha armazena os valores na ordem em que os recebe e remove os valores na ordem inversa. Isso é conhecido como _último a entrar, primeiro a sair (LIFO)_. Pense em uma pilha de pratos: quando você adiciona mais pratos, coloca-os no topo da pilha, e quando precisa de um prato, pega um do topo. Adicionar ou remover pratos do meio ou da base não funcionaria tão bem! Adicionar dados é chamado de _empilhar_, e remover dados é chamado de _desempilhar_. Todos os dados armazenados na pilha devem ter um tamanho conhecido e fixo. Dados com tamanho desconhecido em tempo de compilação, ou cujo tamanho possa mudar, devem ser armazenados no heap."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The heap is less organized: When you put data on the heap, you request a certain amount of space. The memory allocator finds an empty spot in the heap that is big enough, marks it as being in use, and returns a _pointer_, which is the address of that location. This process is called _allocating on the heap_ and is sometimes abbreviated as just _allocating_ (pushing values onto the stack is not considered allocating). Because the pointer to the heap is a known, fixed size, you can store the pointer on the stack, but when you want the actual data, you must follow the pointer. Think of being seated at a restaurant. When you enter, you state the number of people in your group, and the host finds an empty table that fits everyone and leads you there. If someone in your group comes late, they can ask where you’ve been seated to find you."
-msgstr ""
+msgstr "O heap é menos organizado: quando você coloca dados no heap, solicita uma certa quantidade de espaço. O alocador de memória encontra um espaço vazio no heap que seja grande o suficiente, marca-o como em uso e retorna um _ponteiro_, que é o endereço desse local. Esse processo é chamado de _alocação no heap_ e às vezes é abreviado simplesmente como _alocação_ (empilhar valores na pilha não é considerado alocação). Como o ponteiro para o heap tem um tamanho conhecido e fixo, você pode armazená-lo na pilha, mas, quando quiser os dados em si, precisa seguir o ponteiro. Pense em ser acomodado em um restaurante. Quando você chega, informa o número de pessoas do seu grupo, e o recepcionista encontra uma mesa vazia onde todos caibam e os leva até lá. Se alguém do seu grupo chegar atrasado, essa pessoa pode perguntar onde vocês foram acomodados para encontrá-los."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Pushing to the stack is faster than allocating on the heap because the allocator never has to search for a place to store new data; that location is always at the top of the stack. Comparatively, allocating space on the heap requires more work because the allocator must first find a big enough space to hold the data and then perform bookkeeping to prepare for the next allocation."
-msgstr ""
+msgstr "Empilhar valores na pilha é mais rápido do que alocar no heap, porque o alocador nunca precisa procurar um lugar para armazenar novos dados; esse local está sempre no topo da pilha. Em comparação, alocar espaço no heap exige mais trabalho, porque o alocador precisa primeiro encontrar um espaço grande o suficiente para conter os dados e depois manter registros internos para se preparar para a próxima alocação."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Accessing data in the heap is generally slower than accessing data on the stack because you have to follow a pointer to get there. Contemporary processors are faster if they jump around less in memory. Continuing the analogy, consider a server at a restaurant taking orders from many tables. It’s most efficient to get all the orders at one table before moving on to the next table. Taking an order from table A, then an order from table B, then one from A again, and then one from B again would be a much slower process. By the same token, a processor can usually do its job better if it works on data that’s close to other data (as it is on the stack) rather than farther away (as it can be on the heap)."
-msgstr ""
+msgstr "Acessar dados no heap costuma ser mais lento do que acessar dados na pilha, porque você precisa seguir um ponteiro para chegar até eles. Processadores modernos são mais rápidos quando saltam menos pela memória. Continuando a analogia, pense em um garçom de restaurante que anota pedidos de muitas mesas. É mais eficiente anotar todos os pedidos de uma mesa antes de passar para a próxima. Anotar um pedido da mesa A, depois um da mesa B, depois outro da A e, em seguida, outro da B seria um processo bem mais lento. Do mesmo modo, um processador geralmente faz seu trabalho melhor quando trabalha com dados próximos a outros dados (como estão na pilha), em vez de dados mais distantes (como podem estar no heap)."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When your code calls a function, the values passed into the function (including, potentially, pointers to data on the heap) and the function’s local variables get pushed onto the stack. When the function is over, those values get popped off the stack."
-msgstr ""
+msgstr "Quando o seu código chama uma função, os valores passados para ela (incluindo, potencialmente, ponteiros para dados no heap) e as variáveis locais da função são empilhados na pilha. Quando a função termina, esses valores são desempilhados."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Keeping track of what parts of code are using what data on the heap, minimizing the amount of duplicate data on the heap, and cleaning up unused data on the heap so that you don’t run out of space are all problems that ownership addresses. Once you understand ownership, you won’t need to think about the stack and the heap very often. But knowing that the main purpose of ownership is to manage heap data can help explain why it works the way it does."
-msgstr ""
+msgstr "Acompanhar quais partes do código estão usando quais dados no heap, minimizar a quantidade de dados duplicados no heap e limpar os dados não usados no heap para que você não fique sem espaço são todos problemas que o ownership trata. Depois que você entender o ownership, não vai precisar pensar com tanta frequência na pilha e no heap. Mas saber que a principal finalidade do ownership é gerenciar os dados do heap pode ajudar a explicar por que ele funciona da maneira como funciona."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Ownership Rules"
-msgstr ""
+msgstr "Regras de ownership {#ownership-rules}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "First, let’s take a look at the ownership rules. Keep these rules in mind as we work through the examples that illustrate them:"
-msgstr ""
+msgstr "Primeiro, vamos dar uma olhada nas regras de ownership. Tenha essas regras em mente enquanto trabalhamos nos exemplos que as ilustram:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Each value in Rust has an _owner_."
-msgstr ""
+msgstr "Cada valor no Rust tem um _dono_."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "There can only be one owner at a time."
-msgstr ""
+msgstr "Só pode haver um dono por vez."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When the owner goes out of scope, the value will be dropped."
-msgstr ""
+msgstr "Quando o dono sair do escopo, o valor será descartado."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Variable Scope"
-msgstr ""
+msgstr "Escopo de variáveis {#variable-scope}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Now that we’re past basic Rust syntax, we won’t include all the `fn main() {` code in the examples, so if you’re following along, make sure to put the following examples inside a `main` function manually. As a result, our examples will be a bit more concise, letting us focus on the actual details rather than boilerplate code."
-msgstr ""
+msgstr "Agora que já passamos da sintaxe básica do Rust, não vamos incluir todo o código `fn main() {` nos exemplos. Então, se você estiver acompanhando, certifique-se de colocar os exemplos a seguir manualmente dentro de uma função `main`. Por isso, nossos exemplos serão um pouco mais concisos, o que nos permite focar nos detalhes reais em vez de no código repetitivo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "As a first example of ownership, we’ll look at the scope of some variables. A _scope_ is the range within a program for which an item is valid. Take the following variable:"
-msgstr ""
+msgstr "Como primeiro exemplo de ownership, vamos ver o escopo de algumas variáveis. Um _escopo_ é o intervalo dentro de um programa no qual um item é válido. Considere a seguinte variável:"
 
 #: src/ch04-01-what-is-ownership.md src/ch04-02-references-and-borrowing.md
 #: src/ch04-03-slices.md src/ch06-01-defining-an-enum.md
@@ -3978,11 +3978,11 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The variable `s` refers to a string literal, where the value of the string is hardcoded into the text of our program. The variable is valid from the point at which it’s declared until the end of the current scope. Listing 4-1 shows a program with comments annotating where the variable `s` would be valid."
-msgstr ""
+msgstr "A variável `s` se refere a um literal de string, cujo valor é fixo no código do nosso programa. A variável é válida desde o ponto em que é declarada até o fim do escopo atual. A Listagem 4-1 mostra um programa com comentários que indicam onde a variável `s` seria válida."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<Listing number=\"4-1\" caption=\"A variable and the scope in which it is valid\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-1\" caption=\"Uma variável e o escopo em que ela é válida\">\n"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "// s is not valid here, since it's not yet declared\n"
@@ -4002,45 +4002,47 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "In other words, there are two important points in time here:"
-msgstr ""
+msgstr "Em outras palavras, há dois momentos importantes aqui:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When `s` comes _into_ scope, it is valid."
-msgstr ""
+msgstr "Quando `s` entra _no_ escopo, ela é válida."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "It remains valid until it goes _out of_ scope."
-msgstr ""
+msgstr "Ela continua válida até sair _do_ escopo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "At this point, the relationship between scopes and when variables are valid is similar to that in other programming languages. Now we’ll build on top of this understanding by introducing the `String` type."
-msgstr ""
+msgstr "Neste ponto, a relação entre escopos e o momento em que as variáveis são válidas é semelhante à de outras linguagens de programação. Agora vamos nos basear nessa compreensão para apresentar o tipo `String`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The `String` Type"
-msgstr ""
+msgstr "O tipo `String` {#the-string-type}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "To illustrate the rules of ownership, we need a data type that is more complex than those we covered in the [“Data Types”](ch03-02-data-types.html#data-types)<!-- ignore --> section of Chapter 3. The types covered previously are of a known size, can be stored on the stack and popped off the stack when their scope is over, and can be quickly and trivially copied to make a new, independent instance if another part of code needs to use the same value in a different scope. But we want to look at data that is stored on the heap and explore how Rust knows when to clean up that data, and the `String` type is a great example."
-msgstr ""
+msgstr "Para ilustrar as regras de ownership, precisamos de um tipo de dado mais complexo do que os que abordamos na seção [“Tipos de dados”](ch03-02-data-types.html#data-types)<!-- ignore --> do Capítulo 3. Os tipos vistos anteriormente têm tamanho conhecido, podem ser armazenados na pilha e desempilhados quando o escopo deles termina, e podem ser copiados de forma rápida e sem complicação para criar uma nova instância independente, se outra parte do código precisar usar o mesmo valor em um escopo diferente. Mas queremos olhar para dados armazenados no heap e explorar como o Rust sabe quando limpar esses dados, e o tipo `String` é um ótimo exemplo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We’ll concentrate on the parts of `String` that relate to ownership. These aspects also apply to other complex data types, whether they are provided by the standard library or created by you. We’ll discuss non-ownership aspects of `String` in [Chapter 8](ch08-02-strings.html)<!-- ignore -->."
-msgstr ""
+msgstr "Vamos nos concentrar nas partes da `String` que se relacionam ao ownership. Esses aspectos também se aplicam a outros tipos de dados complexos, sejam eles fornecidos pela biblioteca padrão ou criados por você. Vamos discutir os aspectos da `String` que não envolvem ownership no [Capítulo 8](ch08-02-strings.html)<!-- ignore -->."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We’ve already seen string literals, where a string value is hardcoded into our program. String literals are convenient, but they aren’t suitable for every situation in which we may want to use text. One reason is that they’re immutable. Another is that not every string value can be known when we write our code: For example, what if we want to take user input and store it? It is for these situations that Rust has the `String` type. This type manages data allocated on the heap and as such is able to store an amount of text that is unknown to us at compile time. You can create a `String` from a string literal using the `from` function, like so:"
-msgstr ""
+msgstr "Já vimos literais de string, nos quais um valor de string é fixo no código do nosso programa. Literais de string são convenientes, mas não são adequados para toda situação em que possamos querer usar texto. Um motivo é que eles são imutáveis. Outro é que nem todo valor de string pode ser conhecido quando escrevemos o código: por exemplo, e se quisermos receber a entrada do usuário e armazená-la? É para essas situações que o Rust tem o tipo `String`. Esse tipo gerencia dados alocados no heap e, por isso, consegue armazenar uma quantidade de texto que é desconhecida para nós em tempo de compilação. Você pode criar uma `String` a partir de um literal de string usando a função `from`, assim:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
 "The double colon `::` operator allows us to namespace this particular `from` function under the `String` type rather than using some sort of name like `string_from`. We’ll discuss this syntax more in the [“Methods”](ch05-03-method-syntax.html#methods)<!--\n"
 "ignore --> section of Chapter 5, and when we talk about namespacing with modules in [“Paths for Referring to an Item in the Module Tree”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> in Chapter 7."
 msgstr ""
+"O operador de dois-pontos duplo `::` nos permite colocar esta função `from` específica sob o espaço de nomes do tipo `String`, em vez de usar um nome como `string_from`. Vamos discutir essa sintaxe com mais detalhes na seção [“Métodos”](ch05-03-method-syntax.html#methods)<!--\n"
+"ignore --> do Capítulo 5, e quando falarmos sobre espaços de nomes com módulos em [“Caminhos para se referir a um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> no Capítulo 7."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "This kind of string _can_ be mutated:"
-msgstr ""
+msgstr "Esse tipo de string _pode_ ser alterado:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\", world!\""
@@ -4060,39 +4062,39 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "So, what’s the difference here? Why can `String` be mutated but literals cannot? The difference is in how these two types deal with memory."
-msgstr ""
+msgstr "Então, qual é a diferença aqui? Por que a `String` pode ser alterada, mas os literais não? A diferença está em como esses dois tipos lidam com a memória."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Memory and Allocation"
-msgstr ""
+msgstr "Memória e alocação {#memory-and-allocation}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "In the case of a string literal, we know the contents at compile time, so the text is hardcoded directly into the final executable. This is why string literals are fast and efficient. But these properties only come from the string literal’s immutability. Unfortunately, we can’t put a blob of memory into the binary for each piece of text whose size is unknown at compile time and whose size might change while running the program."
-msgstr ""
+msgstr "No caso de um literal de string, conhecemos o conteúdo em tempo de compilação, então o texto fica fixo diretamente no executável final. É por isso que literais de string são rápidos e eficientes. Mas essas propriedades vêm apenas da imutabilidade do literal de string. Infelizmente, não podemos colocar um bloco de memória no binário para cada trecho de texto cujo tamanho é desconhecido em tempo de compilação e cujo tamanho pode mudar durante a execução do programa."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "With the `String` type, in order to support a mutable, growable piece of text, we need to allocate an amount of memory on the heap, unknown at compile time, to hold the contents. This means:"
-msgstr ""
+msgstr "Com o tipo `String`, para dar suporte a um texto mutável e que pode crescer, precisamos alocar, no heap, uma quantidade de memória desconhecida em tempo de compilação para armazenar o conteúdo. Isso significa:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The memory must be requested from the memory allocator at runtime."
-msgstr ""
+msgstr "A memória precisa ser solicitada ao alocador de memória em tempo de execução."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We need a way of returning this memory to the allocator when we’re done with our `String`."
-msgstr ""
+msgstr "Precisamos de uma forma de devolver essa memória ao alocador quando terminarmos com a nossa `String`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "That first part is done by us: When we call `String::from`, its implementation requests the memory it needs. This is pretty much universal in programming languages."
-msgstr ""
+msgstr "Essa primeira parte é feita por nós: quando chamamos `String::from`, a implementação dela solicita a memória de que precisa. Isso é praticamente universal nas linguagens de programação."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "However, the second part is different. In languages with a _garbage collector (GC)_, the GC keeps track of and cleans up memory that isn’t being used anymore, and we don’t need to think about it. In most languages without a GC, it’s our responsibility to identify when memory is no longer being used and to call code to explicitly free it, just as we did to request it. Doing this correctly has historically been a difficult programming problem. If we forget, we’ll waste memory. If we do it too early, we’ll have an invalid variable. If we do it twice, that’s a bug too. We need to pair exactly one `allocate` with exactly one `free`."
-msgstr ""
+msgstr "No entanto, a segunda parte é diferente. Em linguagens com um _coletor de lixo (GC)_, o GC acompanha e limpa a memória que não está mais em uso, e não precisamos pensar nisso. Na maioria das linguagens sem GC, é nossa responsabilidade identificar quando a memória deixa de estar em uso e chamar código para liberá-la explicitamente, assim como fizemos para solicitá-la. Fazer isso corretamente tem sido, historicamente, um problema difícil de programação. Se esquecermos, vamos desperdiçar memória. Se fizermos isso cedo demais, teremos uma variável inválida. Se fizermos duas vezes, isso também é um bug. Precisamos parear exatamente uma `allocate` com exatamente uma `free`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Rust takes a different path: The memory is automatically returned once the variable that owns it goes out of scope. Here’s a version of our scope example from Listing 4-1 using a `String` instead of a string literal:"
-msgstr ""
+msgstr "O Rust segue um caminho diferente: a memória é devolvida automaticamente quando a variável que a possui sai do escopo. Aqui está uma versão do nosso exemplo de escopo da Listagem 4-1, usando uma `String` em vez de um literal de string:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4102,15 +4104,15 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "There is a natural point at which we can return the memory our `String` needs to the allocator: when `s` goes out of scope. When a variable goes out of scope, Rust calls a special function for us. This function is called `drop`, and it’s where the author of `String` can put the code to return the memory. Rust calls `drop` automatically at the closing curly bracket."
-msgstr ""
+msgstr "Há um ponto natural em que podemos devolver ao alocador a memória de que a nossa `String` precisa: quando `s` sai do escopo. Quando uma variável sai do escopo, o Rust chama uma função especial para nós. Essa função se chama `drop`, e é nela que o autor do tipo `String` pode colocar o código para devolver a memória. O Rust chama `drop` automaticamente na chave de fechamento."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Note: In C++, this pattern of deallocating resources at the end of an item’s lifetime is sometimes called _Resource Acquisition Is Initialization (RAII)_. The `drop` function in Rust will be familiar to you if you’ve used RAII patterns."
-msgstr ""
+msgstr "Nota: em C++, esse padrão de desalocar recursos no fim do tempo de vida de um item às vezes é chamado de _Resource Acquisition Is Initialization (RAII)_. A função `drop` do Rust vai ser familiar para você se já tiver usado padrões RAII."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "This pattern has a profound impact on the way Rust code is written. It may seem simple right now, but the behavior of code can be unexpected in more complicated situations when we want to have multiple variables use the data we’ve allocated on the heap. Let’s explore some of those situations now."
-msgstr ""
+msgstr "Esse padrão tem um impacto profundo na forma como o código Rust é escrito. Pode parecer simples agora, mas o comportamento do código pode ser inesperado em situações mais complicadas, quando queremos que várias variáveis usem os dados que alocamos no heap. Vamos explorar algumas dessas situações agora."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<a id=\"ways-variables-and-data-interact-move\"></a>"
@@ -4118,31 +4120,31 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Variables and Data Interacting with Move"
-msgstr ""
+msgstr "Variáveis e dados interagindo com movimentação {#variables-and-data-interacting-with-move}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Multiple variables can interact with the same data in different ways in Rust. Listing 4-2 shows an example using an integer."
-msgstr ""
+msgstr "Múltiplas variáveis podem interagir com os mesmos dados de maneiras diferentes no Rust. A Listagem 4-2 mostra um exemplo usando um inteiro."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<Listing number=\"4-2\" caption=\"Assigning the integer value of variable `x` to `y`\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-2\" caption=\"Atribuindo o valor inteiro da variável `x` a `y`\">\n"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We can probably guess what this is doing: “Bind the value `5` to `x`; then, make a copy of the value in `x` and bind it to `y`.” We now have two variables, `x` and `y`, and both equal `5`. This is indeed what is happening, because integers are simple values with a known, fixed size, and these two `5` values are pushed onto the stack."
-msgstr ""
+msgstr "Provavelmente podemos adivinhar o que isso faz: “Vincular o valor `5` a `x`; depois, fazer uma cópia do valor em `x` e vincular essa cópia a `y`.” Agora temos duas variáveis, `x` e `y`, e ambas são iguais a `5`. Isso é exatamente o que está acontecendo, porque inteiros são valores simples, de tamanho conhecido e fixo, e esses dois valores `5` são colocados na pilha."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Now let’s look at the `String` version:"
-msgstr ""
+msgstr "Agora vamos ver a versão com `String`:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "This looks very similar, so we might assume that the way it works would be the same: That is, the second line would make a copy of the value in `s1` and bind it to `s2`. But this isn’t quite what happens."
-msgstr ""
+msgstr "Isso parece muito semelhante, então podemos supor que o funcionamento seria o mesmo: ou seja, a segunda linha faria uma cópia do valor em `s1` e vincularia essa cópia a `s2`. Mas não é exatamente isso que acontece."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Take a look at Figure 4-1 to see what is happening to `String` under the covers. A `String` is made up of three parts, shown on the left: a pointer to the memory that holds the contents of the string, a length, and a capacity. This group of data is stored on the stack. On the right is the memory on the heap that holds the contents."
-msgstr ""
+msgstr "Dê uma olhada na Figura 4-1 para ver o que acontece com a `String` por baixo dos panos. Uma `String` é formada por três partes, mostradas à esquerda: um ponteiro para a memória que guarda o conteúdo da string, um comprimento e uma capacidade. Esse grupo de dados fica armazenado na pilha. À direita está a memória no heap que guarda o conteúdo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4152,18 +4154,23 @@ msgid ""
 "string data on the heap, byte by byte.\" src=\"img/trpl04-01.svg\" class=\"center\"\n"
 "style=\"width: 50%;\" />"
 msgstr ""
+"<img alt=\"Duas tabelas: a primeira tabela contém a representação de s1 na pilha,\n"
+"formada pelo comprimento (5), pela capacidade (5) e por um ponteiro para o\n"
+"primeiro valor da segunda tabela. A segunda tabela contém a representação dos\n"
+"dados da string no heap, byte a byte.\" src=\"img/trpl04-01.svg\" class=\"center\"\n"
+"style=\"width: 50%;\" />"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<span class=\"caption\">Figure 4-1: The representation in memory of a `String` holding the value `\"hello\"` bound to `s1`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-1: A representação na memória de uma `String` que guarda o valor `\"hello\"` vinculado a `s1`</span>"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The length is how much memory, in bytes, the contents of the `String` are currently using. The capacity is the total amount of memory, in bytes, that the `String` has received from the allocator. The difference between length and capacity matters, but not in this context, so for now, it’s fine to ignore the capacity."
-msgstr ""
+msgstr "O comprimento é a quantidade de memória, em bytes, que o conteúdo da `String` está usando no momento. A capacidade é a quantidade total de memória, em bytes, que a `String` recebeu do alocador. A diferença entre comprimento e capacidade importa, mas não neste contexto, então, por enquanto, não há problema em ignorar a capacidade."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When we assign `s1` to `s2`, the `String` data is copied, meaning we copy the pointer, the length, and the capacity that are on the stack. We do not copy the data on the heap that the pointer refers to. In other words, the data representation in memory looks like Figure 4-2."
-msgstr ""
+msgstr "Quando atribuímos `s1` a `s2`, os dados da `String` são copiados, o que significa que copiamos o ponteiro, o comprimento e a capacidade que estão na pilha. Não copiamos os dados do heap para os quais o ponteiro aponta. Em outras palavras, a representação dos dados na memória fica como na Figura 4-2."
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4171,14 +4178,17 @@ msgid ""
 "stack, respectively, and both pointing to the same string data on the heap.\"\n"
 "src=\"img/trpl04-02.svg\" class=\"center\" style=\"width: 50%;\" />"
 msgstr ""
+"<img alt=\"Três tabelas: as tabelas s1 e s2 representam essas strings na\n"
+"pilha, respectivamente, e ambas apontam para os mesmos dados da string no heap.\"\n"
+"src=\"img/trpl04-02.svg\" class=\"center\" style=\"width: 50%;\" />"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<span class=\"caption\">Figure 4-2: The representation in memory of the variable `s2` that has a copy of the pointer, length, and capacity of `s1`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-2: A representação na memória da variável `s2`, que tem uma cópia do ponteiro, do comprimento e da capacidade de `s1`</span>"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The representation does _not_ look like Figure 4-3, which is what memory would look like if Rust instead copied the heap data as well. If Rust did this, the operation `s2 = s1` could be very expensive in terms of runtime performance if the data on the heap were large."
-msgstr ""
+msgstr "A representação _não_ se parece com a Figura 4-3, que é como a memória ficaria se o Rust copiasse também os dados do heap. Se o Rust fizesse isso, a operação `s2 = s1` poderia ser muito custosa em termos de desempenho em tempo de execução, se os dados no heap fossem grandes."
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4186,18 +4196,21 @@ msgid ""
 "and each points to its own copy of string data on the heap.\"\n"
 "src=\"img/trpl04-03.svg\" class=\"center\" style=\"width: 50%;\" />"
 msgstr ""
+"<img alt=\"Quatro tabelas: duas tabelas representando os dados na pilha de s1 e s2,\n"
+"e cada uma aponta para sua própria cópia dos dados da string no heap.\"\n"
+"src=\"img/trpl04-03.svg\" class=\"center\" style=\"width: 50%;\" />"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<span class=\"caption\">Figure 4-3: Another possibility for what `s2 = s1` might do if Rust copied the heap data as well</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-3: Outra possibilidade para o que `s2 = s1` poderia fazer se o Rust copiasse também os dados do heap</span>"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Earlier, we said that when a variable goes out of scope, Rust automatically calls the `drop` function and cleans up the heap memory for that variable. But Figure 4-2 shows both data pointers pointing to the same location. This is a problem: When `s2` and `s1` go out of scope, they will both try to free the same memory. This is known as a _double free_ error and is one of the memory safety bugs we mentioned previously. Freeing memory twice can lead to memory corruption, which can potentially lead to security vulnerabilities."
-msgstr ""
+msgstr "Antes, dissemos que, quando uma variável sai do escopo, o Rust chama automaticamente a função `drop` e libera a memória do heap usada por essa variável. Mas a Figura 4-2 mostra os dois ponteiros de dados apontando para o mesmo local. Isso é um problema: quando `s2` e `s1` saírem do escopo, ambas tentarão liberar a mesma memória. Isso é conhecido como um erro de _double free_ e é um dos bugs de segurança de memória que mencionamos anteriormente. Liberar a mesma memória duas vezes pode levar à corrupção de memória, o que, por sua vez, pode levar a vulnerabilidades de segurança."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "To ensure memory safety, after the line `let s2 = s1;`, Rust considers `s1` as no longer valid. Therefore, Rust doesn’t need to free anything when `s1` goes out of scope. Check out what happens when you try to use `s1` after `s2` is created; it won’t work:"
-msgstr ""
+msgstr "Para garantir a segurança de memória, depois da linha `let s2 = s1;`, o Rust considera que `s1` não é mais válida. Por isso, o Rust não precisa liberar nada quando `s1` sai do escopo. Veja o que acontece quando você tenta usar `s1` depois que `s2` é criada; não vai funcionar:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\"{s1}, world!\""
@@ -4205,7 +4218,7 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "You’ll get an error like this because Rust prevents you from using the invalidated reference:"
-msgstr ""
+msgstr "Você vai receber um erro como este, porque o Rust impede que você use a referência invalidada:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4235,7 +4248,7 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "If you’ve heard the terms _shallow copy_ and _deep copy_ while working with other languages, the concept of copying the pointer, length, and capacity without copying the data probably sounds like making a shallow copy. But because Rust also invalidates the first variable, instead of being called a shallow copy, it’s known as a _move_. In this example, we would say that `s1` was _moved_ into `s2`. So, what actually happens is shown in Figure 4-4."
-msgstr ""
+msgstr "Se você já ouviu os termos _cópia rasa_ e _cópia profunda_ ao trabalhar com outras linguagens, o conceito de copiar o ponteiro, o comprimento e a capacidade sem copiar os dados provavelmente parece uma cópia rasa. Mas, como o Rust também invalida a primeira variável, em vez de ser chamado de cópia rasa, isso é conhecido como _movimentação_. Neste exemplo, diríamos que `s1` foi _movida_ para `s2`. Então, o que realmente acontece é mostrado na Figura 4-4."
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4245,26 +4258,31 @@ msgid ""
 "access the heap data.\" src=\"img/trpl04-04.svg\" class=\"center\" style=\"width:\n"
 "50%;\" />"
 msgstr ""
+"<img alt=\"Três tabelas: as tabelas s1 e s2 representam essas strings na\n"
+"pilha, respectivamente, e ambas apontam para os mesmos dados da string no heap.\n"
+"A tabela de s1 aparece acinzentada porque s1 não é mais válida; somente s2 pode\n"
+"ser usada para acessar os dados do heap.\" src=\"img/trpl04-04.svg\" class=\"center\" style=\"width:\n"
+"50%;\" />"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<span class=\"caption\">Figure 4-4: The representation in memory after `s1` has been invalidated</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-4: A representação na memória depois que `s1` foi invalidada</span>"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "That solves our problem! With only `s2` valid, when it goes out of scope it alone will free the memory, and we’re done."
-msgstr ""
+msgstr "Isso resolve nosso problema! Com apenas `s2` válida, quando ela sair do escopo, somente ela vai liberar a memória, e pronto."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "In addition, there’s a design choice that’s implied by this: Rust will never automatically create “deep” copies of your data. Therefore, any _automatic_ copying can be assumed to be inexpensive in terms of runtime performance."
-msgstr ""
+msgstr "Além disso, há uma decisão de design implícita nisso: o Rust nunca criará automaticamente cópias “profundas” dos seus dados. Por isso, qualquer cópia _automática_ pode ser considerada barata em termos de desempenho em tempo de execução."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Scope and Assignment"
-msgstr ""
+msgstr "Escopo e atribuição {#scope-and-assignment}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The inverse of this is true for the relationship between scoping, ownership, and memory being freed via the `drop` function as well. When you assign a completely new value to an existing variable, Rust will call `drop` and free the original value’s memory immediately. Consider this code, for example:"
-msgstr ""
+msgstr "O inverso disso também vale para a relação entre escopo, ownership e memória liberada pela função `drop`. Quando você atribui um valor completamente novo a uma variável existente, o Rust chama `drop` e libera imediatamente a memória do valor original. Veja este código, por exemplo:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\"ahoy\""
@@ -4276,7 +4294,7 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We initially declare a variable `s` and bind it to a `String` with the value `\"hello\"`. Then, we immediately create a new `String` with the value `\"ahoy\"` and assign it to `s`. At this point, nothing is referring to the original value on the heap at all. Figure 4-5 illustrates the stack and heap data now:"
-msgstr ""
+msgstr "Inicialmente, declaramos uma variável `s` e a vinculamos a uma `String` com o valor `\"hello\"`. Depois, criamos imediatamente uma nova `String` com o valor `\"ahoy\"` e a atribuímos a `s`. Neste ponto, nada mais faz referência ao valor original no heap. A Figura 4-5 mostra agora os dados da pilha e do heap:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4285,14 +4303,18 @@ msgid ""
 "data (hello) grayed out because it cannot be accessed anymore.\"\n"
 "src=\"img/trpl04-05.svg\" class=\"center\" style=\"width: 50%;\" />"
 msgstr ""
+"<img alt=\"Uma tabela representando o valor da string na pilha, apontando para\n"
+"a segunda parte dos dados da string (ahoy) no heap, com os dados originais da string\n"
+"(hello) acinzentados, porque não podem mais ser acessados.\"\n"
+"src=\"img/trpl04-05.svg\" class=\"center\" style=\"width: 50%;\" />"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<span class=\"caption\">Figure 4-5: The representation in memory after the initial value has been replaced in its entirety</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-5: A representação na memória depois que o valor inicial foi substituído por completo</span>"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The original string thus immediately goes out of scope. Rust will run the `drop` function on it and its memory will be freed right away. When we print the value at the end, it will be `\"ahoy, world!\"`."
-msgstr ""
+msgstr "Por isso, a string original sai do escopo imediatamente. O Rust vai executar a função `drop` sobre ela, e a memória dela será liberada na mesma hora. Quando imprimirmos o valor no final, ele será `\"ahoy, world!\"`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<a id=\"ways-variables-and-data-interact-clone\"></a>"
@@ -4300,15 +4322,15 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Variables and Data Interacting with Clone"
-msgstr ""
+msgstr "Variáveis e dados interagindo com clonagem {#variables-and-data-interacting-with-clone}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "If we _do_ want to deeply copy the heap data of the `String`, not just the stack data, we can use a common method called `clone`. We’ll discuss method syntax in Chapter 5, but because methods are a common feature in many programming languages, you’ve probably seen them before."
-msgstr ""
+msgstr "Se _quisermos_ fazer uma cópia profunda dos dados do heap da `String`, e não apenas os dados da pilha, podemos usar um método comum chamado `clone`. Vamos falar sobre a sintaxe de método no Capítulo 5, mas, como métodos são um recurso comum em muitas linguagens de programação, você provavelmente já os viu antes."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Here’s an example of the `clone` method in action:"
-msgstr ""
+msgstr "Aqui está um exemplo do método `clone` em ação:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\"s1 = {s1}, s2 = {s2}\""
@@ -4316,19 +4338,19 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "This works just fine and explicitly produces the behavior shown in Figure 4-3, where the heap data _does_ get copied."
-msgstr ""
+msgstr "Isso funciona sem problemas e produz explicitamente o comportamento mostrado na Figura 4-3, em que os dados do heap _são_ copiados."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When you see a call to `clone`, you know that some arbitrary code is being executed and that code may be expensive. It’s a visual indicator that something different is going on."
-msgstr ""
+msgstr "Quando você vir uma chamada a `clone`, sabe que algum código arbitrário está sendo executado e que esse código pode ser custoso. É um indicador visual de que algo diferente está acontecendo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Stack-Only Data: Copy"
-msgstr ""
+msgstr "Dados somente na pilha: Copy {#stack-only-data-copy}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "There’s another wrinkle we haven’t talked about yet. This code using integers—part of which was shown in Listing 4-2—works and is valid:"
-msgstr ""
+msgstr "Há mais um detalhe sobre o qual ainda não falamos. Este código usando inteiros—parte dele mostrada na Listagem 4-2—funciona e é válido:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\"x = {x}, y = {y}\""
@@ -4336,55 +4358,55 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "But this code seems to contradict what we just learned: We don’t have a call to `clone`, but `x` is still valid and wasn’t moved into `y`."
-msgstr ""
+msgstr "Mas este código parece contradizer o que acabamos de aprender: não temos uma chamada a `clone`, mas `x` continua válida e não foi movida para `y`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The reason is that types such as integers that have a known size at compile time are stored entirely on the stack, so copies of the actual values are quick to make. That means there’s no reason we would want to prevent `x` from being valid after we create the variable `y`. In other words, there’s no difference between deep and shallow copying here, so calling `clone` wouldn’t do anything different from the usual shallow copying, and we can leave it out."
-msgstr ""
+msgstr "O motivo é que tipos como os inteiros, que têm um tamanho conhecido em tempo de compilação, são armazenados inteiramente na pilha, então fazer cópias dos valores em si é rápido. Isso significa que não há motivo para impedir que `x` continue válida depois que criamos a variável `y`. Em outras palavras, não há diferença entre cópia profunda e cópia rasa aqui; por isso, chamar `clone` não faria nada diferente da cópia rasa usual, e podemos deixá-lo de fora."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Rust has a special annotation called the `Copy` trait that we can place on types that are stored on the stack, as integers are (we’ll talk more about traits in [Chapter 10](ch10-02-traits.html)<!-- ignore -->). If a type implements the `Copy` trait, variables that use it do not move, but rather are trivially copied, making them still valid after assignment to another variable."
-msgstr ""
+msgstr "O Rust tem uma anotação especial chamada trait `Copy`, que podemos aplicar a tipos armazenados na pilha, como os inteiros (vamos falar mais sobre traits no [Capítulo 10](ch10-02-traits.html)<!-- ignore -->). Se um tipo implementa o trait `Copy`, as variáveis que o usam não são movidas; em vez disso, são copiadas de forma trivial, permanecendo válidas depois da atribuição a outra variável."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Rust won’t let us annotate a type with `Copy` if the type, or any of its parts, has implemented the `Drop` trait. If the type needs something special to happen when the value goes out of scope and we add the `Copy` annotation to that type, we’ll get a compile-time error. To learn about how to add the `Copy` annotation to your type to implement the trait, see [“Derivable Traits”](appendix-03-derivable-traits.html)<!-- ignore --> in Appendix C."
-msgstr ""
+msgstr "O Rust não nos deixa anotar um tipo com `Copy` se o tipo, ou qualquer uma de suas partes, implementar o trait `Drop`. Se o tipo precisar que algo especial aconteça quando o valor sair do escopo e adicionarmos a anotação `Copy` a esse tipo, receberemos um erro em tempo de compilação. Para saber como adicionar a anotação `Copy` ao seu tipo para implementar o trait, veja [“Traits deriváveis”](appendix-03-derivable-traits.html)<!-- ignore --> no Apêndice C."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "So, what types implement the `Copy` trait? You can check the documentation for the given type to be sure, but as a general rule, any group of simple scalar values can implement `Copy`, and nothing that requires allocation or is some form of resource can implement `Copy`. Here are some of the types that implement `Copy`:"
-msgstr ""
+msgstr "Então, quais tipos implementam o trait `Copy`? Você pode consultar a documentação do tipo em questão para ter certeza, mas, como regra geral, qualquer grupo de valores escalares simples pode implementar `Copy`, e nada que exija alocação ou seja algum tipo de recurso pode implementar `Copy`. Aqui estão alguns dos tipos que implementam `Copy`:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "All the integer types, such as `u32`."
-msgstr ""
+msgstr "Todos os tipos inteiros, como `u32`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The Boolean type, `bool`, with values `true` and `false`."
-msgstr ""
+msgstr "O tipo booleano, `bool`, com os valores `true` e `false`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "All the floating-point types, such as `f64`."
-msgstr ""
+msgstr "Todos os tipos de ponto flutuante, como `f64`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The character type, `char`."
-msgstr ""
+msgstr "O tipo caractere, `char`."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Tuples, if they only contain types that also implement `Copy`. For example, `(i32, i32)` implements `Copy`, but `(i32, String)` does not."
-msgstr ""
+msgstr "Tuplas, desde que contenham apenas tipos que também implementem `Copy`. Por exemplo, `(i32, i32)` implementa `Copy`, mas `(i32, String)` não."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Ownership and Functions"
-msgstr ""
+msgstr "Ownership e funções {#ownership-and-functions}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The mechanics of passing a value to a function are similar to those when assigning a value to a variable. Passing a variable to a function will move or copy, just as assignment does. Listing 4-3 has an example with some annotations showing where variables go into and out of scope."
-msgstr ""
+msgstr "A mecânica de passar um valor para uma função é semelhante à de atribuir um valor a uma variável. Passar uma variável para uma função vai movê-la ou copiá-la, assim como acontece na atribuição. A Listagem 4-3 tem um exemplo com algumas anotações mostrando onde as variáveis entram e saem do escopo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<Listing number=\"4-3\" file-name=\"src/main.rs\" caption=\"Functions with ownership and scope annotated\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-3\" file-name=\"src/main.rs\" caption=\"Funções com anotações de ownership e escopo\">\n"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "// s comes into scope\n"
@@ -4441,19 +4463,19 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "If we tried to use `s` after the call to `takes_ownership`, Rust would throw a compile-time error. These static checks protect us from mistakes. Try adding code to `main` that uses `s` and `x` to see where you can use them and where the ownership rules prevent you from doing so."
-msgstr ""
+msgstr "Se tentássemos usar `s` depois da chamada a `takes_ownership`, o Rust geraria um erro em tempo de compilação. Essas verificações estáticas nos protegem de erros. Tente adicionar código a `main` que use `s` e `x` para ver onde você pode usá-las e onde as regras de ownership impedem que você faça isso."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Return Values and Scope"
-msgstr ""
+msgstr "Valores de retorno e escopo {#return-values-and-scope}"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Returning values can also transfer ownership. Listing 4-4 shows an example of a function that returns some value, with similar annotations as those in Listing 4-3."
-msgstr ""
+msgstr "Retornar valores também pode transferir o ownership. A Listagem 4-4 mostra um exemplo de uma função que retorna algum valor, com anotações semelhantes às da Listagem 4-3."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<Listing number=\"4-4\" file-name=\"src/main.rs\" caption=\"Transferring ownership of return values\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-4\" file-name=\"src/main.rs\" caption=\"Transferindo o ownership de valores de retorno\">\n"
 
 #: src/ch04-01-what-is-ownership.md
 msgid ""
@@ -4512,19 +4534,19 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "The ownership of a variable follows the same pattern every time: Assigning a value to another variable moves it. When a variable that includes data on the heap goes out of scope, the value will be cleaned up by `drop` unless ownership of the data has been moved to another variable."
-msgstr ""
+msgstr "O ownership de uma variável segue sempre o mesmo padrão: atribuir um valor a outra variável faz com que ele seja movido. Quando uma variável que inclui dados no heap sai do escopo, o valor será liberado por `drop`, a menos que o ownership dos dados tenha sido movido para outra variável."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "While this works, taking ownership and then returning ownership with every function is a bit tedious. What if we want to let a function use a value but not take ownership? It’s quite annoying that anything we pass in also needs to be passed back if we want to use it again, in addition to any data resulting from the body of the function that we might want to return as well."
-msgstr ""
+msgstr "Embora isso funcione, assumir o ownership e depois retornar o ownership em cada função é um pouco tedioso. E se quisermos deixar uma função usar um valor sem assumir o ownership? É bastante incômodo que tudo o que passamos para a função também precise ser retornado se quisermos usá-lo de novo, além de quaisquer dados resultantes do corpo da função que também queiramos retornar."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Rust does let us return multiple values using a tuple, as shown in Listing 4-5."
-msgstr ""
+msgstr "O Rust nos permite retornar vários valores usando uma tupla, como mostrado na Listagem 4-5."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "<Listing number=\"4-5\" file-name=\"src/main.rs\" caption=\"Returning ownership of parameters\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-5\" file-name=\"src/main.rs\" caption=\"Retornando o ownership de parâmetros\">\n"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "\"The length of '{s2}' is {len}.\""
@@ -4536,15 +4558,15 @@ msgstr ""
 
 #: src/ch04-01-what-is-ownership.md
 msgid "But this is too much ceremony and a lot of work for a concept that should be common. Luckily for us, Rust has a feature for using a value without transferring ownership: references."
-msgstr ""
+msgstr "Mas isso é burocracia demais e muito trabalho para um conceito que deveria ser comum. Felizmente, o Rust tem um recurso para usar um valor sem transferir o ownership: as referências."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The issue with the tuple code in Listing 4-5 is that we have to return the `String` to the calling function so that we can still use the `String` after the call to `calculate_length`, because the `String` was moved into `calculate_length`. Instead, we can provide a reference to the `String` value. A reference is like a pointer in that it’s an address we can follow to access the data stored at that address; that data is owned by some other variable. Unlike a pointer, a reference is guaranteed to point to a valid value of a particular type for the life of that reference."
-msgstr ""
+msgstr "O problema do código com tupla da Listagem 4-5 é que precisamos retornar a `String` para a função chamadora, para que possamos continuar usando a `String` depois da chamada a `calculate_length`, porque a `String` foi movida para `calculate_length`. Em vez disso, podemos fornecer uma referência ao valor da `String`. Uma referência é parecida com um ponteiro, pois é um endereço que podemos seguir para acessar os dados armazenados nesse endereço; esses dados pertencem a alguma outra variável. Diferentemente de um ponteiro, uma referência tem a garantia de apontar para um valor válido de um tipo específico durante todo o tempo de vida dessa referência."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Here is how you would define and use a `calculate_length` function that has a reference to an object as a parameter instead of taking ownership of the value:"
-msgstr ""
+msgstr "Veja como você definiria e usaria uma função `calculate_length` que tem como parâmetro uma referência a um objeto, em vez de assumir o ownership do valor:"
 
 #: src/ch04-02-references-and-borrowing.md src/ch04-03-slices.md
 #: src/ch05-01-defining-structs.md src/ch05-03-method-syntax.md
@@ -4566,7 +4588,7 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "First, notice that all the tuple code in the variable declaration and the function return value is gone. Second, note that we pass `&s1` into `calculate_length` and, in its definition, we take `&String` rather than `String`. These ampersands represent references, and they allow you to refer to some value without taking ownership of it. Figure 4-6 depicts this concept."
-msgstr ""
+msgstr "Primeiro, observe que todo o código com tupla na declaração da variável e no valor de retorno da função desapareceu. Segundo, note que passamos `&s1` para `calculate_length` e, na definição dela, usamos `&String` em vez de `String`. Esses e comerciais representam referências, e eles permitem que você se refira a algum valor sem assumir o ownership dele. A Figura 4-6 ilustra esse conceito."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid ""
@@ -4574,26 +4596,29 @@ msgid ""
 "for s1. The table for s1 contains the stack data for s1 and points to the\n"
 "string data on the heap.\" src=\"img/trpl04-06.svg\" class=\"center\" />"
 msgstr ""
+"<img alt=\"Três tabelas: a tabela de s contém apenas um ponteiro para a tabela\n"
+"de s1. A tabela de s1 contém os dados de s1 na pilha e aponta para os\n"
+"dados da string no heap.\" src=\"img/trpl04-06.svg\" class=\"center\" />"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "<span class=\"caption\">Figure 4-6: A diagram of `&String` `s` pointing at `String` `s1`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-6: Um diagrama de `&String` `s` apontando para `String` `s1`</span>"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Note: The opposite of referencing by using `&` is _dereferencing_, which is accomplished with the dereference operator, `*`. We’ll see some uses of the dereference operator in Chapter 8 and discuss details of dereferencing in Chapter 15."
-msgstr ""
+msgstr "Nota: o oposto de criar uma referência usando `&` é _desreferenciar_, o que é feito com o operador de desreferência, `*`. Vamos ver alguns usos do operador de desreferência no Capítulo 8 e discutir detalhes sobre a desreferenciação no Capítulo 15."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Let’s take a closer look at the function call here:"
-msgstr ""
+msgstr "Vamos dar uma olhada mais de perto na chamada de função aqui:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The `&s1` syntax lets us create a reference that _refers_ to the value of `s1` but does not own it. Because the reference does not own it, the value it points to will not be dropped when the reference stops being used."
-msgstr ""
+msgstr "A sintaxe `&s1` nos permite criar uma referência que _se refere_ ao valor de `s1`, mas não tem o ownership dele. Como a referência não tem o ownership, o valor para o qual ela aponta não será descartado quando a referência deixar de ser usada."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Likewise, the signature of the function uses `&` to indicate that the type of the parameter `s` is a reference. Let’s add some explanatory annotations:"
-msgstr ""
+msgstr "Da mesma forma, a assinatura da função usa `&` para indicar que o tipo do parâmetro `s` é uma referência. Vamos adicionar algumas anotações explicativas:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "// s is a reference to a String\n"
@@ -4607,19 +4632,19 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The scope in which the variable `s` is valid is the same as any function parameter’s scope, but the value pointed to by the reference is not dropped when `s` stops being used, because `s` doesn’t have ownership. When functions have references as parameters instead of the actual values, we won’t need to return the values in order to give back ownership, because we never had ownership."
-msgstr ""
+msgstr "O escopo em que a variável `s` é válida é o mesmo de qualquer parâmetro de função, mas o valor apontado pela referência não é descartado quando `s` deixa de ser usada, porque `s` não tem ownership. Quando funções recebem referências como parâmetros, em vez dos valores em si, não precisamos retornar os valores para transferir o ownership de volta, porque nunca tivemos o ownership."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "We call the action of creating a reference _borrowing_. As in real life, if a person owns something, you can borrow it from them. When you’re done, you have to give it back. You don’t own it."
-msgstr ""
+msgstr "Chamamos de _empréstimo_ a ação de criar uma referência. Assim como na vida real, se alguém é dono de algo, você pode pegá-lo emprestado com essa pessoa. Quando terminar, você precisa devolvê-lo. Você não é o dono dele."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "So, what happens if we try to modify something we’re borrowing? Try the code in Listing 4-6. Spoiler alert: It doesn’t work!"
-msgstr ""
+msgstr "Então, o que acontece se tentarmos modificar algo que estamos pegando emprestado? Experimente o código da Listagem 4-6. Alerta de spoiler: não funciona!"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "<Listing number=\"4-6\" file-name=\"src/main.rs\" caption=\"Attempting to modify a borrowed value\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-6\" file-name=\"src/main.rs\" caption=\"Tentando modificar um valor emprestado\">\n"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "\", world\""
@@ -4627,7 +4652,7 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Here’s the error:"
-msgstr ""
+msgstr "Este é o erro:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid ""
@@ -4652,23 +4677,23 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Just as variables are immutable by default, so are references. We’re not allowed to modify something we have a reference to."
-msgstr ""
+msgstr "Assim como as variáveis são imutáveis por padrão, as referências também são. Não é permitido modificar algo para o qual temos uma referência."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Mutable References"
-msgstr ""
+msgstr "Referências mutáveis {#mutable-references}"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "We can fix the code from Listing 4-6 to allow us to modify a borrowed value with just a few small tweaks that use, instead, a _mutable reference_:"
-msgstr ""
+msgstr "Podemos corrigir o código da Listagem 4-6 para nos permitir modificar um valor emprestado com apenas alguns pequenos ajustes que usam, em vez disso, uma _referência mutável_:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "First, we change `s` to be `mut`. Then, we create a mutable reference with `&mut s` where we call the `change` function and update the function signature to accept a mutable reference with `some_string: &mut String`. This makes it very clear that the `change` function will mutate the value it borrows."
-msgstr ""
+msgstr "Primeiro, mudamos `s` para `mut`. Depois, criamos uma referência mutável com `&mut s`, em que chamamos a função `change` e atualizamos a assinatura da função para aceitar uma referência mutável com `some_string: &mut String`. Isso deixa muito claro que a função `change` vai alterar o valor que ela pega emprestado."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Mutable references have one big restriction: If you have a mutable reference to a value, you can have no other references to that value. This code that attempts to create two mutable references to `s` will fail:"
-msgstr ""
+msgstr "As referências mutáveis têm uma grande restrição: se você tiver uma referência mutável a um valor, não pode ter nenhuma outra referência a esse valor. Este código, que tenta criar duas referências mutáveis para `s`, vai falhar:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "\"{r1}, {r2}\""
@@ -4697,31 +4722,31 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "This error says that this code is invalid because we cannot borrow `s` as mutable more than once at a time. The first mutable borrow is in `r1` and must last until it’s used in the `println!`, but between the creation of that mutable reference and its usage, we tried to create another mutable reference in `r2` that borrows the same data as `r1`."
-msgstr ""
+msgstr "Este erro diz que este código é inválido porque não podemos pegar `s` emprestado como mutável mais de uma vez ao mesmo tempo. O primeiro empréstimo mutável está em `r1` e precisa durar até ser usado no `println!`, mas, entre a criação dessa referência mutável e o seu uso, tentamos criar outra referência mutável em `r2` que pega emprestados os mesmos dados que `r1`."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The restriction preventing multiple mutable references to the same data at the same time allows for mutation but in a very controlled fashion. It’s something that new Rustaceans struggle with because most languages let you mutate whenever you’d like. The benefit of having this restriction is that Rust can prevent data races at compile time. A _data race_ is similar to a race condition and happens when these three behaviors occur:"
-msgstr ""
+msgstr "A restrição que impede várias referências mutáveis aos mesmos dados ao mesmo tempo permite a alteração, mas de forma muito controlada. É algo com que os novos rustáceos têm dificuldade, porque a maioria das linguagens permite alterar sempre que você quiser. O benefício dessa restrição é que o Rust pode impedir corridas de dados em tempo de compilação. Uma _corrida de dados_ é parecida com uma condição de corrida e acontece quando estes três comportamentos ocorrem:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Two or more pointers access the same data at the same time."
-msgstr ""
+msgstr "Dois ou mais ponteiros acessam os mesmos dados ao mesmo tempo."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "At least one of the pointers is being used to write to the data."
-msgstr ""
+msgstr "Pelo menos um dos ponteiros é usado para escrever nos dados."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "There’s no mechanism being used to synchronize access to the data."
-msgstr ""
+msgstr "Não há nenhum mecanismo usado para sincronizar o acesso aos dados."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Data races cause undefined behavior and can be difficult to diagnose and fix when you’re trying to track them down at runtime; Rust prevents this problem by refusing to compile code with data races!"
-msgstr ""
+msgstr "Corridas de dados causam comportamento indefinido e podem ser difíceis de diagnosticar e corrigir quando você tenta rastreá-las em tempo de execução; o Rust evita esse problema recusando-se a compilar código com corridas de dados!"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "As always, we can use curly brackets to create a new scope, allowing for multiple mutable references, just not _simultaneous_ ones:"
-msgstr ""
+msgstr "Como sempre, podemos usar chaves para criar um novo escopo, permitindo várias referências mutáveis, só que não _simultâneas_:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "// r1 goes out of scope here, so we can make a new reference with no problems.\n"
@@ -4729,7 +4754,7 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Rust enforces a similar rule for combining mutable and immutable references. This code results in an error:"
-msgstr ""
+msgstr "O Rust impõe uma regra semelhante para combinar referências mutáveis e imutáveis. Este código resulta em um erro:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "// no problem\n"
@@ -4767,15 +4792,15 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Whew! We _also_ cannot have a mutable reference while we have an immutable one to the same value."
-msgstr ""
+msgstr "Ufa! _Também_ não podemos ter uma referência mutável enquanto temos uma imutável para o mesmo valor."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Users of an immutable reference don’t expect the value to suddenly change out from under them! However, multiple immutable references are allowed because no one who is just reading the data has the ability to affect anyone else’s reading of the data."
-msgstr ""
+msgstr "Quem usa uma referência imutável não espera que o valor mude de repente por baixo dos seus pés! No entanto, várias referências imutáveis são permitidas, porque quem está apenas lendo os dados não tem como afetar a leitura que qualquer outra pessoa faz deles."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Note that a reference’s scope starts from where it is introduced and continues through the last time that reference is used. For instance, this code will compile because the last usage of the immutable references is in the `println!`, before the mutable reference is introduced:"
-msgstr ""
+msgstr "Observe que o escopo de uma referência começa onde ela é introduzida e continua até a última vez em que essa referência é usada. Por exemplo, este código vai compilar porque o último uso das referências imutáveis está no `println!`, antes que a referência mutável seja introduzida:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "\"{r1} and {r2}\""
@@ -4791,23 +4816,23 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The scopes of the immutable references `r1` and `r2` end after the `println!` where they are last used, which is before the mutable reference `r3` is created. These scopes don’t overlap, so this code is allowed: The compiler can tell that the reference is no longer being used at a point before the end of the scope."
-msgstr ""
+msgstr "Os escopos das referências imutáveis `r1` e `r2` terminam depois do `println!` onde são usadas pela última vez, o que acontece antes que a referência mutável `r3` seja criada. Esses escopos não se sobrepõem, então este código é permitido: o compilador consegue perceber que a referência não é mais usada em um ponto anterior ao fim do escopo."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Even though borrowing errors may be frustrating at times, remember that it’s the Rust compiler pointing out a potential bug early (at compile time rather than at runtime) and showing you exactly where the problem is. Then, you don’t have to track down why your data isn’t what you thought it was."
-msgstr ""
+msgstr "Mesmo que erros de empréstimo possam ser frustrantes às vezes, lembre-se de que é o compilador do Rust que aponta um possível bug logo no início (em tempo de compilação, e não em tempo de execução) e mostra exatamente onde está o problema. Assim, você não precisa investigar por que os seus dados não são o que você achava que eram."
 
 #: src/ch04-02-references-and-borrowing.md src/ch10-03-lifetime-syntax.md
 msgid "Dangling References"
-msgstr ""
+msgstr "Referências pendentes {#dangling-references}"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "In languages with pointers, it’s easy to erroneously create a _dangling pointer_—a pointer that references a location in memory that may have been given to someone else—by freeing some memory while preserving a pointer to that memory. In Rust, by contrast, the compiler guarantees that references will never be dangling references: If you have a reference to some data, the compiler will ensure that the data will not go out of scope before the reference to the data does."
-msgstr ""
+msgstr "Em linguagens com ponteiros, é fácil criar por engano um _ponteiro pendente_—um ponteiro que referencia um local na memória que pode ter sido dado a outra pessoa—ao liberar alguma memória enquanto se mantém um ponteiro para essa memória. No Rust, por outro lado, o compilador garante que as referências nunca serão referências pendentes: se você tiver uma referência a alguns dados, o compilador vai garantir que os dados não saiam do escopo antes da referência a eles."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Let’s try to create a dangling reference to see how Rust prevents them with a compile-time error:"
-msgstr ""
+msgstr "Vamos tentar criar uma referência pendente para ver como o Rust as impede com um erro em tempo de compilação:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid ""
@@ -4838,11 +4863,11 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "This error message refers to a feature we haven’t covered yet: lifetimes. We’ll discuss lifetimes in detail in Chapter 10. But, if you disregard the parts about lifetimes, the message does contain the key to why this code is a problem:"
-msgstr ""
+msgstr "Esta mensagem de erro se refere a um recurso que ainda não abordamos: tempos de vida. Vamos discutir os tempos de vida em detalhes no Capítulo 10. Mas, se você ignorar as partes sobre tempos de vida, a mensagem contém, sim, a chave para entender por que este código é um problema:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Let’s take a closer look at exactly what’s happening at each stage of our `dangle` code:"
-msgstr ""
+msgstr "Vamos observar com mais atenção o que está acontecendo em cada etapa do nosso código `dangle`:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "// dangle returns a reference to a String\n"
@@ -4864,59 +4889,59 @@ msgstr ""
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Because `s` is created inside `dangle`, when the code of `dangle` is finished, `s` will be deallocated. But we tried to return a reference to it. That means this reference would be pointing to an invalid `String`. That’s no good! Rust won’t let us do this."
-msgstr ""
+msgstr "Como `s` é criada dentro de `dangle`, quando o código de `dangle` termina, `s` será desalocada. Mas tentamos retornar uma referência a ela. Isso significa que essa referência estaria apontando para uma `String` inválida. Isso não serve! O Rust não nos deixa fazer isso."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The solution here is to return the `String` directly:"
-msgstr ""
+msgstr "A solução aqui é retornar a `String` diretamente:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "This works without any problems. Ownership is moved out, and nothing is deallocated."
-msgstr ""
+msgstr "Isso funciona sem nenhum problema. O ownership é movido para fora, e nada é desalocado."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "The Rules of References"
-msgstr ""
+msgstr "As regras das referências {#the-rules-of-references}"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Let’s recap what we’ve discussed about references:"
-msgstr ""
+msgstr "Vamos recapitular o que discutimos sobre referências:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "At any given time, you can have _either_ one mutable reference _or_ any number of immutable references."
-msgstr ""
+msgstr "A qualquer momento, você pode ter _ou_ uma referência mutável _ou_ qualquer número de referências imutáveis."
 
 #: src/ch04-02-references-and-borrowing.md src/ch15-05-interior-mutability.md
 msgid "References must always be valid."
-msgstr ""
+msgstr "As referências devem ser sempre válidas."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Next, we’ll look at a different kind of reference: slices."
-msgstr ""
+msgstr "Em seguida, vamos ver outro tipo de referência: as slices."
 
 #: src/ch04-03-slices.md
 msgid "_Slices_ let you reference a contiguous sequence of elements in a [collection](ch08-00-common-collections.md)<!-- ignore -->. A slice is a kind of reference, so it does not have ownership."
-msgstr ""
+msgstr "_Slices_ permitem que você faça referência a uma sequência contígua de elementos em uma [coleção](ch08-00-common-collections.md)<!-- ignore -->. Uma slice é um tipo de referência, então ela não tem ownership."
 
 #: src/ch04-03-slices.md
 msgid "Here’s a small programming problem: Write a function that takes a string of words separated by spaces and returns the first word it finds in that string. If the function doesn’t find a space in the string, the whole string must be one word, so the entire string should be returned."
-msgstr ""
+msgstr "Aqui está um pequeno problema de programação: escreva uma função que receba uma string de palavras separadas por espaços e retorne a primeira palavra que encontrar nessa string. Se a função não encontrar um espaço na string, a string inteira deve ser uma única palavra, então a string toda deve ser retornada."
 
 #: src/ch04-03-slices.md
 msgid "Note: For the purposes of introducing slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the [“Storing UTF-8 Encoded Text with Strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> section of Chapter 8."
-msgstr ""
+msgstr "Nota: para fins de introdução às slices, nesta seção estamos assumindo apenas ASCII; uma discussão mais completa sobre o tratamento de UTF-8 está na seção [“Armazenando texto codificado em UTF-8 com strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> do Capítulo 8."
 
 #: src/ch04-03-slices.md
 msgid "Let’s work through how we’d write the signature of this function without using slices, to understand the problem that slices will solve:"
-msgstr ""
+msgstr "Vamos ver como escreveríamos a assinatura desta função sem usar slices, para entender o problema que as slices vão resolver:"
 
 #: src/ch04-03-slices.md
 msgid "The `first_word` function has a parameter of type `&String`. We don’t need ownership, so this is fine. (In idiomatic Rust, functions do not take ownership of their arguments unless they need to, and the reasons for that will become clear as we keep going.) But what should we return? We don’t really have a way to talk about _part_ of a string. However, we could return the index of the end of the word, indicated by a space. Let’s try that, as shown in Listing 4-7."
-msgstr ""
+msgstr "A função `first_word` tem um parâmetro do tipo `&String`. Não precisamos de ownership, então isso está bem. (No Rust idiomático, as funções não assumem o ownership de seus argumentos a menos que precisem, e os motivos para isso ficarão claros conforme avançarmos.) Mas o que devemos retornar? Não temos realmente uma forma de falar sobre _parte_ de uma string. No entanto, poderíamos retornar o índice do fim da palavra, indicado por um espaço. Vamos tentar isso, como mostrado na Listagem 4-7."
 
 #: src/ch04-03-slices.md
 msgid "<Listing number=\"4-7\" file-name=\"src/main.rs\" caption=\"The `first_word` function that returns a byte index value into the `String` parameter\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-7\" file-name=\"src/main.rs\" caption=\"A função `first_word` que retorna um valor de índice de byte para o parâmetro `String`\">\n"
 
 #: src/ch04-03-slices.md src/ch10-03-lifetime-syntax.md
 msgid "b' '"
@@ -4924,31 +4949,31 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "Because we need to go through the `String` element by element and check whether a value is a space, we’ll convert our `String` to an array of bytes using the `as_bytes` method."
-msgstr ""
+msgstr "Como precisamos percorrer a `String` elemento por elemento e verificar se um valor é um espaço, vamos converter nossa `String` em um array de bytes usando o método `as_bytes`."
 
 #: src/ch04-03-slices.md
 msgid "Next, we create an iterator over the array of bytes using the `iter` method:"
-msgstr ""
+msgstr "Em seguida, criamos um iterador sobre o array de bytes usando o método `iter`:"
 
 #: src/ch04-03-slices.md
 msgid "We’ll discuss iterators in more detail in [Chapter 13](ch13-02-iterators.html)<!-- ignore -->. For now, know that `iter` is a method that returns each element in a collection and that `enumerate` wraps the result of `iter` and returns each element as part of a tuple instead. The first element of the tuple returned from `enumerate` is the index, and the second element is a reference to the element. This is a bit more convenient than calculating the index ourselves."
-msgstr ""
+msgstr "Vamos discutir iteradores com mais detalhes no [Capítulo 13](ch13-02-iterators.html)<!-- ignore -->. Por enquanto, saiba que `iter` é um método que retorna cada elemento de uma coleção, e que `enumerate` envolve o resultado de `iter` e, em vez disso, retorna cada elemento como parte de uma tupla. O primeiro elemento da tupla retornada por `enumerate` é o índice, e o segundo elemento é uma referência ao elemento. Isso é um pouco mais conveniente do que calcular o índice nós mesmos."
 
 #: src/ch04-03-slices.md
 msgid "Because the `enumerate` method returns a tuple, we can use patterns to destructure that tuple. We’ll be discussing patterns more in [Chapter 6](ch06-02-match.html#patterns-that-bind-to-values)<!-- ignore -->. In the `for` loop, we specify a pattern that has `i` for the index in the tuple and `&item` for the single byte in the tuple. Because we get a reference to the element from `.iter().enumerate()`, we use `&` in the pattern."
-msgstr ""
+msgstr "Como o método `enumerate` retorna uma tupla, podemos usar padrões para desestruturar essa tupla. Vamos discutir padrões com mais detalhes no [Capítulo 6](ch06-02-match.html#patterns-that-bind-to-values)<!-- ignore -->. No loop `for`, especificamos um padrão que tem `i` para o índice na tupla e `&item` para o único byte da tupla. Como obtemos uma referência ao elemento a partir de `.iter().enumerate()`, usamos `&` no padrão."
 
 #: src/ch04-03-slices.md
 msgid "Inside the `for` loop, we search for the byte that represents the space by using the byte literal syntax. If we find a space, we return the position. Otherwise, we return the length of the string by using `s.len()`."
-msgstr ""
+msgstr "Dentro do loop `for`, procuramos o byte que representa o espaço usando a sintaxe de literal de byte. Se encontrarmos um espaço, retornamos a posição. Caso contrário, retornamos o comprimento da string usando `s.len()`."
 
 #: src/ch04-03-slices.md
 msgid "We now have a way to find out the index of the end of the first word in the string, but there’s a problem. We’re returning a `usize` on its own, but it’s only a meaningful number in the context of the `&String`. In other words, because it’s a separate value from the `String`, there’s no guarantee that it will still be valid in the future. Consider the program in Listing 4-8 that uses the `first_word` function from Listing 4-7."
-msgstr ""
+msgstr "Agora temos uma forma de descobrir o índice do fim da primeira palavra na string, mas há um problema. Estamos retornando um `usize` por si só, mas ele só é um número significativo no contexto do `&String`. Em outras palavras, como ele é um valor separado da `String`, não há garantia de que ele ainda será válido no futuro. Considere o programa da Listagem 4-8, que usa a função `first_word` da Listagem 4-7."
 
 #: src/ch04-03-slices.md
 msgid "<Listing number=\"4-8\" file-name=\"src/main.rs\" caption=\"Storing the result from calling the `first_word` function and then changing the `String` contents\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-8\" file-name=\"src/main.rs\" caption=\"Armazenando o resultado da chamada da função `first_word` e, em seguida, alterando o conteúdo da `String`\">\n"
 
 #: src/ch04-03-slices.md src/ch10-03-lifetime-syntax.md
 msgid "\"hello world\""
@@ -4970,35 +4995,35 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "This program compiles without any errors and would also do so if we used `word` after calling `s.clear()`. Because `word` isn’t connected to the state of `s` at all, `word` still contains the value `5`. We could use that value `5` with the variable `s` to try to extract the first word out, but this would be a bug because the contents of `s` have changed since we saved `5` in `word`."
-msgstr ""
+msgstr "Este programa compila sem nenhum erro e também compilaria se usássemos `word` depois de chamar `s.clear()`. Como `word` não tem nenhuma ligação com o estado de `s`, `word` ainda contém o valor `5`. Poderíamos usar esse valor `5` com a variável `s` para tentar extrair a primeira palavra, mas isso seria um bug, porque o conteúdo de `s` mudou desde que salvamos `5` em `word`."
 
 #: src/ch04-03-slices.md
 msgid "Having to worry about the index in `word` getting out of sync with the data in `s` is tedious and error-prone! Managing these indices is even more brittle if we write a `second_word` function. Its signature would have to look like this:"
-msgstr ""
+msgstr "Ter que se preocupar com o índice em `word` ficar fora de sincronia com os dados em `s` é tedioso e propenso a erros! Gerenciar esses índices é ainda mais frágil se escrevermos uma função `second_word`. Sua assinatura teria que ficar assim:"
 
 #: src/ch04-03-slices.md
 msgid "Now we’re tracking a starting _and_ an ending index, and we have even more values that were calculated from data in a particular state but aren’t tied to that state at all. We have three unrelated variables floating around that need to be kept in sync."
-msgstr ""
+msgstr "Agora estamos acompanhando um índice inicial _e_ um índice final, e temos ainda mais valores que foram calculados a partir dos dados em um determinado estado, mas que não estão de forma alguma ligados a esse estado. Temos três variáveis não relacionadas soltas por aí que precisam ser mantidas em sincronia."
 
 #: src/ch04-03-slices.md
 msgid "Luckily, Rust has a solution to this problem: string slices."
-msgstr ""
+msgstr "Felizmente, o Rust tem uma solução para esse problema: as slices de string."
 
 #: src/ch04-03-slices.md
 msgid "String Slices"
-msgstr ""
+msgstr "Slices de string {#string-slices}"
 
 #: src/ch04-03-slices.md
 msgid "A _string slice_ is a reference to a contiguous sequence of the elements of a `String`, and it looks like this:"
-msgstr ""
+msgstr "Uma _slice de string_ é uma referência a uma sequência contígua dos elementos de uma `String`, e ela se parece com isto:"
 
 #: src/ch04-03-slices.md
 msgid "Rather than a reference to the entire `String`, `hello` is a reference to a portion of the `String`, specified in the extra `[0..5]` bit. We create slices using a range within square brackets by specifying `[starting_index..ending_index]`, where _`starting_index`_ is the first position in the slice and _`ending_index`_ is one more than the last position in the slice. Internally, the slice data structure stores the starting position and the length of the slice, which corresponds to _`ending_index`_ minus _`starting_index`_. So, in the case of `let world = &s[6..11];`, `world` would be a slice that contains a pointer to the byte at index 6 of `s` with a length value of `5`."
-msgstr ""
+msgstr "Em vez de uma referência a toda a `String`, `hello` é uma referência a uma parte da `String`, especificada na parte extra `[0..5]`. Criamos slices usando um intervalo entre colchetes, especificando `[starting_index..ending_index]`, em que _`starting_index`_ é a primeira posição da slice e _`ending_index`_ é uma posição a mais do que a última posição da slice. Internamente, a estrutura de dados da slice armazena a posição inicial e o comprimento da slice, que corresponde a _`ending_index`_ menos _`starting_index`_. Assim, no caso de `let world = &s[6..11];`, `world` seria uma slice que contém um ponteiro para o byte no índice 6 de `s` com um valor de comprimento de `5`."
 
 #: src/ch04-03-slices.md
 msgid "Figure 4-7 shows this in a diagram."
-msgstr ""
+msgstr "A Figura 4-7 mostra isso em um diagrama."
 
 #: src/ch04-03-slices.md
 msgid ""
@@ -5008,46 +5033,51 @@ msgid ""
 "has a length value of 5 and points to byte 6 of the heap data table.\"\n"
 "src=\"img/trpl04-07.svg\" class=\"center\" style=\"width: 50%;\" />"
 msgstr ""
+"<img alt=\"Três tabelas: uma tabela representando os dados da pilha de s, que aponta\n"
+"para o byte no índice 0 de uma tabela com os dados da string &quot;hello world&quot; no\n"
+"heap. A terceira tabela representa os dados da pilha da slice world, que\n"
+"tem um valor de comprimento 5 e aponta para o byte 6 da tabela de dados do heap.\"\n"
+"src=\"img/trpl04-07.svg\" class=\"center\" style=\"width: 50%;\" />"
 
 #: src/ch04-03-slices.md
 msgid "<span class=\"caption\">Figure 4-7: A string slice referring to part of a `String`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 4-7: Uma slice de string que faz referência a parte de uma `String`</span>"
 
 #: src/ch04-03-slices.md
 msgid "With Rust’s `..` range syntax, if you want to start at index 0, you can drop the value before the two periods. In other words, these are equal:"
-msgstr ""
+msgstr "Com a sintaxe de intervalo `..` do Rust, se você quiser começar no índice 0, pode omitir o valor que vem antes desses dois pontos. Em outras palavras, estes são iguais:"
 
 #: src/ch04-03-slices.md
 msgid "By the same token, if your slice includes the last byte of the `String`, you can drop the trailing number. That means these are equal:"
-msgstr ""
+msgstr "Da mesma forma, se a sua slice incluir o último byte da `String`, você pode omitir o número final. Isso significa que estes são iguais:"
 
 #: src/ch04-03-slices.md
 msgid "You can also drop both values to take a slice of the entire string. So, these are equal:"
-msgstr ""
+msgstr "Você também pode omitir os dois valores para obter uma slice da string inteira. Assim, estes são iguais:"
 
 #: src/ch04-03-slices.md
 msgid "Note: String slice range indices must occur at valid UTF-8 character boundaries. If you attempt to create a string slice in the middle of a multibyte character, your program will exit with an error."
-msgstr ""
+msgstr "Nota: os índices de intervalo de uma slice de string devem ocorrer em limites válidos de caracteres UTF-8. Se você tentar criar uma slice de string no meio de um caractere multibyte, seu programa vai encerrar com um erro."
 
 #: src/ch04-03-slices.md
 msgid "With all this information in mind, let’s rewrite `first_word` to return a slice. The type that signifies “string slice” is written as `&str`:"
-msgstr ""
+msgstr "Com todas essas informações em mente, vamos reescrever `first_word` para retornar uma slice. O tipo que representa “slice de string” é escrito como `&str`:"
 
 #: src/ch04-03-slices.md
 msgid "We get the index for the end of the word the same way we did in Listing 4-7, by looking for the first occurrence of a space. When we find a space, we return a string slice using the start of the string and the index of the space as the starting and ending indices."
-msgstr ""
+msgstr "Obtemos o índice do fim da palavra da mesma forma que fizemos na Listagem 4-7, procurando a primeira ocorrência de um espaço. Quando encontramos um espaço, retornamos uma slice de string usando o início da string e o índice do espaço como índices inicial e final."
 
 #: src/ch04-03-slices.md
 msgid "Now when we call `first_word`, we get back a single value that is tied to the underlying data. The value is made up of a reference to the starting point of the slice and the number of elements in the slice."
-msgstr ""
+msgstr "Agora, quando chamamos `first_word`, recebemos de volta um único valor que está ligado aos dados subjacentes. O valor é formado por uma referência ao ponto inicial da slice e pelo número de elementos na slice."
 
 #: src/ch04-03-slices.md
 msgid "Returning a slice would also work for a `second_word` function:"
-msgstr ""
+msgstr "Retornar uma slice também funcionaria para uma função `second_word`:"
 
 #: src/ch04-03-slices.md
 msgid "We now have a straightforward API that’s much harder to mess up because the compiler will ensure that the references into the `String` remain valid. Remember the bug in the program in Listing 4-8, when we got the index to the end of the first word but then cleared the string so our index was invalid? That code was logically incorrect but didn’t show any immediate errors. The problems would show up later if we kept trying to use the first word index with an emptied string. Slices make this bug impossible and let us know much sooner that we have a problem with our code. Using the slice version of `first_word` will throw a compile-time error:"
-msgstr ""
+msgstr "Agora temos uma API direta, muito mais difícil de usar incorretamente, porque o compilador vai garantir que as referências à `String` continuem válidas. Você se lembra do bug do programa da Listagem 4-8, quando obtivemos o índice do fim da primeira palavra, mas depois limpamos a string, o que deixou nosso índice inválido? Esse código estava logicamente incorreto, mas não mostrava nenhum erro imediato. Os problemas apareceriam mais tarde se continuássemos tentando usar o índice da primeira palavra com uma string esvaziada. As slices tornam esse bug impossível e nos avisam muito mais cedo que temos um problema no código. Usar a versão com slice de `first_word` vai gerar um erro em tempo de compilação:"
 
 #: src/ch04-03-slices.md
 msgid "// error!\n"
@@ -5059,7 +5089,7 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "Here’s the compiler error:"
-msgstr ""
+msgstr "Aqui está o erro de compilação:"
 
 #: src/ch04-03-slices.md
 msgid ""
@@ -5085,7 +5115,7 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because `clear` needs to truncate the `String`, it needs to get a mutable reference. The `println!` after the call to `clear` uses the reference in `word`, so the immutable reference must still be active at that point. Rust disallows the mutable reference in `clear` and the immutable reference in `word` from existing at the same time, and compilation fails. Not only has Rust made our API easier to use, but it has also eliminated an entire class of errors at compile time!"
-msgstr ""
+msgstr "Lembre-se das regras de empréstimo: se temos uma referência imutável a algo, não podemos também obter uma referência mutável. Como `clear` precisa truncar a `String`, ele precisa obter uma referência mutável. O `println!` depois da chamada a `clear` usa a referência em `word`, então a referência imutável precisa estar ativa nesse ponto. O Rust não permite que a referência mutável em `clear` e a referência imutável em `word` existam ao mesmo tempo, e a compilação falha. Não só o Rust tornou nossa API mais fácil de usar, como também eliminou uma classe inteira de erros em tempo de compilação!"
 
 #: src/ch04-03-slices.md
 msgid "<a id=\"string-literals-are-slices\"></a>"
@@ -5093,31 +5123,31 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "String Literals as Slices"
-msgstr ""
+msgstr "Literais de string como slices {#string-literals-as-slices}"
 
 #: src/ch04-03-slices.md
 msgid "Recall that we talked about string literals being stored inside the binary. Now that we know about slices, we can properly understand string literals:"
-msgstr ""
+msgstr "Lembre-se de que falamos sobre literais de string sendo armazenados dentro do binário. Agora que conhecemos as slices, podemos entender corretamente os literais de string:"
 
 #: src/ch04-03-slices.md
 msgid "The type of `s` here is `&str`: It’s a slice pointing to that specific point of the binary. This is also why string literals are immutable; `&str` is an immutable reference."
-msgstr ""
+msgstr "O tipo de `s` aqui é `&str`: é uma slice apontando para aquele ponto específico do binário. Esse também é o motivo pelo qual os literais de string são imutáveis; `&str` é uma referência imutável."
 
 #: src/ch04-03-slices.md
 msgid "String Slices as Parameters"
-msgstr ""
+msgstr "Slices de string como parâmetros {#string-slices-as-parameters}"
 
 #: src/ch04-03-slices.md
 msgid "Knowing that you can take slices of literals and `String` values leads us to one more improvement on `first_word`, and that’s its signature:"
-msgstr ""
+msgstr "Saber que você pode criar slices de literais e de valores `String` nos leva a mais uma melhoria em `first_word`, e essa é a assinatura dela:"
 
 #: src/ch04-03-slices.md
 msgid "A more experienced Rustacean would write the signature shown in Listing 4-9 instead because it allows us to use the same function on both `&String` values and `&str` values."
-msgstr ""
+msgstr "Um rustáceo mais experiente escreveria, em vez disso, a assinatura mostrada na Listagem 4-9, porque ela nos permite usar a mesma função tanto com valores `&String` quanto com valores `&str`."
 
 #: src/ch04-03-slices.md
 msgid "<Listing number=\"4-9\" caption=\"Improving the `first_word` function by using a string slice for the type of the `s` parameter\">\n"
-msgstr ""
+msgstr "<Listing number=\"4-9\" caption=\"Melhorando a função `first_word` usando uma slice de string para o tipo do parâmetro `s`\">\n"
 
 #: src/ch04-03-slices.md
 msgid "// `first_word` works on slices of `String`s, whether partial or whole.\n"
@@ -5152,10 +5182,12 @@ msgid ""
 "If we have a string slice, we can pass that directly. If we have a `String`, we can pass a slice of the `String` or a reference to the `String`. This flexibility takes advantage of deref coercions, a feature we will cover in the [“Using Deref Coercions in Functions and Methods”](ch15-02-deref.html#using-deref-coercions-in-functions-and-methods)<!--\n"
 "ignore --> section of Chapter 15."
 msgstr ""
+"Se tivermos uma slice de string, podemos passá-la diretamente. Se tivermos uma `String`, podemos passar uma slice da `String` ou uma referência à `String`. Essa flexibilidade tira proveito das coerções de desreferência, um recurso que abordaremos na seção [“Usando coerção de desreferência em funções e métodos”](ch15-02-deref.html#using-deref-coercions-in-functions-and-methods)<!--\n"
+"ignore --> do Capítulo 15."
 
 #: src/ch04-03-slices.md
 msgid "Defining a function to take a string slice instead of a reference to a `String` makes our API more general and useful without losing any functionality:"
-msgstr ""
+msgstr "Definir uma função que receba uma slice de string em vez de uma referência a uma `String` torna nossa API mais geral e útil, sem perder nenhuma funcionalidade:"
 
 #: src/ch04-03-slices.md
 msgid ""
@@ -5177,27 +5209,27 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "Other Slices"
-msgstr ""
+msgstr "Outras slices {#other-slices}"
 
 #: src/ch04-03-slices.md
 msgid "String slices, as you might imagine, are specific to strings. But there’s a more general slice type too. Consider this array:"
-msgstr ""
+msgstr "As slices de string, como você pode imaginar, são específicas de strings. Mas também existe um tipo de slice mais geral. Considere este array:"
 
 #: src/ch04-03-slices.md
 msgid "Just as we might want to refer to part of a string, we might want to refer to part of an array. We’d do so like this:"
-msgstr ""
+msgstr "Assim como podemos querer fazer referência a parte de uma string, também podemos querer fazer referência a parte de um array. Faríamos isso assim:"
 
 #: src/ch04-03-slices.md
 msgid "This slice has the type `&[i32]`. It works the same way as string slices do, by storing a reference to the first element and a length. You’ll use this kind of slice for all sorts of other collections. We’ll discuss these collections in detail when we talk about vectors in Chapter 8."
-msgstr ""
+msgstr "Esta slice tem o tipo `&[i32]`. Ela funciona da mesma forma que as slices de string, armazenando uma referência ao primeiro elemento e um comprimento. Você vai usar esse tipo de slice para todos os tipos de outras coleções. Vamos discutir essas coleções em detalhes quando falarmos sobre vetores no Capítulo 8."
 
 #: src/ch04-03-slices.md
 msgid "The concepts of ownership, borrowing, and slices ensure memory safety in Rust programs at compile time. The Rust language gives you control over your memory usage in the same way as other systems programming languages. But having the owner of data automatically clean up that data when the owner goes out of scope means you don’t have to write and debug extra code to get this control."
-msgstr ""
+msgstr "Os conceitos de ownership, empréstimo e slices garantem a segurança de memória em programas Rust em tempo de compilação. A linguagem Rust dá a você controle sobre o uso de memória da mesma forma que outras linguagens de programação de sistemas. Mas ter o dono dos dados limpando esses dados automaticamente quando ele sai do escopo significa que você não precisa escrever e depurar código extra para obter esse controle."
 
 #: src/ch04-03-slices.md
 msgid "Ownership affects how lots of other parts of Rust work, so we’ll talk about these concepts further throughout the rest of the book. Let’s move on to Chapter 5 and look at grouping pieces of data together in a `struct`."
-msgstr ""
+msgstr "O ownership afeta o funcionamento de muitas outras partes do Rust, então vamos falar mais sobre esses conceitos ao longo do restante do livro. Vamos passar para o Capítulo 5 e ver como agrupar pedaços de dados em um `struct`."
 
 #: src/ch05-00-structs.md
 msgid "A _struct_, or _structure_, is a custom data type that lets you package together and name multiple related values that make up a meaningful group. If you’re familiar with an object-oriented language, a struct is like an object’s data attributes. In this chapter, we’ll compare and contrast tuples with structs to build on what you already know and demonstrate when structs are a better way to group data."
