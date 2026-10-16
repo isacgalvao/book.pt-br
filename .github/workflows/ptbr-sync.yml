@@ -8,12 +8,14 @@
 #   traduzir  permissions: {}; o único job com ANTHROPIC_API_KEY; um job por capítulo do
 #             delta com traduz_delta.py (chamada à API sem ferramentas, git nem shell).
 #   montar    sem token de escrita: recria o branch a partir do bundle, aplica as traduções
-#             (apply.py --modo sync), roda slugs.py e check.py e monta o corpo do PR.
+#             (apply.py --modo sync), roda slugs.py e check.py e monta o corpo do PR, os
+#             comentários de continuação da tabela e a tabela completa (entradas.md).
 #   publicar  o ÚNICO job com escrita (token do GitHub App). Não executa código do
 #             repositório nem do upstream: só git e gh sobre artefatos conferidos por
 #             sha256. Recalcula o merge por conta própria e só aceita, depois dele,
 #             commits que mexem apenas em po/pt-BR.po; faz push de sync/upstream com
-#             --force-with-lease e abre ou atualiza UM PR "Sync upstream <sha7>".
+#             --force-with-lease e abre ou atualiza UM PR "Sync upstream <sha7>" (o que
+#             não cabe da tabela por entrada vai em comentários do PR).
 #   sync-quebrado  em falha (ou alarme de atraso) abre ou comenta a issue "sync-quebrado".
 #
 # O preparar e o montar executam código do upstream (o build compila os preprocessors de
@@ -38,6 +40,9 @@
 #     sem ela). O ruleset da main não pode bloquear o push do App em sync/*. O Pages não
 #     é usado aqui (é do ptbr-deploy.yml). Como o PR é aberto pelo App, e não pelo
 #     GITHUB_TOKEN, os workflows de CI rodam nele.
+#   - Settings > General > Pull Requests: "Allow merge commits" ligado, e nenhum ruleset
+#     da main com "Require linear history" (o PR de sync precisa de merge commit; veja
+#     OPERAÇÃO).
 #   - O agendamento e o botão "Run workflow" só valem com este arquivo na main (branch
 #     padrão); no spike/migracao-po ele não roda sozinho.
 #
@@ -51,6 +56,18 @@
 #     rust-lang/book; padrão main) e dry_run (prepara, traduz e monta, mas não faz push,
 #     PR nem issue; o alarme de atraso ainda marca a execução como falha).
 #   - Sem mudança no upstream (ou com o PR de sync já atualizado) termina em poucos minutos.
+#   - MESCLE O PR DE SYNC SEMPRE COM "Create a merge commit", nunca com "Squash and merge"
+#     nem "Rebase and merge". O merge commit é o que põe o upstream no histórico da main:
+#     é por ele que o merge-base avança, o no-op é detectado e o alarme de atraso mede o
+#     atraso real. Com squash ou rebase o merge-base fica parado, o merge seguinte parte de
+#     uma base antiga (e pode conflitar) e o alarme dispara. Se isso acontecer, a execução
+#     seguinte percebe que a main já tem o conteúdo do upstream e abre um PR que só traz o
+#     commit de merge (sem mudar arquivos): mesclado com merge commit, ele conserta o
+#     histórico. Se o upstream andou antes disso e o merge conflitar, registre à mão o
+#     upstream que o squash trouxe (o <sha7> do título do PR squashado), numa branch a
+#     partir da main: git fetch https://github.com/rust-lang/book main, depois
+#     git merge -s ours --no-ff <sha7> (só histórico: git diff HEAD^1 HEAD fica vazio);
+#     mescle essa branch por PR, com merge commit, e rode o sync de novo.
 #   - O PR acumula: cada execução refaz o branch a partir da main com o upstream mais novo.
 #     Um commit manual no branch sync/upstream nunca é sobrescrito: o publicar recusa e
 #     abre a issue. Para refazer um PR, feche-o (ou apague o branch) e rode de novo.
@@ -62,6 +79,10 @@
 #   - Guarda de reestruturação: capítulo com mais de 10% das mensagens fuzzy, novas ou
 #     removidas (e no mínimo 5) fica fora da IA e o PR vai como rascunho.
 #   - O PR também vai como rascunho se o check.py falhar ou se a tradução falhar.
+#   - Tabela por entrada: o corpo do PR tem até ~60 KB (cada célula recortada no trecho em
+#     que o texto antigo e o novo diferem); as linhas que não cabem vão em comentários do PR
+#     (marcados com <!-- ptbr-sync:entradas -->, trocados a cada execução) e a tabela
+#     completa, sem cortes, fica em entradas.md no artifact "montar" (30 dias).
 
 name: ptbr-sync
 
@@ -117,6 +138,7 @@ jobs:
       pull-requests: read   # só para listar os PRs sync/* abertos (alarme de atraso)
     outputs:
       has_changes: ${{ steps.decisao.outputs.has_changes }}
+      so_historico: ${{ steps.decisao.outputs.so_historico }}
       chapters: ${{ steps.guarda.outputs.chapters }}
       draft: ${{ steps.guarda.outputs.draft }}
       alarme_atraso: ${{ steps.decisao.outputs.alarme_atraso }}
@@ -200,6 +222,7 @@ jobs:
           PR_SYNC: ${{ steps.prs.outputs.pr_sync }}
         run: |
           has_changes=true
+          so_historico=false
           alarme=false
           dias=0
           remoto=$(git rev-parse --verify -q "refs/remotes/origin/$RAMO_SYNC" || true)
@@ -211,6 +234,15 @@ jobs:
             && git merge-base --is-ancestor "$MAIN_SHA" "$remoto"; then
             has_changes=false
             motivo="o PR #$PR_SYNC já contém o upstream ${UPSTREAM_SHA:0:7} e a main atual"
+          elif arvore=$(git merge-tree --write-tree --no-messages "$MAIN_SHA" "$UPSTREAM_SHA" 2> /dev/null) \
+            && [[ "$arvore" == "$(git rev-parse "$MAIN_SHA^{tree}")" ]]; then
+            # A main já tem o conteúdo do upstream, mas não o histórico: um PR de sync
+            # foi mesclado com squash ou rebase. Sem atraso real (nada de alarme); o sync
+            # segue e o PR leva só o commit de merge, que, mesclado com merge commit,
+            # devolve o upstream ao histórico e faz o merge-base voltar a avançar.
+            so_historico=true
+            motivo="a main já tem o conteúdo do upstream ${UPSTREAM_SHA:0:7}, mas não o histórico (PR de sync mesclado com squash ou rebase?): o PR só registra o merge"
+            echo "::warning title=Upstream fora do histórico da main::$motivo; mescle os PRs de sync com 'Create a merge commit'"
           else
             motivo="upstream ${UPSTREAM_SHA:0:7} ainda não está na main"
             t_upstream=$(git log -1 --format=%ct "$UPSTREAM_SHA")
@@ -218,12 +250,13 @@ jobs:
             dias=$(( (t_upstream - t_base) / 86400 ))
             if (( dias > ATRASO_MAX_DIAS && PRS_ABERTOS == 0 )); then
               alarme=true
-              echo "::error title=Sync atrasado::o upstream está $dias dias à frente do merge-base e não há PR sync/* aberto"
+              echo "::error title=Sync atrasado::o upstream está $dias dias à frente do merge-base e não há PR sync/* aberto (se o último PR de sync foi mesclado com squash ou rebase, o merge-base não avançou: veja OPERAÇÃO no topo do ptbr-sync.yml)"
             fi
           fi
           echo "$motivo"
           {
             echo "has_changes=$has_changes"
+            echo "so_historico=$so_historico"
             echo "alarme_atraso=$alarme"
             echo "dias_atraso=$dias"
           } >> "$GITHUB_OUTPUT"
@@ -316,10 +349,12 @@ jobs:
           msg="Merge upstream rust-lang/book ${UPSTREAM_SHA:0:7} ($UPSTREAM_REF)"
           if ! git -c user.name="$BOT_NOME" -c user.email="$BOT_EMAIL" \
               merge --no-ff --no-edit -m "$msg" "$UPSTREAM_SHA"; then
-            echo "::error title=Conflito no merge do upstream::alguém editou um caminho do upstream no fork (veja a lista no resumo)"
+            echo "::error title=Conflito no merge do upstream::alguém editou um caminho do upstream no fork, ou um PR de sync anterior foi mesclado com squash ou rebase (veja a lista no resumo)"
             {
               echo "### Conflito no merge do upstream"
-              echo "O fork só muda caminhos próprios (po/, i18n/, AGENTS.md, ...); estes arquivos conflitaram:"
+              echo "O fork só muda caminhos próprios (po/, i18n/, AGENTS.md, ...). Outra causa possível: um PR"
+              echo "de sync mesclado com squash ou rebase (o merge-base não avança e o merge parte de uma base antiga)."
+              echo "Estes arquivos conflitaram:"
               git diff --name-only --diff-filter=U | sed 's/^/    /'
             } >> "$GITHUB_STEP_SUMMARY"
             git diff --name-only --diff-filter=U | sed 's/^/  conflito: /'
@@ -763,6 +798,7 @@ jobs:
           MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
           UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
           DRAFT_PREPARAR: ${{ needs.preparar.outputs.draft }}
+          SO_HISTORICO: ${{ needs.preparar.outputs.so_historico }}
           CHECK_OK: ${{ steps.check.outputs.check_ok }}
           TRADUZIR_RESULT: ${{ needs.traduzir.result }}
         run: |
@@ -775,7 +811,13 @@ jobs:
           T = Path(os.environ["RUNNER_TEMP"])
           P, M, TR = T / "preparar", T / "montar", T / "trad"
           main_sha, up_sha = os.environ["MAIN_SHA"], os.environ["UPSTREAM_SHA"]
-          LIMITE_CORPO = 60000   # bytes; o GitHub aceita até 65536 caracteres
+          up7 = up_sha[:7]
+          execucao = (f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+                      f"/actions/runs/{os.environ['GITHUB_RUN_ID']}")
+          LIMITE_CORPO = 60000   # bytes por corpo ou comentário; o GitHub aceita até 65536 caracteres
+          CELULA_CORPO, CELULA_COMENTARIO = 400, 1500   # caracteres por célula de texto
+          MAX_COMENTARIOS = 10
+          MARCA = "<!-- ptbr-sync:entradas -->"   # o publicar troca os comentários com esta marca
 
           def tam(texto):
               return len(texto.encode("utf-8"))
@@ -791,15 +833,41 @@ jobs:
               # @mencao e #123 viram texto: nada de notificar pessoas nem citar issues.
               return texto.replace("@", "@​").replace("#", "#​")
 
-          def cel(texto, limite=400):
+          def cel(texto, limite=None):
               """Texto não confiável (upstream, IA) -> célula de tabela inerte."""
               if texto is None or texto == "":
                   return "—"
               texto = str(texto)
-              if len(texto) > limite:
+              if limite is not None and len(texto) > limite:
                   texto = texto[:limite] + "…"
               texto = "".join(f"&#{ord(c)};" if c in ESPECIAIS else c for c in neutro(texto))
               return texto.replace("\r", "").replace("\n", "<br>")
+
+          def recorte(antigo, novo, limite):
+              """Corta o par antigo/novo no mesmo trecho, perto da primeira diferença, para a
+              mudança nunca ficar depois do corte. limite=None: sem corte."""
+              a = "" if antigo is None else str(antigo)
+              b = "" if novo is None else str(novo)
+              if limite is None or (len(a) <= limite and len(b) <= limite):
+                  return a, b
+              comum = len(os.path.commonprefix([a, b])) if a and b else 0
+              ini = comum - limite // 4 if comum > limite * 3 // 4 else 0
+              def corta(t):
+                  if not t:
+                      return t
+                  return ("…" if ini else "") + t[ini:ini + limite] + ("…" if ini + limite < len(t) else "")
+              return corta(a), corta(b)
+
+          CABECALHO = ["| cap. | id | EN antigo | EN novo | PT antigo | PT novo | origem | confiança |",
+                       "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+
+          def linha_md(l, limite):
+              cap, ident, en_a, en_n, pt_a, pt_n, origem, conf = l
+              en_a, en_n = recorte(en_a, en_n, limite)
+              pt_a, pt_n = recorte(pt_a, pt_n, limite)
+              ident = f"`{ident}`" if re.fullmatch(r"[0-9a-f]{12}", str(ident)) else cel(ident, 20)
+              return "| " + " | ".join([cel(cap, 20), ident, cel(en_a), cel(en_n), cel(pt_a), cel(pt_n),
+                                        cel(origem, limite), cel(conf, 20)]) + " |"
 
           motivos = []
           if os.environ.get("DRAFT_PREPARAR") == "true":
@@ -829,8 +897,8 @@ jobs:
                   tok_in, tok_out = tok_in + int(m.group(1)), tok_out + int(m.group(2))
           final = po_util.mapa_ids(po_util.carregar("po/pt-BR.po"))
 
-          # Prioridade na tabela (se faltar espaço, cortam-se as últimas): o que mudou
-          # (autoport, IA, rejeitada), depois fuzzy sem tradução, por fim novas sem tradução.
+          # Ordem da tabela (o corpo mostra as primeiras; as outras vão para os comentários):
+          # o que mudou (autoport, IA, rejeitada), depois fuzzy sem tradução, por fim novas.
           linhas = []
           for p in portadas:
               linhas.append((0, len(linhas), (p["capitulo"], p["id"], p["msgid_anterior"], p["msgid"],
@@ -862,6 +930,13 @@ jobs:
                                  origem, t.get("confianca") or "—")))
           linhas = [l for _p, _i, l in sorted(linhas)]
 
+          # Tabela completa, sem cortes: vai no artifact montar (e entra no SHA256SUMS).
+          (M / "entradas.md").write_text("\n".join(
+              [f"# Sync upstream {up7}: tabela completa das entradas\n",
+               f"Execução {execucao}: {len(linhas)} entrada(s), sem cortes. O texto do upstream e o da "
+               "IA são dados não confiáveis (vão escapados).\n", *CABECALHO]
+              + [linha_md(l, None) for l in linhas]) + "\n", encoding="utf-8")
+
           def git(*args):
               return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
 
@@ -869,13 +944,20 @@ jobs:
           commits = git("log", "--no-merges", "-n", "300", "--date=short",
                         "--format=%h %ad %an: %s", f"{main_sha}..{up_sha}")
 
-          up7 = up_sha[:7]
           resumo = check.get("resumo", {})
           partes = [f"## Sync upstream {up7}\n",
                     f"Mescla o `rust-lang/book` (`{up7}`) na main (`{main_sha[:7]}`), atualiza o "
                     "`po/pt-BR.po` (msgmerge --previous), porta sem IA as trocas de versão (autoport), "
                     "acerta os `{#slug}` e aplica o porte por IA do delta (`apply.py --modo sync`). "
-                    "O que ficar fuzzy ou vazio aparece em inglês no livro.\n"]
+                    "O que ficar fuzzy ou vazio aparece em inglês no livro.\n",
+                    "> [!IMPORTANT]\n> Mescle este PR com **Create a merge commit**, nunca com squash nem "
+                    "rebase: o merge commit é o que põe o upstream no histórico da main. Sem ele o "
+                    "merge-base não avança, o próximo sync parte de uma base antiga (e pode conflitar) "
+                    "e o alarme de atraso dispara.\n"]
+          if os.environ.get("SO_HISTORICO") == "true":
+              partes.append("> [!NOTE]\n> A main já tinha o conteúdo deste upstream, mas não o histórico "
+                            "(um PR de sync anterior foi mesclado com squash ou rebase). O commit de merge "
+                            "deste PR não muda nenhum arquivo: só devolve o upstream ao histórico da main.\n")
           if motivos:
               partes.append("> [!WARNING]\n> PR em rascunho: " + "; ".join(motivos) + ".\n")
           partes += ["### Resumo\n", "| item | valor |", "| --- | --- |",
@@ -888,8 +970,9 @@ jobs:
                      f"| check.py | {resumo.get('erros', '?')} erro(s), {resumo.get('avisos', '?')} aviso(s) |",
                      f"| tokens da API | {tok_in} de entrada, {tok_out} de saída |", ""]
           tabela = ["### Entradas\n",
-                    "| cap. | id | EN antigo | EN novo | PT antigo | PT novo | origem | confiança |",
-                    "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+                    f"Células de texto com até {CELULA_CORPO} caracteres, recortadas em volta da primeira "
+                    "diferença entre o antigo e o novo. Tabela completa, sem cortes: `entradas.md` no "
+                    f"artifact `montar` da execução {execucao}.\n", *CABECALHO]
           erros = [a for a in check.get("achados", []) if a.get("severidade") == "erro"]
           fim = ["", "### check.py\n",
                  f"<details><summary>{len(erros)} erro(s), {resumo.get('avisos', '?')} aviso(s)</summary>\n"]
@@ -901,23 +984,55 @@ jobs:
           else:
               fim += [f"<details><summary>{n_commits} commit(s)" + (", mostrando 300" if n_commits > 300 else "")
                       + "</summary>\n", "<pre>", lista, "</pre>", "</details>\n"]
-          fim.append(f"Gerado pelo ptbr-sync.yml: {os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
-                     f"/actions/runs/{os.environ['GITHUB_RUN_ID']}")
+          fim.append(f"Gerado pelo ptbr-sync.yml: {execucao}")
 
           corpo = "\n".join(partes + tabela)
           resto = "\n".join(fim)
-          omitidas = 0
-          for i, l in enumerate(linhas):
-              linha = "| " + " | ".join([cel(l[0], 20), f"`{l[1]}`"] + [cel(x) for x in l[2:]]) + " |"
-              if tam(corpo) + tam(linha) + tam(resto) + 200 > LIMITE_CORPO:
-                  omitidas = len(linhas) - i
+          i = 0
+          while i < len(linhas):
+              linha = linha_md(linhas[i], CELULA_CORPO)
+              if tam(corpo) + tam(linha) + tam(resto) + 500 > LIMITE_CORPO:
                   break
               corpo += "\n" + linha
+              i += 1
+
+          # O que não coube no corpo continua em comentários do PR (o publicar apaga os da
+          # execução anterior e posta estes), cada um abaixo do limite do GitHub.
+          C = M / "comentarios"
+          C.mkdir(parents=True, exist_ok=True)
+          comentarios, j = [], i
+          while j < len(linhas) and len(comentarios) < MAX_COMENTARIOS:
+              texto = f"{MARCA}\n### Entradas (continuação {len(comentarios) + 1})\n\n" + "\n".join(CABECALHO)
+              k = j
+              while k < len(linhas):
+                  linha = linha_md(linhas[k], CELULA_COMENTARIO)
+                  if tam(texto) + tam(linha) + 500 > LIMITE_CORPO and k == j:
+                      linha = linha_md(linhas[k], CELULA_CORPO)   # linha enorme sozinha: corte do corpo
+                  if tam(texto) + tam(linha) + 500 > LIMITE_CORPO:
+                      break
+                  texto += "\n" + linha
+                  k += 1
+              if k == j:
+                  break
+              comentarios.append([j, k, texto])
+              j = k
+          sobram = len(linhas) - j
+          for n, (de, ate, texto) in enumerate(comentarios, 1):
+              texto += f"\n\nLinhas {de + 1} a {ate} de {len(linhas)} da tabela do PR."
+              if n == len(comentarios) and sobram:
+                  texto += (f"\n\n… e mais {sobram} entrada(s) além dos {MAX_COMENTARIOS} comentários: tabela "
+                            f"completa em `entradas.md` no artifact `montar` da execução {execucao}.")
+              (C / f"parte-{n:02d}.md").write_text(texto + "\n", encoding="utf-8")
+
+          omitidas = len(linhas) - i
           if omitidas:
-              corpo += f"\n\n… e mais {omitidas} entrada(s): veja o artifact `montar` desta execução."
+              corpo += (f"\n\n… e mais {omitidas} entrada(s) que não couberam aqui: "
+                        + (f"continuam em {len(comentarios)} comentário(s) deste PR; " if comentarios else "")
+                        + f"tabela completa, sem cortes, em `entradas.md` no artifact `montar` da execução {execucao}.")
           corpo += "\n" + resto + "\n"
           (M / "pr-body.md").write_text(corpo, encoding="utf-8")
-          print(f"corpo do PR: {tam(corpo)} bytes, {len(linhas) - omitidas} linha(s) na tabela")
+          print(f"corpo do PR: {tam(corpo)} bytes, {i} de {len(linhas)} linha(s) na tabela; "
+                f"{len(comentarios)} comentário(s) com {j - i} linha(s); {sobram} só no entradas.md")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
               out.write(f"draft={'true' if motivos else 'false'}\n")
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
@@ -945,7 +1060,7 @@ jobs:
           name: montar
           path: ${{ runner.temp }}/montar
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
 
   publicar:
     name: Publica o PR (único job com escrita; não roda código do repositório)
@@ -1078,6 +1193,7 @@ jobs:
           git push --force-with-lease="refs/heads/$RAMO_SYNC:$REMOTO" origin "$TIP_SHA:refs/heads/$RAMO_SYNC"
 
       - name: Abre ou atualiza o PR
+        id: pr
         if: steps.base.outputs.mudou == 'false'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
@@ -1108,9 +1224,55 @@ jobs:
               args+=(--draft)
             fi
             url=$(gh pr create "${args[@]}")
+            num="${url##*/}"
           fi
           echo "PR: $url"
           echo "### ptbr-sync: PR $url" >> "$GITHUB_STEP_SUMMARY"
+          echo "num=$num" >> "$GITHUB_OUTPUT"
+
+      # O resto da tabela por entrada (o que não coube no corpo) vai em comentários
+      # marcados; os da execução anterior, do próprio App, são apagados antes. Falha aqui
+      # só avisa: o PR já está publicado e a tabela completa está no artifact montar.
+      - name: Continua a tabela nos comentários do PR
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
+          NUM: ${{ steps.pr.outputs.num }}
+        run: |
+          marca='<!-- ptbr-sync:entradas -->'
+          aviso() {
+            echo "::warning title=Comentários da tabela::$1 (a tabela completa está em entradas.md no artifact montar)"
+          }
+          if [[ ! "$NUM" =~ ^[0-9]+$ ]]; then
+            aviso "número do PR inválido: '${NUM:0:20}'"
+            exit 0
+          fi
+          if [[ -z "$APP_SLUG" ]]; then
+            aviso "o token não informou o app-slug: os comentários anteriores ficam"
+          elif ! antigos=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$NUM/comments" \
+              | jq -r --arg login "${APP_SLUG}[bot]" --arg marca "$marca" \
+                '.[] | select(.user.login == $login and (.body | startswith($marca))) | .id'); then
+            aviso "não consegui listar os comentários do PR #$NUM"
+            antigos=""
+          fi
+          while read -r id; do
+            [[ "$id" =~ ^[0-9]+$ ]] || continue
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/comments/$id" > /dev/null \
+              || aviso "não consegui apagar o comentário $id"
+          done <<< "${antigos:-}"
+          shopt -s nullglob
+          partes=("$RUNNER_TEMP"/montar/comentarios/parte-*.md)
+          for parte in "${partes[@]}"; do
+            if (( $(wc -c < "$parte") > 65000 )) || [[ "$(head -n 1 "$parte")" != "$marca" ]]; then
+              aviso "$(basename "$parte") fora do formato esperado; não publicado"
+              continue
+            fi
+            gh pr comment "$NUM" --repo "$GITHUB_REPOSITORY" --body-file "$parte" > /dev/null \
+              || aviso "não consegui publicar $(basename "$parte")"
+            sleep 2
+          done
+          echo "comentários: ${#partes[@]} parte(s) publicada(s) no PR #$NUM"
 
   # Roda em falha de qualquer job ou no alarme de atraso. A issue só é aberta fora do
   # dry_run e com o App configurado; o alarme falha a execução mesmo no dry_run.
