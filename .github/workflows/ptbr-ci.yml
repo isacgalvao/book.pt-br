@@ -1,0 +1,315 @@
+# ptbr-ci.yml: portão de qualidade da tradução pt-BR (i18n/tools/check.py).
+#
+# O que faz: instala o Rust (a toolchain do arquivo rust-toolchain), o mdbook
+# 0.5.1, o gettext, o polib, o PyYAML e o mdbook-i18n-helpers (revisão fixada,
+# compilada uma vez e guardada no cache), busca o upstream (rust-lang/book) em
+# refs/remotes/upstream/main e roda `python3 i18n/tools/check.py --json
+# check.json`. Sem --en/--pt, o check.py compila o livro em inglês e em pt-BR
+# sozinho (i18n/build.sh) e confere fronteira, formato do PO, títulos, mensagens,
+# HTML e glossário. O check.json sobe como artefato (mesmo se o check falhar) e
+# um resumo (erros, avisos e cobertura por capítulo) vai para a página da execução.
+#
+# Pré-requisitos: Actions habilitado no repositório e acesso de rede a github.com,
+# crates.io e apt. Não usa segredos, não escreve no repositório e não precisa do
+# Pages: só `contents: read`. Para rodar à mão: aba Actions > ptbr-ci > Run workflow.
+#
+# O gatilho de push no branch spike/migracao-po vale só enquanto a migração para
+# PO estiver nele; depois que for para a main, basta deixar `main`.
+#
+# Regras deste arquivo: ações fixadas por versão maior; nenhuma expressão de
+# contexto dentro de `run:` (tudo passa por `env:`); timeout em todo job.
+# O .github/workflows/main.yml é do upstream e nunca se edita.
+
+name: ptbr-ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - spike/migracao-po
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+# Uma execução por branch ou PR; um push novo cancela a execução em andamento do
+# PR (no push para um branch, a anterior termina para o histórico ficar completo).
+concurrency:
+  group: ptbr-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # Revisão do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai <Listing caption>).
+  # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh.
+  I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+
+jobs:
+  check:
+    name: Verificar a tradução (check.py)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+        with:
+          # O check `fronteira` usa `git merge-base HEAD upstream/main`: precisa do histórico inteiro.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Buscar o upstream (rust-lang/book)
+        run: git fetch --no-tags https://github.com/rust-lang/book main:refs/remotes/upstream/main
+
+      - name: Mostrar as revisões
+        run: |
+          # Uma revisão por chamada: `git rev-parse --short` aceita só uma (com duas sai com 128).
+          rev_head="$(git rev-parse --short HEAD)"
+          rev_upstream="$(git rev-parse --short refs/remotes/upstream/main)"
+          rev_base="$(git merge-base HEAD refs/remotes/upstream/main)"
+          rev_base="$(git rev-parse --short "$rev_base")"
+          echo "HEAD:          $rev_head"
+          echo "upstream/main: $rev_upstream"
+          echo "base comum:    $rev_base"
+
+      - name: Definir caminhos
+        run: echo "HELPERS_ROOT=$HOME/.cache/ptbr-i18n-helpers" >> "$GITHUB_ENV"
+
+      - name: Instalar o Python e as bibliotecas (polib, PyYAML)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar polib e PyYAML
+        run: python3 -m pip install --disable-pip-version-check polib==1.1.1 PyYAML==6.0.1
+
+      - name: Instalar o gettext
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends gettext
+
+      # Como o main.yml do upstream: rustup, perfil minimal, toolchain do rust-toolchain.
+      # (O componente rust-docs, que o upstream pede para o `mdbook test`, não é preciso aqui.)
+      - name: Instalar o Rust (toolchain do arquivo rust-toolchain)
+        run: |
+          toolchain="$(tr -d '[:space:]' < rust-toolchain)"
+          if [ -z "$toolchain" ]; then
+            echo "::error::o arquivo rust-toolchain está vazio"
+            exit 1
+          fi
+          rustup self update
+          rustup set profile minimal
+          rustup toolchain install "$toolchain"
+          rustup default "$toolchain"
+
+      # Como o main.yml do upstream: tarball do release. Vai para fora do workspace
+      # (um bin/ no repositório viraria "arquivo não rastreado" no check fronteira).
+      - name: Instalar o mdbook
+        env:
+          MDBOOK_VERSION: "0.5.1"
+        run: |
+          bin_dir="$RUNNER_TEMP/bin"
+          mkdir -p "$bin_dir"
+          curl --fail --silent --show-error --location --retry 3 \
+            "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz --directory="$bin_dir"
+          echo "$bin_dir" >> "$GITHUB_PATH"
+
+      # restore + save separados (em vez de um actions/cache só): o cache é gravado logo
+      # depois da instalação, mesmo que o check falhe mais adiante (o post-step do
+      # actions/cache só grava quando o job inteiro termina com sucesso).
+      - name: Restaurar o cache do mdbook-i18n-helpers
+        id: helpers
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.HELPERS_ROOT }}
+          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Instalar o mdbook-i18n-helpers (revisão fixada)
+        if: steps.helpers.outputs.cache-hit != 'true'
+        run: |
+          cargo install --locked --root "$HELPERS_ROOT" \
+            --git https://github.com/google/mdbook-i18n-helpers \
+            --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
+
+      - name: Guardar o mdbook-i18n-helpers no cache
+        if: steps.helpers.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.HELPERS_ROOT }}
+          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Pôr o mdbook-i18n-helpers no PATH
+        run: |
+          for bin in mdbook-gettext mdbook-xgettext; do
+            if [ ! -x "$HELPERS_ROOT/bin/$bin" ]; then
+              echo "::error::$bin não está em $HELPERS_ROOT/bin"
+              exit 1
+            fi
+          done
+          echo "$HELPERS_ROOT/bin" >> "$GITHUB_PATH"
+
+      - name: Mostrar as versões
+        run: |
+          rustup --version
+          rustc -Vv
+          cargo --version
+          mdbook --version
+          msgfmt --version | sed -n 1p
+          python3 --version
+          python3 -c 'import polib, yaml; print("polib", polib.__version__, "PyYAML", yaml.__version__)'
+
+      - name: Rodar o check.py
+        id: check
+        run: python3 i18n/tools/check.py --json check.json
+
+      # Daqui para baixo roda mesmo se o check falhou: o JSON é o que explica a falha.
+      - name: Resumo da verificação
+        if: always()
+        env:
+          CHECK_JSON: check.json
+        run: |
+          python3 - <<'PY'
+          import html
+          import json
+          import os
+          import re
+          import sys
+          import traceback
+
+          CAMINHO = os.environ.get("CHECK_JSON", "check.json")
+          DESTINO = os.environ.get("GITHUB_STEP_SUMMARY")
+          MAX_ACHADOS = 40  # por severidade; o resto fica no artefato check-json
+          MAX_CHARS = 400   # por mensagem
+
+          # Depois do html.escape, estes caracteres viram entidades numéricas para o
+          # Markdown não os interpretar (negrito, código, link, tabela...).
+          ENTIDADES = str.maketrans({c: "&#%d;" % ord(c) for c in "\\`*_[]|~"})
+          CONTROLE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
+
+
+          def esc(valor, limite=MAX_CHARS):
+              """Texto seguro para a página: HTML escapado ('<', '>', '&', aspas), sem
+              quebras de linha, truncado, e sem caracteres especiais do Markdown."""
+              texto = "" if valor is None else str(valor)
+              texto = CONTROLE.sub("", " ".join(texto.split()))
+              if len(texto) > limite:
+                  texto = texto[: limite - 1] + "…"
+              return html.escape(texto).translate(ENTIDADES)
+
+
+          def inteiro(valor):
+              try:
+                  return int(valor)
+              except (TypeError, ValueError):
+                  return 0
+
+
+          def porcento(valor):
+              try:
+                  return ("%.1f" % float(valor)).replace(".", ",")
+              except (TypeError, ValueError):
+                  return esc(valor)
+
+
+          def montar():
+              linhas = ["## Verificação da tradução pt-BR (check.py)", ""]
+              try:
+                  with open(CAMINHO, encoding="utf-8") as arq:
+                      dados = json.load(arq)
+                  if not isinstance(dados, dict):
+                      raise ValueError("o JSON não é um objeto")
+              except FileNotFoundError:
+                  linhas.append("O arquivo de resultado não foi gerado: o `check.py` terminou antes de gravá-lo "
+                                "(veja o log do passo anterior).")
+                  return linhas
+              except (OSError, ValueError) as exc:
+                  linhas.append("Não consegui ler o arquivo de resultado: " + esc(exc))
+                  return linhas
+
+              achados = [a for a in (dados.get("achados") or []) if isinstance(a, dict)]
+              erros = [a for a in achados if a.get("severidade") == "erro"]
+              avisos = [a for a in achados if a.get("severidade") == "aviso"]
+              resumo = dados.get("resumo") if isinstance(dados.get("resumo"), dict) else {}
+              n_erros = inteiro(resumo.get("erros", len(erros)))
+              n_avisos = inteiro(resumo.get("avisos", len(avisos)))
+
+              linhas.append("**Resultado: %s.** %d erro(s) e %d aviso(s)."
+                            % ("FALHOU" if n_erros else "passou", n_erros, n_avisos))
+              linhas.append("")
+
+              por_check = {}
+              for a in achados:
+                  conta = por_check.setdefault(str(a.get("check") or "?"), {"erro": 0, "aviso": 0})
+                  if a.get("severidade") in conta:
+                      conta[a["severidade"]] += 1
+              if por_check:
+                  linhas += ["| Check | Erros | Avisos |", "|---|--:|--:|"]
+                  for nome in sorted(por_check):
+                      linhas.append("| %s | %d | %d |" % (esc(nome), por_check[nome]["erro"], por_check[nome]["aviso"]))
+                  linhas.append("")
+
+              for titulo, lista in (("Erros", erros), ("Avisos", avisos)):
+                  if not lista:
+                      continue
+                  linhas.append("### %s (%d)" % (titulo, len(lista)))
+                  linhas.append("")
+                  if len(lista) > MAX_ACHADOS:
+                      linhas.append("Mostrando os primeiros %d; a lista completa está no artefato check-json." % MAX_ACHADOS)
+                      linhas.append("")
+                  for a in lista[:MAX_ACHADOS]:
+                      onde = ""
+                      if a.get("arquivo"):
+                          onde = " (" + esc(a.get("arquivo"))
+                          if a.get("id"):
+                              onde += ", id " + esc(a.get("id"))
+                          onde += ")"
+                      linhas.append("- **%s**%s: %s" % (esc(a.get("check") or "?"), onde, esc(a.get("mensagem"))))
+                  linhas.append("")
+
+              cobertura = dados.get("cobertura")
+              if isinstance(cobertura, dict) and cobertura:
+                  linhas += ["### Cobertura por capítulo", "",
+                             "| Capítulo | Total | Traduzidas | Fuzzy | Faltando | % |",
+                             "|---|--:|--:|--:|--:|--:|"]
+                  soma = dict.fromkeys(("total", "traduzidas", "fuzzy", "faltando"), 0)
+                  for cap, c in cobertura.items():
+                      c = c if isinstance(c, dict) else {}
+                      for chave in soma:
+                          soma[chave] += inteiro(c.get(chave))
+                      linhas.append("| %s | %d | %d | %d | %d | %s |" % (
+                          esc(cap), inteiro(c.get("total")), inteiro(c.get("traduzidas")),
+                          inteiro(c.get("fuzzy")), inteiro(c.get("faltando")), porcento(c.get("pct"))))
+                  pct_total = 100.0 * soma["traduzidas"] / soma["total"] if soma["total"] else 0.0
+                  linhas.append("| **total** | **%d** | **%d** | **%d** | **%d** | **%s** |" % (
+                      soma["total"], soma["traduzidas"], soma["fuzzy"], soma["faltando"], porcento(pct_total)))
+                  linhas.append("")
+              return linhas
+
+
+          try:
+              texto = "\n".join(montar()) + "\n"
+          except Exception:
+              traceback.print_exc()
+              print("::warning::Não foi possível montar o resumo da verificação (veja o log deste passo).")
+              texto = ("## Verificação da tradução pt-BR (check.py)\n\n"
+                       "Não foi possível montar o resumo; veja o log do passo e o artefato check-json.\n")
+
+          if DESTINO:
+              with open(DESTINO, "a", encoding="utf-8", errors="replace") as saida:
+                  saida.write(texto)
+          else:
+              sys.stdout.write(texto)
+          PY
+
+      - name: Guardar o check.json
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-json
+          path: check.json
+          if-no-files-found: warn
+          retention-days: 30

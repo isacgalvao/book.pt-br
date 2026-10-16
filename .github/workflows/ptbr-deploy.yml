@@ -1,0 +1,170 @@
+# ptbr-deploy.yml: publica o livro em pt-BR no GitHub Pages.
+#
+# O que faz: a cada push na main (ou à mão), compila o livro com
+# `i18n/build.sh pt` num diretório novo e o publica com actions/deploy-pages.
+# Dois jobs: `construir` (só `contents: read`) gera e envia o artefato; `publicar`
+# (o único que usa `pages: write` e `id-token: write`) faz o deploy.
+#
+# Pré-requisitos (configuração única, do mantenedor do repositório):
+#   1. Settings > Pages > Build and deployment > Source = "GitHub Actions". Sem
+#      isso o deploy-pages falha com "Ensure GitHub Pages has been enabled".
+#   2. O environment `github-pages` é criado sozinho no primeiro deploy. Se ele
+#      tiver regra de proteção por branch, a `main` precisa estar permitida.
+#   3. O endereço sai como https://<usuário>.github.io/<repositório>/; o SITE_URL
+#      do build usa o nome do repositório (sem isso o build.sh usa /book.pt-br/).
+#      Com domínio próprio, troque o SITE_URL por /.
+#
+# Regras deste arquivo: ações fixadas por versão maior; nenhuma expressão de
+# contexto dentro de `run:` (tudo passa por `env:`); timeout em todo job.
+# O .github/workflows/main.yml é do upstream e nunca se edita.
+
+name: ptbr-deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# O mínimo que o deploy-pages exige. O job `construir`, que roda o código do
+# repositório, reduz isso a `contents: read` (permissions do próprio job).
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+defaults:
+  run:
+    shell: bash
+
+# Um deploy por vez; o que já está em andamento termina (nunca é cancelado no meio).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # Revisão do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai <Listing caption>).
+  # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh.
+  I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+
+jobs:
+  construir:
+    name: Compilar o livro (pt-BR)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Definir caminhos
+        run: echo "HELPERS_ROOT=$HOME/.cache/ptbr-i18n-helpers" >> "$GITHUB_ENV"
+
+      - name: Instalar o gettext
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends gettext
+
+      # Como o main.yml do upstream: rustup, perfil minimal, toolchain do rust-toolchain.
+      # (O componente rust-docs, que o upstream pede para o `mdbook test`, não é preciso aqui.)
+      - name: Instalar o Rust (toolchain do arquivo rust-toolchain)
+        run: |
+          toolchain="$(tr -d '[:space:]' < rust-toolchain)"
+          if [ -z "$toolchain" ]; then
+            echo "::error::o arquivo rust-toolchain está vazio"
+            exit 1
+          fi
+          rustup self update
+          rustup set profile minimal
+          rustup toolchain install "$toolchain"
+          rustup default "$toolchain"
+
+      # Como o main.yml do upstream: tarball do release, fora do workspace.
+      - name: Instalar o mdbook
+        env:
+          MDBOOK_VERSION: "0.5.1"
+        run: |
+          bin_dir="$RUNNER_TEMP/bin"
+          mkdir -p "$bin_dir"
+          curl --fail --silent --show-error --location --retry 3 \
+            "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz --directory="$bin_dir"
+          echo "$bin_dir" >> "$GITHUB_PATH"
+
+      # restore + save separados: o cache é gravado logo depois da instalação, sem
+      # depender de o resto do job terminar com sucesso.
+      - name: Restaurar o cache do mdbook-i18n-helpers
+        id: helpers
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.HELPERS_ROOT }}
+          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Instalar o mdbook-i18n-helpers (revisão fixada)
+        if: steps.helpers.outputs.cache-hit != 'true'
+        run: |
+          cargo install --locked --root "$HELPERS_ROOT" \
+            --git https://github.com/google/mdbook-i18n-helpers \
+            --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
+
+      - name: Guardar o mdbook-i18n-helpers no cache
+        if: steps.helpers.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.HELPERS_ROOT }}
+          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
+
+      - name: Pôr o mdbook-i18n-helpers no PATH
+        run: |
+          for bin in mdbook-gettext mdbook-xgettext; do
+            if [ ! -x "$HELPERS_ROOT/bin/$bin" ]; then
+              echo "::error::$bin não está em $HELPERS_ROOT/bin"
+              exit 1
+            fi
+          done
+          echo "$HELPERS_ROOT/bin" >> "$GITHUB_PATH"
+
+      - name: Mostrar as versões
+        run: |
+          rustup --version
+          rustc -Vv
+          cargo --version
+          mdbook --version
+          msgfmt --version | sed -n 1p
+          python3 --version
+
+      # OUT fica em $RUNNER_TEMP (vazio no início do job), fora do repositório: o
+      # build.sh recusa um OUT com arquivos rastreados e nunca deve compilar dentro
+      # do repositório. O mdbook APAGA o conteúdo de OUT; nunca aponte para outro lugar.
+      - name: Compilar o livro em pt-BR
+        env:
+          SITE_URL: /${{ github.event.repository.name }}/
+        run: |
+          out="$RUNNER_TEMP/book"
+          i18n/build.sh pt "$out"
+          if [ ! -s "$out/index.html" ]; then
+            echo "::error::o build terminou sem gerar index.html em $out"
+            exit 1
+          fi
+
+      - name: Enviar o artefato do Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/book
+
+  publicar:
+    name: Publicar no GitHub Pages
+    needs: construir
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # Herda as permissions do topo: contents: read, pages: write, id-token: write.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
