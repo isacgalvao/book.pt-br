@@ -273,19 +273,19 @@ msgstr "Estendendo o Cargo com comandos personalizados {#extending-cargo-with-cu
 
 #: src/SUMMARY.md src/ch15-00-smart-pointers.md
 msgid "Smart Pointers"
-msgstr ""
+msgstr "Ponteiros inteligentes {#smart-pointers}"
 
 #: src/SUMMARY.md src/ch15-01-box.md
 msgid "Using `Box<T>` to Point to Data on the Heap"
-msgstr ""
+msgstr "Usando `Box<T>` para apontar para dados no heap {#using-boxt-to-point-to-data-on-the-heap}"
 
 #: src/SUMMARY.md src/ch15-02-deref.md
 msgid "Treating Smart Pointers Like Regular References"
-msgstr ""
+msgstr "Tratando ponteiros inteligentes como referências comuns {#treating-smart-pointers-like-regular-references}"
 
 #: src/SUMMARY.md src/ch15-03-drop.md
 msgid "Running Code on Cleanup with the `Drop` Trait"
-msgstr ""
+msgstr "Executando código durante a limpeza com o trait `Drop` {#running-code-on-cleanup-with-the-drop-trait}"
 
 #: src/SUMMARY.md
 msgid "`Rc<T>`, the Reference Counted Smart Pointer"
@@ -293,11 +293,11 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch15-05-interior-mutability.md
 msgid "`RefCell<T>` and the Interior Mutability Pattern"
-msgstr ""
+msgstr "`RefCell<T>` e o padrão de mutabilidade interior {#refcellt-and-the-interior-mutability-pattern}"
 
 #: src/SUMMARY.md src/ch15-06-reference-cycles.md
 msgid "Reference Cycles Can Leak Memory"
-msgstr ""
+msgstr "Ciclos de referências podem vazar memória {#reference-cycles-can-leak-memory}"
 
 #: src/SUMMARY.md src/ch16-00-concurrency.md
 msgid "Fearless Concurrency"
@@ -14912,67 +14912,67 @@ msgstr ""
 
 #: src/ch15-00-smart-pointers.md
 msgid "A pointer is a general concept for a variable that contains an address in memory. This address refers to, or “points at,” some other data. The most common kind of pointer in Rust is a reference, which you learned about in Chapter 4. References are indicated by the `&` symbol and borrow the value they point to. They don’t have any special capabilities other than referring to data, and they have no overhead."
-msgstr ""
+msgstr "Um ponteiro é um conceito geral para uma variável que contém um endereço na memória. Esse endereço se refere a algum outro dado, ou “aponta para” ele. O tipo de ponteiro mais comum no Rust é a referência, que você aprendeu no Capítulo 4. As referências são indicadas pelo símbolo `&` e pegam emprestado o valor para o qual apontam. Elas não têm nenhuma capacidade especial além de se referir a dados, e não têm custo adicional."
 
 #: src/ch15-00-smart-pointers.md
 msgid "_Smart pointers_, on the other hand, are data structures that act like a pointer but also have additional metadata and capabilities. The concept of smart pointers isn’t unique to Rust: Smart pointers originated in C++ and exist in other languages as well. Rust has a variety of smart pointers defined in the standard library that provide functionality beyond that provided by references. To explore the general concept, we’ll look at a couple of different examples of smart pointers, including a _reference counting_ smart pointer type. This pointer enables you to allow data to have multiple owners by keeping track of the number of owners and, when no owners remain, cleaning up the data."
-msgstr ""
+msgstr "_Ponteiros inteligentes_, por outro lado, são estruturas de dados que agem como um ponteiro, mas também têm metadados e capacidades adicionais. O conceito de ponteiros inteligentes não é exclusivo do Rust: ponteiros inteligentes surgiram em C++ e também existem em outras linguagens. O Rust tem uma variedade de ponteiros inteligentes definidos na biblioteca padrão que oferecem funcionalidades além das fornecidas pelas referências. Para explorar o conceito geral, vamos ver alguns exemplos diferentes de ponteiros inteligentes, incluindo um tipo de ponteiro inteligente de _contagem de referências_. Esse ponteiro permite que os dados tenham vários donos, mantendo o controle do número de donos e, quando não restam mais donos, liberando os dados."
 
 #: src/ch15-00-smart-pointers.md
 msgid "In Rust, with its concept of ownership and borrowing, there is an additional difference between references and smart pointers: While references only borrow data, in many cases smart pointers _own_ the data they point to."
-msgstr ""
+msgstr "No Rust, com seu conceito de ownership e empréstimo, há uma diferença adicional entre referências e ponteiros inteligentes: enquanto as referências apenas pegam dados emprestados, em muitos casos os ponteiros inteligentes _são donos_ dos dados para os quais apontam."
 
 #: src/ch15-00-smart-pointers.md
 msgid "Smart pointers are usually implemented using structs. Unlike an ordinary struct, smart pointers implement the `Deref` and `Drop` traits. The `Deref` trait allows an instance of the smart pointer struct to behave like a reference so that you can write your code to work with either references or smart pointers. The `Drop` trait allows you to customize the code that’s run when an instance of the smart pointer goes out of scope. In this chapter, we’ll discuss both of these traits and demonstrate why they’re important to smart pointers."
-msgstr ""
+msgstr "Ponteiros inteligentes normalmente são implementados usando structs. Diferentemente de um struct comum, os ponteiros inteligentes implementam os traits `Deref` e `Drop`. O trait `Deref` permite que uma instância do struct de ponteiro inteligente se comporte como uma referência, para que você possa escrever seu código de modo que funcione tanto com referências quanto com ponteiros inteligentes. O trait `Drop` permite que você personalize o código executado quando uma instância do ponteiro inteligente sai do escopo. Neste capítulo, vamos discutir esses dois traits e demonstrar por que eles são importantes para os ponteiros inteligentes."
 
 #: src/ch15-00-smart-pointers.md
 msgid "Given that the smart pointer pattern is a general design pattern used frequently in Rust, this chapter won’t cover every existing smart pointer. Many libraries have their own smart pointers, and you can even write your own. We’ll cover the most common smart pointers in the standard library:"
-msgstr ""
+msgstr "Como o padrão de ponteiro inteligente é um padrão de projeto geral usado com frequência no Rust, este capítulo não vai abordar todos os ponteiros inteligentes existentes. Muitas bibliotecas têm seus próprios ponteiros inteligentes, e você pode até escrever os seus. Vamos abordar os ponteiros inteligentes mais comuns da biblioteca padrão:"
 
 #: src/ch15-00-smart-pointers.md
 msgid "`Box<T>`, for allocating values on the heap"
-msgstr ""
+msgstr "`Box<T>`, para alocar valores no heap"
 
 #: src/ch15-00-smart-pointers.md
 msgid "`Rc<T>`, a reference counting type that enables multiple ownership"
-msgstr ""
+msgstr "`Rc<T>`, um tipo de contagem de referências que permite ownership múltiplo"
 
 #: src/ch15-00-smart-pointers.md
 msgid "`Ref<T>` and `RefMut<T>`, accessed through `RefCell<T>`, a type that enforces the borrowing rules at runtime instead of compile time"
-msgstr ""
+msgstr "`Ref<T>` e `RefMut<T>`, acessados por meio de `RefCell<T>`, um tipo que impõe as regras de empréstimo em tempo de execução em vez de em tempo de compilação"
 
 #: src/ch15-00-smart-pointers.md
 msgid "In addition, we’ll cover the _interior mutability_ pattern where an immutable type exposes an API for mutating an interior value. We’ll also discuss reference cycles: how they can leak memory and how to prevent them."
-msgstr ""
+msgstr "Além disso, vamos abordar o padrão de _mutabilidade interior_, em que um tipo imutável expõe uma API para alterar um valor interior. Também vamos discutir os ciclos de referências: como eles podem vazar memória e como evitá-los."
 
 #: src/ch15-00-smart-pointers.md
 msgid "Let’s dive in!"
-msgstr ""
+msgstr "Vamos lá!"
 
 #: src/ch15-01-box.md
 msgid "The most straightforward smart pointer is a box, whose type is written `Box<T>`. _Boxes_ allow you to store data on the heap rather than the stack. What remains on the stack is the pointer to the heap data. Refer to Chapter 4 to review the difference between the stack and the heap."
-msgstr ""
+msgstr "O ponteiro inteligente mais simples é o box, cujo tipo é escrito `Box<T>`. Os _boxes_ permitem que você armazene dados no heap em vez de na pilha. O que permanece na pilha é o ponteiro para os dados no heap. Consulte o Capítulo 4 para revisar a diferença entre a pilha e o heap."
 
 #: src/ch15-01-box.md
 msgid "Boxes don’t have performance overhead, other than storing their data on the heap instead of on the stack. But they don’t have many extra capabilities either. You’ll use them most often in these situations:"
-msgstr ""
+msgstr "Os boxes não têm custo adicional de desempenho, além de armazenarem seus dados no heap em vez de na pilha. Mas também não têm muitas capacidades extras. Você vai usá-los com mais frequência nestas situações:"
 
 #: src/ch15-01-box.md
 msgid "When you have a type whose size can’t be known at compile time, and you want to use a value of that type in a context that requires an exact size"
-msgstr ""
+msgstr "Quando você tem um tipo cujo tamanho não pode ser conhecido em tempo de compilação e quer usar um valor desse tipo em um contexto que exige um tamanho exato"
 
 #: src/ch15-01-box.md
 msgid "When you have a large amount of data, and you want to transfer ownership but ensure that the data won’t be copied when you do so"
-msgstr ""
+msgstr "Quando você tem uma grande quantidade de dados e quer transferir o ownership, mas garantir que os dados não serão copiados nesse processo"
 
 #: src/ch15-01-box.md
 msgid "When you want to own a value, and you care only that it’s a type that implements a particular trait rather than being of a specific type"
-msgstr ""
+msgstr "Quando você quer ser o dono de um valor e se importa apenas com o fato de ele ser de um tipo que implementa um determinado trait, em vez de ser de um tipo específico"
 
 #: src/ch15-01-box.md
 msgid "We’ll demonstrate the first situation in [“Enabling Recursive Types with Boxes”](#enabling-recursive-types-with-boxes)<!-- ignore -->. In the second case, transferring ownership of a large amount of data can take a long time because the data is copied around on the stack. To improve performance in this situation, we can store the large amount of data on the heap in a box. Then, only the small amount of pointer data is copied around on the stack, while the data it references stays in one place on the heap. The third case is known as a _trait object_, and [“Using Trait Objects to Abstract over Shared Behavior”](ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior)<!-- ignore --> in Chapter 18 is devoted to that topic. So, what you learn here you’ll apply again in that section!"
-msgstr ""
+msgstr "Vamos demonstrar a primeira situação em [“Habilitando tipos recursivos com boxes”](#enabling-recursive-types-with-boxes)<!-- ignore -->. No segundo caso, transferir o ownership de uma grande quantidade de dados pode levar muito tempo, porque os dados são copiados de um lado para outro na pilha. Para melhorar o desempenho nessa situação, podemos armazenar a grande quantidade de dados no heap em um box. Então, apenas a pequena quantidade de dados do ponteiro é copiada de um lado para outro na pilha, enquanto os dados para os quais ele aponta permanecem em um único lugar no heap. O terceiro caso é conhecido como _objeto de trait_, e a seção [“Usando objetos de trait para abstrair comportamento compartilhado”](ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior)<!-- ignore --> do Capítulo 18 é dedicada a esse assunto. Então, o que você aprende aqui, você vai aplicar de novo nessa seção!"
 
 #: src/ch15-01-box.md
 msgid "<a id=\"using-boxt-to-store-data-on-the-heap\"></a>"
@@ -14980,19 +14980,19 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "Storing Data on the Heap"
-msgstr ""
+msgstr "Armazenando dados no heap {#storing-data-on-the-heap}"
 
 #: src/ch15-01-box.md
 msgid "Before we discuss the heap storage use case for `Box<T>`, we’ll cover the syntax and how to interact with values stored within a `Box<T>`."
-msgstr ""
+msgstr "Antes de discutirmos o caso de uso do armazenamento no heap para `Box<T>`, vamos ver a sintaxe e como interagir com os valores armazenados dentro de um `Box<T>`."
 
 #: src/ch15-01-box.md
 msgid "Listing 15-1 shows how to use a box to store an `i32` value on the heap."
-msgstr ""
+msgstr "A Listagem 15-1 mostra como usar um box para armazenar um valor `i32` no heap."
 
 #: src/ch15-01-box.md
 msgid "<Listing number=\"15-1\" file-name=\"src/main.rs\" caption=\"Storing an `i32` value on the heap using a box\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-1\" file-name=\"src/main.rs\" caption=\"Armazenando um valor `i32` no heap usando um box\">\n"
 
 #: src/ch15-01-box.md
 msgid "\"b = {b}\""
@@ -15000,23 +15000,23 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "We define the variable `b` to have the value of a `Box` that points to the value `5`, which is allocated on the heap. This program will print `b = 5`; in this case, we can access the data in the box similarly to how we would if this data were on the stack. Just like any owned value, when a box goes out of scope, as `b` does at the end of `main`, it will be deallocated. The deallocation happens both for the box (stored on the stack) and the data it points to (stored on the heap)."
-msgstr ""
+msgstr "Definimos a variável `b` com o valor de um `Box` que aponta para o valor `5`, que é alocado no heap. Este programa vai imprimir `b = 5`; neste caso, podemos acessar os dados no box de forma semelhante à que usaríamos se esses dados estivessem na pilha. Assim como qualquer valor que tem dono, quando um box sai do escopo, como `b` faz no fim de `main`, ele é desalocado. A desalocação acontece tanto para o box (armazenado na pilha) quanto para os dados para os quais ele aponta (armazenados no heap)."
 
 #: src/ch15-01-box.md
 msgid "Putting a single value on the heap isn’t very useful, so you won’t use boxes by themselves in this way very often. Having values like a single `i32` on the stack, where they’re stored by default, is more appropriate in the majority of situations. Let’s look at a case where boxes allow us to define types that we wouldn’t be allowed to define if we didn’t have boxes."
-msgstr ""
+msgstr "Colocar um único valor no heap não é muito útil, então você não vai usar boxes sozinhos desse jeito com muita frequência. Ter valores como um único `i32` na pilha, onde eles são armazenados por padrão, é mais adequado na maioria das situações. Vamos ver um caso em que os boxes nos permitem definir tipos que não poderíamos definir se não tivéssemos boxes."
 
 #: src/ch15-01-box.md
 msgid "Enabling Recursive Types with Boxes"
-msgstr ""
+msgstr "Habilitando tipos recursivos com boxes {#enabling-recursive-types-with-boxes}"
 
 #: src/ch15-01-box.md
 msgid "A value of a _recursive type_ can have another value of the same type as part of itself. Recursive types pose an issue because Rust needs to know at compile time how much space a type takes up. However, the nesting of values of recursive types could theoretically continue infinitely, so Rust can’t know how much space the value needs. Because boxes have a known size, we can enable recursive types by inserting a box in the recursive type definition."
-msgstr ""
+msgstr "Um valor de um _tipo recursivo_ pode ter outro valor do mesmo tipo como parte de si mesmo. Tipos recursivos criam um problema porque o Rust precisa saber em tempo de compilação quanto espaço um tipo ocupa. No entanto, o aninhamento de valores de tipos recursivos poderia, em teoria, continuar infinitamente, então o Rust não consegue saber quanto espaço o valor precisa. Como os boxes têm um tamanho conhecido, podemos habilitar tipos recursivos inserindo um box na definição do tipo recursivo."
 
 #: src/ch15-01-box.md
 msgid "As an example of a recursive type, let’s explore the cons list. This is a data type commonly found in functional programming languages. The cons list type we’ll define is straightforward except for the recursion; therefore, the concepts in the example we’ll work with will be useful anytime you get into more complex situations involving recursive types."
-msgstr ""
+msgstr "Como exemplo de tipo recursivo, vamos explorar a lista cons. Este é um tipo de dado comumente encontrado em linguagens de programação funcionais. O tipo de lista cons que vamos definir é simples, exceto pela recursão; por isso, os conceitos do exemplo com que vamos trabalhar serão úteis sempre que você se deparar com situações mais complexas envolvendo tipos recursivos."
 
 #: src/ch15-01-box.md
 msgid "<a id=\"more-information-about-the-cons-list\"></a>"
@@ -15024,55 +15024,55 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "Understanding the Cons List"
-msgstr ""
+msgstr "Entendendo a lista cons {#understanding-the-cons-list}"
 
 #: src/ch15-01-box.md
 msgid "A _cons list_ is a data structure that comes from the Lisp programming language and its dialects, is made up of nested pairs, and is the Lisp version of a linked list. Its name comes from the `cons` function (short for _construct function_) in Lisp that constructs a new pair from its two arguments. By calling `cons` on a pair consisting of a value and another pair, we can construct cons lists made up of recursive pairs."
-msgstr ""
+msgstr "Uma _lista cons_ é uma estrutura de dados que vem da linguagem de programação Lisp e de seus dialetos, é formada por pares aninhados e é a versão em Lisp de uma lista encadeada. Seu nome vem da função `cons` (abreviação de _construct function_) em Lisp, que constrói um novo par a partir de seus dois argumentos. Ao chamar `cons` em um par formado por um valor e outro par, podemos construir listas cons formadas por pares recursivos."
 
 #: src/ch15-01-box.md
 msgid "For example, here’s a pseudocode representation of a cons list containing the list `1, 2, 3` with each pair in parentheses:"
-msgstr ""
+msgstr "Por exemplo, aqui está uma representação em pseudocódigo de uma lista cons contendo a lista `1, 2, 3`, com cada par entre parênteses:"
 
 #: src/ch15-01-box.md
 msgid "Each item in a cons list contains two elements: the value of the current item and of the next item. The last item in the list contains only a value called `Nil` without a next item. A cons list is produced by recursively calling the `cons` function. The canonical name to denote the base case of the recursion is `Nil`. Note that this is not the same as the “null” or “nil” concept discussed in Chapter 6, which is an invalid or absent value."
-msgstr ""
+msgstr "Cada item em uma lista cons contém dois elementos: o valor do item atual e o do próximo item. O último item da lista contém apenas um valor chamado `Nil`, sem um próximo item. Uma lista cons é produzida pela chamada recursiva da função `cons`. O nome canônico para indicar o caso base da recursão é `Nil`. Observe que isso não é o mesmo que o conceito de “null” ou “nil” discutido no Capítulo 6, que é um valor inválido ou ausente."
 
 #: src/ch15-01-box.md
 msgid "The cons list isn’t a commonly used data structure in Rust. Most of the time when you have a list of items in Rust, `Vec<T>` is a better choice to use. Other, more complex recursive data types _are_ useful in various situations, but by starting with the cons list in this chapter, we can explore how boxes let us define a recursive data type without much distraction."
-msgstr ""
+msgstr "A lista cons não é uma estrutura de dados comumente usada no Rust. Na maioria das vezes, quando você tem uma lista de itens no Rust, `Vec<T>` é uma escolha melhor. Outros tipos de dados recursivos, mais complexos, _são_ úteis em várias situações, mas, ao começar com a lista cons neste capítulo, podemos explorar como os boxes nos permitem definir um tipo de dado recursivo sem muita distração."
 
 #: src/ch15-01-box.md
 msgid "Listing 15-2 contains an enum definition for a cons list. Note that this code won’t compile yet, because the `List` type doesn’t have a known size, which we’ll demonstrate."
-msgstr ""
+msgstr "A Listagem 15-2 contém a definição de um enum para uma lista cons. Observe que este código ainda não vai compilar, porque o tipo `List` não tem um tamanho conhecido, o que vamos demonstrar."
 
 #: src/ch15-01-box.md
 msgid "<Listing number=\"15-2\" file-name=\"src/main.rs\" caption=\"The first attempt at defining an enum to represent a cons list data structure of `i32` values\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-2\" file-name=\"src/main.rs\" caption=\"Primeira tentativa de definir um enum para representar uma estrutura de dados de lista cons de valores `i32`\">\n"
 
 #: src/ch15-01-box.md
 msgid "Note: We’re implementing a cons list that holds only `i32` values for the purposes of this example. We could have implemented it using generics, as we discussed in Chapter 10, to define a cons list type that could store values of any type."
-msgstr ""
+msgstr "Nota: estamos implementando uma lista cons que armazena apenas valores `i32` para os fins deste exemplo. Poderíamos tê-la implementado usando genéricos, como discutimos no Capítulo 10, para definir um tipo de lista cons que pudesse armazenar valores de qualquer tipo."
 
 #: src/ch15-01-box.md
 msgid "Using the `List` type to store the list `1, 2, 3` would look like the code in Listing 15-3."
-msgstr ""
+msgstr "Usar o tipo `List` para armazenar a lista `1, 2, 3` ficaria como o código da Listagem 15-3."
 
 #: src/ch15-01-box.md
 msgid "<Listing number=\"15-3\" file-name=\"src/main.rs\" caption=\"Using the `List` enum to store the list `1, 2, 3`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-3\" file-name=\"src/main.rs\" caption=\"Usando o enum `List` para armazenar a lista `1, 2, 3`\">\n"
 
 #: src/ch15-01-box.md
 msgid "The first `Cons` value holds `1` and another `List` value. This `List` value is another `Cons` value that holds `2` and another `List` value. This `List` value is one more `Cons` value that holds `3` and a `List` value, which is finally `Nil`, the non-recursive variant that signals the end of the list."
-msgstr ""
+msgstr "O primeiro valor `Cons` contém `1` e outro valor `List`. Esse valor `List` é outro valor `Cons`, que contém `2` e outro valor `List`. Esse valor `List` é mais um valor `Cons`, que contém `3` e um valor `List`, que por fim é `Nil`, a variante não recursiva que sinaliza o fim da lista."
 
 #: src/ch15-01-box.md
 msgid "If we try to compile the code in Listing 15-3, we get the error shown in Listing 15-4."
-msgstr ""
+msgstr "Se tentarmos compilar o código da Listagem 15-3, obtemos o erro mostrado na Listagem 15-4."
 
 #: src/ch15-01-box.md
 msgid "<Listing number=\"15-4\" caption=\"The error we get when attempting to define a recursive enum\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-4\" caption=\"O erro que obtemos ao tentar definir um enum recursivo\">\n"
 
 #: src/ch15-01-box.md
 msgid ""
@@ -15099,31 +15099,31 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "The error shows this type “has infinite size.” The reason is that we’ve defined `List` with a variant that is recursive: It holds another value of itself directly. As a result, Rust can’t figure out how much space it needs to store a `List` value. Let’s break down why we get this error. First, we’ll look at how Rust decides how much space it needs to store a value of a non-recursive type."
-msgstr ""
+msgstr "O erro mostra que esse tipo “tem tamanho infinito.” O motivo é que definimos `List` com uma variante recursiva: ela contém diretamente outro valor de si mesma. Como resultado, o Rust não consegue descobrir quanto espaço precisa para armazenar um valor `List`. Vamos detalhar por que recebemos esse erro. Primeiro, vamos ver como o Rust decide quanto espaço precisa para armazenar um valor de um tipo não recursivo."
 
 #: src/ch15-01-box.md
 msgid "Computing the Size of a Non-Recursive Type"
-msgstr ""
+msgstr "Calculando o tamanho de um tipo não recursivo {#computing-the-size-of-a-non-recursive-type}"
 
 #: src/ch15-01-box.md
 msgid "Recall the `Message` enum we defined in Listing 6-2 when we discussed enum definitions in Chapter 6:"
-msgstr ""
+msgstr "Lembre-se do enum `Message` que definimos na Listagem 6-2, quando discutimos definições de enum no Capítulo 6:"
 
 #: src/ch15-01-box.md
 msgid "To determine how much space to allocate for a `Message` value, Rust goes through each of the variants to see which variant needs the most space. Rust sees that `Message::Quit` doesn’t need any space, `Message::Move` needs enough space to store two `i32` values, and so forth. Because only one variant will be used, the most space a `Message` value will need is the space it would take to store the largest of its variants."
-msgstr ""
+msgstr "Para determinar quanto espaço alocar para um valor `Message`, o Rust percorre cada uma das variantes para ver qual precisa de mais espaço. O Rust vê que `Message::Quit` não precisa de espaço algum, que `Message::Move` precisa de espaço suficiente para armazenar dois valores `i32` e assim por diante. Como apenas uma variante será usada, o máximo de espaço que um valor `Message` vai precisar é o espaço necessário para armazenar a maior de suas variantes."
 
 #: src/ch15-01-box.md
 msgid "Contrast this with what happens when Rust tries to determine how much space a recursive type like the `List` enum in Listing 15-2 needs. The compiler starts by looking at the `Cons` variant, which holds a value of type `i32` and a value of type `List`. Therefore, `Cons` needs an amount of space equal to the size of an `i32` plus the size of a `List`. To figure out how much memory the `List` type needs, the compiler looks at the variants, starting with the `Cons` variant. The `Cons` variant holds a value of type `i32` and a value of type `List`, and this process continues infinitely, as shown in Figure 15-1."
-msgstr ""
+msgstr "Compare isso com o que acontece quando o Rust tenta determinar quanto espaço um tipo recursivo, como o enum `List` da Listagem 15-2, precisa. O compilador começa examinando a variante `Cons`, que contém um valor do tipo `i32` e um valor do tipo `List`. Portanto, `Cons` precisa de uma quantidade de espaço igual ao tamanho de um `i32` mais o tamanho de uma `List`. Para descobrir quanta memória o tipo `List` precisa, o compilador examina as variantes, começando pela variante `Cons`. A variante `Cons` contém um valor do tipo `i32` e um valor do tipo `List`, e esse processo continua infinitamente, como mostrado na Figura 15-1."
 
 #: src/ch15-01-box.md
 msgid "<img alt=\"An infinite Cons list: a rectangle labeled 'Cons' split into two smaller rectangles. The first smaller rectangle holds the label 'i32', and the second smaller rectangle holds the label 'Cons' and a smaller version of the outer 'Cons' rectangle. The 'Cons' rectangles continue to hold smaller and smaller versions of themselves until the smallest comfortably sized rectangle holds an infinity symbol, indicating that this repetition goes on forever.\" src=\"img/trpl15-01.svg\" class=\"center\" style=\"width: 50%;\" />\n"
-msgstr ""
+msgstr "<img alt=\"Uma lista Cons infinita: um retângulo rotulado como “Cons”, dividido em dois retângulos menores. O primeiro retângulo menor contém o rótulo “i32”, e o segundo contém o rótulo “Cons” e uma versão menor do retângulo “Cons” externo. Os retângulos “Cons” continuam contendo versões cada vez menores de si mesmos, até que o menor retângulo, de tamanho confortável, contenha um símbolo de infinito, indicando que essa repetição continua para sempre.\" src=\"img/trpl15-01.svg\" class=\"center\" style=\"width: 50%;\" />\n"
 
 #: src/ch15-01-box.md
 msgid "<span class=\"caption\">Figure 15-1: An infinite `List` consisting of infinite `Cons` variants</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 15-1: Uma `List` infinita formada por variantes `Cons` infinitas</span>"
 
 #: src/ch15-01-box.md
 msgid "<a id=\"using-boxt-to-get-a-recursive-type-with-a-known-size\"></a>"
@@ -15131,11 +15131,11 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "Getting a Recursive Type with a Known Size"
-msgstr ""
+msgstr "Obtendo um tipo recursivo com tamanho conhecido {#getting-a-recursive-type-with-a-known-size}"
 
 #: src/ch15-01-box.md
 msgid "Because Rust can’t figure out how much space to allocate for recursively defined types, the compiler gives an error with this helpful suggestion:"
-msgstr ""
+msgstr "Como o Rust não consegue descobrir quanto espaço alocar para tipos definidos recursivamente, o compilador emite um erro com esta sugestão útil:"
 
 #: src/ch15-01-box.md
 msgid ""
@@ -15146,39 +15146,39 @@ msgstr ""
 
 #: src/ch15-01-box.md
 msgid "In this suggestion, _indirection_ means that instead of storing a value directly, we should change the data structure to store the value indirectly by storing a pointer to the value instead."
-msgstr ""
+msgstr "Nessa sugestão, _indireção_ significa que, em vez de armazenar um valor diretamente, devemos alterar a estrutura de dados para armazenar o valor indiretamente, armazenando um ponteiro para o valor em vez disso."
 
 #: src/ch15-01-box.md
 msgid "Because a `Box<T>` is a pointer, Rust always knows how much space a `Box<T>` needs: A pointer’s size doesn’t change based on the amount of data it’s pointing to. This means we can put a `Box<T>` inside the `Cons` variant instead of another `List` value directly. The `Box<T>` will point to the next `List` value that will be on the heap rather than inside the `Cons` variant. Conceptually, we still have a list, created with lists holding other lists, but this implementation is now more like placing the items next to one another rather than inside one another."
-msgstr ""
+msgstr "Como um `Box<T>` é um ponteiro, o Rust sempre sabe quanto espaço um `Box<T>` precisa: o tamanho de um ponteiro não muda de acordo com a quantidade de dados para os quais ele aponta. Isso significa que podemos colocar um `Box<T>` dentro da variante `Cons`, em vez de colocar diretamente outro valor `List`. O `Box<T>` vai apontar para o próximo valor `List`, que ficará no heap em vez de dentro da variante `Cons`. Conceitualmente, ainda temos uma lista, criada com listas que contêm outras listas, mas essa implementação se parece mais com colocar os itens lado a lado, em vez de um dentro do outro."
 
 #: src/ch15-01-box.md
 msgid "We can change the definition of the `List` enum in Listing 15-2 and the usage of the `List` in Listing 15-3 to the code in Listing 15-5, which will compile."
-msgstr ""
+msgstr "Podemos alterar a definição do enum `List` da Listagem 15-2 e o uso de `List` na Listagem 15-3 para o código da Listagem 15-5, que vai compilar."
 
 #: src/ch15-01-box.md
 msgid "<Listing number=\"15-5\" file-name=\"src/main.rs\" caption=\"The definition of `List` that uses `Box<T>` in order to have a known size\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-5\" file-name=\"src/main.rs\" caption=\"A definição de `List` que usa `Box<T>` para ter um tamanho conhecido\">\n"
 
 #: src/ch15-01-box.md
 msgid "The `Cons` variant needs the size of an `i32` plus the space to store the box’s pointer data. The `Nil` variant stores no values, so it needs less space on the stack than the `Cons` variant. We now know that any `List` value will take up the size of an `i32` plus the size of a box’s pointer data. By using a box, we’ve broken the infinite, recursive chain, so the compiler can figure out the size it needs to store a `List` value. Figure 15-2 shows what the `Cons` variant looks like now."
-msgstr ""
+msgstr "A variante `Cons` precisa do tamanho de um `i32` mais o espaço para armazenar os dados do ponteiro do box. A variante `Nil` não armazena valores, então precisa de menos espaço na pilha do que a variante `Cons`. Agora sabemos que qualquer valor `List` vai ocupar o tamanho de um `i32` mais o tamanho dos dados do ponteiro de um box. Ao usar um box, quebramos a cadeia infinita e recursiva, então o compilador consegue descobrir o tamanho que precisa para armazenar um valor `List`. A Figura 15-2 mostra como a variante `Cons` fica agora."
 
 #: src/ch15-01-box.md
 msgid "<img alt=\"A rectangle labeled 'Cons' split into two smaller rectangles. The first smaller rectangle holds the label 'i32', and the second smaller rectangle holds the label 'Box' with one inner rectangle that contains the label 'usize', representing the finite size of the box's pointer.\" src=\"img/trpl15-02.svg\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Um retângulo rotulado como “Cons”, dividido em dois retângulos menores. O primeiro retângulo menor contém o rótulo “i32”, e o segundo contém o rótulo “Box”, com um retângulo interno que contém o rótulo “usize”, representando o tamanho finito do ponteiro do box.\" src=\"img/trpl15-02.svg\" class=\"center\" />\n"
 
 #: src/ch15-01-box.md
 msgid "<span class=\"caption\">Figure 15-2: A `List` that is not infinitely sized, because `Cons` holds a `Box`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 15-2: Uma `List` que não tem tamanho infinito, porque `Cons` contém um `Box`</span>"
 
 #: src/ch15-01-box.md
 msgid "Boxes provide only the indirection and heap allocation; they don’t have any other special capabilities, like those we’ll see with the other smart pointer types. They also don’t have the performance overhead that these special capabilities incur, so they can be useful in cases like the cons list where the indirection is the only feature we need. We’ll look at more use cases for boxes in Chapter 18."
-msgstr ""
+msgstr "Os boxes fornecem apenas indireção e alocação no heap; eles não têm nenhuma outra capacidade especial, como as que veremos nos outros tipos de ponteiros inteligentes. Eles também não têm o custo adicional de desempenho que essas capacidades especiais acarretam, por isso podem ser úteis em casos como o da lista cons, em que a indireção é o único recurso de que precisamos. Vamos ver mais casos de uso dos boxes no Capítulo 18."
 
 #: src/ch15-01-box.md
 msgid "The `Box<T>` type is a smart pointer because it implements the `Deref` trait, which allows `Box<T>` values to be treated like references. When a `Box<T>` value goes out of scope, the heap data that the box is pointing to is cleaned up as well because of the `Drop` trait implementation. These two traits will be even more important to the functionality provided by the other smart pointer types we’ll discuss in the rest of this chapter. Let’s explore these two traits in more detail."
-msgstr ""
+msgstr "O tipo `Box<T>` é um ponteiro inteligente porque implementa o trait `Deref`, o que permite que valores de `Box<T>` sejam tratados como referências. Quando um valor de `Box<T>` sai do escopo, os dados no heap para os quais o box aponta também são liberados, por causa da implementação do trait `Drop`. Esses dois traits terão ainda mais importância para as funcionalidades oferecidas pelos outros tipos de ponteiros inteligentes que discutiremos no restante deste capítulo. Vamos explorar esses dois traits com mais detalhes."
 
 #: src/ch15-02-deref.md
 msgid "<a id=\"treating-smart-pointers-like-regular-references-with-the-deref-trait\"></a> <a id=\"treating-smart-pointers-like-regular-references-with-deref\"></a>"
@@ -15186,11 +15186,11 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Implementing the `Deref` trait allows you to customize the behavior of the _dereference operator_ `*` (not to be confused with the multiplication or glob operator). By implementing `Deref` in such a way that a smart pointer can be treated like a regular reference, you can write code that operates on references and use that code with smart pointers too."
-msgstr ""
+msgstr "Implementar o trait `Deref` permite que você personalize o comportamento do _operador de desreferência_ `*` (que não deve ser confundido com o operador de multiplicação ou com o operador glob). Ao implementar `Deref` de modo que um ponteiro inteligente possa ser tratado como uma referência comum, você pode escrever código que opera com referências e usar esse código com ponteiros inteligentes também."
 
 #: src/ch15-02-deref.md
 msgid "Let’s first look at how the dereference operator works with regular references. Then, we’ll try to define a custom type that behaves like `Box<T>` and see why the dereference operator doesn’t work like a reference on our newly defined type. We’ll explore how implementing the `Deref` trait makes it possible for smart pointers to work in ways similar to references. Then, we’ll look at Rust’s deref coercion feature and how it lets us work with either references or smart pointers."
-msgstr ""
+msgstr "Vamos primeiro ver como o operador de desreferência funciona com referências comuns. Depois, vamos tentar definir um tipo personalizado que se comporta como `Box<T>` e ver por que o operador de desreferência não funciona como uma referência no tipo que acabamos de definir. Vamos explorar como implementar o trait `Deref` torna possível que ponteiros inteligentes funcionem de maneiras semelhantes às referências. Depois, vamos ver o recurso de coerção de desreferência do Rust e como ele nos permite trabalhar com referências ou com ponteiros inteligentes."
 
 #: src/ch15-02-deref.md
 msgid "<a id=\"following-the-pointer-to-the-value-with-the-dereference-operator\"></a> <a id=\"following-the-pointer-to-the-value\"></a>"
@@ -15198,23 +15198,23 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Following the Reference to the Value"
-msgstr ""
+msgstr "Seguindo a referência até o valor {#following-the-reference-to-the-value}"
 
 #: src/ch15-02-deref.md
 msgid "A regular reference is a type of pointer, and one way to think of a pointer is as an arrow to a value stored somewhere else. In Listing 15-6, we create a reference to an `i32` value and then use the dereference operator to follow the reference to the value."
-msgstr ""
+msgstr "Uma referência comum é um tipo de ponteiro, e uma forma de pensar em um ponteiro é como uma seta para um valor armazenado em outro lugar. Na Listagem 15-6, criamos uma referência a um valor `i32` e depois usamos o operador de desreferência para seguir a referência até o valor."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-6\" file-name=\"src/main.rs\" caption=\"Using the dereference operator to follow a reference to an `i32` value\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-6\" file-name=\"src/main.rs\" caption=\"Usando o operador de desreferência para seguir uma referência a um valor `i32`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "The variable `x` holds an `i32` value `5`. We set `y` equal to a reference to `x`. We can assert that `x` is equal to `5`. However, if we want to make an assertion about the value in `y`, we have to use `*y` to follow the reference to the value it’s pointing to (hence, _dereference_) so that the compiler can compare the actual value. Once we dereference `y`, we have access to the integer value `y` is pointing to that we can compare with `5`."
-msgstr ""
+msgstr "A variável `x` contém um valor `i32` igual a `5`. Atribuímos a `y` uma referência a `x`. Podemos afirmar que `x` é igual a `5`. No entanto, se quisermos fazer uma asserção sobre o valor em `y`, precisamos usar `*y` para seguir a referência até o valor para o qual ela aponta (daí o nome _desreferência_), para que o compilador possa comparar o valor real. Depois de desreferenciar `y`, temos acesso ao valor inteiro para o qual `y` aponta, que podemos comparar com `5`."
 
 #: src/ch15-02-deref.md
 msgid "If we tried to write `assert_eq!(5, y);` instead, we would get this compilation error:"
-msgstr ""
+msgstr "Se tentássemos escrever `assert_eq!(5, y);` no lugar disso, receberíamos este erro de compilação:"
 
 #: src/ch15-02-deref.md
 msgid ""
@@ -15246,59 +15246,59 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Comparing a number and a reference to a number isn’t allowed because they’re different types. We must use the dereference operator to follow the reference to the value it’s pointing to."
-msgstr ""
+msgstr "Não é permitido comparar um número com uma referência a um número, porque são tipos diferentes. Precisamos usar o operador de desreferência para seguir a referência até o valor para o qual ela aponta."
 
 #: src/ch15-02-deref.md
 msgid "Using `Box<T>` Like a Reference"
-msgstr ""
+msgstr "Usando `Box<T>` como uma referência {#using-boxt-like-a-reference}"
 
 #: src/ch15-02-deref.md
 msgid "We can rewrite the code in Listing 15-6 to use a `Box<T>` instead of a reference; the dereference operator used on the `Box<T>` in Listing 15-7 functions in the same way as the dereference operator used on the reference in Listing 15-6."
-msgstr ""
+msgstr "Podemos reescrever o código da Listagem 15-6 para usar um `Box<T>` em vez de uma referência; o operador de desreferência usado no `Box<T>` da Listagem 15-7 funciona da mesma maneira que o operador de desreferência usado na referência da Listagem 15-6."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-7\" file-name=\"src/main.rs\" caption=\"Using the dereference operator on a `Box<i32>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-7\" file-name=\"src/main.rs\" caption=\"Usando o operador de desreferência em um `Box<i32>`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "The main difference between Listing 15-7 and Listing 15-6 is that here we set `y` to be an instance of a box pointing to a copied value of `x` rather than a reference pointing to the value of `x`. In the last assertion, we can use the dereference operator to follow the box’s pointer in the same way that we did when `y` was a reference. Next, we’ll explore what is special about `Box<T>` that enables us to use the dereference operator by defining our own box type."
-msgstr ""
+msgstr "A principal diferença entre a Listagem 15-7 e a Listagem 15-6 é que, aqui, definimos `y` como uma instância de um box que aponta para uma cópia do valor de `x`, em vez de uma referência que aponta para o valor de `x`. Na última asserção, podemos usar o operador de desreferência para seguir o ponteiro do box da mesma maneira que fizemos quando `y` era uma referência. A seguir, vamos explorar o que há de especial em `Box<T>` que nos permite usar o operador de desreferência ao definir nosso próprio tipo de box."
 
 #: src/ch15-02-deref.md
 msgid "Defining Our Own Smart Pointer"
-msgstr ""
+msgstr "Definindo nosso próprio ponteiro inteligente {#defining-our-own-smart-pointer}"
 
 #: src/ch15-02-deref.md
 msgid "Let’s build a wrapper type similar to the `Box<T>` type provided by the standard library to experience how smart pointer types behave differently from references by default. Then, we’ll look at how to add the ability to use the dereference operator."
-msgstr ""
+msgstr "Vamos criar um tipo wrapper semelhante ao tipo `Box<T>` fornecido pela biblioteca padrão para ver, na prática, como os tipos de ponteiro inteligente se comportam de forma diferente das referências por padrão. Depois, vamos ver como adicionar a capacidade de usar o operador de desreferência."
 
 #: src/ch15-02-deref.md
 msgid "Note: There’s one big difference between the `MyBox<T>` type we’re about to build and the real `Box<T>`: Our version will not store its data on the heap. We are focusing this example on `Deref`, so where the data is actually stored is less important than the pointer-like behavior."
-msgstr ""
+msgstr "Nota: há uma grande diferença entre o tipo `MyBox<T>` que estamos prestes a criar e o `Box<T>` real: nossa versão não vai armazenar seus dados no heap. Estamos concentrando este exemplo em `Deref`, então onde os dados são armazenados de fato é menos importante do que o comportamento semelhante ao de um ponteiro."
 
 #: src/ch15-02-deref.md
 msgid "The `Box<T>` type is ultimately defined as a tuple struct with one element, so Listing 15-8 defines a `MyBox<T>` type in the same way. We’ll also define a `new` function to match the `new` function defined on `Box<T>`."
-msgstr ""
+msgstr "O tipo `Box<T>` é, no fim das contas, definido como um struct de tupla com um elemento, então a Listagem 15-8 define um tipo `MyBox<T>` da mesma forma. Também vamos definir uma função `new` para corresponder à função `new` definida em `Box<T>`."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-8\" file-name=\"src/main.rs\" caption=\"Defining a `MyBox<T>` type\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-8\" file-name=\"src/main.rs\" caption=\"Definindo um tipo `MyBox<T>`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "We define a struct named `MyBox` and declare a generic parameter `T` because we want our type to hold values of any type. The `MyBox` type is a tuple struct with one element of type `T`. The `MyBox::new` function takes one parameter of type `T` and returns a `MyBox` instance that holds the value passed in."
-msgstr ""
+msgstr "Definimos um struct chamado `MyBox` e declaramos um parâmetro genérico `T`, porque queremos que nosso tipo armazene valores de qualquer tipo. O tipo `MyBox` é um struct de tupla com um elemento do tipo `T`. A função `MyBox::new` recebe um parâmetro do tipo `T` e retorna uma instância de `MyBox` que armazena o valor passado."
 
 #: src/ch15-02-deref.md
 msgid "Let’s try adding the `main` function in Listing 15-7 to Listing 15-8 and changing it to use the `MyBox<T>` type we’ve defined instead of `Box<T>`. The code in Listing 15-9 won’t compile, because Rust doesn’t know how to dereference `MyBox`."
-msgstr ""
+msgstr "Vamos tentar adicionar a função `main` da Listagem 15-7 à Listagem 15-8 e alterá-la para usar o tipo `MyBox<T>` que definimos, em vez de `Box<T>`. O código da Listagem 15-9 não vai compilar, porque o Rust não sabe como desreferenciar `MyBox`."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-9\" file-name=\"src/main.rs\" caption=\"Attempting to use `MyBox<T>` in the same way we used references and `Box<T>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-9\" file-name=\"src/main.rs\" caption=\"Tentando usar `MyBox<T>` da mesma forma que usamos referências e `Box<T>`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "Here’s the resultant compilation error:"
-msgstr ""
+msgstr "Este é o erro de compilação resultante:"
 
 #: src/ch15-02-deref.md
 msgid ""
@@ -15318,7 +15318,7 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Our `MyBox<T>` type can’t be dereferenced because we haven’t implemented that ability on our type. To enable dereferencing with the `*` operator, we implement the `Deref` trait."
-msgstr ""
+msgstr "Nosso tipo `MyBox<T>` não pode ser desreferenciado, porque não implementamos essa capacidade nele. Para permitir a desreferência com o operador `*`, implementamos o trait `Deref`."
 
 #: src/ch15-02-deref.md
 msgid "<a id=\"treating-a-type-like-a-reference-by-implementing-the-deref-trait\"></a>"
@@ -15326,45 +15326,47 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Implementing the `Deref` Trait"
-msgstr ""
+msgstr "Implementando o trait `Deref` {#implementing-the-deref-trait}"
 
 #: src/ch15-02-deref.md
 msgid "As discussed in [“Implementing a Trait on a Type”](ch10-02-traits.html#implementing-a-trait-on-a-type)<!-- ignore --> in Chapter 10, to implement a trait we need to provide implementations for the trait’s required methods. The `Deref` trait, provided by the standard library, requires us to implement one method named `deref` that borrows `self` and returns a reference to the inner data. Listing 15-10 contains an implementation of `Deref` to add to the definition of `MyBox<T>`."
-msgstr ""
+msgstr "Como vimos em [“Implementando um trait em um tipo”](ch10-02-traits.html#implementing-a-trait-on-a-type)<!-- ignore --> no Capítulo 10, para implementar um trait precisamos fornecer implementações dos métodos obrigatórios dele. O trait `Deref`, fornecido pela biblioteca padrão, exige que implementemos um método chamado `deref` que pega `self` emprestado e retorna uma referência aos dados internos. A Listagem 15-10 contém uma implementação de `Deref` para acrescentar à definição de `MyBox<T>`."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-10\" file-name=\"src/main.rs\" caption=\"Implementing `Deref` on `MyBox<T>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-10\" file-name=\"src/main.rs\" caption=\"Implementando `Deref` em `MyBox<T>`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "The `type Target = T;` syntax defines an associated type for the `Deref` trait to use. Associated types are a slightly different way of declaring a generic parameter, but you don’t need to worry about them for now; we’ll cover them in more detail in Chapter 20."
-msgstr ""
+msgstr "A sintaxe `type Target = T;` define um tipo associado para o trait `Deref` usar. Tipos associados são uma forma um pouco diferente de declarar um parâmetro genérico, mas você não precisa se preocupar com eles por enquanto; vamos abordá-los com mais detalhes no Capítulo 20."
 
 #: src/ch15-02-deref.md
 msgid ""
 "We fill in the body of the `deref` method with `&self.0` so that `deref` returns a reference to the value we want to access with the `*` operator; recall from [“Creating Different Types with Tuple Structs”](ch05-01-defining-structs.html#creating-different-types-with-tuple-structs)<!--\n"
 "ignore --> in Chapter 5 that `.0` accesses the first value in a tuple struct. The `main` function in Listing 15-9 that calls `*` on the `MyBox<T>` value now compiles, and the assertions pass!"
 msgstr ""
+"Preenchemos o corpo do método `deref` com `&self.0`, para que `deref` retorne uma referência ao valor que queremos acessar com o operador `*`; lembre-se, em [“Criando tipos diferentes com structs de tupla”](ch05-01-defining-structs.html#creating-different-types-with-tuple-structs)<!--\n"
+"ignore --> no Capítulo 5, de que `.0` acessa o primeiro valor em um struct de tupla. A função `main` da Listagem 15-9, que chama `*` no valor `MyBox<T>`, agora compila, e as asserções passam!"
 
 #: src/ch15-02-deref.md
 msgid "Without the `Deref` trait, the compiler can only dereference `&` references. The `deref` method gives the compiler the ability to take a value of any type that implements `Deref` and call the `deref` method to get a reference that it knows how to dereference."
-msgstr ""
+msgstr "Sem o trait `Deref`, o compilador só consegue desreferenciar referências `&`. O método `deref` dá ao compilador a capacidade de pegar um valor de qualquer tipo que implemente `Deref` e chamar o método `deref` para obter uma referência que ele sabe desreferenciar."
 
 #: src/ch15-02-deref.md
 msgid "When we entered `*y` in Listing 15-9, behind the scenes Rust actually ran this code:"
-msgstr ""
+msgstr "Quando escrevemos `*y` na Listagem 15-9, por trás dos panos o Rust na verdade executou este código:"
 
 #: src/ch15-02-deref.md
 msgid "Rust substitutes the `*` operator with a call to the `deref` method and then a plain dereference so that we don’t have to think about whether or not we need to call the `deref` method. This Rust feature lets us write code that functions identically whether we have a regular reference or a type that implements `Deref`."
-msgstr ""
+msgstr "O Rust substitui o operador `*` por uma chamada ao método `deref` seguida de uma desreferência simples, para que não precisemos pensar se devemos ou não chamar o método `deref`. Esse recurso do Rust nos permite escrever código que funciona de forma idêntica, quer tenhamos uma referência comum, quer um tipo que implemente `Deref`."
 
 #: src/ch15-02-deref.md
 msgid "The reason the `deref` method returns a reference to a value, and that the plain dereference outside the parentheses in `*(y.deref())` is still necessary, has to do with the ownership system. If the `deref` method returned the value directly instead of a reference to the value, the value would be moved out of `self`. We don’t want to take ownership of the inner value inside `MyBox<T>` in this case or in most cases where we use the dereference operator."
-msgstr ""
+msgstr "O fato de o método `deref` retornar uma referência a um valor, e de a desreferência simples fora dos parênteses em `*(y.deref())` continuar sendo necessária, tem a ver com o sistema de ownership. Se o método `deref` retornasse o valor diretamente, em vez de uma referência a ele, o valor seria movido para fora de `self`. Nesse caso, assim como na maioria dos casos em que usamos o operador de desreferência, não queremos assumir o ownership do valor interno de `MyBox<T>`."
 
 #: src/ch15-02-deref.md
 msgid "Note that the `*` operator is replaced with a call to the `deref` method and then a call to the `*` operator just once, each time we use a `*` in our code. Because the substitution of the `*` operator does not recurse infinitely, we end up with data of type `i32`, which matches the `5` in `assert_eq!` in Listing 15-9."
-msgstr ""
+msgstr "Observe que o operador `*` é substituído por uma chamada ao método `deref` e, depois, por uma chamada ao operador `*` apenas uma vez, cada vez que usamos um `*` no código. Como a substituição do operador `*` não entra em recursão infinita, acabamos com dados do tipo `i32`, que correspondem ao `5` em `assert_eq!` na Listagem 15-9."
 
 #: src/ch15-02-deref.md
 msgid "<a id=\"implicit-deref-coercions-with-functions-and-methods\"></a> <a id=\"using-deref-coercions-in-functions-and-methods\"></a>"
@@ -15372,23 +15374,23 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Using Deref Coercion in Functions and Methods"
-msgstr ""
+msgstr "Usando coerção de desreferência em funções e métodos {#using-deref-coercion-in-functions-and-methods}"
 
 #: src/ch15-02-deref.md
 msgid "_Deref coercion_ converts a reference to a type that implements the `Deref` trait into a reference to another type. For example, deref coercion can convert `&String` to `&str` because `String` implements the `Deref` trait such that it returns `&str`. Deref coercion is a convenience Rust performs on arguments to functions and methods, and it works only on types that implement the `Deref` trait. It happens automatically when we pass a reference to a particular type’s value as an argument to a function or method that doesn’t match the parameter type in the function or method definition. A sequence of calls to the `deref` method converts the type we provided into the type the parameter needs."
-msgstr ""
+msgstr "_Coerção de desreferência_ converte uma referência a um tipo que implementa o trait `Deref` em uma referência a outro tipo. Por exemplo, a coerção de desreferência pode converter `&String` em `&str`, porque `String` implementa o trait `Deref` de forma a retornar `&str`. A coerção de desreferência é uma conveniência que o Rust realiza nos argumentos de funções e métodos, e funciona somente com tipos que implementam o trait `Deref`. Ela acontece automaticamente quando passamos uma referência ao valor de um tipo específico como argumento para uma função ou método cujo tipo de parâmetro, na definição, não corresponde a esse tipo. Uma sequência de chamadas ao método `deref` converte o tipo que fornecemos no tipo que o parâmetro precisa."
 
 #: src/ch15-02-deref.md
 msgid "Deref coercion was added to Rust so that programmers writing function and method calls don’t need to add as many explicit references and dereferences with `&` and `*`. The deref coercion feature also lets us write more code that can work for either references or smart pointers."
-msgstr ""
+msgstr "A coerção de desreferência foi adicionada ao Rust para que os programadores que escrevem chamadas de funções e métodos não precisem acrescentar tantas referências e desreferências explícitas com `&` e `*`. O recurso de coerção de desreferência também nos permite escrever mais código que funciona tanto com referências quanto com ponteiros inteligentes."
 
 #: src/ch15-02-deref.md
 msgid "To see deref coercion in action, let’s use the `MyBox<T>` type we defined in Listing 15-8 as well as the implementation of `Deref` that we added in Listing 15-10. Listing 15-11 shows the definition of a function that has a string slice parameter."
-msgstr ""
+msgstr "Para ver a coerção de desreferência em ação, vamos usar o tipo `MyBox<T>` que definimos na Listagem 15-8, assim como a implementação de `Deref` que acrescentamos na Listagem 15-10. A Listagem 15-11 mostra a definição de uma função que tem um parâmetro do tipo slice de string."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-11\" file-name=\"src/main.rs\" caption=\"A `hello` function that has the parameter `name` of type `&str`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-11\" file-name=\"src/main.rs\" caption=\"Uma função `hello` que tem o parâmetro `name` do tipo `&str`\">\n"
 
 #: src/ch15-02-deref.md
 msgid "\"Hello, {name}!\""
@@ -15396,11 +15398,11 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "We can call the `hello` function with a string slice as an argument, such as `hello(\"Rust\");`, for example. Deref coercion makes it possible to call `hello` with a reference to a value of type `MyBox<String>`, as shown in Listing 15-12."
-msgstr ""
+msgstr "Podemos chamar a função `hello` com uma slice de string como argumento, como em `hello(\"Rust\");`, por exemplo. A coerção de desreferência torna possível chamar `hello` com uma referência a um valor do tipo `MyBox<String>`, como mostra a Listagem 15-12."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-12\" file-name=\"src/main.rs\" caption=\"Calling `hello` with a reference to a `MyBox<String>` value, which works because of deref coercion\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-12\" file-name=\"src/main.rs\" caption=\"Chamando `hello` com uma referência a um valor `MyBox<String>`, o que funciona por causa da coerção de desreferência\">\n"
 
 #: src/ch15-02-deref.md
 msgid "\"Rust\""
@@ -15408,23 +15410,23 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Here we’re calling the `hello` function with the argument `&m`, which is a reference to a `MyBox<String>` value. Because we implemented the `Deref` trait on `MyBox<T>` in Listing 15-10, Rust can turn `&MyBox<String>` into `&String` by calling `deref`. The standard library provides an implementation of `Deref` on `String` that returns a string slice, and this is in the API documentation for `Deref`. Rust calls `deref` again to turn the `&String` into `&str`, which matches the `hello` function’s definition."
-msgstr ""
+msgstr "Aqui estamos chamando a função `hello` com o argumento `&m`, que é uma referência a um valor `MyBox<String>`. Como implementamos o trait `Deref` em `MyBox<T>` na Listagem 15-10, o Rust consegue transformar `&MyBox<String>` em `&String` chamando `deref`. A biblioteca padrão fornece uma implementação de `Deref` para `String` que retorna uma slice de string, e isso está na documentação da API de `Deref`. O Rust chama `deref` novamente para transformar `&String` em `&str`, o que corresponde à definição da função `hello`."
 
 #: src/ch15-02-deref.md
 msgid "If Rust didn’t implement deref coercion, we would have to write the code in Listing 15-13 instead of the code in Listing 15-12 to call `hello` with a value of type `&MyBox<String>`."
-msgstr ""
+msgstr "Se o Rust não implementasse a coerção de desreferência, teríamos que escrever o código da Listagem 15-13, em vez do código da Listagem 15-12, para chamar `hello` com um valor do tipo `&MyBox<String>`."
 
 #: src/ch15-02-deref.md
 msgid "<Listing number=\"15-13\" file-name=\"src/main.rs\" caption=\"The code we would have to write if Rust didn’t have deref coercion\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-13\" file-name=\"src/main.rs\" caption=\"O código que teríamos que escrever se o Rust não tivesse coerção de desreferência\">\n"
 
 #: src/ch15-02-deref.md
 msgid "The `(*m)` dereferences the `MyBox<String>` into a `String`. Then, the `&` and `[..]` take a string slice of the `String` that is equal to the whole string to match the signature of `hello`. This code without deref coercions is harder to read, write, and understand with all of these symbols involved. Deref coercion allows Rust to handle these conversions for us automatically."
-msgstr ""
+msgstr "O `(*m)` desreferencia o `MyBox<String>` e obtém uma `String`. Depois, o `&` e o `[..]` obtêm uma slice de string da `String` que equivale à string inteira, para corresponder à assinatura de `hello`. Esse código sem coerções de desreferência é mais difícil de ler, escrever e entender, com todos esses símbolos envolvidos. A coerção de desreferência permite que o Rust cuide dessas conversões por nós, automaticamente."
 
 #: src/ch15-02-deref.md
 msgid "When the `Deref` trait is defined for the types involved, Rust will analyze the types and use `Deref::deref` as many times as necessary to get a reference to match the parameter’s type. The number of times that `Deref::deref` needs to be inserted is resolved at compile time, so there is no runtime penalty for taking advantage of deref coercion!"
-msgstr ""
+msgstr "Quando o trait `Deref` está definido para os tipos envolvidos, o Rust analisa os tipos e usa `Deref::deref` quantas vezes forem necessárias para obter uma referência que corresponda ao tipo do parâmetro. O número de vezes em que `Deref::deref` precisa ser inserido é resolvido em tempo de compilação, então não há nenhuma penalidade em tempo de execução por aproveitar a coerção de desreferência!"
 
 #: src/ch15-02-deref.md
 msgid "<a id=\"how-deref-coercion-interacts-with-mutability\"></a>"
@@ -15432,59 +15434,59 @@ msgstr ""
 
 #: src/ch15-02-deref.md
 msgid "Handling Deref Coercion with Mutable References"
-msgstr ""
+msgstr "Lidando com a coerção de desreferência com referências mutáveis {#handling-deref-coercion-with-mutable-references}"
 
 #: src/ch15-02-deref.md
 msgid "Similar to how you use the `Deref` trait to override the `*` operator on immutable references, you can use the `DerefMut` trait to override the `*` operator on mutable references."
-msgstr ""
+msgstr "Assim como você usa o trait `Deref` para sobrescrever o operador `*` em referências imutáveis, pode usar o trait `DerefMut` para sobrescrever o operador `*` em referências mutáveis."
 
 #: src/ch15-02-deref.md
 msgid "Rust does deref coercion when it finds types and trait implementations in three cases:"
-msgstr ""
+msgstr "O Rust faz a coerção de desreferência quando encontra tipos e implementações de trait em três casos:"
 
 #: src/ch15-02-deref.md
 msgid "From `&T` to `&U` when `T: Deref<Target=U>`"
-msgstr ""
+msgstr "De `&T` para `&U` quando `T: Deref<Target=U>`"
 
 #: src/ch15-02-deref.md
 msgid "From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`"
-msgstr ""
+msgstr "De `&mut T` para `&mut U` quando `T: DerefMut<Target=U>`"
 
 #: src/ch15-02-deref.md
 msgid "From `&mut T` to `&U` when `T: Deref<Target=U>`"
-msgstr ""
+msgstr "De `&mut T` para `&U` quando `T: Deref<Target=U>`"
 
 #: src/ch15-02-deref.md
 msgid "The first two cases are the same except that the second implements mutability. The first case states that if you have a `&T`, and `T` implements `Deref` to some type `U`, you can get a `&U` transparently. The second case states that the same deref coercion happens for mutable references."
-msgstr ""
+msgstr "Os dois primeiros casos são iguais, exceto que o segundo acrescenta a mutabilidade. O primeiro caso diz que, se você tem um `&T`, e `T` implementa `Deref` para algum tipo `U`, pode obter um `&U` de forma transparente. O segundo caso diz que a mesma coerção de desreferência acontece para referências mutáveis."
 
 #: src/ch15-02-deref.md
 msgid "The third case is trickier: Rust will also coerce a mutable reference to an immutable one. But the reverse is _not_ possible: Immutable references will never coerce to mutable references. Because of the borrowing rules, if you have a mutable reference, that mutable reference must be the only reference to that data (otherwise, the program wouldn’t compile). Converting one mutable reference to one immutable reference will never break the borrowing rules. Converting an immutable reference to a mutable reference would require that the initial immutable reference is the only immutable reference to that data, but the borrowing rules don’t guarantee that. Therefore, Rust can’t make the assumption that converting an immutable reference to a mutable reference is possible."
-msgstr ""
+msgstr "O terceiro caso é mais complicado: o Rust também converte uma referência mutável em uma imutável. Mas o inverso _não_ é possível: referências imutáveis nunca são convertidas em referências mutáveis. Por causa das regras de empréstimo, se você tem uma referência mutável, ela precisa ser a única referência a esses dados (caso contrário, o programa não compilaria). Converter uma referência mutável em uma referência imutável nunca quebra as regras de empréstimo. Converter uma referência imutável em uma referência mutável exigiria que a referência imutável inicial fosse a única referência imutável a esses dados, mas as regras de empréstimo não garantem isso. Por isso, o Rust não pode presumir que converter uma referência imutável em uma referência mutável é possível."
 
 #: src/ch15-03-drop.md
 msgid "The second trait important to the smart pointer pattern is `Drop`, which lets you customize what happens when a value is about to go out of scope. You can provide an implementation for the `Drop` trait on any type, and that code can be used to release resources like files or network connections."
-msgstr ""
+msgstr "O segundo trait importante para o padrão de ponteiro inteligente é `Drop`, que permite personalizar o que acontece quando um valor está prestes a sair do escopo. Você pode fornecer uma implementação do trait `Drop` para qualquer tipo, e esse código pode ser usado para liberar recursos, como arquivos ou conexões de rede."
 
 #: src/ch15-03-drop.md
 msgid "We’re introducing `Drop` in the context of smart pointers because the functionality of the `Drop` trait is almost always used when implementing a smart pointer. For example, when a `Box<T>` is dropped, it will deallocate the space on the heap that the box points to."
-msgstr ""
+msgstr "Estamos apresentando `Drop` no contexto de ponteiros inteligentes porque a funcionalidade do trait `Drop` quase sempre é usada ao implementar um ponteiro inteligente. Por exemplo, quando um `Box<T>` é descartado, ele desaloca o espaço no heap para o qual o box aponta."
 
 #: src/ch15-03-drop.md
 msgid "In some languages, for some types, the programmer must call code to free memory or resources every time they finish using an instance of those types. Examples include file handles, sockets, and locks. If the programmer forgets, the system might become overloaded and crash. In Rust, you can specify that a particular bit of code be run whenever a value goes out of scope, and the compiler will insert this code automatically. As a result, you don’t need to be careful about placing cleanup code everywhere in a program that an instance of a particular type is finished with—you still won’t leak resources!"
-msgstr ""
+msgstr "Em algumas linguagens, para alguns tipos, o programador precisa chamar código para liberar memória ou recursos toda vez que termina de usar uma instância desses tipos. Exemplos incluem handles de arquivo, sockets e locks. Se o programador se esquecer, o sistema pode ficar sobrecarregado e falhar. No Rust, você pode especificar que determinado trecho de código seja executado sempre que um valor sair do escopo, e o compilador vai inserir esse código automaticamente. Como consequência, você não precisa se preocupar em colocar código de limpeza em todos os pontos do programa em que uma instância de um determinado tipo deixa de ser usada — mesmo assim, você não vai vazar recursos!"
 
 #: src/ch15-03-drop.md
 msgid "You specify the code to run when a value goes out of scope by implementing the `Drop` trait. The `Drop` trait requires you to implement one method named `drop` that takes a mutable reference to `self`. To see when Rust calls `drop`, let’s implement `drop` with `println!` statements for now."
-msgstr ""
+msgstr "Você especifica o código a ser executado quando um valor sai do escopo ao implementar o trait `Drop`. O trait `Drop` exige que você implemente um método chamado `drop` que recebe uma referência mutável a `self`. Para ver quando o Rust chama `drop`, vamos implementar `drop` com instruções `println!` por enquanto."
 
 #: src/ch15-03-drop.md
 msgid "Listing 15-14 shows a `CustomSmartPointer` struct whose only custom functionality is that it will print `Dropping CustomSmartPointer!` when the instance goes out of scope, to show when Rust runs the `drop` method."
-msgstr ""
+msgstr "A Listagem 15-14 mostra um struct `CustomSmartPointer` cuja única funcionalidade personalizada é imprimir `Dropping CustomSmartPointer!` quando a instância sair do escopo, para mostrar quando o Rust executa o método `drop`."
 
 #: src/ch15-03-drop.md
 msgid "<Listing number=\"15-14\" file-name=\"src/main.rs\" caption=\"A `CustomSmartPointer` struct that implements the `Drop` trait where we would put our cleanup code\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-14\" file-name=\"src/main.rs\" caption=\"Um struct `CustomSmartPointer` que implementa o trait `Drop`, onde colocaríamos nosso código de limpeza\">\n"
 
 #: src/ch15-03-drop.md
 msgid "\"Dropping CustomSmartPointer with data `{}`!\""
@@ -15504,15 +15506,15 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "The `Drop` trait is included in the prelude, so we don’t need to bring it into scope. We implement the `Drop` trait on `CustomSmartPointer` and provide an implementation for the `drop` method that calls `println!`. The body of the `drop` method is where you would place any logic that you wanted to run when an instance of your type goes out of scope. We’re printing some text here to demonstrate visually when Rust will call `drop`."
-msgstr ""
+msgstr "O trait `Drop` está incluído no prelúdio, então não precisamos trazê-lo para o escopo. Implementamos o trait `Drop` em `CustomSmartPointer` e fornecemos uma implementação do método `drop` que chama `println!`. O corpo do método `drop` é onde você colocaria qualquer lógica que quisesse executar quando uma instância do seu tipo sai do escopo. Estamos imprimindo algum texto aqui para demonstrar visualmente quando o Rust vai chamar `drop`."
 
 #: src/ch15-03-drop.md
 msgid "In `main`, we create two instances of `CustomSmartPointer` and then print `CustomSmartPointers created`. At the end of `main`, our instances of `CustomSmartPointer` will go out of scope, and Rust will call the code we put in the `drop` method, printing our final message. Note that we didn’t need to call the `drop` method explicitly."
-msgstr ""
+msgstr "Em `main`, criamos duas instâncias de `CustomSmartPointer` e depois imprimimos `CustomSmartPointers created`. No fim de `main`, nossas instâncias de `CustomSmartPointer` vão sair do escopo, e o Rust vai chamar o código que colocamos no método `drop`, imprimindo nossa mensagem final. Observe que não precisamos chamar o método `drop` explicitamente."
 
 #: src/ch15-03-drop.md
 msgid "When we run this program, we’ll see the following output:"
-msgstr ""
+msgstr "Quando executarmos este programa, vamos ver a seguinte saída:"
 
 #: src/ch15-03-drop.md
 msgid ""
@@ -15529,7 +15531,7 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "Rust automatically called `drop` for us when our instances went out of scope, calling the code we specified. Variables are dropped in the reverse order of their creation, so `d` was dropped before `c`. This example’s purpose is to give you a visual guide to how the `drop` method works; usually you would specify the cleanup code that your type needs to run rather than a print message."
-msgstr ""
+msgstr "O Rust chamou `drop` automaticamente para nós quando nossas instâncias saíram do escopo, executando o código que especificamos. As variáveis são descartadas na ordem inversa à da sua criação, então `d` foi descartada antes de `c`. O objetivo deste exemplo é dar a você um guia visual de como o método `drop` funciona; normalmente, você especificaria o código de limpeza de que o seu tipo precisa, em vez de uma mensagem impressa."
 
 #: src/ch15-03-drop.md
 msgid "<a id=\"dropping-a-value-early-with-std-mem-drop\"></a>"
@@ -15537,15 +15539,15 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "Unfortunately, it’s not straightforward to disable the automatic `drop` functionality. Disabling `drop` isn’t usually necessary; the whole point of the `Drop` trait is that it’s taken care of automatically. Occasionally, however, you might want to clean up a value early. One example is when using smart pointers that manage locks: You might want to force the `drop` method that releases the lock so that other code in the same scope can acquire the lock. Rust doesn’t let you call the `Drop` trait’s `drop` method manually; instead, you have to call the `std::mem::drop` function provided by the standard library if you want to force a value to be dropped before the end of its scope."
-msgstr ""
+msgstr "Infelizmente, não é simples desativar a funcionalidade automática de `drop`. Desativar `drop` normalmente não é necessário; a própria razão de ser do trait `Drop` é que isso é feito automaticamente. Ocasionalmente, porém, você pode querer limpar um valor antecipadamente. Um exemplo é quando usamos ponteiros inteligentes que gerenciam locks: você pode querer forçar o método `drop` que libera o lock, para que outro código no mesmo escopo possa adquirir o lock. O Rust não permite que você chame o método `drop` do trait `Drop` manualmente; em vez disso, você precisa chamar a função `std::mem::drop` fornecida pela biblioteca padrão, se quiser forçar um valor a ser descartado antes do fim do seu escopo."
 
 #: src/ch15-03-drop.md
 msgid "Trying to call the `Drop` trait’s `drop` method manually by modifying the `main` function from Listing 15-14 won’t work, as shown in Listing 15-15."
-msgstr ""
+msgstr "Tentar chamar manualmente o método `drop` do trait `Drop`, modificando a função `main` da Listagem 15-14, não vai funcionar, como mostra a Listagem 15-15."
 
 #: src/ch15-03-drop.md
 msgid "<Listing number=\"15-15\" file-name=\"src/main.rs\" caption=\"Attempting to call the `drop` method from the `Drop` trait manually to clean up early\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-15\" file-name=\"src/main.rs\" caption=\"Tentando chamar manualmente o método `drop` do trait `Drop` para limpar antecipadamente\">\n"
 
 #: src/ch15-03-drop.md
 msgid "\"some data\""
@@ -15561,7 +15563,7 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "When we try to compile this code, we’ll get this error:"
-msgstr ""
+msgstr "Ao tentar compilar este código, vamos obter este erro:"
 
 #: src/ch15-03-drop.md
 msgid ""
@@ -15587,27 +15589,27 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "This error message states that we’re not allowed to explicitly call `drop`. The error message uses the term _destructor_, which is the general programming term for a function that cleans up an instance. A _destructor_ is analogous to a _constructor_, which creates an instance. The `drop` function in Rust is one particular destructor."
-msgstr ""
+msgstr "Esta mensagem de erro afirma que não podemos chamar `drop` explicitamente. A mensagem usa o termo _destrutor_, que é o termo geral de programação para uma função que limpa uma instância. Um _destrutor_ é análogo a um _construtor_, que cria uma instância. A função `drop` no Rust é um destrutor específico."
 
 #: src/ch15-03-drop.md
 msgid "Rust doesn’t let us call `drop` explicitly, because Rust would still automatically call `drop` on the value at the end of `main`. This would cause a double free error because Rust would be trying to clean up the same value twice."
-msgstr ""
+msgstr "O Rust não nos deixa chamar `drop` explicitamente, porque ele ainda chamaria `drop` automaticamente no valor no fim de `main`. Isso causaria um erro de double free, porque o Rust tentaria limpar o mesmo valor duas vezes."
 
 #: src/ch15-03-drop.md
 msgid "We can’t disable the automatic insertion of `drop` when a value goes out of scope, and we can’t call the `drop` method explicitly. So, if we need to force a value to be cleaned up early, we use the `std::mem::drop` function."
-msgstr ""
+msgstr "Não podemos desativar a inserção automática de `drop` quando um valor sai do escopo, e não podemos chamar o método `drop` explicitamente. Por isso, se precisarmos forçar a limpeza antecipada de um valor, usamos a função `std::mem::drop`."
 
 #: src/ch15-03-drop.md
 msgid "The `std::mem::drop` function is different from the `drop` method in the `Drop` trait. We call it by passing as an argument the value we want to force-drop. The function is in the prelude, so we can modify `main` in Listing 15-15 to call the `drop` function, as shown in Listing 15-16."
-msgstr ""
+msgstr "A função `std::mem::drop` é diferente do método `drop` do trait `Drop`. Nós a chamamos passando como argumento o valor que queremos descartar à força. A função está no prelúdio, então podemos modificar `main` na Listagem 15-15 para chamar a função `drop`, como mostra a Listagem 15-16."
 
 #: src/ch15-03-drop.md
 msgid "<Listing number=\"15-16\" file-name=\"src/main.rs\" caption=\"Calling `std::mem::drop` to explicitly drop a value before it goes out of scope\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-16\" file-name=\"src/main.rs\" caption=\"Chamando `std::mem::drop` para descartar explicitamente um valor antes de ele sair do escopo\">\n"
 
 #: src/ch15-03-drop.md
 msgid "Running this code will print the following:"
-msgstr ""
+msgstr "Executar este código vai imprimir o seguinte:"
 
 #: src/ch15-03-drop.md
 msgid ""
@@ -15624,43 +15626,43 @@ msgstr ""
 
 #: src/ch15-03-drop.md
 msgid "The text ``Dropping CustomSmartPointer with data `some data`!`` is printed between the `CustomSmartPointer created` and `CustomSmartPointer dropped before the end of main` text, showing that the `drop` method code is called to drop `c` at that point."
-msgstr ""
+msgstr "O texto ``Dropping CustomSmartPointer with data `some data`!`` é impresso entre os textos `CustomSmartPointer created` e `CustomSmartPointer dropped before the end of main`, mostrando que o código do método `drop` é chamado para descartar `c` naquele ponto."
 
 #: src/ch15-03-drop.md
 msgid "You can use code specified in a `Drop` trait implementation in many ways to make cleanup convenient and safe: For instance, you could use it to create your own memory allocator! With the `Drop` trait and Rust’s ownership system, you don’t have to remember to clean up, because Rust does it automatically."
-msgstr ""
+msgstr "Você pode usar o código especificado em uma implementação do trait `Drop` de muitas maneiras para tornar a limpeza conveniente e segura: por exemplo, você poderia usá-lo para criar seu próprio alocador de memória! Com o trait `Drop` e o sistema de ownership do Rust, você não precisa se lembrar de fazer a limpeza, porque o Rust faz isso automaticamente."
 
 #: src/ch15-03-drop.md
 msgid "You also don’t have to worry about problems resulting from accidentally cleaning up values still in use: The ownership system that makes sure references are always valid also ensures that `drop` gets called only once when the value is no longer being used."
-msgstr ""
+msgstr "Você também não precisa se preocupar com problemas decorrentes da limpeza acidental de valores que ainda estão em uso: o sistema de ownership que garante que as referências sejam sempre válidas também garante que `drop` seja chamado apenas uma vez, quando o valor não está mais sendo usado."
 
 #: src/ch15-03-drop.md
 msgid "Now that we’ve examined `Box<T>` and some of the characteristics of smart pointers, let’s look at a few other smart pointers defined in the standard library."
-msgstr ""
+msgstr "Agora que examinamos `Box<T>` e algumas das características dos ponteiros inteligentes, vamos ver alguns outros ponteiros inteligentes definidos na biblioteca padrão."
 
 #: src/ch15-04-rc.md
 msgid "`Rc<T>`, the Reference-Counted Smart Pointer"
-msgstr ""
+msgstr "`Rc<T>`, o ponteiro inteligente de contagem de referências {#rct-the-reference-counted-smart-pointer}"
 
 #: src/ch15-04-rc.md
 msgid "In the majority of cases, ownership is clear: You know exactly which variable owns a given value. However, there are cases when a single value might have multiple owners. For example, in graph data structures, multiple edges might point to the same node, and that node is conceptually owned by all of the edges that point to it. A node shouldn’t be cleaned up unless it doesn’t have any edges pointing to it and so has no owners."
-msgstr ""
+msgstr "Na maioria dos casos, o ownership é claro: você sabe exatamente qual variável é o dono de um determinado valor. No entanto, há casos em que um único valor pode ter vários donos. Por exemplo, em estruturas de dados de grafo, várias arestas podem apontar para o mesmo nó, e esse nó pertence conceitualmente a todas as arestas que apontam para ele. Um nó só deve ser limpo quando não tiver nenhuma aresta apontando para ele e, portanto, nenhum dono."
 
 #: src/ch15-04-rc.md
 msgid "You have to enable multiple ownership explicitly by using the Rust type `Rc<T>`, which is an abbreviation for _reference counting_. The `Rc<T>` type keeps track of the number of references to a value to determine whether or not the value is still in use. If there are zero references to a value, the value can be cleaned up without any references becoming invalid."
-msgstr ""
+msgstr "Você precisa permitir explicitamente múltiplos donos, usando o tipo `Rc<T>` do Rust, que é uma abreviação de _contagem de referências_. O tipo `Rc<T>` mantém o controle do número de referências a um valor para determinar se o valor ainda está em uso. Se não houver nenhuma referência a um valor, ele pode ser limpo sem que nenhuma referência fique inválida."
 
 #: src/ch15-04-rc.md
 msgid "Imagine `Rc<T>` as a TV in a family room. When one person enters to watch TV, they turn it on. Others can come into the room and watch the TV. When the last person leaves the room, they turn off the TV because it’s no longer being used. If someone turns off the TV while others are still watching it, there would be an uproar from the remaining TV watchers!"
-msgstr ""
+msgstr "Imagine `Rc<T>` como uma TV em uma sala de estar. Quando uma pessoa entra para assistir à TV, ela a liga. Outras pessoas podem entrar na sala e assistir à TV. Quando a última pessoa sai da sala, ela desliga a TV, porque ninguém mais a está usando. Se alguém desligasse a TV enquanto outras pessoas ainda estivessem assistindo, haveria um alvoroço entre os espectadores restantes!"
 
 #: src/ch15-04-rc.md
 msgid "We use the `Rc<T>` type when we want to allocate some data on the heap for multiple parts of our program to read and we can’t determine at compile time which part will finish using the data last. If we knew which part would finish last, we could just make that part the data’s owner, and the normal ownership rules enforced at compile time would take effect."
-msgstr ""
+msgstr "Usamos o tipo `Rc<T>` quando queremos alocar alguns dados no heap para que várias partes do nosso programa os leiam, e não conseguimos determinar em tempo de compilação qual parte vai terminar de usar os dados por último. Se soubéssemos qual parte terminaria por último, poderíamos simplesmente fazer dessa parte o dono dos dados, e as regras normais de ownership, impostas em tempo de compilação, entrariam em vigor."
 
 #: src/ch15-04-rc.md
 msgid "Note that `Rc<T>` is only for use in single-threaded scenarios. When we discuss concurrency in Chapter 16, we’ll cover how to do reference counting in multithreaded programs."
-msgstr ""
+msgstr "Observe que `Rc<T>` é apenas para uso em cenários de thread única. Quando discutirmos concorrência no Capítulo 16, vamos abordar como fazer contagem de referências em programas com múltiplas threads."
 
 #: src/ch15-04-rc.md
 msgid "<a id=\"using-rct-to-share-data\"></a>"
@@ -15668,11 +15670,11 @@ msgstr ""
 
 #: src/ch15-04-rc.md
 msgid "Sharing Data"
-msgstr ""
+msgstr "Compartilhando dados {#sharing-data}"
 
 #: src/ch15-04-rc.md
 msgid "Let’s return to our cons list example in Listing 15-5. Recall that we defined it using `Box<T>`. This time, we’ll create two lists that both share ownership of a third list. Conceptually, this looks similar to Figure 15-3."
-msgstr ""
+msgstr "Vamos voltar ao nosso exemplo de lista cons da Listagem 15-5. Lembre-se de que a definimos usando `Box<T>`. Desta vez, vamos criar duas listas que compartilham o ownership de uma terceira lista. Conceitualmente, isso se parece com a Figura 15-3."
 
 #: src/ch15-04-rc.md
 msgid ""
@@ -15682,26 +15684,31 @@ msgid ""
 "f list 'a'. A linked list with the label 'c' points to an element that contains the integer 4 and also points to the first element of list 'a' so th\n"
 "at the tails of lists 'b' and 'c' are both list 'a'.\" src=\"img/trpl15-03.svg\" class=\"center\" />"
 msgstr ""
+"<img alt=\"Uma lista encadeada com o rótulo “a” apontando para três elementos. O primeiro elemento contém o inteiro 5 e aponta para o segundo elemento. O\n"
+"segundo elemento contém o inteiro 10 e aponta para o terceiro elemento. O terceiro elemento contém o valor “Nil”, que sinaliza o fim da lista; ele não\n"
+"aponta para lugar nenhum. Uma lista encadeada com o rótulo “b” aponta para um elemento que contém o inteiro 3 e aponta para o primeiro elemento da lista\n"
+"“a”. Uma lista encadeada com o rótulo “c” aponta para um elemento que contém o inteiro 4 e também aponta para o primeiro elemento da lista “a”, de modo que\n"
+"as caudas das listas “b” e “c” são ambas a lista “a”.\" src=\"img/trpl15-03.svg\" class=\"center\" />"
 
 #: src/ch15-04-rc.md
 msgid "<span class=\"caption\">Figure 15-3: Two lists, `b` and `c`, sharing ownership of a third list, `a`</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 15-3: Duas listas, `b` e `c`, compartilhando o ownership de uma terceira lista, `a`</span>"
 
 #: src/ch15-04-rc.md
 msgid "We’ll create list `a` that contains `5` and then `10`. Then, we’ll make two more lists: `b` that starts with `3` and `c` that starts with `4`. Both the `b` and `c` lists will then continue on to the first `a` list containing `5` and `10`. In other words, both lists will share the first list containing `5` and `10`."
-msgstr ""
+msgstr "Vamos criar a lista `a`, que contém `5` e depois `10`. Em seguida, vamos criar mais duas listas: `b`, que começa com `3`, e `c`, que começa com `4`. Tanto a lista `b` quanto a `c` vão então seguir até a primeira lista `a`, que contém `5` e `10`. Em outras palavras, as duas listas vão compartilhar a primeira lista, que contém `5` e `10`."
 
 #: src/ch15-04-rc.md
 msgid "Trying to implement this scenario using our definition of `List` with `Box<T>` won’t work, as shown in Listing 15-17."
-msgstr ""
+msgstr "Tentar implementar esse cenário usando nossa definição de `List` com `Box<T>` não vai funcionar, como mostrado na Listagem 15-17."
 
 #: src/ch15-04-rc.md
 msgid "<Listing number=\"15-17\" file-name=\"src/main.rs\" caption=\"Demonstrating that we’re not allowed to have two lists using `Box<T>` that try to share ownership of a third list\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-17\" file-name=\"src/main.rs\" caption=\"Demonstrando que não podemos ter duas listas usando `Box<T>` que tentam compartilhar o ownership de uma terceira lista\">\n"
 
 #: src/ch15-04-rc.md
 msgid "When we compile this code, we get this error:"
-msgstr ""
+msgstr "Quando compilamos este código, recebemos este erro:"
 
 #: src/ch15-04-rc.md
 msgid ""
@@ -15734,27 +15741,27 @@ msgstr ""
 
 #: src/ch15-04-rc.md
 msgid "The `Cons` variants own the data they hold, so when we create the `b` list, `a` is moved into `b` and `b` owns `a`. Then, when we try to use `a` again when creating `c`, we’re not allowed to because `a` has been moved."
-msgstr ""
+msgstr "As variantes `Cons` são donas dos dados que armazenam, então, ao criar a lista `b`, `a` é movida para `b`, e `b` passa a ser dona de `a`. Depois, quando tentamos usar `a` de novo ao criar `c`, não podemos, porque `a` já foi movida."
 
 #: src/ch15-04-rc.md
 msgid "We could change the definition of `Cons` to hold references instead, but then we would have to specify lifetime parameters. By specifying lifetime parameters, we would be specifying that every element in the list will live at least as long as the entire list. This is the case for the elements and lists in Listing 15-17, but not in every scenario."
-msgstr ""
+msgstr "Poderíamos mudar a definição de `Cons` para armazenar referências, mas aí precisaríamos especificar parâmetros de tempo de vida. Ao especificar parâmetros de tempo de vida, estaríamos definindo que cada elemento da lista vai viver pelo menos tanto quanto a lista inteira. Isso acontece com os elementos e as listas da Listagem 15-17, mas não em todos os cenários."
 
 #: src/ch15-04-rc.md
 msgid "Instead, we’ll change our definition of `List` to use `Rc<T>` in place of `Box<T>`, as shown in Listing 15-18. Each `Cons` variant will now hold a value and an `Rc<T>` pointing to a `List`. When we create `b`, instead of taking ownership of `a`, we’ll clone the `Rc<List>` that `a` is holding, thereby increasing the number of references from one to two and letting `a` and `b` share ownership of the data in that `Rc<List>`. We’ll also clone `a` when creating `c`, increasing the number of references from two to three. Every time we call `Rc::clone`, the reference count to the data within the `Rc<List>` will increase, and the data won’t be cleaned up unless there are zero references to it."
-msgstr ""
+msgstr "Em vez disso, vamos mudar nossa definição de `List` para usar `Rc<T>` no lugar de `Box<T>`, como mostrado na Listagem 15-18. Cada variante `Cons` agora vai armazenar um valor e um `Rc<T>` que aponta para uma `List`. Quando criamos `b`, em vez de assumir o ownership de `a`, vamos clonar o `Rc<List>` que `a` está armazenando, aumentando assim o número de referências de uma para duas e permitindo que `a` e `b` compartilhem o ownership dos dados desse `Rc<List>`. Também vamos clonar `a` ao criar `c`, aumentando o número de referências de duas para três. Toda vez que chamamos `Rc::clone`, a contagem de referências aos dados dentro do `Rc<List>` aumenta, e os dados só serão liberados quando não houver mais nenhuma referência a eles."
 
 #: src/ch15-04-rc.md
 msgid "<Listing number=\"15-18\" file-name=\"src/main.rs\" caption=\"A definition of `List` that uses `Rc<T>`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-18\" file-name=\"src/main.rs\" caption=\"Uma definição de `List` que usa `Rc<T>`\">\n"
 
 #: src/ch15-04-rc.md
 msgid "We need to add a `use` statement to bring `Rc<T>` into scope because it’s not in the prelude. In `main`, we create the list holding `5` and `10` and store it in a new `Rc<List>` in `a`. Then, when we create `b` and `c`, we call the `Rc::clone` function and pass a reference to the `Rc<List>` in `a` as an argument."
-msgstr ""
+msgstr "Precisamos adicionar uma instrução `use` para trazer `Rc<T>` para o escopo, porque ele não está no prelúdio. Em `main`, criamos a lista que contém `5` e `10` e a armazenamos em um novo `Rc<List>` em `a`. Depois, ao criar `b` e `c`, chamamos a função `Rc::clone` e passamos uma referência ao `Rc<List>` em `a` como argumento."
 
 #: src/ch15-04-rc.md
 msgid "We could have called `a.clone()` rather than `Rc::clone(&a)`, but Rust’s convention is to use `Rc::clone` in this case. The implementation of `Rc::clone` doesn’t make a deep copy of all the data like most types’ implementations of `clone` do. The call to `Rc::clone` only increments the reference count, which doesn’t take much time. Deep copies of data can take a lot of time. By using `Rc::clone` for reference counting, we can visually distinguish between the deep-copy kinds of clones and the kinds of clones that increase the reference count. When looking for performance problems in the code, we only need to consider the deep-copy clones and can disregard calls to `Rc::clone`."
-msgstr ""
+msgstr "Poderíamos ter chamado `a.clone()` em vez de `Rc::clone(&a)`, mas a convenção do Rust é usar `Rc::clone` nesse caso. A implementação de `Rc::clone` não faz uma cópia profunda de todos os dados, como fazem as implementações de `clone` da maioria dos tipos. A chamada a `Rc::clone` apenas incrementa a contagem de referências, o que não toma muito tempo. Cópias profundas de dados podem levar bastante tempo. Ao usar `Rc::clone` para a contagem de referências, podemos distinguir visualmente os clones de cópia profunda dos clones que aumentam a contagem de referências. Ao procurar problemas de desempenho no código, precisamos considerar apenas os clones de cópia profunda e podemos desconsiderar as chamadas a `Rc::clone`."
 
 #: src/ch15-04-rc.md
 msgid "<a id=\"cloning-an-rct-increases-the-reference-count\"></a>"
@@ -15762,19 +15769,19 @@ msgstr ""
 
 #: src/ch15-04-rc.md
 msgid "Cloning to Increase the Reference Count"
-msgstr ""
+msgstr "Clonando para aumentar a contagem de referências {#cloning-to-increase-the-reference-count}"
 
 #: src/ch15-04-rc.md
 msgid "Let’s change our working example in Listing 15-18 so that we can see the reference counts changing as we create and drop references to the `Rc<List>` in `a`."
-msgstr ""
+msgstr "Vamos modificar nosso exemplo da Listagem 15-18 para que possamos ver as contagens de referências mudando conforme criamos e descartamos referências ao `Rc<List>` em `a`."
 
 #: src/ch15-04-rc.md
 msgid "In Listing 15-19, we’ll change `main` so that it has an inner scope around list `c`; then, we can see how the reference count changes when `c` goes out of scope."
-msgstr ""
+msgstr "Na Listagem 15-19, vamos mudar `main` para que ele tenha um escopo interno em volta da lista `c`; assim, podemos ver como a contagem de referências muda quando `c` sai do escopo."
 
 #: src/ch15-04-rc.md
 msgid "<Listing number=\"15-19\" file-name=\"src/main.rs\" caption=\"Printing the reference count\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-19\" file-name=\"src/main.rs\" caption=\"Imprimindo a contagem de referências\">\n"
 
 #: src/ch15-04-rc.md
 msgid "\"count after creating a = {}\""
@@ -15794,11 +15801,11 @@ msgstr ""
 
 #: src/ch15-04-rc.md
 msgid "At each point in the program where the reference count changes, we print the reference count, which we get by calling the `Rc::strong_count` function. This function is named `strong_count` rather than `count` because the `Rc<T>` type also has a `weak_count`; we’ll see what `weak_count` is used for in [“Preventing Reference Cycles Using `Weak<T>`”](ch15-06-reference-cycles.html#preventing-reference-cycles-turning-an-rct-into-a-weakt)<!-- ignore -->."
-msgstr ""
+msgstr "Em cada ponto do programa em que a contagem de referências muda, imprimimos a contagem de referências, que obtemos chamando a função `Rc::strong_count`. Essa função se chama `strong_count`, e não `count`, porque o tipo `Rc<T>` também tem um `weak_count`; vamos ver para que serve o `weak_count` em [“Evitando ciclos de referências usando `Weak<T>`”](ch15-06-reference-cycles.html#preventing-reference-cycles-turning-an-rct-into-a-weakt)<!-- ignore -->."
 
 #: src/ch15-04-rc.md
 msgid "This code prints the following:"
-msgstr ""
+msgstr "Este código imprime o seguinte:"
 
 #: src/ch15-04-rc.md
 msgid ""
@@ -15816,27 +15823,27 @@ msgstr ""
 
 #: src/ch15-04-rc.md
 msgid "We can see that the `Rc<List>` in `a` has an initial reference count of 1; then, each time we call `clone`, the count goes up by 1. When `c` goes out of scope, the count goes down by 1. We don’t have to call a function to decrease the reference count like we have to call `Rc::clone` to increase the reference count: The implementation of the `Drop` trait decreases the reference count automatically when an `Rc<T>` value goes out of scope."
-msgstr ""
+msgstr "Podemos ver que o `Rc<List>` em `a` tem uma contagem de referências inicial de 1; depois, cada vez que chamamos `clone`, a contagem sobe em 1. Quando `c` sai do escopo, a contagem desce em 1. Não precisamos chamar uma função para diminuir a contagem de referências, como precisamos chamar `Rc::clone` para aumentá-la: a implementação do trait `Drop` diminui a contagem de referências automaticamente quando um valor `Rc<T>` sai do escopo."
 
 #: src/ch15-04-rc.md
 msgid "What we can’t see in this example is that when `b` and then `a` go out of scope at the end of `main`, the count is 0, and the `Rc<List>` is cleaned up completely. Using `Rc<T>` allows a single value to have multiple owners, and the count ensures that the value remains valid as long as any of the owners still exist."
-msgstr ""
+msgstr "O que não podemos ver neste exemplo é que, quando `b` e depois `a` saem do escopo no fim de `main`, a contagem chega a 0, e o `Rc<List>` é totalmente liberado. Usar `Rc<T>` permite que um único valor tenha vários donos, e a contagem garante que o valor continue válido enquanto algum dos donos ainda existir."
 
 #: src/ch15-04-rc.md
 msgid "Via immutable references, `Rc<T>` allows you to share data between multiple parts of your program for reading only. If `Rc<T>` allowed you to have multiple mutable references too, you might violate one of the borrowing rules discussed in Chapter 4: Multiple mutable borrows to the same place can cause data races and inconsistencies. But being able to mutate data is very useful! In the next section, we’ll discuss the interior mutability pattern and the `RefCell<T>` type that you can use in conjunction with an `Rc<T>` to work with this immutability restriction."
-msgstr ""
+msgstr "Por meio de referências imutáveis, `Rc<T>` permite que você compartilhe dados entre várias partes do seu programa apenas para leitura. Se `Rc<T>` permitisse também várias referências mutáveis, você poderia violar uma das regras de empréstimo discutidas no Capítulo 4: vários empréstimos mutáveis para o mesmo lugar podem causar corridas de dados e inconsistências. Mas poder alterar dados é muito útil! Na próxima seção, vamos discutir o padrão de mutabilidade interior e o tipo `RefCell<T>`, que você pode usar em conjunto com um `Rc<T>` para lidar com essa restrição de imutabilidade."
 
 #: src/ch15-05-interior-mutability.md
 msgid "_Interior mutability_ is a design pattern in Rust that allows you to mutate data even when there are immutable references to that data; normally, this action is disallowed by the borrowing rules. To mutate data, the pattern uses `unsafe` code inside a data structure to bend Rust’s usual rules that govern mutation and borrowing. Unsafe code indicates to the compiler that we’re checking the rules manually instead of relying on the compiler to check them for us; we will discuss unsafe code more in Chapter 20."
-msgstr ""
+msgstr "_Mutabilidade interior_ é um padrão de projeto no Rust que permite alterar dados mesmo quando existem referências imutáveis a esses dados; normalmente, essa ação é proibida pelas regras de empréstimo. Para alterar dados, o padrão usa código `unsafe` dentro de uma estrutura de dados para contornar as regras usuais do Rust que regem a alteração e o empréstimo. Código inseguro indica ao compilador que estamos verificando as regras manualmente, em vez de depender do compilador para verificá-las por nós; vamos discutir código inseguro com mais detalhes no Capítulo 20."
 
 #: src/ch15-05-interior-mutability.md
 msgid "We can use types that use the interior mutability pattern only when we can ensure that the borrowing rules will be followed at runtime, even though the compiler can’t guarantee that. The `unsafe` code involved is then wrapped in a safe API, and the outer type is still immutable."
-msgstr ""
+msgstr "Podemos usar tipos que seguem o padrão de mutabilidade interior apenas quando podemos garantir que as regras de empréstimo serão respeitadas em tempo de execução, mesmo que o compilador não consiga garantir isso. O código `unsafe` envolvido fica então encapsulado em uma API segura, e o tipo externo continua imutável."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Let’s explore this concept by looking at the `RefCell<T>` type that follows the interior mutability pattern."
-msgstr ""
+msgstr "Vamos explorar esse conceito analisando o tipo `RefCell<T>`, que segue o padrão de mutabilidade interior."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<a id=\"enforcing-borrowing-rules-at-runtime-with-refcellt\"></a>"
@@ -15844,55 +15851,55 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Enforcing Borrowing Rules at Runtime"
-msgstr ""
+msgstr "Aplicando as regras de empréstimo em tempo de execução {#enforcing-borrowing-rules-at-runtime}"
 
 #: src/ch15-05-interior-mutability.md
 msgid "Unlike `Rc<T>`, the `RefCell<T>` type represents single ownership over the data it holds. So, what makes `RefCell<T>` different from a type like `Box<T>`? Recall the borrowing rules you learned in Chapter 4:"
-msgstr ""
+msgstr "Diferentemente de `Rc<T>`, o tipo `RefCell<T>` representa o ownership único sobre os dados que armazena. Então, o que torna `RefCell<T>` diferente de um tipo como `Box<T>`? Lembre-se das regras de empréstimo que você aprendeu no Capítulo 4:"
 
 #: src/ch15-05-interior-mutability.md
 msgid "At any given time, you can have _either_ one mutable reference or any number of immutable references (but not both)."
-msgstr ""
+msgstr "A qualquer momento, você pode ter _ou_ uma referência mutável ou qualquer número de referências imutáveis (mas não as duas)."
 
 #: src/ch15-05-interior-mutability.md
 msgid "With references and `Box<T>`, the borrowing rules’ invariants are enforced at compile time. With `RefCell<T>`, these invariants are enforced _at runtime_. With references, if you break these rules, you’ll get a compiler error. With `RefCell<T>`, if you break these rules, your program will panic and exit."
-msgstr ""
+msgstr "Com referências e `Box<T>`, os invariantes das regras de empréstimo são aplicados em tempo de compilação. Com `RefCell<T>`, esses invariantes são aplicados _em tempo de execução_. Com referências, se você quebrar essas regras, receberá um erro de compilação. Com `RefCell<T>`, se você quebrar essas regras, seu programa vai entrar em pânico e encerrar."
 
 #: src/ch15-05-interior-mutability.md
 msgid "The advantages of checking the borrowing rules at compile time are that errors will be caught sooner in the development process, and there is no impact on runtime performance because all the analysis is completed beforehand. For those reasons, checking the borrowing rules at compile time is the best choice in the majority of cases, which is why this is Rust’s default."
-msgstr ""
+msgstr "As vantagens de verificar as regras de empréstimo em tempo de compilação são que os erros são detectados mais cedo no processo de desenvolvimento e não há impacto no desempenho em tempo de execução, porque toda a análise é concluída antecipadamente. Por esses motivos, verificar as regras de empréstimo em tempo de compilação é a melhor escolha na maioria dos casos, e por isso é o padrão do Rust."
 
 #: src/ch15-05-interior-mutability.md
 msgid "The advantage of checking the borrowing rules at runtime instead is that certain memory-safe scenarios are then allowed, where they would’ve been disallowed by the compile-time checks. Static analysis, like the Rust compiler, is inherently conservative. Some properties of code are impossible to detect by analyzing the code: The most famous example is the Halting Problem, which is beyond the scope of this book but is an interesting topic to research."
-msgstr ""
+msgstr "A vantagem de verificar as regras de empréstimo em tempo de execução, por outro lado, é que alguns cenários seguros quanto à memória passam a ser permitidos, cenários que seriam proibidos pelas verificações em tempo de compilação. A análise estática, como a do compilador do Rust, é inerentemente conservadora. Algumas propriedades do código são impossíveis de detectar analisando o código: o exemplo mais famoso é o Problema da Parada, que está fora do escopo deste livro, mas é um tema interessante para pesquisar."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Because some analysis is impossible, if the Rust compiler can’t be sure the code complies with the ownership rules, it might reject a correct program; in this way, it’s conservative. If Rust accepted an incorrect program, users wouldn’t be able to trust the guarantees Rust makes. However, if Rust rejects a correct program, the programmer will be inconvenienced, but nothing catastrophic can occur. The `RefCell<T>` type is useful when you’re sure your code follows the borrowing rules but the compiler is unable to understand and guarantee that."
-msgstr ""
+msgstr "Como algumas análises são impossíveis, se o compilador do Rust não puder ter certeza de que o código respeita as regras de ownership, ele pode rejeitar um programa correto; dessa forma, ele é conservador. Se o Rust aceitasse um programa incorreto, os usuários não poderiam confiar nas garantias que o Rust oferece. No entanto, se o Rust rejeitar um programa correto, o programador será incomodado, mas nada catastrófico pode acontecer. O tipo `RefCell<T>` é útil quando você tem certeza de que seu código segue as regras de empréstimo, mas o compilador não consegue entender e garantir isso."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Similar to `Rc<T>`, `RefCell<T>` is only for use in single-threaded scenarios and will give you a compile-time error if you try using it in a multithreaded context. We’ll talk about how to get the functionality of `RefCell<T>` in a multithreaded program in Chapter 16."
-msgstr ""
+msgstr "Assim como `Rc<T>`, `RefCell<T>` é apenas para uso em cenários de thread única e vai gerar um erro em tempo de compilação se você tentar usá-lo em um contexto multithread. Vamos falar sobre como obter a funcionalidade de `RefCell<T>` em um programa multithread no Capítulo 16."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Here is a recap of the reasons to choose `Box<T>`, `Rc<T>`, or `RefCell<T>`:"
-msgstr ""
+msgstr "Aqui está um resumo dos motivos para escolher `Box<T>`, `Rc<T>` ou `RefCell<T>`:"
 
 #: src/ch15-05-interior-mutability.md
 msgid "`Rc<T>` enables multiple owners of the same data; `Box<T>` and `RefCell<T>` have single owners."
-msgstr ""
+msgstr "`Rc<T>` permite vários donos para os mesmos dados; `Box<T>` e `RefCell<T>` têm donos únicos."
 
 #: src/ch15-05-interior-mutability.md
 msgid "`Box<T>` allows immutable or mutable borrows checked at compile time; `Rc<T>` allows only immutable borrows checked at compile time; `RefCell<T>` allows immutable or mutable borrows checked at runtime."
-msgstr ""
+msgstr "`Box<T>` permite empréstimos imutáveis ou mutáveis verificados em tempo de compilação; `Rc<T>` permite apenas empréstimos imutáveis verificados em tempo de compilação; `RefCell<T>` permite empréstimos imutáveis ou mutáveis verificados em tempo de execução."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Because `RefCell<T>` allows mutable borrows checked at runtime, you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` is immutable."
-msgstr ""
+msgstr "Como `RefCell<T>` permite empréstimos mutáveis verificados em tempo de execução, você pode alterar o valor dentro do `RefCell<T>` mesmo quando o `RefCell<T>` é imutável."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Mutating the value inside an immutable value is the interior mutability pattern. Let’s look at a situation in which interior mutability is useful and examine how it’s possible."
-msgstr ""
+msgstr "Alterar o valor dentro de um valor imutável é o padrão de mutabilidade interior. Vamos ver uma situação em que a mutabilidade interior é útil e examinar como isso é possível."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<a id=\"interior-mutability-a-mutable-borrow-to-an-immutable-value\"></a>"
@@ -15900,15 +15907,15 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Using Interior Mutability"
-msgstr ""
+msgstr "Usando mutabilidade interior {#using-interior-mutability}"
 
 #: src/ch15-05-interior-mutability.md
 msgid "A consequence of the borrowing rules is that when you have an immutable value, you can’t borrow it mutably. For example, this code won’t compile:"
-msgstr ""
+msgstr "Uma consequência das regras de empréstimo é que, quando você tem um valor imutável, não pode pegá-lo emprestado de forma mutável. Por exemplo, este código não vai compilar:"
 
 #: src/ch15-05-interior-mutability.md
 msgid "If you tried to compile this code, you’d get the following error:"
-msgstr ""
+msgstr "Se você tentasse compilar este código, receberia o seguinte erro:"
 
 #: src/ch15-05-interior-mutability.md
 msgid ""
@@ -15933,11 +15940,11 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "However, there are situations in which it would be useful for a value to mutate itself in its methods but appear immutable to other code. Code outside the value’s methods would not be able to mutate the value. Using `RefCell<T>` is one way to get the ability to have interior mutability, but `RefCell<T>` doesn’t get around the borrowing rules completely: The borrow checker in the compiler allows this interior mutability, and the borrowing rules are checked at runtime instead. If you violate the rules, you’ll get a `panic!` instead of a compiler error."
-msgstr ""
+msgstr "No entanto, há situações em que seria útil que um valor se alterasse em seus métodos, mas parecesse imutável para outros trechos de código. O código fora dos métodos do valor não conseguiria alterá-lo. Usar `RefCell<T>` é uma forma de obter a capacidade de ter mutabilidade interior, mas `RefCell<T>` não contorna completamente as regras de empréstimo: o verificador de empréstimos do compilador permite essa mutabilidade interior, e as regras de empréstimo passam a ser verificadas em tempo de execução. Se você violar as regras, receberá um `panic!` em vez de um erro de compilação."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Let’s work through a practical example where we can use `RefCell<T>` to mutate an immutable value and see why that is useful."
-msgstr ""
+msgstr "Vamos ver um exemplo prático em que podemos usar `RefCell<T>` para alterar um valor imutável e entender por que isso é útil."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<a id=\"a-use-case-for-interior-mutability-mock-objects\"></a>"
@@ -15945,27 +15952,27 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Testing with Mock Objects"
-msgstr ""
+msgstr "Testando com objetos mock {#testing-with-mock-objects}"
 
 #: src/ch15-05-interior-mutability.md
 msgid "Sometimes during testing a programmer will use a type in place of another type, in order to observe particular behavior and assert that it’s implemented correctly. This placeholder type is called a _test double_. Think of it in the sense of a stunt double in filmmaking, where a person steps in and substitutes for an actor to do a particularly tricky scene. Test doubles stand in for other types when we’re running tests. _Mock objects_ are specific types of test doubles that record what happens during a test so that you can assert that the correct actions took place."
-msgstr ""
+msgstr "Às vezes, durante os testes, um programador vai usar um tipo no lugar de outro, para observar um comportamento específico e verificar se ele está implementado corretamente. Esse tipo substituto é chamado de _dublê de teste_. Pense nele no sentido de um dublê de cinema, em que uma pessoa entra no lugar de um ator para fazer uma cena particularmente complicada. Dublês de teste substituem outros tipos quando estamos executando testes. _Objetos mock_ são tipos específicos de dublês de teste que registram o que acontece durante um teste, para que você possa verificar se as ações corretas aconteceram."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Rust doesn’t have objects in the same sense as other languages have objects, and Rust doesn’t have mock object functionality built into the standard library as some other languages do. However, you can definitely create a struct that will serve the same purposes as a mock object."
-msgstr ""
+msgstr "O Rust não tem objetos no mesmo sentido em que outras linguagens têm objetos, e o Rust também não tem funcionalidade de objeto mock integrada à biblioteca padrão, como algumas outras linguagens têm. No entanto, você pode, com certeza, criar um struct que vai servir aos mesmos propósitos de um objeto mock."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Here’s the scenario we’ll test: We’ll create a library that tracks a value against a maximum value and sends messages based on how close to the maximum value the current value is. This library could be used to keep track of a user’s quota for the number of API calls they’re allowed to make, for example."
-msgstr ""
+msgstr "Este é o cenário que vamos testar: vamos criar uma biblioteca que acompanha um valor em relação a um valor máximo e envia mensagens com base em quão perto do máximo o valor atual está. Essa biblioteca poderia ser usada para acompanhar a cota de um usuário em relação ao número de chamadas de API que ele tem permissão para fazer, por exemplo."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Our library will only provide the functionality of tracking how close to the maximum a value is and what the messages should be at what times. Applications that use our library will be expected to provide the mechanism for sending the messages: The application could show the message to the user directly, send an email, send a text message, or do something else. The library doesn’t need to know that detail. All it needs is something that implements a trait we’ll provide, called `Messenger`. Listing 15-20 shows the library code."
-msgstr ""
+msgstr "Nossa biblioteca vai fornecer apenas a funcionalidade de acompanhar quão perto do máximo um valor está e em quais momentos cada mensagem deve ser enviada. Espera-se que as aplicações que usarem nossa biblioteca forneçam o mecanismo para enviar as mensagens: a aplicação poderia mostrar a mensagem diretamente ao usuário, enviar um e-mail, enviar uma mensagem de texto ou fazer outra coisa. A biblioteca não precisa saber esse detalhe. Tudo o que ela precisa é algo que implemente um trait que vamos fornecer, chamado `Messenger`. A Listagem 15-20 mostra o código da biblioteca."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<Listing number=\"15-20\" file-name=\"src/lib.rs\" caption=\"A library to keep track of how close a value is to a maximum value and warn when the value is at certain levels\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-20\" file-name=\"src/lib.rs\" caption=\"Uma biblioteca para acompanhar quão perto um valor está de um valor máximo e emitir avisos quando o valor atinge certos níveis\">\n"
 
 #: src/ch15-05-interior-mutability.md
 msgid "\"Error: You are over your quota!\""
@@ -15981,27 +15988,27 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "One important part of this code is that the `Messenger` trait has one method called `send` that takes an immutable reference to `self` and the text of the message. This trait is the interface our mock object needs to implement so that the mock can be used in the same way a real object is. The other important part is that we want to test the behavior of the `set_value` method on the `LimitTracker`. We can change what we pass in for the `value` parameter, but `set_value` doesn’t return anything for us to make assertions on. We want to be able to say that if we create a `LimitTracker` with something that implements the `Messenger` trait and a particular value for `max`, the messenger is told to send the appropriate messages when we pass different numbers for `value`."
-msgstr ""
+msgstr "Uma parte importante deste código é que o trait `Messenger` tem um método chamado `send`, que recebe uma referência imutável a `self` e o texto da mensagem. Esse trait é a interface que nosso objeto mock precisa implementar para que o mock possa ser usado do mesmo jeito que um objeto real. A outra parte importante é que queremos testar o comportamento do método `set_value` no `LimitTracker`. Podemos mudar o que passamos para o parâmetro `value`, mas `set_value` não retorna nada sobre o qual possamos fazer asserções. Queremos poder verificar que, se criarmos um `LimitTracker` com algo que implemente o trait `Messenger` e um valor específico para `max`, o mensageiro é instruído a enviar as mensagens apropriadas quando passarmos números diferentes para `value`."
 
 #: src/ch15-05-interior-mutability.md
 msgid "We need a mock object that, instead of sending an email or text message when we call `send`, will only keep track of the messages it’s told to send. We can create a new instance of the mock object, create a `LimitTracker` that uses the mock object, call the `set_value` method on `LimitTracker`, and then check that the mock object has the messages we expect. Listing 15-21 shows an attempt to implement a mock object to do just that, but the borrow checker won’t allow it."
-msgstr ""
+msgstr "Precisamos de um objeto mock que, em vez de enviar um e-mail ou uma mensagem de texto quando chamamos `send`, apenas registre as mensagens que receber para enviar. Podemos criar uma nova instância do objeto mock, criar um `LimitTracker` que use o objeto mock, chamar o método `set_value` em `LimitTracker` e, depois, verificar se o objeto mock tem as mensagens que esperamos. A Listagem 15-21 mostra uma tentativa de implementar um objeto mock para fazer exatamente isso, mas o verificador de empréstimos não vai permitir."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<Listing number=\"15-21\" file-name=\"src/lib.rs\" caption=\"An attempt to implement a `MockMessenger` that isn’t allowed by the borrow checker\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-21\" file-name=\"src/lib.rs\" caption=\"Uma tentativa de implementar um `MockMessenger` que o verificador de empréstimos não permite\">\n"
 
 #: src/ch15-05-interior-mutability.md
 msgid "This test code defines a `MockMessenger` struct that has a `sent_messages` field with a `Vec` of `String` values to keep track of the messages it’s told to send. We also define an associated function `new` to make it convenient to create new `MockMessenger` values that start with an empty list of messages. We then implement the `Messenger` trait for `MockMessenger` so that we can give a `MockMessenger` to a `LimitTracker`. In the definition of the `send` method, we take the message passed in as a parameter and store it in the `MockMessenger` list of `sent_messages`."
-msgstr ""
+msgstr "Este código de teste define um struct `MockMessenger` que tem um campo `sent_messages` com um `Vec` de valores `String` para registrar as mensagens que recebe para enviar. Também definimos uma função associada `new`, para facilitar a criação de novos valores de `MockMessenger` que começam com uma lista vazia de mensagens. Em seguida, implementamos o trait `Messenger` para `MockMessenger`, para que possamos passar um `MockMessenger` a um `LimitTracker`. Na definição do método `send`, pegamos a mensagem passada como parâmetro e a armazenamos na lista `sent_messages` do `MockMessenger`."
 
 #: src/ch15-05-interior-mutability.md
 msgid "In the test, we’re testing what happens when the `LimitTracker` is told to set `value` to something that is more than 75 percent of the `max` value. First, we create a new `MockMessenger`, which will start with an empty list of messages. Then, we create a new `LimitTracker` and give it a reference to the new `MockMessenger` and a `max` value of `100`. We call the `set_value` method on the `LimitTracker` with a value of `80`, which is more than 75 percent of 100. Then, we assert that the list of messages that the `MockMessenger` is keeping track of should now have one message in it."
-msgstr ""
+msgstr "No teste, verificamos o que acontece quando o `LimitTracker` recebe a instrução de definir `value` com um valor maior que 75% do valor de `max`. Primeiro, criamos um novo `MockMessenger`, que começa com uma lista vazia de mensagens. Depois, criamos um novo `LimitTracker` e damos a ele uma referência ao novo `MockMessenger` e um valor de `max` igual a `100`. Chamamos o método `set_value` no `LimitTracker` com o valor `80`, que é mais de 75% de 100. Então, verificamos que a lista de mensagens que o `MockMessenger` está registrando deve ter agora uma mensagem."
 
 #: src/ch15-05-interior-mutability.md
 msgid "However, there’s one problem with this test, as shown here:"
-msgstr ""
+msgstr "No entanto, há um problema com este teste, como mostrado aqui:"
 
 #: src/ch15-05-interior-mutability.md
 msgid ""
@@ -16030,31 +16037,31 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "We can’t modify the `MockMessenger` to keep track of the messages, because the `send` method takes an immutable reference to `self`. We also can’t take the suggestion from the error text to use `&mut self` in both the `impl` method and the trait definition. We do not want to change the `Messenger` trait solely for the sake of testing. Instead, we need to find a way to make our test code work correctly with our existing design."
-msgstr ""
+msgstr "Não podemos modificar o `MockMessenger` para registrar as mensagens, porque o método `send` recebe uma referência imutável a `self`. Também não podemos seguir a sugestão do texto de erro de usar `&mut self` tanto no método do bloco `impl` quanto na definição do trait. Não queremos mudar o trait `Messenger` só por causa dos testes. Em vez disso, precisamos encontrar um jeito de fazer nosso código de teste funcionar corretamente com o design existente."
 
 #: src/ch15-05-interior-mutability.md
 msgid "This is a situation in which interior mutability can help! We’ll store the `sent_messages` within a `RefCell<T>`, and then the `send` method will be able to modify `sent_messages` to store the messages we’ve seen. Listing 15-22 shows what that looks like."
-msgstr ""
+msgstr "Esta é uma situação em que a mutabilidade interior pode ajudar! Vamos armazenar `sent_messages` dentro de um `RefCell<T>`, e assim o método `send` vai poder modificar `sent_messages` para guardar as mensagens recebidas. A Listagem 15-22 mostra como isso fica."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<Listing number=\"15-22\" file-name=\"src/lib.rs\" caption=\"Using `RefCell<T>` to mutate an inner value while the outer value is considered immutable\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-22\" file-name=\"src/lib.rs\" caption=\"Usando `RefCell<T>` para alterar um valor interno enquanto o valor externo é considerado imutável\">\n"
 
 #: src/ch15-05-interior-mutability.md
 msgid "The `sent_messages` field is now of type `RefCell<Vec<String>>` instead of `Vec<String>`. In the `new` function, we create a new `RefCell<Vec<String>>` instance around the empty vector."
-msgstr ""
+msgstr "O campo `sent_messages` agora é do tipo `RefCell<Vec<String>>`, em vez de `Vec<String>`. Na função `new`, criamos uma nova instância de `RefCell<Vec<String>>` envolvendo o vetor vazio."
 
 #: src/ch15-05-interior-mutability.md
 msgid "For the implementation of the `send` method, the first parameter is still an immutable borrow of `self`, which matches the trait definition. We call `borrow_mut` on the `RefCell<Vec<String>>` in `self.sent_messages` to get a mutable reference to the value inside the `RefCell<Vec<String>>`, which is the vector. Then, we can call `push` on the mutable reference to the vector to keep track of the messages sent during the test."
-msgstr ""
+msgstr "Na implementação do método `send`, o primeiro parâmetro continua sendo um empréstimo imutável de `self`, o que corresponde à definição do trait. Chamamos `borrow_mut` no `RefCell<Vec<String>>` em `self.sent_messages` para obter uma referência mutável ao valor dentro do `RefCell<Vec<String>>`, que é o vetor. Então, podemos chamar `push` na referência mutável ao vetor para registrar as mensagens enviadas durante o teste."
 
 #: src/ch15-05-interior-mutability.md
 msgid "The last change we have to make is in the assertion: To see how many items are in the inner vector, we call `borrow` on the `RefCell<Vec<String>>` to get an immutable reference to the vector."
-msgstr ""
+msgstr "A última mudança que precisamos fazer está na asserção: para ver quantos itens há no vetor interno, chamamos `borrow` no `RefCell<Vec<String>>` para obter uma referência imutável ao vetor."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Now that you’ve seen how to use `RefCell<T>`, let’s dig into how it works!"
-msgstr ""
+msgstr "Agora que você viu como usar `RefCell<T>`, vamos ver como ele funciona por dentro!"
 
 #: src/ch15-05-interior-mutability.md
 msgid "<a id=\"keeping-track-of-borrows-at-runtime-with-refcellt\"></a>"
@@ -16062,27 +16069,27 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Tracking Borrows at Runtime"
-msgstr ""
+msgstr "Rastreando empréstimos em tempo de execução {#tracking-borrows-at-runtime}"
 
 #: src/ch15-05-interior-mutability.md
 msgid "When creating immutable and mutable references, we use the `&` and `&mut` syntax, respectively. With `RefCell<T>`, we use the `borrow` and `borrow_mut` methods, which are part of the safe API that belongs to `RefCell<T>`. The `borrow` method returns the smart pointer type `Ref<T>`, and `borrow_mut` returns the smart pointer type `RefMut<T>`. Both types implement `Deref`, so we can treat them like regular references."
-msgstr ""
+msgstr "Ao criar referências imutáveis e mutáveis, usamos a sintaxe `&` e `&mut`, respectivamente. Com o `RefCell<T>`, usamos os métodos `borrow` e `borrow_mut`, que fazem parte da API segura que pertence ao `RefCell<T>`. O método `borrow` retorna o tipo de ponteiro inteligente `Ref<T>`, e `borrow_mut` retorna o tipo de ponteiro inteligente `RefMut<T>`. Ambos os tipos implementam `Deref`, então podemos tratá-los como referências comuns."
 
 #: src/ch15-05-interior-mutability.md
 msgid "The `RefCell<T>` keeps track of how many `Ref<T>` and `RefMut<T>` smart pointers are currently active. Every time we call `borrow`, the `RefCell<T>` increases its count of how many immutable borrows are active. When a `Ref<T>` value goes out of scope, the count of immutable borrows goes down by 1. Just like the compile-time borrowing rules, `RefCell<T>` lets us have many immutable borrows or one mutable borrow at any point in time."
-msgstr ""
+msgstr "O `RefCell<T>` mantém o controle de quantos ponteiros inteligentes `Ref<T>` e `RefMut<T>` estão ativos no momento. Toda vez que chamamos `borrow`, o `RefCell<T>` aumenta a sua contagem de quantos empréstimos imutáveis estão ativos. Quando um valor `Ref<T>` sai do escopo, a contagem de empréstimos imutáveis diminui em 1. Assim como as regras de empréstimo em tempo de compilação, o `RefCell<T>` nos permite ter muitos empréstimos imutáveis ou um único empréstimo mutável a qualquer momento."
 
 #: src/ch15-05-interior-mutability.md
 msgid "If we try to violate these rules, rather than getting a compiler error as we would with references, the implementation of `RefCell<T>` will panic at runtime. Listing 15-23 shows a modification of the implementation of `send` in Listing 15-22. We’re deliberately trying to create two mutable borrows active for the same scope to illustrate that `RefCell<T>` prevents us from doing this at runtime."
-msgstr ""
+msgstr "Se tentarmos violar essas regras, em vez de receber um erro de compilação, como receberíamos com referências, a implementação do `RefCell<T>` vai entrar em pânico em tempo de execução. A Listagem 15-23 mostra uma modificação da implementação de `send` na Listagem 15-22. Estamos tentando de propósito criar dois empréstimos mutáveis ativos no mesmo escopo, para ilustrar que o `RefCell<T>` nos impede de fazer isso em tempo de execução."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<Listing number=\"15-23\" file-name=\"src/lib.rs\" caption=\"Creating two mutable references in the same scope to see that `RefCell<T>` will panic\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-23\" file-name=\"src/lib.rs\" caption=\"Criando duas referências mutáveis no mesmo escopo para ver que o `RefCell<T>` vai entrar em pânico\">\n"
 
 #: src/ch15-05-interior-mutability.md
 msgid "We create a variable `one_borrow` for the `RefMut<T>` smart pointer returned from `borrow_mut`. Then, we create another mutable borrow in the same way in the variable `two_borrow`. This makes two mutable references in the same scope, which isn’t allowed. When we run the tests for our library, the code in Listing 15-23 will compile without any errors, but the test will fail:"
-msgstr ""
+msgstr "Criamos uma variável `one_borrow` para o ponteiro inteligente `RefMut<T>` retornado por `borrow_mut`. Em seguida, criamos outro empréstimo mutável da mesma forma, na variável `two_borrow`. Isso cria duas referências mutáveis no mesmo escopo, o que não é permitido. Quando executamos os testes da nossa biblioteca, o código da Listagem 15-23 vai compilar sem nenhum erro, mas o teste vai falhar:"
 
 #: src/ch15-05-interior-mutability.md
 msgid ""
@@ -16115,11 +16122,11 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Notice that the code panicked with the message `already borrowed: BorrowMutError`. This is how `RefCell<T>` handles violations of the borrowing rules at runtime."
-msgstr ""
+msgstr "Observe que o código entrou em pânico com a mensagem `already borrowed: BorrowMutError`. É assim que o `RefCell<T>` trata as violações das regras de empréstimo em tempo de execução."
 
 #: src/ch15-05-interior-mutability.md
 msgid "Choosing to catch borrowing errors at runtime rather than compile time, as we’ve done here, means you’d potentially be finding mistakes in your code later in the development process: possibly not until your code was deployed to production. Also, your code would incur a small runtime performance penalty as a result of keeping track of the borrows at runtime rather than compile time. However, using `RefCell<T>` makes it possible to write a mock object that can modify itself to keep track of the messages it has seen while you’re using it in a context where only immutable values are allowed. You can use `RefCell<T>` despite its trade-offs to get more functionality than regular references provide."
-msgstr ""
+msgstr "Escolher detectar erros de empréstimo em tempo de execução, e não em tempo de compilação, como fizemos aqui, significa que você poderia encontrar problemas no seu código mais tarde no processo de desenvolvimento: possivelmente só depois que o código fosse implantado em produção. Além disso, o seu código teria uma pequena penalidade de desempenho em tempo de execução, por causa do controle dos empréstimos feito em tempo de execução, e não em tempo de compilação. No entanto, usar `RefCell<T>` torna possível escrever um objeto mock que pode se modificar para acompanhar as mensagens que ele já viu enquanto você o usa em um contexto em que só são permitidos valores imutáveis. Você pode usar `RefCell<T>`, apesar das suas concessões, para obter mais funcionalidades do que as referências comuns oferecem."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<a id=\"having-multiple-owners-of-mutable-data-by-combining-rc-t-and-ref-cell-t\"></a> <a id=\"allowing-multiple-owners-of-mutable-data-with-rct-and-refcellt\"></a>"
@@ -16127,19 +16134,19 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "Allowing Multiple Owners of Mutable Data"
-msgstr ""
+msgstr "Permitindo vários donos de dados mutáveis {#allowing-multiple-owners-of-mutable-data}"
 
 #: src/ch15-05-interior-mutability.md
 msgid "A common way to use `RefCell<T>` is in combination with `Rc<T>`. Recall that `Rc<T>` lets you have multiple owners of some data, but it only gives immutable access to that data. If you have an `Rc<T>` that holds a `RefCell<T>`, you can get a value that can have multiple owners _and_ that you can mutate!"
-msgstr ""
+msgstr "Uma forma comum de usar o `RefCell<T>` é em combinação com `Rc<T>`. Lembre-se de que o `Rc<T>` permite ter vários donos de alguns dados, mas oferece apenas acesso imutável a esses dados. Se você tiver um `Rc<T>` que contém um `RefCell<T>`, pode obter um valor que pode ter vários donos _e_ que você pode alterar!"
 
 #: src/ch15-05-interior-mutability.md
 msgid "For example, recall the cons list example in Listing 15-18 where we used `Rc<T>` to allow multiple lists to share ownership of another list. Because `Rc<T>` holds only immutable values, we can’t change any of the values in the list once we’ve created them. Let’s add in `RefCell<T>` for its ability to change the values in the lists. Listing 15-24 shows that by using a `RefCell<T>` in the `Cons` definition, we can modify the value stored in all the lists."
-msgstr ""
+msgstr "Por exemplo, lembre-se do exemplo de lista cons da Listagem 15-18, em que usamos `Rc<T>` para permitir que várias listas compartilhassem o ownership de outra lista. Como o `Rc<T>` armazena apenas valores imutáveis, não podemos alterar nenhum dos valores da lista depois que a criamos. Vamos acrescentar o `RefCell<T>` pela sua capacidade de alterar os valores das listas. A Listagem 15-24 mostra que, usando um `RefCell<T>` na definição de `Cons`, podemos modificar o valor armazenado em todas as listas."
 
 #: src/ch15-05-interior-mutability.md
 msgid "<Listing number=\"15-24\" file-name=\"src/main.rs\" caption=\"Using `Rc<RefCell<i32>>` to create a `List` that we can mutate\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-24\" file-name=\"src/main.rs\" caption=\"Usando `Rc<RefCell<i32>>` para criar uma `List` que podemos alterar\">\n"
 
 #: src/ch15-05-interior-mutability.md
 msgid "\"a after = {a:?}\""
@@ -16155,19 +16162,19 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "We create a value that is an instance of `Rc<RefCell<i32>>` and store it in a variable named `value` so that we can access it directly later. Then, we create a `List` in `a` with a `Cons` variant that holds `value`. We need to clone `value` so that both `a` and `value` have ownership of the inner `5` value rather than transferring ownership from `value` to `a` or having `a` borrow from `value`."
-msgstr ""
+msgstr "Criamos um valor que é uma instância de `Rc<RefCell<i32>>` e o armazenamos em uma variável chamada `value`, para que possamos acessá-lo diretamente depois. Em seguida, criamos uma `List` em `a` com uma variante `Cons` que contém `value`. Precisamos clonar `value` para que tanto `a` quanto `value` tenham o ownership do valor interno `5`, em vez de transferir o ownership de `value` para `a` ou fazer com que `a` pegue emprestado de `value`."
 
 #: src/ch15-05-interior-mutability.md
 msgid "We wrap the list `a` in an `Rc<T>` so that when we create lists `b` and `c`, they can both refer to `a`, which is what we did in Listing 15-18."
-msgstr ""
+msgstr "Envolvemos a lista `a` em um `Rc<T>` para que, ao criarmos as listas `b` e `c`, ambas possam se referir a `a`, como fizemos na Listagem 15-18."
 
 #: src/ch15-05-interior-mutability.md
 msgid "After we’ve created the lists in `a`, `b`, and `c`, we want to add 10 to the value in `value`. We do this by calling `borrow_mut` on `value`, which uses the automatic dereferencing feature we discussed in [“Where’s the `->` Operator?”](ch05-03-method-syntax.html#wheres-the---operator)<!-- ignore --> in Chapter 5 to dereference the `Rc<T>` to the inner `RefCell<T>` value. The `borrow_mut` method returns a `RefMut<T>` smart pointer, and we use the dereference operator on it and change the inner value."
-msgstr ""
+msgstr "Depois de criarmos as listas em `a`, `b` e `c`, queremos somar 10 ao valor em `value`. Fazemos isso chamando `borrow_mut` em `value`, o que usa o recurso de desreferenciação automática que discutimos em [“Onde está o operador `->`?”](ch05-03-method-syntax.html#wheres-the---operator)<!-- ignore --> no Capítulo 5, para desreferenciar o `Rc<T>` até o valor interno `RefCell<T>`. O método `borrow_mut` retorna um ponteiro inteligente `RefMut<T>`, e usamos o operador de desreferência nele para alterar o valor interno."
 
 #: src/ch15-05-interior-mutability.md
 msgid "When we print `a`, `b`, and `c`, we can see that they all have the modified value of `15` rather than `5`:"
-msgstr ""
+msgstr "Quando imprimimos `a`, `b` e `c`, podemos ver que todas têm o valor modificado `15`, em vez de `5`:"
 
 #: src/ch15-05-interior-mutability.md
 msgid ""
@@ -16184,35 +16191,35 @@ msgstr ""
 
 #: src/ch15-05-interior-mutability.md
 msgid "This technique is pretty neat! By using `RefCell<T>`, we have an outwardly immutable `List` value. But we can use the methods on `RefCell<T>` that provide access to its interior mutability so that we can modify our data when we need to. The runtime checks of the borrowing rules protect us from data races, and it’s sometimes worth trading a bit of speed for this flexibility in our data structures. Note that `RefCell<T>` does not work for multithreaded code! `Mutex<T>` is the thread-safe version of `RefCell<T>`, and we’ll discuss `Mutex<T>` in Chapter 16."
-msgstr ""
+msgstr "Essa técnica é muito legal! Com o `RefCell<T>`, temos um valor `List` externamente imutável. Mas podemos usar os métodos do `RefCell<T>` que dão acesso à sua mutabilidade interior, para que possamos modificar nossos dados quando precisarmos. As verificações em tempo de execução das regras de empréstimo nos protegem de corridas de dados, e às vezes vale a pena trocar um pouco de desempenho por essa flexibilidade nas nossas estruturas de dados. Observe que o `RefCell<T>` não funciona para código multithread! O `Mutex<T>` é a versão segura para threads do `RefCell<T>`, e vamos discutir o `Mutex<T>` no Capítulo 16."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Rust’s memory safety guarantees make it difficult, but not impossible, to accidentally create memory that is never cleaned up (known as a _memory leak_). Preventing memory leaks entirely is not one of Rust’s guarantees, meaning memory leaks are memory safe in Rust. We can see that Rust allows memory leaks by using `Rc<T>` and `RefCell<T>`: It’s possible to create references where items refer to each other in a cycle. This creates memory leaks because the reference count of each item in the cycle will never reach 0, and the values will never be dropped."
-msgstr ""
+msgstr "As garantias de segurança de memória do Rust tornam difícil, mas não impossível, criar acidentalmente memória que nunca é liberada (conhecida como _vazamento de memória_). Evitar totalmente os vazamentos de memória não é uma das garantias do Rust, o que significa que vazamentos de memória são seguros em relação à memória no Rust. Podemos ver que o Rust permite vazamentos de memória usando `Rc<T>` e `RefCell<T>`: é possível criar referências em que os itens se referem uns aos outros em um ciclo. Isso gera vazamentos de memória porque a contagem de referências de cada item do ciclo nunca chega a 0, e os valores nunca serão descartados."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Creating a Reference Cycle"
-msgstr ""
+msgstr "Criando um ciclo de referências {#creating-a-reference-cycle}"
 
 #: src/ch15-06-reference-cycles.md
 msgid "Let’s look at how a reference cycle might happen and how to prevent it, starting with the definition of the `List` enum and a `tail` method in Listing 15-25."
-msgstr ""
+msgstr "Vamos ver como um ciclo de referências pode acontecer e como evitá-lo, começando pela definição do enum `List` e de um método `tail` na Listagem 15-25."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<Listing number=\"15-25\" file-name=\"src/main.rs\" caption=\"A cons list definition that holds a `RefCell<T>` so that we can modify what a `Cons` variant is referring to\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-25\" file-name=\"src/main.rs\" caption=\"Uma definição de lista cons que contém um `RefCell<T>` para que possamos modificar aquilo a que uma variante `Cons` se refere\">\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "We’re using another variation of the `List` definition from Listing 15-5. The second element in the `Cons` variant is now `RefCell<Rc<List>>`, meaning that instead of having the ability to modify the `i32` value as we did in Listing 15-24, we want to modify the `List` value a `Cons` variant is pointing to. We’re also adding a `tail` method to make it convenient for us to access the second item if we have a `Cons` variant."
-msgstr ""
+msgstr "Estamos usando outra variação da definição de `List` da Listagem 15-5. O segundo elemento da variante `Cons` agora é `RefCell<Rc<List>>`, o que significa que, em vez de ter a capacidade de modificar o valor `i32`, como fizemos na Listagem 15-24, queremos modificar o valor `List` para o qual a variante `Cons` aponta. Também estamos adicionando um método `tail` para facilitar o acesso ao segundo item se tivermos uma variante `Cons`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "In Listing 15-26, we’re adding a `main` function that uses the definitions in Listing 15-25. This code creates a list in `a` and a list in `b` that points to the list in `a`. Then, it modifies the list in `a` to point to `b`, creating a reference cycle. There are `println!` statements along the way to show what the reference counts are at various points in this process."
-msgstr ""
+msgstr "Na Listagem 15-26, estamos adicionando uma função `main` que usa as definições da Listagem 15-25. Este código cria uma lista em `a` e uma lista em `b` que aponta para a lista em `a`. Em seguida, ele modifica a lista em `a` para que aponte para `b`, criando um ciclo de referências. Há instruções `println!` pelo caminho para mostrar quais são as contagens de referências em vários pontos desse processo."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<Listing number=\"15-26\" file-name=\"src/main.rs\" caption=\"Creating a reference cycle of two `List` values pointing to each other\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-26\" file-name=\"src/main.rs\" caption=\"Criando um ciclo de referências entre dois valores `List` que apontam um para o outro\">\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "\"a initial rc count = {}\""
@@ -16251,15 +16258,15 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "We create an `Rc<List>` instance holding a `List` value in the variable `a` with an initial list of `5, Nil`. We then create an `Rc<List>` instance holding another `List` value in the variable `b` that contains the value `10` and points to the list in `a`."
-msgstr ""
+msgstr "Criamos uma instância de `Rc<List>` que contém um valor `List` na variável `a`, com uma lista inicial de `5, Nil`. Em seguida, criamos outra instância de `Rc<List>` que contém outro valor `List` na variável `b`. Esse valor contém `10` e aponta para a lista em `a`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "We modify `a` so that it points to `b` instead of `Nil`, creating a cycle. We do that by using the `tail` method to get a reference to the `RefCell<Rc<List>>` in `a`, which we put in the variable `link`. Then, we use the `borrow_mut` method on the `RefCell<Rc<List>>` to change the value inside from an `Rc<List>` that holds a `Nil` value to the `Rc<List>` in `b`."
-msgstr ""
+msgstr "Modificamos `a` para que aponte para `b` em vez de `Nil`, criando um ciclo. Fazemos isso usando o método `tail` para obter uma referência ao `RefCell<Rc<List>>` em `a`, que armazenamos na variável `link`. Em seguida, usamos o método `borrow_mut` no `RefCell<Rc<List>>` para alterar o valor interno, trocando o `Rc<List>` que contém um valor `Nil` pelo `Rc<List>` de `b`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "When we run this code, keeping the last `println!` commented out for the moment, we’ll get this output:"
-msgstr ""
+msgstr "Quando executarmos este código, mantendo o último `println!` comentado por enquanto, teremos esta saída:"
 
 #: src/ch15-06-reference-cycles.md
 msgid ""
@@ -16280,31 +16287,31 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "The reference count of the `Rc<List>` instances in both `a` and `b` is 2 after we change the list in `a` to point to `b`. At the end of `main`, Rust drops the variable `b`, which decreases the reference count of the `b` `Rc<List>` instance from 2 to 1. The memory that `Rc<List>` has on the heap won’t be dropped at this point because its reference count is 1, not 0. Then, Rust drops `a`, which decreases the reference count of the `a` `Rc<List>` instance from 2 to 1 as well. This instance’s memory can’t be dropped either, because the other `Rc<List>` instance still refers to it. The memory allocated to the list will remain uncollected forever. To visualize this reference cycle, we’ve created the diagram in Figure 15-4."
-msgstr ""
+msgstr "A contagem de referências das instâncias de `Rc<List>` em `a` e em `b` é 2 depois que alteramos a lista em `a` para que aponte para `b`. Ao final de `main`, o Rust descarta a variável `b`, o que diminui a contagem de referências da instância `Rc<List>` de `b` de 2 para 1. A memória que o `Rc<List>` ocupa no heap não será descartada neste momento, porque a contagem de referências dele é 1, e não 0. Em seguida, o Rust descarta `a`, o que também diminui a contagem de referências da instância `Rc<List>` de `a` de 2 para 1. A memória dessa instância também não pode ser descartada, porque a outra instância `Rc<List>` ainda se refere a ela. A memória alocada para a lista permanecerá sem ser liberada para sempre. Para visualizar esse ciclo de referências, criamos o diagrama da Figura 15-4."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<img alt=\"A rectangle labeled 'a' that points to a rectangle containing the integer 5. A rectangle labeled 'b' that points to a rectangle containing the integer 10. The rectangle containing 5 points to the rectangle containing 10, and the rectangle containing 10 points back to the rectangle containing 5, creating a cycle.\" src=\"img/trpl15-04.svg\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Um retângulo com o rótulo “a” que aponta para um retângulo que contém o inteiro 5. Um retângulo com o rótulo “b” que aponta para um retângulo que contém o inteiro 10. O retângulo que contém 5 aponta para o retângulo que contém 10, e o retângulo que contém 10 aponta de volta para o retângulo que contém 5, formando um ciclo.\" src=\"img/trpl15-04.svg\" class=\"center\" />\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "<span class=\"caption\">Figure 15-4: A reference cycle of lists `a` and `b` pointing to each other</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 15-4: Um ciclo de referências entre as listas `a` e `b`, que apontam uma para a outra</span>"
 
 #: src/ch15-06-reference-cycles.md
 msgid "If you uncomment the last `println!` and run the program, Rust will try to print this cycle with `a` pointing to `b` pointing to `a` and so forth until it overflows the stack."
-msgstr ""
+msgstr "Se você descomentar o último `println!` e executar o programa, o Rust vai tentar imprimir esse ciclo, com `a` apontando para `b`, que aponta para `a` e assim por diante, até estourar a pilha."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Compared to a real-world program, the consequences of creating a reference cycle in this example aren’t very dire: Right after we create the reference cycle, the program ends. However, if a more complex program allocated lots of memory in a cycle and held onto it for a long time, the program would use more memory than it needed and might overwhelm the system, causing it to run out of available memory."
-msgstr ""
+msgstr "Comparado a um programa do mundo real, as consequências de criar um ciclo de referências neste exemplo não são muito graves: logo depois de criarmos o ciclo, o programa termina. No entanto, se um programa mais complexo alocasse muita memória em um ciclo e a mantivesse por muito tempo, ele usaria mais memória do que o necessário e poderia sobrecarregar o sistema, fazendo com que ficasse sem memória disponível."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Creating reference cycles is not easily done, but it’s not impossible either. If you have `RefCell<T>` values that contain `Rc<T>` values or similar nested combinations of types with interior mutability and reference counting, you must ensure that you don’t create cycles; you can’t rely on Rust to catch them. Creating a reference cycle would be a logic bug in your program that you should use automated tests, code reviews, and other software development practices to minimize."
-msgstr ""
+msgstr "Criar ciclos de referências não é fácil, mas também não é impossível. Se você tiver valores `RefCell<T>` que contenham valores `Rc<T>`, ou combinações aninhadas semelhantes de tipos com mutabilidade interior e contagem de referências, precisa garantir que não crie ciclos; você não pode contar com o Rust para detectá-los. Criar um ciclo de referências seria um bug de lógica no seu programa, que você deve minimizar usando testes automatizados, revisões de código e outras práticas de desenvolvimento de software."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Another solution for avoiding reference cycles is reorganizing your data structures so that some references express ownership and some references don’t. As a result, you can have cycles made up of some ownership relationships and some non-ownership relationships, and only the ownership relationships affect whether or not a value can be dropped. In Listing 15-25, we always want `Cons` variants to own their list, so reorganizing the data structure isn’t possible. Let’s look at an example using graphs made up of parent nodes and child nodes to see when non-ownership relationships are an appropriate way to prevent reference cycles."
-msgstr ""
+msgstr "Outra solução para evitar ciclos de referências é reorganizar as suas estruturas de dados, de modo que algumas referências expressem ownership e outras não. Com isso, você pode ter ciclos formados por algumas relações de ownership e algumas relações sem ownership, e apenas as relações de ownership afetam se um valor pode ser descartado ou não. Na Listagem 15-25, queremos que as variantes `Cons` sempre tenham o ownership da sua lista, então reorganizar a estrutura de dados não é possível. Vamos ver um exemplo com grafos formados por nós pais e nós filhos, para entender quando relações sem ownership são uma forma adequada de evitar ciclos de referências."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<a id=\"preventing-reference-cycles-turning-an-rct-into-a-weakt\"></a>"
@@ -16312,23 +16319,23 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "Preventing Reference Cycles Using `Weak<T>`"
-msgstr ""
+msgstr "Evitando ciclos de referências usando `Weak<T>` {#preventing-reference-cycles-using-weakt}"
 
 #: src/ch15-06-reference-cycles.md
 msgid "So far, we’ve demonstrated that calling `Rc::clone` increases the `strong_count` of an `Rc<T>` instance, and an `Rc<T>` instance is only cleaned up if its `strong_count` is 0. You can also create a weak reference to the value within an `Rc<T>` instance by calling `Rc::downgrade` and passing a reference to the `Rc<T>`. _Strong references_ are how you can share ownership of an `Rc<T>` instance. _Weak references_ don’t express an ownership relationship, and their count doesn’t affect when an `Rc<T>` instance is cleaned up. They won’t cause a reference cycle, because any cycle involving some weak references will be broken once the strong reference count of values involved is 0."
-msgstr ""
+msgstr "Até agora, demonstramos que chamar `Rc::clone` aumenta o `strong_count` de uma instância de `Rc<T>`, e que uma instância de `Rc<T>` só é liberada se o seu `strong_count` for 0. Você também pode criar uma referência fraca para o valor dentro de uma instância de `Rc<T>` chamando `Rc::downgrade` e passando uma referência ao `Rc<T>`. _Referências fortes_ são a forma de compartilhar o ownership de uma instância de `Rc<T>`. _Referências fracas_ não expressam uma relação de ownership, e a contagem delas não afeta quando uma instância de `Rc<T>` é liberada. Elas não causam ciclos de referências, porque qualquer ciclo que envolva algumas referências fracas será quebrado assim que a contagem de referências fortes dos valores envolvidos chegar a 0."
 
 #: src/ch15-06-reference-cycles.md
 msgid "When you call `Rc::downgrade`, you get a smart pointer of type `Weak<T>`. Instead of increasing the `strong_count` in the `Rc<T>` instance by 1, calling `Rc::downgrade` increases the `weak_count` by 1. The `Rc<T>` type uses `weak_count` to keep track of how many `Weak<T>` references exist, similar to `strong_count`. The difference is the `weak_count` doesn’t need to be 0 for the `Rc<T>` instance to be cleaned up."
-msgstr ""
+msgstr "Ao chamar `Rc::downgrade`, você obtém um ponteiro inteligente do tipo `Weak<T>`. Em vez de aumentar em 1 o `strong_count` na instância de `Rc<T>`, chamar `Rc::downgrade` aumenta em 1 o `weak_count`. O tipo `Rc<T>` usa o `weak_count` para controlar quantas referências `Weak<T>` existem, de forma semelhante ao `strong_count`. A diferença é que o `weak_count` não precisa ser 0 para que a instância de `Rc<T>` seja liberada."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Because the value that `Weak<T>` references might have been dropped, to do anything with the value that a `Weak<T>` is pointing to you must make sure the value still exists. Do this by calling the `upgrade` method on a `Weak<T>` instance, which will return an `Option<Rc<T>>`. You’ll get a result of `Some` if the `Rc<T>` value has not been dropped yet and a result of `None` if the `Rc<T>` value has been dropped. Because `upgrade` returns an `Option<Rc<T>>`, Rust will ensure that the `Some` case and the `None` case are handled, and there won’t be an invalid pointer."
-msgstr ""
+msgstr "Como o valor referenciado por `Weak<T>` pode ter sido descartado, para fazer qualquer coisa com o valor apontado por um `Weak<T>`, você precisa garantir que o valor ainda existe. Para isso, chame o método `upgrade` em uma instância de `Weak<T>`, que vai retornar um `Option<Rc<T>>`. Você vai obter um resultado `Some` se o valor `Rc<T>` ainda não tiver sido descartado, e um resultado `None` se o valor `Rc<T>` tiver sido descartado. Como `upgrade` retorna um `Option<Rc<T>>`, o Rust garante que os casos `Some` e `None` sejam tratados, e não haverá um ponteiro inválido."
 
 #: src/ch15-06-reference-cycles.md
 msgid "As an example, rather than using a list whose items know only about the next item, we’ll create a tree whose items know about their child items _and_ their parent items."
-msgstr ""
+msgstr "Como exemplo, em vez de usar uma lista cujos itens conhecem apenas o próximo item, vamos criar uma árvore cujos itens conhecem seus itens filhos _e_ seus itens pais."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<a id=\"creating-a-tree-data-structure-a-node-with-child-nodes\"></a>"
@@ -16336,43 +16343,43 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "Creating a Tree Data Structure"
-msgstr ""
+msgstr "Criando uma estrutura de dados em árvore {#creating-a-tree-data-structure}"
 
 #: src/ch15-06-reference-cycles.md
 msgid "To start, we’ll build a tree with nodes that know about their child nodes. We’ll create a struct named `Node` that holds its own `i32` value as well as references to its child `Node` values:"
-msgstr ""
+msgstr "Para começar, vamos construir uma árvore com nós que conhecem os seus nós filhos. Vamos criar um struct chamado `Node`, que armazena o seu próprio valor `i32` e também referências aos valores `Node` filhos:"
 
 #: src/ch15-06-reference-cycles.md
 msgid "We want a `Node` to own its children, and we want to share that ownership with variables so that we can access each `Node` in the tree directly. To do this, we define the `Vec<T>` items to be values of type `Rc<Node>`. We also want to modify which nodes are children of another node, so we have a `RefCell<T>` in `children` around the `Vec<Rc<Node>>`."
-msgstr ""
+msgstr "Queremos que um `Node` tenha o ownership dos seus filhos e queremos compartilhar esse ownership com variáveis, para que possamos acessar cada `Node` da árvore diretamente. Para isso, definimos que os itens de `Vec<T>` sejam valores do tipo `Rc<Node>`. Também queremos modificar quais nós são filhos de outro nó, então colocamos um `RefCell<T>` em `children`, envolvendo o `Vec<Rc<Node>>`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Next, we’ll use our struct definition and create one `Node` instance named `leaf` with the value `3` and no children, and another instance named `branch` with the value `5` and `leaf` as one of its children, as shown in Listing 15-27."
-msgstr ""
+msgstr "Em seguida, vamos usar a definição do nosso struct para criar uma instância de `Node` chamada `leaf`, com o valor `3` e nenhum filho, e outra instância chamada `branch`, com o valor `5` e `leaf` como um dos seus filhos, como mostrado na Listagem 15-27."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<Listing number=\"15-27\" file-name=\"src/main.rs\" caption=\"Creating a `leaf` node with no children and a `branch` node with `leaf` as one of its children\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-27\" file-name=\"src/main.rs\" caption=\"Criando um nó `leaf` sem filhos e um nó `branch` com `leaf` como um dos seus filhos\">\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "We clone the `Rc<Node>` in `leaf` and store that in `branch`, meaning the `Node` in `leaf` now has two owners: `leaf` and `branch`. We can get from `branch` to `leaf` through `branch.children`, but there’s no way to get from `leaf` to `branch`. The reason is that `leaf` has no reference to `branch` and doesn’t know they’re related. We want `leaf` to know that `branch` is its parent. We’ll do that next."
-msgstr ""
+msgstr "Clonamos o `Rc<Node>` em `leaf` e o armazenamos em `branch`, o que significa que o `Node` em `leaf` agora tem dois donos: `leaf` e `branch`. Podemos ir de `branch` até `leaf` por meio de `branch.children`, mas não há como ir de `leaf` até `branch`. O motivo é que `leaf` não tem nenhuma referência a `branch` e não sabe que eles estão relacionados. Queremos que `leaf` saiba que `branch` é o seu pai. Vamos fazer isso a seguir."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Adding a Reference from a Child to Its Parent"
-msgstr ""
+msgstr "Adicionando uma referência do filho ao seu pai {#adding-a-reference-from-a-child-to-its-parent}"
 
 #: src/ch15-06-reference-cycles.md
 msgid "To make the child node aware of its parent, we need to add a `parent` field to our `Node` struct definition. The trouble is in deciding what the type of `parent` should be. We know it can’t contain an `Rc<T>`, because that would create a reference cycle with `leaf.parent` pointing to `branch` and `branch.children` pointing to `leaf`, which would cause their `strong_count` values to never be 0."
-msgstr ""
+msgstr "Para que o nó filho saiba quem é o seu pai, precisamos adicionar um campo `parent` à definição do struct `Node`. A dificuldade está em decidir qual deve ser o tipo de `parent`. Sabemos que ele não pode conter um `Rc<T>`, porque isso criaria um ciclo de referências, com `leaf.parent` apontando para `branch` e `branch.children` apontando para `leaf`, o que faria com que os valores de `strong_count` deles nunca fossem 0."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Thinking about the relationships another way, a parent node should own its children: If a parent node is dropped, its child nodes should be dropped as well. However, a child should not own its parent: If we drop a child node, the parent should still exist. This is a case for weak references!"
-msgstr ""
+msgstr "Pensando nas relações de outra forma, um nó pai deve ter o ownership dos seus filhos: se um nó pai for descartado, os seus nós filhos também devem ser descartados. No entanto, um filho não deve ter o ownership do seu pai: se descartarmos um nó filho, o pai ainda deve existir. Este é um caso para referências fracas!"
 
 #: src/ch15-06-reference-cycles.md
 msgid "So, instead of `Rc<T>`, we’ll make the type of `parent` use `Weak<T>`, specifically a `RefCell<Weak<Node>>`. Now our `Node` struct definition looks like this:"
-msgstr ""
+msgstr "Por isso, em vez de `Rc<T>`, vamos fazer com que o tipo de `parent` use `Weak<T>`, especificamente um `RefCell<Weak<Node>>`. Agora, a definição do nosso struct `Node` fica assim:"
 
 #: src/ch15-06-reference-cycles.md
 msgid "\"leaf parent = {:?}\""
@@ -16380,43 +16387,43 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "A node will be able to refer to its parent node but doesn’t own its parent. In Listing 15-28, we update `main` to use this new definition so that the `leaf` node will have a way to refer to its parent, `branch`."
-msgstr ""
+msgstr "Um nó poderá se referir ao seu nó pai, mas não tem o ownership do seu pai. Na Listagem 15-28, atualizamos `main` para usar essa nova definição, de modo que o nó `leaf` tenha uma forma de se referir ao seu pai, `branch`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<Listing number=\"15-28\" file-name=\"src/main.rs\" caption=\"A `leaf` node with a weak reference to its parent node, `branch`\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-28\" file-name=\"src/main.rs\" caption=\"Um nó `leaf` com uma referência fraca para o seu nó pai, `branch`\">\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "Creating the `leaf` node looks similar to Listing 15-27 with the exception of the `parent` field: `leaf` starts out without a parent, so we create a new, empty `Weak<Node>` reference instance."
-msgstr ""
+msgstr "Criar o nó `leaf` é parecido com a Listagem 15-27, com exceção do campo `parent`: `leaf` começa sem pai, então criamos uma nova instância vazia de referência `Weak<Node>`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "At this point, when we try to get a reference to the parent of `leaf` by using the `upgrade` method, we get a `None` value. We see this in the output from the first `println!` statement:"
-msgstr ""
+msgstr "Neste ponto, quando tentamos obter uma referência ao pai de `leaf` usando o método `upgrade`, recebemos um valor `None`. Vemos isso na saída da primeira instrução `println!`:"
 
 #: src/ch15-06-reference-cycles.md
 msgid "When we create the `branch` node, it will also have a new `Weak<Node>` reference in the `parent` field because `branch` doesn’t have a parent node. We still have `leaf` as one of the children of `branch`. Once we have the `Node` instance in `branch`, we can modify `leaf` to give it a `Weak<Node>` reference to its parent. We use the `borrow_mut` method on the `RefCell<Weak<Node>>` in the `parent` field of `leaf`, and then we use the `Rc::downgrade` function to create a `Weak<Node>` reference to `branch` from the `Rc<Node>` in `branch`."
-msgstr ""
+msgstr "Quando criamos o nó `branch`, ele também terá uma nova referência `Weak<Node>` no campo `parent`, porque `branch` não tem um nó pai. Ainda temos `leaf` como um dos filhos de `branch`. Assim que tivermos a instância de `Node` em `branch`, podemos modificar `leaf` para dar a ele uma referência `Weak<Node>` ao seu pai. Usamos o método `borrow_mut` no `RefCell<Weak<Node>>` do campo `parent` de `leaf` e, em seguida, usamos a função `Rc::downgrade` para criar uma referência `Weak<Node>` para `branch` a partir do `Rc<Node>` em `branch`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "When we print the parent of `leaf` again, this time we’ll get a `Some` variant holding `branch`: Now `leaf` can access its parent! When we print `leaf`, we also avoid the cycle that eventually ended in a stack overflow like we had in Listing 15-26; the `Weak<Node>` references are printed as `(Weak)`:"
-msgstr ""
+msgstr "Quando imprimimos o pai de `leaf` novamente, desta vez vamos obter uma variante `Some` contendo `branch`: agora `leaf` pode acessar o seu pai! Quando imprimimos `leaf`, também evitamos o ciclo que acabou em estouro de pilha, como tivemos na Listagem 15-26; as referências `Weak<Node>` são impressas como `(Weak)`:"
 
 #: src/ch15-06-reference-cycles.md
 msgid "The lack of infinite output indicates that this code didn’t create a reference cycle. We can also tell this by looking at the values we get from calling `Rc::strong_count` and `Rc::weak_count`."
-msgstr ""
+msgstr "A ausência de saída infinita indica que este código não criou um ciclo de referências. Também podemos verificar isso observando os valores que obtemos ao chamar `Rc::strong_count` e `Rc::weak_count`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Visualizing Changes to `strong_count` and `weak_count`"
-msgstr ""
+msgstr "Visualizando alterações em `strong_count` e `weak_count` {#visualizing-changes-to-strong_count-and-weak_count}"
 
 #: src/ch15-06-reference-cycles.md
 msgid "Let’s look at how the `strong_count` and `weak_count` values of the `Rc<Node>` instances change by creating a new inner scope and moving the creation of `branch` into that scope. By doing so, we can see what happens when `branch` is created and then dropped when it goes out of scope. The modifications are shown in Listing 15-29."
-msgstr ""
+msgstr "Vamos ver como os valores de `strong_count` e `weak_count` das instâncias de `Rc<Node>` mudam ao criar um novo escopo interno e mover para ele a criação de `branch`. Com isso, podemos ver o que acontece quando `branch` é criado e depois descartado quando sai do escopo. As modificações são mostradas na Listagem 15-29."
 
 #: src/ch15-06-reference-cycles.md
 msgid "<Listing number=\"15-29\" file-name=\"src/main.rs\" caption=\"Creating `branch` in an inner scope and examining strong and weak reference counts\">\n"
-msgstr ""
+msgstr "<Listing number=\"15-29\" file-name=\"src/main.rs\" caption=\"Criando `branch` em um escopo interno e examinando as contagens fortes e fracas de referências\">\n"
 
 #: src/ch15-06-reference-cycles.md
 msgid "\"leaf strong = {}, weak = {}\""
@@ -16428,35 +16435,35 @@ msgstr ""
 
 #: src/ch15-06-reference-cycles.md
 msgid "After `leaf` is created, its `Rc<Node>` has a strong count of 1 and a weak count of 0. In the inner scope, we create `branch` and associate it with `leaf`, at which point when we print the counts, the `Rc<Node>` in `branch` will have a strong count of 1 and a weak count of 1 (for `leaf.parent` pointing to `branch` with a `Weak<Node>`). When we print the counts in `leaf`, we’ll see it will have a strong count of 2 because `branch` now has a clone of the `Rc<Node>` of `leaf` stored in `branch.children` but will still have a weak count of 0."
-msgstr ""
+msgstr "Depois que `leaf` é criado, o `Rc<Node>` dele tem uma contagem forte de 1 e uma contagem fraca de 0. No escopo interno, criamos `branch` e o associamos a `leaf`. Nesse momento, ao imprimirmos as contagens, o `Rc<Node>` em `branch` terá uma contagem forte de 1 e uma contagem fraca de 1 (por causa de `leaf.parent`, que aponta para `branch` com um `Weak<Node>`). Quando imprimirmos as contagens de `leaf`, veremos que ele terá uma contagem forte de 2, porque `branch` agora tem um clone do `Rc<Node>` de `leaf` armazenado em `branch.children`, mas a contagem fraca continuará sendo 0."
 
 #: src/ch15-06-reference-cycles.md
 msgid "When the inner scope ends, `branch` goes out of scope and the strong count of the `Rc<Node>` decreases to 0, so its `Node` is dropped. The weak count of 1 from `leaf.parent` has no bearing on whether or not `Node` is dropped, so we don’t get any memory leaks!"
-msgstr ""
+msgstr "Quando o escopo interno termina, `branch` sai do escopo e a contagem forte do `Rc<Node>` cai para 0, então o `Node` dele é descartado. A contagem fraca de 1 vinda de `leaf.parent` não influencia se o `Node` é descartado ou não, então não temos nenhum vazamento de memória!"
 
 #: src/ch15-06-reference-cycles.md
 msgid "If we try to access the parent of `leaf` after the end of the scope, we’ll get `None` again. At the end of the program, the `Rc<Node>` in `leaf` has a strong count of 1 and a weak count of 0 because the variable `leaf` is now the only reference to the `Rc<Node>` again."
-msgstr ""
+msgstr "Se tentarmos acessar o pai de `leaf` depois do fim do escopo, obteremos `None` novamente. No fim do programa, o `Rc<Node>` em `leaf` tem uma contagem forte de 1 e uma contagem fraca de 0, porque a variável `leaf` é novamente a única referência ao `Rc<Node>`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "All of the logic that manages the counts and value dropping is built into `Rc<T>` and `Weak<T>` and their implementations of the `Drop` trait. By specifying that the relationship from a child to its parent should be a `Weak<T>` reference in the definition of `Node`, you’re able to have parent nodes point to child nodes and vice versa without creating a reference cycle and memory leaks."
-msgstr ""
+msgstr "Toda a lógica que gerencia as contagens e o descarte de valores está embutida em `Rc<T>` e `Weak<T>` e nas suas implementações do trait `Drop`. Ao especificar que a relação de um filho com o seu pai deve ser uma referência `Weak<T>` na definição de `Node`, você consegue fazer com que nós pais apontem para nós filhos e vice-versa, sem criar um ciclo de referências nem vazamentos de memória."
 
 #: src/ch15-06-reference-cycles.md
 msgid "This chapter covered how to use smart pointers to make different guarantees and trade-offs from those Rust makes by default with regular references. The `Box<T>` type has a known size and points to data allocated on the heap. The `Rc<T>` type keeps track of the number of references to data on the heap so that the data can have multiple owners. The `RefCell<T>` type with its interior mutability gives us a type that we can use when we need an immutable type but need to change an inner value of that type; it also enforces the borrowing rules at runtime instead of at compile time."
-msgstr ""
+msgstr "Este capítulo abordou como usar ponteiros inteligentes para oferecer garantias e concessões diferentes daquelas que o Rust faz por padrão com referências comuns. O tipo `Box<T>` tem um tamanho conhecido e aponta para dados alocados no heap. O tipo `Rc<T>` acompanha o número de referências aos dados no heap, para que esses dados possam ter vários donos. O tipo `RefCell<T>`, com a sua mutabilidade interior, nos dá um tipo que podemos usar quando precisamos de um tipo imutável, mas precisamos alterar um valor interno desse tipo; ele também aplica as regras de empréstimo em tempo de execução, em vez de em tempo de compilação."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Also discussed were the `Deref` and `Drop` traits, which enable a lot of the functionality of smart pointers. We explored reference cycles that can cause memory leaks and how to prevent them using `Weak<T>`."
-msgstr ""
+msgstr "Também discutimos os traits `Deref` e `Drop`, que possibilitam grande parte da funcionalidade dos ponteiros inteligentes. Exploramos os ciclos de referências, que podem causar vazamentos de memória, e como evitá-los usando `Weak<T>`."
 
 #: src/ch15-06-reference-cycles.md
 msgid "If this chapter has piqued your interest and you want to implement your own smart pointers, check out [“The Rustonomicon”](../nomicon/index.html) for more useful information."
-msgstr ""
+msgstr "Se este capítulo despertou o seu interesse e você quer implementar os seus próprios ponteiros inteligentes, confira [“The Rustonomicon”](../nomicon/index.html) para mais informações úteis."
 
 #: src/ch15-06-reference-cycles.md
 msgid "Next, we’ll talk about concurrency in Rust. You’ll even learn about a few new smart pointers."
-msgstr ""
+msgstr "Em seguida, vamos falar sobre concorrência no Rust. Você vai conhecer até alguns novos ponteiros inteligentes."
 
 #: src/ch16-00-concurrency.md
 msgid "Handling concurrent programming safely and efficiently is another of Rust’s major goals. _Concurrent programming_, in which different parts of a program execute independently, and _parallel programming_, in which different parts of a program execute at the same time, are becoming increasingly important as more computers take advantage of their multiple processors. Historically, programming in these contexts has been difficult and error-prone. Rust hopes to change that."
