@@ -39,27 +39,27 @@ msgstr "Programando um Jogo de Adivinhação {#programming-a-guessing-game}"
 
 #: src/SUMMARY.md src/ch03-00-common-programming-concepts.md
 msgid "Common Programming Concepts"
-msgstr "Conceitos Comuns de Programação {#common-programming-concepts}"
+msgstr "Conceitos comuns de programação {#common-programming-concepts}"
 
 #: src/SUMMARY.md src/ch03-01-variables-and-mutability.md
 msgid "Variables and Mutability"
-msgstr "Variáveis e Mutabilidade {#variables-and-mutability}"
+msgstr "Variáveis e mutabilidade {#variables-and-mutability}"
 
 #: src/SUMMARY.md src/ch03-02-data-types.md
 msgid "Data Types"
-msgstr ""
+msgstr "Tipos de dados {#data-types}"
 
 #: src/SUMMARY.md src/ch03-03-how-functions-work.md
 msgid "Functions"
-msgstr ""
+msgstr "Funções {#functions}"
 
 #: src/SUMMARY.md src/ch03-04-comments.md
 msgid "Comments"
-msgstr ""
+msgstr "Comentários {#comments}"
 
 #: src/SUMMARY.md src/ch03-05-control-flow.md
 msgid "Control Flow"
-msgstr ""
+msgstr "Fluxo de controle {#control-flow}"
 
 #: src/SUMMARY.md src/ch04-00-understanding-ownership.md
 msgid "Understanding Ownership"
@@ -2349,11 +2349,11 @@ msgstr "Este projeto foi uma forma prática de apresentar muitos conceitos novos
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "This chapter covers concepts that appear in almost every programming language and how they work in Rust. Many programming languages have much in common at their core. None of the concepts presented in this chapter are unique to Rust, but we’ll discuss them in the context of Rust and explain the conventions around using them."
-msgstr "Este capítulo aborda conceitos que aparecem em quase toda linguagem de programação e como eles funcionam em Rust. Muitas linguagens de programação têm muito em comum em sua base. Nenhum dos conceitos apresentados neste capítulo é exclusivo de Rust, mas vamos discuti-los no contexto de Rust e explicar as convenções para usá-los."
+msgstr "Este capítulo aborda conceitos que aparecem em quase toda linguagem de programação e como eles funcionam no Rust. Muitas linguagens de programação têm muito em comum em sua base. Nenhum dos conceitos apresentados neste capítulo é exclusivo do Rust, mas vamos discuti-los no contexto do Rust e explicar as convenções para usá-los."
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "Specifically, you’ll learn about variables, basic types, functions, comments, and control flow. These foundations will be in every Rust program, and learning them early will give you a strong core to start from."
-msgstr "Especificamente, você aprenderá sobre variáveis, tipos básicos, funções, comentários e controle de fluxo. Esses fundamentos estarão em todo programa em Rust, e aprendê-los cedo dará a você uma base sólida para começar."
+msgstr "Especificamente, você aprenderá sobre variáveis, tipos básicos, funções, comentários e fluxo de controle. Esses fundamentos estarão em todo programa Rust, e aprendê-los cedo dará a você uma base sólida para começar."
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "Keywords"
@@ -2361,15 +2361,15 @@ msgstr "Palavras-chave {#keywords}"
 
 #: src/ch03-00-common-programming-concepts.md
 msgid "The Rust language has a set of _keywords_ that are reserved for use by the language only, much as in other languages. Keep in mind that you cannot use these words as names of variables or functions. Most of the keywords have special meanings, and you’ll be using them to do various tasks in your Rust programs; a few have no current functionality associated with them but have been reserved for functionality that might be added to Rust in the future. You can find the list of the keywords in [Appendix A](appendix-01-keywords.md)<!-- ignore -->."
-msgstr "A linguagem Rust tem um conjunto de palavras-chave que são reservadas para uso exclusivo da linguagem, assim como em outras linguagens. Tenha em mente que você não pode usar essas palavras como nomes de variáveis ou funções. A maioria das palavras-chave tem significados especiais, e você as usará para realizar várias tarefas em seus programas Rust; algumas não possuem funcionalidade atualmente associada, mas foram reservadas para funcionalidades que possam ser adicionadas ao Rust no futuro. Você pode encontrar a lista de palavras-chave no [Apêndice A](appendix-01-keywords.md)<!-- ignore -->."
+msgstr "A linguagem Rust tem um conjunto de _palavras-chave_ que são reservadas para uso exclusivo da linguagem, assim como em outras linguagens. Tenha em mente que você não pode usar essas palavras como nomes de variáveis ou funções. A maioria das palavras-chave tem significados especiais, e você as usará para realizar várias tarefas em seus programas Rust; algumas não possuem funcionalidade atualmente associada, mas foram reservadas para funcionalidades que possam ser adicionadas ao Rust no futuro. Você pode encontrar a lista de palavras-chave no [Apêndice A](appendix-01-keywords.md)<!-- ignore -->."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "As mentioned in the [“Storing Values with Variables”](ch02-00-guessing-game-tutorial.html#storing-values-with-variables)<!-- ignore --> section, by default, variables are immutable. This is one of many nudges Rust gives you to write your code in a way that takes advantage of the safety and easy concurrency that Rust offers. However, you still have the option to make your variables mutable. Let’s explore how and why Rust encourages you to favor immutability and why sometimes you might want to opt out."
-msgstr "Como mencionado na seção [“Armazenando Valores com Variáveis”](ch02-00-guessing-game-tutorial.html#storing-values-with-variables)<!-- ignore -->, por padrão, as variáveis são imutáveis. Esse é um dos muitos incentivos que Rust dá para que você escreva seu código de um jeito que aproveite a segurança e a facilidade de concorrência que Rust oferece. No entanto, você ainda tem a opção de tornar suas variáveis mutáveis. Vamos explorar como e por que Rust incentiva você a preferir a imutabilidade e por que, às vezes, você pode querer não seguir isso."
+msgstr "Como mencionado na seção [“Armazenando valores com variáveis”](ch02-00-guessing-game-tutorial.html#storing-values-with-variables)<!-- ignore -->, por padrão, as variáveis são imutáveis. Esse é um dos muitos incentivos que o Rust dá para que você escreva seu código de um jeito que aproveite a segurança e a facilidade de concorrência que o Rust oferece. No entanto, você ainda tem a opção de tornar suas variáveis mutáveis. Vamos explorar como e por que o Rust incentiva você a preferir a imutabilidade e por que, às vezes, você pode querer optar por não adotá-la."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "When a variable is immutable, once a value is bound to a name, you can’t change that value. To illustrate this, generate a new project called _variables_ in your _projects_ directory by using `cargo new variables`."
-msgstr "Quando uma variável é imutável, depois que um valor é associado a um nome, você não pode mudar esse valor. Para ilustrar isso, gere um novo projeto chamado _variables_ no seu diretório _projects_ usando `cargo new variables`."
+msgstr "Quando uma variável é imutável, depois que um valor é vinculado a um nome, você não pode mudar esse valor. Para ilustrar isso, crie um novo projeto chamado _variables_ no seu diretório _projects_ usando `cargo new variables`."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Then, in your new _variables_ directory, open _src/main.rs_ and replace its code with the following code, which won’t compile just yet:"
@@ -2409,7 +2409,7 @@ msgstr ""
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "This example shows how the compiler helps you find errors in your programs. Compiler errors can be frustrating, but really they only mean your program isn’t safely doing what you want it to do yet; they do _not_ mean that you’re not a good programmer! Experienced Rustaceans still get compiler errors."
-msgstr "Este exemplo mostra como o compilador ajuda você a encontrar erros em seus programas. Erros do compilador podem ser frustrantes, mas na verdade eles só significam que seu programa ainda não está fazendo com segurança o que você quer que ele faça; isso _não_ significa que você não seja um bom programador! Até Rustaceans experientes ainda recebem erros do compilador."
+msgstr "Este exemplo mostra como o compilador ajuda você a encontrar erros em seus programas. Erros de compilação podem ser frustrantes, mas na verdade eles só significam que seu programa ainda não está fazendo com segurança o que você quer que ele faça; isso _não_ significa que você não seja um bom programador! Até rustáceos experientes ainda recebem erros de compilação."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "You received the error message `` cannot assign twice to immutable variable `x` `` because you tried to assign a second value to the immutable `x` variable."
@@ -2417,7 +2417,7 @@ msgstr "Você recebeu a mensagem de erro `` cannot assign twice to immutable var
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "It’s important that we get compile-time errors when we attempt to change a value that’s designated as immutable, because this very situation can lead to bugs. If one part of our code operates on the assumption that a value will never change and another part of our code changes that value, it’s possible that the first part of the code won’t do what it was designed to do. The cause of this kind of bug can be difficult to track down after the fact, especially when the second piece of code changes the value only _sometimes_. The Rust compiler guarantees that when you state that a value won’t change, it really won’t change, so you don’t have to keep track of it yourself. Your code is thus easier to reason through."
-msgstr "É importante recebermos erros em tempo de compilação quando tentamos mudar um valor que foi definido como imutável, porque exatamente esse tipo de situação pode levar a bugs. Se uma parte do nosso código opera assumindo que um valor nunca vai mudar e outra parte do nosso código muda esse valor, é possível que a primeira parte do código não faça o que foi projetada para fazer. A causa desse tipo de bug pode ser difícil de rastrear depois, especialmente quando o segundo trecho de código muda o valor apenas _às vezes_. O compilador Rust garante que, quando você diz que um valor não vai mudar, ele realmente não vai mudar; assim, você não precisa acompanhar isso por conta própria. Assim, seu código fica mais fácil de raciocinar."
+msgstr "É importante recebermos erros em tempo de compilação quando tentamos mudar um valor que foi definido como imutável, porque exatamente esse tipo de situação pode levar a bugs. Se uma parte do nosso código opera assumindo que um valor nunca vai mudar e outra parte do nosso código muda esse valor, é possível que a primeira parte do código não faça o que foi projetada para fazer. A causa desse tipo de bug pode ser difícil de rastrear depois, especialmente quando o segundo trecho de código muda o valor apenas _às vezes_. O compilador Rust garante que, quando você diz que um valor não vai mudar, ele realmente não vai mudar, por isso você não precisa acompanhar isso por conta própria. Dessa forma, seu código fica mais fácil de entender."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "But mutability can be very useful and can make code more convenient to write. Although variables are immutable by default, you can make them mutable by adding `mut` in front of the variable name as you did in [Chapter 2](ch02-00-guessing-game-tutorial.html#storing-values-with-variables)<!-- ignore -->. Adding `mut` also conveys intent to future readers of the code by indicating that other parts of the code will be changing this variable’s value."
@@ -2445,7 +2445,7 @@ msgstr ""
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "We’re allowed to change the value bound to `x` from `5` to `6` when `mut` is used. Ultimately, deciding whether to use mutability or not is up to you and depends on what you think is clearest in that particular situation."
-msgstr "Temos permissão para mudar o valor associado a `x` de `5` para `6` quando `mut` é usado. No fim das contas, decidir se deve usar mutabilidade ou não depende de você e do que você considera mais claro naquela situação específica."
+msgstr "Temos permissão para mudar o valor vinculado a `x` de `5` para `6` quando `mut` é usado. No fim das contas, decidir se deve usar mutabilidade ou não depende de você e do que você considera mais claro naquela situação específica."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "<a id=\"constants\"></a>"
@@ -2453,15 +2453,15 @@ msgstr ""
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Declaring Constants"
-msgstr "Declarando Constantes {#declaring-constants}"
+msgstr "Declarando constantes {#declaring-constants}"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Like immutable variables, _constants_ are values that are bound to a name and are not allowed to change, but there are a few differences between constants and variables."
-msgstr "Assim como variáveis imutáveis, _constantes_ são valores associados a um nome e que não podem mudar, mas há algumas diferenças entre constantes e variáveis."
+msgstr "Assim como variáveis imutáveis, _constantes_ são valores vinculados a um nome e que não podem mudar, mas há algumas diferenças entre constantes e variáveis."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "First, you aren’t allowed to use `mut` with constants. Constants aren’t just immutable by default—they’re always immutable. You declare constants using the `const` keyword instead of the `let` keyword, and the type of the value _must_ be annotated. We’ll cover types and type annotations in the next section, [“Data Types”](ch03-02-data-types.html#data-types)<!-- ignore -->, so don’t worry about the details right now. Just know that you must always annotate the type."
-msgstr "Primeiro, você não pode usar `mut` com constantes. Constantes não são apenas imutáveis por padrão — elas são sempre imutáveis. Você declara constantes usando a palavra-chave `const` em vez da palavra-chave `let`, e o tipo do valor _deve_ ser anotado. Vamos abordar tipos e anotações de tipo na próxima seção, [“Tipos de Dados”](ch03-02-data-types.html#data-types)<!-- ignore -->, então não se preocupe com os detalhes agora. Só saiba que você sempre deve anotar o tipo."
+msgstr "Primeiro, você não pode usar `mut` com constantes. Constantes não são apenas imutáveis por padrão — elas são sempre imutáveis. Você declara constantes usando a palavra-chave `const` em vez da palavra-chave `let`, e o tipo do valor _deve_ ser anotado. Vamos abordar tipos e anotações de tipo na próxima seção, [“Tipos de dados”](ch03-02-data-types.html#data-types)<!-- ignore -->, então não se preocupe com os detalhes agora. Só saiba que você sempre deve anotar o tipo."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Constants can be declared in any scope, including the global scope, which makes them useful for values that many parts of code need to know about."
@@ -2477,7 +2477,7 @@ msgstr "Aqui está um exemplo de declaração de constante:"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "The constant’s name is `THREE_HOURS_IN_SECONDS`, and its value is set to the result of multiplying 60 (the number of seconds in a minute) by 60 (the number of minutes in an hour) by 3 (the number of hours we want to count in this program). Rust’s naming convention for constants is to use all uppercase with underscores between words. The compiler is able to evaluate a limited set of operations at compile time, which lets us choose to write out this value in a way that’s easier to understand and verify, rather than setting this constant to the value 10,800. See the [Rust Reference’s section on constant evaluation](../reference/const_eval.html) for more information on what operations can be used when declaring constants."
-msgstr "O nome da constante é `THREE_HOURS_IN_SECONDS`, e seu valor é definido como o resultado da multiplicação de 60 (o número de segundos em um minuto) por 60 (o número de minutos em uma hora) por 3 (o número de horas que queremos contar neste programa). A convenção de nomes de constantes em Rust é usar tudo em maiúsculas com sublinhados entre as palavras. O compilador consegue avaliar um conjunto limitado de operações em tempo de compilação, o que nos permite escolher escrever esse valor de uma forma mais fácil de entender e verificar, em vez de definir essa constante diretamente com o valor 10.800. Veja a [seção da Referência de Rust sobre avaliação de constantes](../reference/const_eval.html) para mais informações sobre quais operações podem ser usadas ao declarar constantes."
+msgstr "O nome da constante é `THREE_HOURS_IN_SECONDS`, e seu valor é definido como o resultado da multiplicação de 60 (o número de segundos em um minuto) por 60 (o número de minutos em uma hora) por 3 (o número de horas que queremos contar neste programa). A convenção de nomes de constantes do Rust é usar tudo em maiúsculas com sublinhados entre as palavras. O compilador consegue avaliar um conjunto limitado de operações em tempo de compilação, o que nos permite escolher escrever esse valor de uma forma mais fácil de entender e verificar, em vez de definir essa constante diretamente com o valor 10.800. Veja a [seção da Referência do Rust sobre avaliação de constantes](../reference/const_eval.html) para mais informações sobre quais operações podem ser usadas ao declarar constantes."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Constants are valid for the entire time a program runs, within the scope in which they were declared. This property makes constants useful for values in your application domain that multiple parts of the program might need to know about, such as the maximum number of points any player of a game is allowed to earn, or the speed of light."
@@ -2485,15 +2485,15 @@ msgstr "Constantes são válidas durante todo o tempo de execução de um progra
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Naming hardcoded values used throughout your program as constants is useful in conveying the meaning of that value to future maintainers of the code. It also helps to have only one place in your code that you would need to change if the hardcoded value needed to be updated in the future."
-msgstr "Dar nomes de constantes a valores codificados diretamente usados em todo o seu programa é útil para transmitir o significado desse valor a futuros mantenedores do código. Também ajuda ter apenas um lugar no seu código que você precisará alterar se esse valor codificado precisar ser atualizado no futuro."
+msgstr "Dar nomes de constantes a valores fixos no código usados em todo o seu programa é útil para transmitir o significado desse valor a futuros mantenedores do código. Também ajuda ter apenas um lugar no seu código que você precisará alterar se esse valor fixo precisar ser atualizado no futuro."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Shadowing"
-msgstr ""
+msgstr "Sombreamento {#shadowing}"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "As you saw in the guessing game tutorial in [Chapter 2](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!-- ignore -->, you can declare a new variable with the same name as a previous variable. Rustaceans say that the first variable is _shadowed_ by the second, which means that the second variable is what the compiler will see when you use the name of the variable. In effect, the second variable overshadows the first, taking any uses of the variable name to itself until either it itself is shadowed or the scope ends. We can shadow a variable by using the same variable’s name and repeating the use of the `let` keyword as follows:"
-msgstr "Como você viu no tutorial do jogo de adivinhação no [Capítulo 2](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!-- ignore -->, você pode declarar uma nova variável com o mesmo nome de uma variável anterior. Rustaceans dizem que a segunda variável faz _shadowing_ da primeira, o que significa que a segunda variável é o que o compilador verá quando você usar o nome da variável. Na prática, a segunda variável faz shadowing da primeira, assumindo para si todos os usos do nome da variável até que ela mesma faça shadowing ou o escopo termine. Podemos fazer shadowing de uma variável usando o mesmo nome da variável e repetindo o uso da palavra-chave `let`, como segue:"
+msgstr "Como você viu no tutorial do jogo de adivinhação no [Capítulo 2](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!-- ignore -->, você pode declarar uma nova variável com o mesmo nome de uma variável anterior. Os rustáceos dizem que a primeira variável é _sombreada_ pela segunda, o que significa que a segunda variável é o que o compilador verá quando você usar o nome da variável. Na prática, a segunda variável ofusca a primeira, tomando para si todos os usos do nome da variável até que ela mesma seja sombreada ou o escopo termine. Podemos sombrear uma variável usando o mesmo nome da variável e repetindo o uso da palavra-chave `let`, como segue:"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "\"The value of x in the inner scope is: {x}\""
@@ -2501,7 +2501,7 @@ msgstr ""
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "This program first binds `x` to a value of `5`. Then, it creates a new variable `x` by repeating `let x =`, taking the original value and adding `1` so that the value of `x` is `6`. Then, within an inner scope created with the curly brackets, the third `let` statement also shadows `x` and creates a new variable, multiplying the previous value by `2` to give `x` a value of `12`. When that scope is over, the inner shadowing ends and `x` returns to being `6`. When we run this program, it will output the following:"
-msgstr "Este programa primeiro associa `x` ao valor `5`. Em seguida, ele cria uma nova variável `x` repetindo `let x =`, pegando o valor original e somando `1`, de modo que o valor de `x` seja `6`. Depois, dentro de um escopo interno criado com chaves, a terceira instrução `let` também faz shadowing de `x` e cria uma nova variável, multiplicando o valor anterior por `2` para que `x` tenha o valor `12`. Quando esse escopo termina, o sombreamento interno termina e `x` volta a ser `6`. Quando executarmos este programa, ele produzirá o seguinte:"
+msgstr "Este programa primeiro vincula `x` ao valor `5`. Em seguida, ele cria uma nova variável `x` repetindo `let x =`, pegando o valor original e somando `1`, de modo que o valor de `x` seja `6`. Depois, dentro de um escopo interno criado com chaves, a terceira instrução `let` também sombreia `x` e cria uma nova variável, multiplicando o valor anterior por `2` para que `x` tenha o valor `12`. Quando esse escopo termina, o sombreamento interno termina e `x` volta a ser `6`. Quando executarmos este programa, ele produzirá o seguinte:"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid ""
@@ -2533,7 +2533,7 @@ msgstr "A primeira variável `spaces` é do tipo string, e a segunda variável `
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "The error says we’re not allowed to mutate a variable’s type:"
-msgstr "O erro diz que não temos permissão para mutar o tipo de uma variável:"
+msgstr "O erro diz que não temos permissão para alterar o tipo de uma variável:"
 
 #: src/ch03-01-variables-and-mutability.md
 msgid ""
@@ -2559,11 +2559,11 @@ msgstr "Agora que exploramos como variáveis funcionam, vamos ver mais tipos de 
 
 #: src/ch03-02-data-types.md
 msgid "Every value in Rust is of a certain _data type_, which tells Rust what kind of data is being specified so that it knows how to work with that data. We’ll look at two data type subsets: scalar and compound."
-msgstr ""
+msgstr "Cada valor no Rust é de um certo _tipo de dado_, que informa ao Rust que tipo de dado está sendo especificado, para que ele saiba como trabalhar com esses dados. Vamos ver dois subconjuntos de tipos de dados: escalares e compostos."
 
 #: src/ch03-02-data-types.md
 msgid "Keep in mind that Rust is a _statically typed_ language, which means that it must know the types of all variables at compile time. The compiler can usually infer what type we want to use based on the value and how we use it. In cases when many types are possible, such as when we converted a `String` to a numeric type using `parse` in the [“Comparing the Guess to the Secret Number”](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!-- ignore --> section in Chapter 2, we must add a type annotation, like this:"
-msgstr ""
+msgstr "Tenha em mente que o Rust é uma linguagem de _tipagem estática_, o que significa que ele precisa conhecer os tipos de todas as variáveis em tempo de compilação. O compilador geralmente consegue inferir qual tipo queremos usar com base no valor e na forma como o usamos. Em casos em que muitos tipos são possíveis, como quando convertemos uma `String` para um tipo numérico usando `parse` na seção [“Comparando o palpite com o número secreto”](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!-- ignore --> do Capítulo 2, precisamos adicionar uma anotação de tipo, assim:"
 
 #: src/ch03-02-data-types.md
 msgid "\"42\""
@@ -2575,7 +2575,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "If we don’t add the `: u32` type annotation shown in the preceding code, Rust will display the following error, which means the compiler needs more information from us to know which type we want to use:"
-msgstr ""
+msgstr "Se não adicionarmos a anotação de tipo `: u32` mostrada no código anterior, o Rust vai exibir o seguinte erro, o que significa que o compilador precisa de mais informações da nossa parte para saber qual tipo queremos usar:"
 
 #: src/ch03-02-data-types.md
 msgid ""
@@ -2601,43 +2601,43 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "You’ll see different type annotations for other data types."
-msgstr ""
+msgstr "Você vai ver anotações de tipo diferentes para outros tipos de dados."
 
 #: src/ch03-02-data-types.md
 msgid "Scalar Types"
-msgstr ""
+msgstr "Tipos escalares {#scalar-types}"
 
 #: src/ch03-02-data-types.md
 msgid "A _scalar_ type represents a single value. Rust has four primary scalar types: integers, floating-point numbers, Booleans, and characters. You may recognize these from other programming languages. Let’s jump into how they work in Rust."
-msgstr ""
+msgstr "Um tipo _escalar_ representa um único valor. O Rust tem quatro tipos escalares principais: inteiros, números de ponto flutuante, booleanos e caracteres. Você talvez reconheça esses tipos de outras linguagens de programação. Vamos ver agora como eles funcionam no Rust."
 
 #: src/ch03-02-data-types.md
 msgid "Integer Types"
-msgstr ""
+msgstr "Tipos inteiros {#integer-types}"
 
 #: src/ch03-02-data-types.md
 msgid "An _integer_ is a number without a fractional component. We used one integer type in Chapter 2, the `u32` type. This type declaration indicates that the value it’s associated with should be an unsigned integer (signed integer types start with `i` instead of `u`) that takes up 32 bits of space. Table 3-1 shows the built-in integer types in Rust. We can use any of these variants to declare the type of an integer value."
-msgstr ""
+msgstr "Um _inteiro_ é um número sem componente fracionário. Usamos um tipo inteiro no Capítulo 2, o tipo `u32`. Essa declaração de tipo indica que o valor associado a ela deve ser um inteiro sem sinal (tipos inteiros com sinal começam com `i` em vez de `u`) que ocupa 32 bits de espaço. A Tabela 3-1 mostra os tipos inteiros integrados no Rust. Podemos usar qualquer uma destas variantes para declarar o tipo de um valor inteiro."
 
 #: src/ch03-02-data-types.md
 msgid "<span class=\"caption\">Table 3-1: Integer Types in Rust</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Tabela 3-1: Tipos inteiros no Rust</span>"
 
 #: src/ch03-02-data-types.md
 msgid "Length"
-msgstr ""
+msgstr "Tamanho"
 
 #: src/ch03-02-data-types.md
 msgid "Signed"
-msgstr ""
+msgstr "Com sinal"
 
 #: src/ch03-02-data-types.md
 msgid "Unsigned"
-msgstr ""
+msgstr "Sem sinal"
 
 #: src/ch03-02-data-types.md
 msgid "8-bit"
-msgstr ""
+msgstr "8 bits"
 
 #: src/ch03-02-data-types.md
 msgid "`i8`"
@@ -2649,7 +2649,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "16-bit"
-msgstr ""
+msgstr "16 bits"
 
 #: src/ch03-02-data-types.md
 msgid "`i16`"
@@ -2661,7 +2661,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "32-bit"
-msgstr ""
+msgstr "32 bits"
 
 #: src/ch03-02-data-types.md
 msgid "`i32`"
@@ -2673,7 +2673,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "64-bit"
-msgstr ""
+msgstr "64 bits"
 
 #: src/ch03-02-data-types.md
 msgid "`i64`"
@@ -2685,7 +2685,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "128-bit"
-msgstr ""
+msgstr "128 bits"
 
 #: src/ch03-02-data-types.md
 msgid "`i128`"
@@ -2697,7 +2697,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Architecture-dependent"
-msgstr ""
+msgstr "Dependente da arquitetura"
 
 #: src/ch03-02-data-types.md
 msgid "`isize`"
@@ -2712,34 +2712,36 @@ msgid ""
 "Each variant can be either signed or unsigned and has an explicit size. _Signed_ and _unsigned_ refer to whether it’s possible for the number to be negative—in other words, whether the number needs to have a sign with it (signed) or whether it will only ever be positive and can therefore be represented without a sign (unsigned). It’s like writing numbers on paper: When the sign matters, a number is shown with a plus sign or a minus sign; however, when it’s safe to assume the number is positive, it’s shown with no sign. Signed numbers are stored using [two’s complement](https://en.wikipedia.org/wiki/Two%27s_complement)<!-- ignore\n"
 "--> representation."
 msgstr ""
+"Cada variante pode ser com sinal ou sem sinal, e tem um tamanho explícito. _Com sinal_ e _sem sinal_ se referem a se é possível que o número seja negativo—em outras palavras, se o número precisa ter um sinal junto a ele (com sinal) ou se ele sempre será positivo e, portanto, pode ser representado sem sinal (sem sinal). É como escrever números no papel: quando o sinal importa, o número é escrito com um sinal de mais ou de menos; já quando é seguro presumir que o número é positivo, ele é escrito sem sinal. Números com sinal são armazenados usando a representação em [complemento de dois](https://en.wikipedia.org/wiki/Two%27s_complement)<!-- ignore\n"
+"-->."
 
 #: src/ch03-02-data-types.md
 msgid "Each signed variant can store numbers from −(2<sup>n − 1</sup>) to 2<sup>n − 1</sup> − 1 inclusive, where _n_ is the number of bits that variant uses. So, an `i8` can store numbers from −(2<sup>7</sup>) to 2<sup>7</sup> − 1, which equals −128 to 127. Unsigned variants can store numbers from 0 to 2<sup>n</sup> − 1, so a `u8` can store numbers from 0 to 2<sup>8</sup> − 1, which equals 0 to 255."
-msgstr ""
+msgstr "Cada variante com sinal pode armazenar números de −(2<sup>n − 1</sup>) a 2<sup>n − 1</sup> − 1, inclusive, em que _n_ é o número de bits que a variante usa. Assim, um `i8` pode armazenar números de −(2<sup>7</sup>) a 2<sup>7</sup> − 1, o que equivale ao intervalo de −128 a 127. As variantes sem sinal podem armazenar números de 0 a 2<sup>n</sup> − 1, então um `u8` pode armazenar números de 0 a 2<sup>8</sup> − 1, o que equivale ao intervalo de 0 a 255."
 
 #: src/ch03-02-data-types.md
 msgid "Additionally, the `isize` and `usize` types depend on the architecture of the computer your program is running on: 64 bits if you’re on a 64-bit architecture and 32 bits if you’re on a 32-bit architecture."
-msgstr ""
+msgstr "Além disso, os tipos `isize` e `usize` dependem da arquitetura do computador em que o seu programa está sendo executado: 64 bits se você estiver em uma arquitetura de 64 bits e 32 bits se você estiver em uma arquitetura de 32 bits."
 
 #: src/ch03-02-data-types.md
 msgid "You can write integer literals in any of the forms shown in Table 3-2. Note that number literals that can be multiple numeric types allow a type suffix, such as `57u8`, to designate the type. Number literals can also use `_` as a visual separator to make the number easier to read, such as `1_000`, which will have the same value as if you had specified `1000`."
-msgstr ""
+msgstr "Você pode escrever literais inteiros em qualquer um dos formatos mostrados na Tabela 3-2. Observe que literais numéricos que podem ser de vários tipos numéricos permitem um sufixo de tipo, como `57u8`, para indicar o tipo. Literais numéricos também podem usar `_` como separador visual para tornar o número mais fácil de ler, como `1_000`, que terá o mesmo valor que se você tivesse especificado `1000`."
 
 #: src/ch03-02-data-types.md
 msgid "<span class=\"caption\">Table 3-2: Integer Literals in Rust</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Tabela 3-2: Literais inteiros no Rust</span>"
 
 #: src/ch03-02-data-types.md
 msgid "Number literals"
-msgstr ""
+msgstr "Literais numéricos"
 
 #: src/ch03-02-data-types.md src/appendix-02-operators.md
 msgid "Example"
-msgstr ""
+msgstr "Exemplo"
 
 #: src/ch03-02-data-types.md
 msgid "Decimal"
-msgstr ""
+msgstr "Decimal"
 
 #: src/ch03-02-data-types.md
 msgid "`98_222`"
@@ -2747,7 +2749,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Hex"
-msgstr ""
+msgstr "Hexadecimal"
 
 #: src/ch03-02-data-types.md
 msgid "`0xff`"
@@ -2755,7 +2757,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Octal"
-msgstr ""
+msgstr "Octal"
 
 #: src/ch03-02-data-types.md
 msgid "`0o77`"
@@ -2763,7 +2765,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Binary"
-msgstr ""
+msgstr "Binário"
 
 #: src/ch03-02-data-types.md
 msgid "`0b1111_0000`"
@@ -2771,7 +2773,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Byte (`u8` only)"
-msgstr ""
+msgstr "Byte (somente `u8`)"
 
 #: src/ch03-02-data-types.md
 msgid "`b'A'`"
@@ -2779,51 +2781,51 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "So how do you know which type of integer to use? If you’re unsure, Rust’s defaults are generally good places to start: Integer types default to `i32`. The primary situation in which you’d use `isize` or `usize` is when indexing some sort of collection."
-msgstr ""
+msgstr "Então, como saber qual tipo de inteiro usar? Se você não tiver certeza, os padrões do Rust geralmente são bons pontos de partida: os tipos inteiros têm `i32` como padrão. A situação principal em que você usaria `isize` ou `usize` é ao indexar algum tipo de coleção."
 
 #: src/ch03-02-data-types.md
 msgid "Integer Overflow"
-msgstr ""
+msgstr "Estouro de inteiro {#integer-overflow}"
 
 #: src/ch03-02-data-types.md
 msgid "Let’s say you have a variable of type `u8` that can hold values between 0 and 255. If you try to change the variable to a value outside that range, such as 256, _integer overflow_ will occur, which can result in one of two behaviors. When you’re compiling in debug mode, Rust includes checks for integer overflow that cause your program to _panic_ at runtime if this behavior occurs. Rust uses the term _panicking_ when a program exits with an error; we’ll discuss panics in more depth in the [“Unrecoverable Errors with `panic!`”](ch09-01-unrecoverable-errors-with-panic.html)<!-- ignore --> section in Chapter 9."
-msgstr ""
+msgstr "Digamos que você tenha uma variável do tipo `u8`, que pode armazenar valores entre 0 e 255. Se você tentar alterar a variável para um valor fora desse intervalo, como 256, _estouro de inteiro_ vai ocorrer, o que pode resultar em um de dois comportamentos. Ao compilar em modo de depuração, o Rust inclui verificações de estouro de inteiro que fazem o seu programa _entrar em pânico_ em tempo de execução se esse comportamento ocorrer. O Rust usa o termo _entrar em pânico_ quando um programa termina com um erro; vamos discutir os pânicos com mais detalhes na seção [“Erros irrecuperáveis com `panic!`”](ch09-01-unrecoverable-errors-with-panic.html)<!-- ignore --> do Capítulo 9."
 
 #: src/ch03-02-data-types.md
 msgid "When you’re compiling in release mode with the `--release` flag, Rust does _not_ include checks for integer overflow that cause panics. Instead, if overflow occurs, Rust performs _two’s complement wrapping_. In short, values greater than the maximum value the type can hold “wrap around” to the minimum of the values the type can hold. In the case of a `u8`, the value 256 becomes 0, the value 257 becomes 1, and so on. The program won’t panic, but the variable will have a value that probably isn’t what you were expecting it to have. Relying on integer overflow’s wrapping behavior is considered an error."
-msgstr ""
+msgstr "Ao compilar em modo release com a flag `--release`, o Rust _não_ inclui verificações de estouro de inteiro que causam pânicos. Em vez disso, se ocorrer estouro, o Rust realiza um _wrapping em complemento de dois_. Em resumo, valores maiores que o valor máximo que o tipo pode armazenar “dão a volta” até o mínimo dos valores que o tipo pode armazenar. No caso de um `u8`, o valor 256 se torna 0, o valor 257 se torna 1, e assim por diante. O programa não vai entrar em pânico, mas a variável terá um valor que provavelmente não é o que você esperava. Depender do comportamento de wrapping do estouro de inteiro é considerado um erro."
 
 #: src/ch03-02-data-types.md
 msgid "To explicitly handle the possibility of overflow, you can use these families of methods provided by the standard library for primitive numeric types:"
-msgstr ""
+msgstr "Para tratar explicitamente a possibilidade de estouro, você pode usar estas famílias de métodos fornecidas pela biblioteca padrão para os tipos numéricos primitivos:"
 
 #: src/ch03-02-data-types.md
 msgid "Wrap in all compilation modes with the `wrapping_*` methods, such as `wrapping_add`."
-msgstr ""
+msgstr "Aplicar wrapping em todos os modos de compilação com os métodos `wrapping_*`, como `wrapping_add`."
 
 #: src/ch03-02-data-types.md
 msgid "Return the `None` value if there is overflow with the `checked_*` methods."
-msgstr ""
+msgstr "Retornar o valor `None` se houver estouro, com os métodos `checked_*`."
 
 #: src/ch03-02-data-types.md
 msgid "Return the value and a Boolean indicating whether there was overflow with the `overflowing_*` methods."
-msgstr ""
+msgstr "Retornar o valor e um booleano que indica se houve estouro, com os métodos `overflowing_*`."
 
 #: src/ch03-02-data-types.md
 msgid "Saturate at the value’s minimum or maximum values with the `saturating_*` methods."
-msgstr ""
+msgstr "Saturar nos valores mínimo ou máximo do tipo, com os métodos `saturating_*`."
 
 #: src/ch03-02-data-types.md
 msgid "Floating-Point Types"
-msgstr ""
+msgstr "Tipos de ponto flutuante {#floating-point-types}"
 
 #: src/ch03-02-data-types.md
 msgid "Rust also has two primitive types for _floating-point numbers_, which are numbers with decimal points. Rust’s floating-point types are `f32` and `f64`, which are 32 bits and 64 bits in size, respectively. The default type is `f64` because on modern CPUs, it’s roughly the same speed as `f32` but is capable of more precision. All floating-point types are signed."
-msgstr ""
+msgstr "O Rust também tem dois tipos primitivos para _números de ponto flutuante_, que são números com casas decimais. Os tipos de ponto flutuante do Rust são `f32` e `f64`, que têm, respectivamente, 32 bits e 64 bits de tamanho. O tipo padrão é `f64` porque, em CPUs modernas, ele tem aproximadamente a mesma velocidade de `f32`, mas é capaz de mais precisão. Todos os tipos de ponto flutuante são com sinal."
 
 #: src/ch03-02-data-types.md
 msgid "Here’s an example that shows floating-point numbers in action:"
-msgstr ""
+msgstr "Aqui está um exemplo que mostra números de ponto flutuante em ação:"
 
 #: src/ch03-02-data-types.md
 msgid "// f64\n"
@@ -2835,15 +2837,15 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Floating-point numbers are represented according to the IEEE-754 standard."
-msgstr ""
+msgstr "Os números de ponto flutuante são representados de acordo com o padrão IEEE-754."
 
 #: src/ch03-02-data-types.md
 msgid "Numeric Operations"
-msgstr ""
+msgstr "Operações numéricas {#numeric-operations}"
 
 #: src/ch03-02-data-types.md
 msgid "Rust supports the basic mathematical operations you’d expect for all the number types: addition, subtraction, multiplication, division, and remainder. Integer division truncates toward zero to the nearest integer. The following code shows how you’d use each numeric operation in a `let` statement:"
-msgstr ""
+msgstr "O Rust oferece suporte às operações matemáticas básicas que você esperaria para todos os tipos numéricos: adição, subtração, multiplicação, divisão e resto. A divisão de inteiros trunca em direção a zero, até o inteiro mais próximo. O código a seguir mostra como você usaria cada operação numérica em uma instrução `let`:"
 
 #: src/ch03-02-data-types.md
 msgid "// addition\n"
@@ -2871,15 +2873,15 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Each expression in these statements uses a mathematical operator and evaluates to a single value, which is then bound to a variable. [Appendix B](appendix-02-operators.md)<!-- ignore --> contains a list of all operators that Rust provides."
-msgstr ""
+msgstr "Cada expressão nessas instruções usa um operador matemático e resulta em um único valor, que é então vinculado a uma variável. O [Apêndice B](appendix-02-operators.md)<!-- ignore --> contém uma lista de todos os operadores que o Rust oferece."
 
 #: src/ch03-02-data-types.md
 msgid "The Boolean Type"
-msgstr ""
+msgstr "O tipo booleano {#the-boolean-type}"
 
 #: src/ch03-02-data-types.md
 msgid "As in most other programming languages, a Boolean type in Rust has two possible values: `true` and `false`. Booleans are one byte in size. The Boolean type in Rust is specified using `bool`. For example:"
-msgstr ""
+msgstr "Como na maioria das outras linguagens de programação, um tipo booleano no Rust tem dois valores possíveis: `true` e `false`. Booleanos têm tamanho de um byte. O tipo booleano no Rust é especificado usando `bool`. Por exemplo:"
 
 #: src/ch03-02-data-types.md
 msgid "// with explicit type annotation\n"
@@ -2887,15 +2889,15 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "The main way to use Boolean values is through conditionals, such as an `if` expression. We’ll cover how `if` expressions work in Rust in the [“Control Flow”](ch03-05-control-flow.html#control-flow)<!-- ignore --> section."
-msgstr ""
+msgstr "A principal forma de usar valores booleanos é por meio de condicionais, como uma expressão `if`. Vamos ver como as expressões `if` funcionam no Rust na seção [“Fluxo de controle”](ch03-05-control-flow.html#control-flow)<!-- ignore -->."
 
 #: src/ch03-02-data-types.md
 msgid "The Character Type"
-msgstr ""
+msgstr "O tipo caractere {#the-character-type}"
 
 #: src/ch03-02-data-types.md
 msgid "Rust’s `char` type is the language’s most primitive alphabetic type. Here are some examples of declaring `char` values:"
-msgstr ""
+msgstr "O tipo `char` do Rust é o tipo alfabético mais primitivo da linguagem. Veja alguns exemplos de declaração de valores `char`:"
 
 #: src/ch03-02-data-types.md src/ch19-03-pattern-syntax.md
 msgid "'z'"
@@ -2911,31 +2913,31 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Note that we specify `char` literals with single quotation marks, as opposed to string literals, which use double quotation marks. Rust’s `char` type is 4 bytes in size and represents a Unicode scalar value, which means it can represent a lot more than just ASCII. Accented letters; Chinese, Japanese, and Korean characters; emojis; and zero-width spaces are all valid `char` values in Rust. Unicode scalar values range from `U+0000` to `U+D7FF` and `U+E000` to `U+10FFFF` inclusive. However, a “character” isn’t really a concept in Unicode, so your human intuition for what a “character” is may not match up with what a `char` is in Rust. We’ll discuss this topic in detail in [“Storing UTF-8 Encoded Text with Strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> in Chapter 8."
-msgstr ""
+msgstr "Observe que especificamos literais `char` com aspas simples, ao contrário dos literais de string, que usam aspas duplas. O tipo `char` do Rust tem 4 bytes de tamanho e representa um valor escalar Unicode, o que significa que ele pode representar muito mais do que apenas ASCII. Letras acentuadas; caracteres chineses, japoneses e coreanos; emojis; e espaços de largura zero são todos valores `char` válidos no Rust. Os valores escalares Unicode vão de `U+0000` a `U+D7FF` e de `U+E000` a `U+10FFFF`, inclusive. No entanto, “caractere” não é realmente um conceito do Unicode, então a sua intuição humana sobre o que é um “caractere” pode não coincidir com o que é um `char` no Rust. Vamos discutir esse assunto em detalhes na seção [“Armazenando texto codificado em UTF-8 com strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> do Capítulo 8."
 
 #: src/ch03-02-data-types.md
 msgid "Compound Types"
-msgstr ""
+msgstr "Tipos compostos {#compound-types}"
 
 #: src/ch03-02-data-types.md
 msgid "_Compound types_ can group multiple values into one type. Rust has two primitive compound types: tuples and arrays."
-msgstr ""
+msgstr "_Tipos compostos_ podem agrupar vários valores em um único tipo. O Rust tem dois tipos compostos primitivos: tuplas e arrays."
 
 #: src/ch03-02-data-types.md
 msgid "The Tuple Type"
-msgstr ""
+msgstr "O tipo tupla {#the-tuple-type}"
 
 #: src/ch03-02-data-types.md
 msgid "A _tuple_ is a general way of grouping together a number of values with a variety of types into one compound type. Tuples have a fixed length: Once declared, they cannot grow or shrink in size."
-msgstr ""
+msgstr "Uma _tupla_ é uma forma geral de agrupar vários valores de tipos variados em um único tipo composto. Tuplas têm tamanho fixo: depois de declaradas, elas não podem crescer nem diminuir de tamanho."
 
 #: src/ch03-02-data-types.md
 msgid "We create a tuple by writing a comma-separated list of values inside parentheses. Each position in the tuple has a type, and the types of the different values in the tuple don’t have to be the same. We’ve added optional type annotations in this example:"
-msgstr ""
+msgstr "Criamos uma tupla escrevendo uma lista de valores separados por vírgula dentro de parênteses. Cada posição na tupla tem um tipo, e os tipos dos diferentes valores da tupla não precisam ser os mesmos. Adicionamos anotações de tipo opcionais neste exemplo:"
 
 #: src/ch03-02-data-types.md
 msgid "The variable `tup` binds to the entire tuple because a tuple is considered a single compound element. To get the individual values out of a tuple, we can use pattern matching to destructure a tuple value, like this:"
-msgstr ""
+msgstr "A variável `tup` é vinculada à tupla inteira, porque uma tupla é considerada um único elemento composto. Para obter os valores individuais de uma tupla, podemos usar a correspondência de padrões para desestruturar um valor de tupla, assim:"
 
 #: src/ch03-02-data-types.md src/ch03-03-how-functions-work.md
 msgid "\"The value of y is: {y}\""
@@ -2943,39 +2945,39 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "This program first creates a tuple and binds it to the variable `tup`. It then uses a pattern with `let` to take `tup` and turn it into three separate variables, `x`, `y`, and `z`. This is called _destructuring_ because it breaks the single tuple into three parts. Finally, the program prints the value of `y`, which is `6.4`."
-msgstr ""
+msgstr "Este programa primeiro cria uma tupla e a vincula à variável `tup`. Em seguida, usa um padrão com `let` para pegar `tup` e transformá-la em três variáveis separadas, `x`, `y` e `z`. Isso se chama _desestruturação_ porque quebra a tupla única em três partes. Por fim, o programa imprime o valor de `y`, que é `6.4`."
 
 #: src/ch03-02-data-types.md
 msgid "We can also access a tuple element directly by using a period (`.`) followed by the index of the value we want to access. For example:"
-msgstr ""
+msgstr "Também podemos acessar um elemento da tupla diretamente usando um ponto (`.`) seguido do índice do valor que queremos acessar. Por exemplo:"
 
 #: src/ch03-02-data-types.md
 msgid "This program creates the tuple `x` and then accesses each element of the tuple using their respective indices. As with most programming languages, the first index in a tuple is 0."
-msgstr ""
+msgstr "Este programa cria a tupla `x` e depois acessa cada elemento da tupla usando os respectivos índices. Assim como na maioria das linguagens de programação, o primeiro índice em uma tupla é 0."
 
 #: src/ch03-02-data-types.md
 msgid "The tuple without any values has a special name, _unit_. This value and its corresponding type are both written `()` and represent an empty value or an empty return type. Expressions implicitly return the unit value if they don’t return any other value."
-msgstr ""
+msgstr "A tupla sem valores tem um nome especial, _unitário_. Esse valor e o seu tipo correspondente são escritos como `()` e representam um valor vazio ou um tipo de retorno vazio. Expressões retornam implicitamente o valor unitário se não retornarem nenhum outro valor."
 
 #: src/ch03-02-data-types.md
 msgid "The Array Type"
-msgstr ""
+msgstr "O tipo array {#the-array-type}"
 
 #: src/ch03-02-data-types.md
 msgid "Another way to have a collection of multiple values is with an _array_. Unlike a tuple, every element of an array must have the same type. Unlike arrays in some other languages, arrays in Rust have a fixed length."
-msgstr ""
+msgstr "Outra forma de ter uma coleção de vários valores é com um _array_. Diferente de uma tupla, todos os elementos de um array devem ter o mesmo tipo. Ao contrário de arrays em algumas outras linguagens, arrays no Rust têm tamanho fixo."
 
 #: src/ch03-02-data-types.md
 msgid "We write the values in an array as a comma-separated list inside square brackets:"
-msgstr ""
+msgstr "Escrevemos os valores de um array como uma lista separada por vírgulas entre colchetes:"
 
 #: src/ch03-02-data-types.md
 msgid "Arrays are useful when you want your data allocated on the stack, the same as the other types we have seen so far, rather than the heap (we will discuss the stack and the heap more in [Chapter 4](ch04-01-what-is-ownership.html#the-stack-and-the-heap)<!-- ignore -->) or when you want to ensure that you always have a fixed number of elements. An array isn’t as flexible as the vector type, though. A vector is a similar collection type provided by the standard library that _is_ allowed to grow or shrink in size because its contents live on the heap. If you’re unsure whether to use an array or a vector, chances are you should use a vector. [Chapter 8](ch08-01-vectors.html)<!-- ignore --> discusses vectors in more detail."
-msgstr ""
+msgstr "Arrays são úteis quando você quer que os seus dados sejam alocados na pilha, assim como os outros tipos que vimos até agora, em vez de no heap (vamos discutir a pilha e o heap com mais detalhes no [Capítulo 4](ch04-01-what-is-ownership.html#the-stack-and-the-heap)<!-- ignore -->), ou quando você quer garantir que sempre tenha um número fixo de elementos. Um array não é tão flexível quanto o tipo vetor, no entanto. Um vetor é um tipo de coleção semelhante, fornecido pela biblioteca padrão, que _pode_ crescer ou diminuir de tamanho porque o seu conteúdo fica no heap. Se você não tiver certeza se deve usar um array ou um vetor, é provável que deva usar um vetor. O [Capítulo 8](ch08-01-vectors.html)<!-- ignore --> discute vetores com mais detalhes."
 
 #: src/ch03-02-data-types.md
 msgid "However, arrays are more useful when you know the number of elements will not need to change. For example, if you were using the names of the month in a program, you would probably use an array rather than a vector because you know it will always contain 12 elements:"
-msgstr ""
+msgstr "No entanto, arrays são mais úteis quando você sabe que o número de elementos não precisará mudar. Por exemplo, se você estivesse usando os nomes dos meses em um programa, provavelmente usaria um array em vez de um vetor, porque sabe que ele sempre terá 12 elementos:"
 
 #: src/ch03-02-data-types.md
 msgid "\"January\""
@@ -3027,19 +3029,19 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "You write an array’s type using square brackets with the type of each element, a semicolon, and then the number of elements in the array, like so:"
-msgstr ""
+msgstr "Você escreve o tipo de um array usando colchetes com o tipo de cada elemento, um ponto e vírgula e, em seguida, o número de elementos do array, assim:"
 
 #: src/ch03-02-data-types.md
 msgid "Here, `i32` is the type of each element. After the semicolon, the number `5` indicates the array contains five elements."
-msgstr ""
+msgstr "Aqui, `i32` é o tipo de cada elemento. Depois do ponto e vírgula, o número `5` indica que o array contém cinco elementos."
 
 #: src/ch03-02-data-types.md
 msgid "You can also initialize an array to contain the same value for each element by specifying the initial value, followed by a semicolon, and then the length of the array in square brackets, as shown here:"
-msgstr ""
+msgstr "Você também pode inicializar um array com o mesmo valor em cada elemento, especificando o valor inicial, seguido de um ponto e vírgula, e depois o tamanho do array entre colchetes, como mostrado aqui:"
 
 #: src/ch03-02-data-types.md
 msgid "The array named `a` will contain `5` elements that will all be set to the value `3` initially. This is the same as writing `let a = [3, 3, 3, 3, 3];` but in a more concise way."
-msgstr ""
+msgstr "O array chamado `a` vai conter `5` elementos, que serão todos definidos com o valor `3` inicialmente. Isso equivale a escrever `let a = [3, 3, 3, 3, 3];`, mas de um jeito mais conciso."
 
 #: src/ch03-02-data-types.md
 msgid "<a id=\"accessing-array-elements\"></a>"
@@ -3047,23 +3049,23 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "Array Element Access"
-msgstr ""
+msgstr "Acesso a elementos de array {#array-element-access}"
 
 #: src/ch03-02-data-types.md
 msgid "An array is a single chunk of memory of a known, fixed size that can be allocated on the stack. You can access elements of an array using indexing, like this:"
-msgstr ""
+msgstr "Um array é uma única porção de memória de tamanho conhecido e fixo que pode ser alocada na pilha. Você pode acessar os elementos de um array usando indexação, assim:"
 
 #: src/ch03-02-data-types.md
 msgid "In this example, the variable named `first` will get the value `1` because that is the value at index `[0]` in the array. The variable named `second` will get the value `2` from index `[1]` in the array."
-msgstr ""
+msgstr "Neste exemplo, a variável chamada `first` vai receber o valor `1`, porque esse é o valor no índice `[0]` do array. A variável chamada `second` vai receber o valor `2` do índice `[1]` do array."
 
 #: src/ch03-02-data-types.md
 msgid "Invalid Array Element Access"
-msgstr ""
+msgstr "Acesso inválido a elementos de array {#invalid-array-element-access}"
 
 #: src/ch03-02-data-types.md
 msgid "Let’s see what happens if you try to access an element of an array that is past the end of the array. Say you run this code, similar to the guessing game in Chapter 2, to get an array index from the user:"
-msgstr ""
+msgstr "Vamos ver o que acontece se você tentar acessar um elemento de um array que esteja além do fim do array. Suponha que você execute este código, parecido com o jogo de adivinhação do Capítulo 2, para obter um índice de array do usuário:"
 
 #: src/ch03-02-data-types.md
 msgid "\"Please enter an array index.\""
@@ -3079,7 +3081,7 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "This code compiles successfully. If you run this code using `cargo run` and enter `0`, `1`, `2`, `3`, or `4`, the program will print out the corresponding value at that index in the array. If you instead enter a number past the end of the array, such as `10`, you’ll see output like this:"
-msgstr ""
+msgstr "Este código compila com sucesso. Se você executar este código usando `cargo run` e digitar `0`, `1`, `2`, `3` ou `4`, o programa vai imprimir o valor correspondente a esse índice no array. Se, em vez disso, você digitar um número além do fim do array, como `10`, você vai ver uma saída como esta:"
 
 #: src/ch03-02-data-types.md
 msgid ""
@@ -3092,19 +3094,19 @@ msgstr ""
 
 #: src/ch03-02-data-types.md
 msgid "The program resulted in a runtime error at the point of using an invalid value in the indexing operation. The program exited with an error message and didn’t execute the final `println!` statement. When you attempt to access an element using indexing, Rust will check that the index you’ve specified is less than the array length. If the index is greater than or equal to the length, Rust will panic. This check has to happen at runtime, especially in this case, because the compiler can’t possibly know what value a user will enter when they run the code later."
-msgstr ""
+msgstr "O programa resultou em um erro em tempo de execução no ponto em que usou um valor inválido na operação de indexação. O programa terminou com uma mensagem de erro e não executou a instrução final `println!`. Quando você tenta acessar um elemento usando indexação, o Rust verifica se o índice que você especificou é menor que o tamanho do array. Se o índice for maior ou igual ao tamanho, o Rust vai entrar em pânico. Essa verificação precisa acontecer em tempo de execução, principalmente neste caso, porque o compilador não tem como saber de antemão qual valor um usuário vai digitar ao executar o código mais tarde."
 
 #: src/ch03-02-data-types.md
 msgid "This is an example of Rust’s memory safety principles in action. In many low-level languages, this kind of check is not done, and when you provide an incorrect index, invalid memory can be accessed. Rust protects you against this kind of error by immediately exiting instead of allowing the memory access and continuing. Chapter 9 discusses more of Rust’s error handling and how you can write readable, safe code that neither panics nor allows invalid memory access."
-msgstr ""
+msgstr "Este é um exemplo dos princípios de segurança de memória do Rust em ação. Em muitas linguagens de baixo nível, esse tipo de verificação não é feito e, ao fornecer um índice incorreto, pode haver acesso a memória inválida. O Rust protege você desse tipo de erro encerrando imediatamente o programa, em vez de permitir o acesso à memória e continuar. O Capítulo 9 aprofunda o tratamento de erros do Rust e mostra como você pode escrever código legível e seguro, que não entra em pânico nem permite acesso a memória inválida."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Functions are prevalent in Rust code. You’ve already seen one of the most important functions in the language: the `main` function, which is the entry point of many programs. You’ve also seen the `fn` keyword, which allows you to declare new functions."
-msgstr ""
+msgstr "Funções são muito comuns no código Rust. Você já viu uma das funções mais importantes da linguagem: a função `main`, que é o ponto de entrada de muitos programas. Você também já viu a palavra-chave `fn`, que permite declarar novas funções."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Rust code uses _snake case_ as the conventional style for function and variable names, in which all letters are lowercase and underscores separate words. Here’s a program that contains an example function definition:"
-msgstr ""
+msgstr "O código Rust usa _snake case_ como estilo convencional para nomes de funções e variáveis, em que todas as letras são minúsculas e sublinhados separam as palavras. Veja um programa que contém um exemplo de definição de função:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "\"Another function.\""
@@ -3112,15 +3114,15 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "We define a function in Rust by entering `fn` followed by a function name and a set of parentheses. The curly brackets tell the compiler where the function body begins and ends."
-msgstr ""
+msgstr "Definimos uma função no Rust escrevendo `fn`, seguido de um nome de função e de um par de parênteses. As chaves indicam ao compilador onde o corpo da função começa e termina."
 
 #: src/ch03-03-how-functions-work.md
 msgid "We can call any function we’ve defined by entering its name followed by a set of parentheses. Because `another_function` is defined in the program, it can be called from inside the `main` function. Note that we defined `another_function` _after_ the `main` function in the source code; we could have defined it before as well. Rust doesn’t care where you define your functions, only that they’re defined somewhere in a scope that can be seen by the caller."
-msgstr ""
+msgstr "Podemos chamar qualquer função que definimos escrevendo o nome dela, seguido de um par de parênteses. Como `another_function` é definida no programa, ela pode ser chamada de dentro da função `main`. Observe que definimos `another_function` _depois_ da função `main` no código-fonte; poderíamos tê-la definido antes também. O Rust não se importa com o lugar em que você define suas funções, desde que elas estejam definidas em algum escopo visível para quem faz a chamada."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Let’s start a new binary project named _functions_ to explore functions further. Place the `another_function` example in _src/main.rs_ and run it. You should see the following output:"
-msgstr ""
+msgstr "Vamos começar um novo projeto binário chamado _functions_ para explorar mais as funções. Coloque o exemplo `another_function` em _src/main.rs_ e execute-o. Você deve ver a seguinte saída:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3136,23 +3138,23 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "The lines execute in the order in which they appear in the `main` function. First the “Hello, world!” message prints, and then `another_function` is called and its message is printed."
-msgstr ""
+msgstr "As linhas são executadas na ordem em que aparecem na função `main`. Primeiro, é impressa a mensagem “Hello, world!”, e depois `another_function` é chamada e a mensagem dela é impressa."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Parameters"
-msgstr ""
+msgstr "Parâmetros {#parameters}"
 
 #: src/ch03-03-how-functions-work.md
 msgid "We can define functions to have _parameters_, which are special variables that are part of a function’s signature. When a function has parameters, you can provide it with concrete values for those parameters. Technically, the concrete values are called _arguments_, but in casual conversation, people tend to use the words _parameter_ and _argument_ interchangeably for either the variables in a function’s definition or the concrete values passed in when you call a function."
-msgstr ""
+msgstr "Podemos definir funções com _parâmetros_, que são variáveis especiais que fazem parte da assinatura de uma função. Quando uma função tem parâmetros, você pode fornecer a ela valores concretos para esses parâmetros. Tecnicamente, os valores concretos são chamados de _argumentos_, mas, na linguagem do dia a dia, as pessoas costumam usar as palavras _parâmetro_ e _argumento_ como sinônimos, tanto para as variáveis na definição de uma função quanto para os valores concretos passados quando você chama uma função."
 
 #: src/ch03-03-how-functions-work.md
 msgid "In this version of `another_function` we add a parameter:"
-msgstr ""
+msgstr "Nesta versão de `another_function`, adicionamos um parâmetro:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Try running this program; you should get the following output:"
-msgstr ""
+msgstr "Experimente executar este programa; você deve obter a seguinte saída:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3167,15 +3169,15 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "The declaration of `another_function` has one parameter named `x`. The type of `x` is specified as `i32`. When we pass `5` in to `another_function`, the `println!` macro puts `5` where the pair of curly brackets containing `x` was in the format string."
-msgstr ""
+msgstr "A declaração de `another_function` tem um parâmetro chamado `x`. O tipo de `x` é especificado como `i32`. Quando passamos `5` para `another_function`, a macro `println!` coloca o `5` no lugar do par de chaves que contém `x` na string de formato."
 
 #: src/ch03-03-how-functions-work.md
 msgid "In function signatures, you _must_ declare the type of each parameter. This is a deliberate decision in Rust’s design: Requiring type annotations in function definitions means the compiler almost never needs you to use them elsewhere in the code to figure out what type you mean. The compiler is also able to give more-helpful error messages if it knows what types the function expects."
-msgstr ""
+msgstr "Nas assinaturas de função, você _precisa_ declarar o tipo de cada parâmetro. Essa é uma decisão deliberada no design do Rust: exigir anotações de tipo nas definições de função significa que o compilador quase nunca precisa que você as use em outros pontos do código para descobrir qual tipo você quer dizer. O compilador também consegue dar mensagens de erro mais úteis quando sabe quais tipos a função espera."
 
 #: src/ch03-03-how-functions-work.md
 msgid "When defining multiple parameters, separate the parameter declarations with commas, like this:"
-msgstr ""
+msgstr "Ao definir vários parâmetros, separe as declarações de parâmetro com vírgulas, assim:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "'h'"
@@ -3187,11 +3189,11 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "This example creates a function named `print_labeled_measurement` with two parameters. The first parameter is named `value` and is an `i32`. The second is named `unit_label` and is type `char`. The function then prints text containing both the `value` and the `unit_label`."
-msgstr ""
+msgstr "Este exemplo cria uma função chamada `print_labeled_measurement` com dois parâmetros. O primeiro parâmetro se chama `value` e é do tipo `i32`. O segundo se chama `unit_label` e é do tipo `char`. Depois, a função imprime um texto que contém tanto o `value` quanto o `unit_label`."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Let’s try running this code. Replace the program currently in your _functions_ project’s _src/main.rs_ file with the preceding example and run it using `cargo run`:"
-msgstr ""
+msgstr "Vamos experimentar executar este código. Substitua o programa atual do seu projeto _functions_, que está no arquivo _src/main.rs_, pelo exemplo anterior e execute-o usando `cargo run`:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3206,47 +3208,47 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "Because we called the function with `5` as the value for `value` and `'h'` as the value for `unit_label`, the program output contains those values."
-msgstr ""
+msgstr "Como chamamos a função com `5` como valor de `value` e `'h'` como valor de `unit_label`, a saída do programa contém esses valores."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Statements and Expressions"
-msgstr ""
+msgstr "Instruções e expressões {#statements-and-expressions}"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Function bodies are made up of a series of statements optionally ending in an expression. So far, the functions we’ve covered haven’t included an ending expression, but you have seen an expression as part of a statement. Because Rust is an expression-based language, this is an important distinction to understand. Other languages don’t have the same distinctions, so let’s look at what statements and expressions are and how their differences affect the bodies of functions."
-msgstr ""
+msgstr "Os corpos das funções são compostos por uma série de instruções, opcionalmente terminada por uma expressão. Até agora, as funções que já vimos não tinham uma expressão final, mas você já viu uma expressão como parte de uma instrução. Como o Rust é uma linguagem baseada em expressões, essa é uma distinção importante para compreender. Outras linguagens não têm as mesmas distinções, então vamos ver o que são instruções e expressões e como as diferenças entre elas afetam o corpo das funções."
 
 #: src/ch03-03-how-functions-work.md
 msgid "_Statements_ are instructions that perform some action and do not return a value."
-msgstr ""
+msgstr "_Instruções_ são comandos que realizam alguma ação e não retornam um valor."
 
 #: src/ch03-03-how-functions-work.md
 msgid "_Expressions_ evaluate to a resultant value."
-msgstr ""
+msgstr "_Expressões_ são avaliadas e resultam em um valor."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Let’s look at some examples."
-msgstr ""
+msgstr "Vamos ver alguns exemplos."
 
 #: src/ch03-03-how-functions-work.md
 msgid "We’ve actually already used statements and expressions. Creating a variable and assigning a value to it with the `let` keyword is a statement. In Listing 3-1, `let y = 6;` is a statement."
-msgstr ""
+msgstr "Na verdade, nós já usamos instruções e expressões. Criar uma variável e atribuir um valor a ela com a palavra-chave `let` é uma instrução. Na Listagem 3-1, `let y = 6;` é uma instrução."
 
 #: src/ch03-03-how-functions-work.md
 msgid "<Listing number=\"3-1\" file-name=\"src/main.rs\" caption=\"A `main` function declaration containing one statement\">\n"
-msgstr ""
+msgstr "<Listing number=\"3-1\" file-name=\"src/main.rs\" caption=\"Uma declaração da função `main` contendo uma instrução\">\n"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Function definitions are also statements; the entire preceding example is a statement in itself. (As we’ll see shortly, calling a function is not a statement, though.)"
-msgstr ""
+msgstr "As definições de função também são instruções; todo o exemplo anterior é uma instrução por si só. (Como veremos em breve, porém, chamar uma função não é uma instrução.)"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Statements do not return values. Therefore, you can’t assign a `let` statement to another variable, as the following code tries to do; you’ll get an error:"
-msgstr ""
+msgstr "Instruções não retornam valores. Por isso, você não pode atribuir uma instrução `let` a outra variável, como o código a seguir tenta fazer; você vai receber um erro:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "When you run this program, the error you’ll get looks like this:"
-msgstr ""
+msgstr "Quando você executar este programa, o erro que você vai receber fica assim:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3281,31 +3283,31 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "The `let y = 6` statement does not return a value, so there isn’t anything for `x` to bind to. This is different from what happens in other languages, such as C and Ruby, where the assignment returns the value of the assignment. In those languages, you can write `x = y = 6` and have both `x` and `y` have the value `6`; that is not the case in Rust."
-msgstr ""
+msgstr "A instrução `let y = 6` não retorna um valor, então não há nada a que `x` possa se vincular. Isso é diferente do que acontece em outras linguagens, como C e Ruby, nas quais a atribuição retorna o valor da própria atribuição. Nessas linguagens, você pode escrever `x = y = 6` e fazer com que `x` e `y` tenham o valor `6`; no Rust, não é isso que acontece."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Expressions evaluate to a value and make up most of the rest of the code that you’ll write in Rust. Consider a math operation, such as `5 + 6`, which is an expression that evaluates to the value `11`. Expressions can be part of statements: In Listing 3-1, the `6` in the statement `let y = 6;` is an expression that evaluates to the value `6`. Calling a function is an expression. Calling a macro is an expression. A new scope block created with curly brackets is an expression, for example:"
-msgstr ""
+msgstr "Expressões são avaliadas e resultam em um valor, e compõem a maior parte do restante do código que você vai escrever no Rust. Considere uma operação matemática, como `5 + 6`, uma expressão que resulta no valor `11`. Expressões podem fazer parte de instruções: na Listagem 3-1, o `6` na instrução `let y = 6;` é uma expressão que resulta no valor `6`. Chamar uma função é uma expressão. Chamar uma macro é uma expressão. Um novo bloco de escopo criado com chaves é uma expressão, por exemplo:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "This expression:"
-msgstr ""
+msgstr "Esta expressão:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "is a block that, in this case, evaluates to `4`. That value gets bound to `y` as part of the `let` statement. Note the `x + 1` line without a semicolon at the end, which is unlike most of the lines you’ve seen so far. Expressions do not include ending semicolons. If you add a semicolon to the end of an expression, you turn it into a statement, and it will then not return a value. Keep this in mind as you explore function return values and expressions next."
-msgstr ""
+msgstr "é um bloco que, neste caso, resulta em `4`. Esse valor é vinculado a `y` como parte da instrução `let`. Observe a linha `x + 1`, sem ponto e vírgula no final, que é diferente da maioria das linhas que você viu até agora. Expressões não incluem ponto e vírgula no final. Se você adicionar um ponto e vírgula no final de uma expressão, ela se torna uma instrução e, então, não retorna um valor. Tenha isso em mente enquanto explora, a seguir, os valores de retorno das funções e as expressões."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Functions with Return Values"
-msgstr ""
+msgstr "Funções com valores de retorno {#functions-with-return-values}"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Functions can return values to the code that calls them. We don’t name return values, but we must declare their type after an arrow (`->`). In Rust, the return value of the function is synonymous with the value of the final expression in the block of the body of a function. You can return early from a function by using the `return` keyword and specifying a value, but most functions return the last expression implicitly. Here’s an example of a function that returns a value:"
-msgstr ""
+msgstr "Funções podem retornar valores para o código que as chama. Não damos nome aos valores de retorno, mas devemos declarar o tipo deles depois de uma seta (`->`). No Rust, o valor de retorno de uma função equivale ao valor da última expressão no bloco do corpo da função. Você pode retornar antecipadamente de uma função usando a palavra-chave `return` e especificando um valor, mas a maioria das funções retorna a última expressão de forma implícita. Veja um exemplo de uma função que retorna um valor:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "There are no function calls, macros, or even `let` statements in the `five` function—just the number `5` by itself. That’s a perfectly valid function in Rust. Note that the function’s return type is specified too, as `-> i32`. Try running this code; the output should look like this:"
-msgstr ""
+msgstr "Não há chamadas de função, macros, nem mesmo instruções `let` na função `five` — apenas o número `5` sozinho. Essa é uma função perfeitamente válida no Rust. Observe que o tipo de retorno da função também é especificado, como `-> i32`. Experimente executar este código; a saída deve ter esta aparência:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3320,23 +3322,23 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "The `5` in `five` is the function’s return value, which is why the return type is `i32`. Let’s examine this in more detail. There are two important bits: First, the line `let x = five();` shows that we’re using the return value of a function to initialize a variable. Because the function `five` returns a `5`, that line is the same as the following:"
-msgstr ""
+msgstr "O `5` em `five` é o valor de retorno da função, e é por isso que o tipo de retorno é `i32`. Vamos examinar isso com mais detalhes. Há duas coisas importantes: primeiro, a linha `let x = five();` mostra que estamos usando o valor de retorno de uma função para inicializar uma variável. Como a função `five` retorna um `5`, essa linha é igual à seguinte:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Second, the `five` function has no parameters and defines the type of the return value, but the body of the function is a lonely `5` with no semicolon because it’s an expression whose value we want to return."
-msgstr ""
+msgstr "Segundo, a função `five` não tem parâmetros e define o tipo do valor de retorno, mas o corpo da função é apenas um `5` solitário, sem ponto e vírgula, porque é uma expressão cujo valor queremos retornar."
 
 #: src/ch03-03-how-functions-work.md
 msgid "Let’s look at another example:"
-msgstr ""
+msgstr "Vamos ver outro exemplo:"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Running this code will print `The value of x is: 6`. But what happens if we place a semicolon at the end of the line containing `x + 1`, changing it from an expression to a statement?"
-msgstr ""
+msgstr "Executar este código vai imprimir `The value of x is: 6`. Mas o que acontece se colocarmos um ponto e vírgula no final da linha que contém `x + 1`, transformando-a de uma expressão em uma instrução?"
 
 #: src/ch03-03-how-functions-work.md
 msgid "Compiling this code will produce an error, as follows:"
-msgstr ""
+msgstr "Compilar este código vai produzir um erro, da seguinte forma:"
 
 #: src/ch03-03-how-functions-work.md
 msgid ""
@@ -3360,15 +3362,15 @@ msgstr ""
 
 #: src/ch03-03-how-functions-work.md
 msgid "The main error message, `mismatched types`, reveals the core issue with this code. The definition of the function `plus_one` says that it will return an `i32`, but statements don’t evaluate to a value, which is expressed by `()`, the unit type. Therefore, nothing is returned, which contradicts the function definition and results in an error. In this output, Rust provides a message to possibly help rectify this issue: It suggests removing the semicolon, which would fix the error."
-msgstr ""
+msgstr "A mensagem de erro principal, `mismatched types`, revela o problema central deste código. A definição da função `plus_one` diz que ela vai retornar um `i32`, mas instruções não resultam em um valor, o que é expresso por `()`, o tipo unitário. Por isso, nada é retornado, o que contradiz a definição da função e resulta em um erro. Nessa saída, o Rust oferece uma mensagem que pode ajudar a corrigir o problema: ela sugere remover o ponto e vírgula, o que corrigiria o erro."
 
 #: src/ch03-04-comments.md
 msgid "All programmers strive to make their code easy to understand, but sometimes extra explanation is warranted. In these cases, programmers leave _comments_ in their source code that the compiler will ignore but that people reading the source code may find useful."
-msgstr ""
+msgstr "Todos os programadores se esforçam para deixar o código fácil de entender, mas às vezes uma explicação extra é justificada. Nesses casos, os programadores deixam _comentários_ no código-fonte que o compilador vai ignorar, mas que as pessoas que leem o código-fonte podem achar úteis."
 
 #: src/ch03-04-comments.md
 msgid "Here’s a simple comment:"
-msgstr ""
+msgstr "Veja um comentário simples:"
 
 #: src/ch03-04-comments.md
 msgid "// hello, world\n"
@@ -3376,7 +3378,7 @@ msgstr ""
 
 #: src/ch03-04-comments.md
 msgid "In Rust, the idiomatic comment style starts a comment with two slashes, and the comment continues until the end of the line. For comments that extend beyond a single line, you’ll need to include `//` on each line, like this:"
-msgstr ""
+msgstr "No Rust, o estilo idiomático de comentário começa com duas barras, e o comentário continua até o fim da linha. Para comentários que se estendem por mais de uma linha, você vai precisar incluir `//` em cada linha, assim:"
 
 #: src/ch03-04-comments.md
 msgid ""
@@ -3387,7 +3389,7 @@ msgstr ""
 
 #: src/ch03-04-comments.md
 msgid "Comments can also be placed at the end of lines containing code:"
-msgstr ""
+msgstr "Comentários também podem ser colocados no fim de linhas que contêm código:"
 
 #: src/ch03-04-comments.md
 msgid "// I'm feeling lucky today\n"
@@ -3395,27 +3397,27 @@ msgstr ""
 
 #: src/ch03-04-comments.md
 msgid "But you’ll more often see them used in this format, with the comment on a separate line above the code it’s annotating:"
-msgstr ""
+msgstr "Mas, com mais frequência, você vai ver comentários usados neste formato, com o comentário em uma linha separada acima do código que ele anota:"
 
 #: src/ch03-04-comments.md
 msgid "Rust also has another kind of comment, documentation comments, which we’ll discuss in the [“Publishing a Crate to Crates.io”](ch14-02-publishing-to-crates-io.html)<!-- ignore --> section of Chapter 14."
-msgstr ""
+msgstr "O Rust também tem outro tipo de comentário, os comentários de documentação, que vamos discutir na seção [“Publicando um crate no crates.io”](ch14-02-publishing-to-crates-io.html)<!-- ignore --> do Capítulo 14."
 
 #: src/ch03-05-control-flow.md
 msgid "The ability to run some code depending on whether a condition is `true` and the ability to run some code repeatedly while a condition is `true` are basic building blocks in most programming languages. The most common constructs that let you control the flow of execution of Rust code are `if` expressions and loops."
-msgstr ""
+msgstr "A capacidade de executar algum código dependendo de uma condição ser `true` e a de executar algum código repetidamente enquanto uma condição for `true` são elementos básicos presentes na maioria das linguagens de programação. As construções mais comuns que permitem controlar o fluxo de execução do código Rust são as expressões `if` e os loops."
 
 #: src/ch03-05-control-flow.md
 msgid "`if` Expressions"
-msgstr ""
+msgstr "Expressões `if` {#if-expressions}"
 
 #: src/ch03-05-control-flow.md
 msgid "An `if` expression allows you to branch your code depending on conditions. You provide a condition and then state, “If this condition is met, run this block of code. If the condition is not met, do not run this block of code.”"
-msgstr ""
+msgstr "Uma expressão `if` permite que você ramifique seu código dependendo de condições. Você fornece uma condição e então declara: “Se esta condição for atendida, execute este bloco de código. Se a condição não for atendida, não execute este bloco de código.”"
 
 #: src/ch03-05-control-flow.md
 msgid "Create a new project called _branches_ in your _projects_ directory to explore the `if` expression. In the _src/main.rs_ file, input the following:"
-msgstr ""
+msgstr "Crie um novo projeto chamado _branches_ no seu diretório _projects_ para explorar a expressão `if`. No arquivo _src/main.rs_, insira o seguinte:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"condition was true\""
@@ -3430,14 +3432,16 @@ msgid ""
 "All `if` expressions start with the keyword `if`, followed by a condition. In this case, the condition checks whether or not the variable `number` has a value less than 5. We place the block of code to execute if the condition is `true` immediately after the condition inside curly brackets. Blocks of code associated with the conditions in `if` expressions are sometimes called _arms_, just like the arms in `match` expressions that we discussed in the [“Comparing the Guess to the Secret Number”](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!--\n"
 "ignore --> section of Chapter 2."
 msgstr ""
+"Todas as expressões `if` começam com a palavra-chave `if`, seguida de uma condição. Neste caso, a condição verifica se a variável `number` tem um valor menor que 5 ou não. Colocamos o bloco de código a ser executado se a condição for `true` logo após a condição, entre chaves. Os blocos de código associados às condições nas expressões `if` são às vezes chamados de _braços_, assim como os braços das expressões `match` que discutimos na seção [“Comparando o palpite com o número secreto”](ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number)<!--\n"
+"ignore --> do Capítulo 2."
 
 #: src/ch03-05-control-flow.md
 msgid "Optionally, we can also include an `else` expression, which we chose to do here, to give the program an alternative block of code to execute should the condition evaluate to `false`. If you don’t provide an `else` expression and the condition is `false`, the program will just skip the `if` block and move on to the next bit of code."
-msgstr ""
+msgstr "Opcionalmente, também podemos incluir uma expressão `else`, o que escolhemos fazer aqui, para dar ao programa um bloco de código alternativo a ser executado caso a condição resulte em `false`. Se você não fornecer uma expressão `else` e a condição for `false`, o programa simplesmente pula o bloco `if` e segue para o próximo trecho de código."
 
 #: src/ch03-05-control-flow.md
 msgid "Try running this code; you should see the following output:"
-msgstr ""
+msgstr "Experimente executar este código; você deve ver a seguinte saída:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3452,11 +3456,11 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Let’s try changing the value of `number` to a value that makes the condition `false` to see what happens:"
-msgstr ""
+msgstr "Vamos tentar mudar o valor de `number` para um valor que torne a condição `false`, para ver o que acontece:"
 
 #: src/ch03-05-control-flow.md
 msgid "Run the program again, and look at the output:"
-msgstr ""
+msgstr "Execute o programa novamente e observe a saída:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3471,7 +3475,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "It’s also worth noting that the condition in this code _must_ be a `bool`. If the condition isn’t a `bool`, we’ll get an error. For example, try running the following code:"
-msgstr ""
+msgstr "Vale também observar que a condição neste código _precisa_ ser um `bool`. Se a condição não for um `bool`, vamos ver um erro. Por exemplo, experimente executar o código a seguir:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"number was three\""
@@ -3479,7 +3483,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The `if` condition evaluates to a value of `3` this time, and Rust throws an error:"
-msgstr ""
+msgstr "Desta vez, a condição do `if` resulta no valor `3`, e o Rust gera um erro:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3499,7 +3503,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The error indicates that Rust expected a `bool` but got an integer. Unlike languages such as Ruby and JavaScript, Rust will not automatically try to convert non-Boolean types to a Boolean. You must be explicit and always provide `if` with a Boolean as its condition. If we want the `if` code block to run only when a number is not equal to `0`, for example, we can change the `if` expression to the following:"
-msgstr ""
+msgstr "O erro indica que o Rust esperava um `bool`, mas recebeu um inteiro. Diferentemente de linguagens como Ruby e JavaScript, o Rust não tenta converter automaticamente tipos que não são booleanos em booleanos. Você precisa ser explícito e sempre fornecer ao `if` um booleano como condição. Se quisermos que o bloco de código do `if` seja executado apenas quando um número for diferente de `0`, por exemplo, podemos alterar a expressão `if` para a seguinte:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"number was something other than zero\""
@@ -3507,15 +3511,15 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Running this code will print `number was something other than zero`."
-msgstr ""
+msgstr "Executar este código vai imprimir `number was something other than zero`."
 
 #: src/ch03-05-control-flow.md
 msgid "Handling Multiple Conditions with `else if`"
-msgstr ""
+msgstr "Tratando múltiplas condições com `else if` {#handling-multiple-conditions-with-else-if}"
 
 #: src/ch03-05-control-flow.md
 msgid "You can use multiple conditions by combining `if` and `else` in an `else if` expression. For example:"
-msgstr ""
+msgstr "Você pode usar múltiplas condições combinando `if` e `else` em uma expressão `else if`. Por exemplo:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"number is divisible by 4\""
@@ -3535,7 +3539,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "This program has four possible paths it can take. After running it, you should see the following output:"
-msgstr ""
+msgstr "Este programa tem quatro caminhos possíveis que ele pode seguir. Depois de executá-lo, você deve ver a seguinte saída:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3550,23 +3554,23 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "When this program executes, it checks each `if` expression in turn and executes the first body for which the condition evaluates to `true`. Note that even though 6 is divisible by 2, we don’t see the output `number is divisible by 2`, nor do we see the `number is not divisible by 4, 3, or 2` text from the `else` block. That’s because Rust only executes the block for the first `true` condition, and once it finds one, it doesn’t even check the rest."
-msgstr ""
+msgstr "Quando este programa é executado, ele verifica cada expressão `if` em sequência e executa o primeiro bloco cuja condição resulta em `true`. Observe que, mesmo que 6 seja divisível por 2, não vemos a saída `number is divisible by 2`, nem vemos o texto `number is not divisible by 4, 3, or 2` do bloco `else`. Isso acontece porque o Rust executa apenas o bloco referente à primeira condição `true` e, assim que encontra uma, nem verifica as demais."
 
 #: src/ch03-05-control-flow.md
 msgid "Using too many `else if` expressions can clutter your code, so if you have more than one, you might want to refactor your code. Chapter 6 describes a powerful Rust branching construct called `match` for these cases."
-msgstr ""
+msgstr "Usar muitas expressões `else if` pode poluir seu código, então, se você tiver mais de uma, talvez queira refatorar seu código. O Capítulo 6 descreve uma poderosa construção de ramificação do Rust chamada `match` para esses casos."
 
 #: src/ch03-05-control-flow.md
 msgid "Using `if` in a `let` Statement"
-msgstr ""
+msgstr "Usando `if` em uma instrução `let` {#using-if-in-a-let-statement}"
 
 #: src/ch03-05-control-flow.md
 msgid "Because `if` is an expression, we can use it on the right side of a `let` statement to assign the outcome to a variable, as in Listing 3-2."
-msgstr ""
+msgstr "Como `if` é uma expressão, podemos usá-lo do lado direito de uma instrução `let` para atribuir o resultado a uma variável, como na Listagem 3-2."
 
 #: src/ch03-05-control-flow.md
 msgid "<Listing number=\"3-2\" file-name=\"src/main.rs\" caption=\"Assigning the result of an `if` expression to a variable\">\n"
-msgstr ""
+msgstr "<Listing number=\"3-2\" file-name=\"src/main.rs\" caption=\"Atribuindo o resultado de uma expressão `if` a uma variável\">\n"
 
 #: src/ch03-05-control-flow.md
 msgid "\"The value of number is: {number}\""
@@ -3574,7 +3578,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The `number` variable will be bound to a value based on the outcome of the `if` expression. Run this code to see what happens:"
-msgstr ""
+msgstr "A variável `number` será vinculada a um valor com base no resultado da expressão `if`. Execute este código para ver o que acontece:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3589,7 +3593,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Remember that blocks of code evaluate to the last expression in them, and numbers by themselves are also expressions. In this case, the value of the whole `if` expression depends on which block of code executes. This means the values that have the potential to be results from each arm of the `if` must be the same type; in Listing 3-2, the results of both the `if` arm and the `else` arm were `i32` integers. If the types are mismatched, as in the following example, we’ll get an error:"
-msgstr ""
+msgstr "Lembre-se de que blocos de código resultam na última expressão que contêm, e números por si só também são expressões. Neste caso, o valor de toda a expressão `if` depende de qual bloco de código é executado. Isso significa que os valores que podem ser o resultado de cada braço do `if` precisam ser do mesmo tipo; na Listagem 3-2, os resultados do braço do `if` e do braço do `else` eram ambos inteiros `i32`. Se os tipos forem incompatíveis, como no exemplo a seguir, vamos ver um erro:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"six\""
@@ -3597,7 +3601,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "When we try to compile this code, we’ll get an error. The `if` and `else` arms have value types that are incompatible, and Rust indicates exactly where to find the problem in the program:"
-msgstr ""
+msgstr "Ao tentar compilar este código, vamos receber um erro. Os braços do `if` e do `else` têm tipos de valor incompatíveis, e o Rust indica exatamente onde encontrar o problema no programa:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3619,31 +3623,31 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The expression in the `if` block evaluates to an integer, and the expression in the `else` block evaluates to a string. This won’t work, because variables must have a single type, and Rust needs to know definitively at compile time what type the `number` variable is. Knowing the type of `number` lets the compiler verify the type is valid everywhere we use `number`. Rust wouldn’t be able to do that if the type of `number` was only determined at runtime; the compiler would be more complex and would make fewer guarantees about the code if it had to keep track of multiple hypothetical types for any variable."
-msgstr ""
+msgstr "A expressão no bloco `if` resulta em um inteiro, e a expressão no bloco `else` resulta em uma string. Isso não vai funcionar, porque as variáveis precisam ter um único tipo, e o Rust precisa saber, de forma definitiva e em tempo de compilação, qual é o tipo da variável `number`. Saber o tipo de `number` permite que o compilador verifique se o tipo é válido em todos os lugares em que usamos `number`. O Rust não conseguiria fazer isso se o tipo de `number` fosse determinado apenas em tempo de execução; o compilador seria mais complexo e ofereceria menos garantias sobre o código se precisasse acompanhar vários tipos hipotéticos para qualquer variável."
 
 #: src/ch03-05-control-flow.md
 msgid "Repetition with Loops"
-msgstr ""
+msgstr "Repetição com loops {#repetition-with-loops}"
 
 #: src/ch03-05-control-flow.md
 msgid "It’s often useful to execute a block of code more than once. For this task, Rust provides several _loops_, which will run through the code inside the loop body to the end and then start immediately back at the beginning. To experiment with loops, let’s make a new project called _loops_."
-msgstr ""
+msgstr "Muitas vezes é útil executar um bloco de código mais de uma vez. Para isso, o Rust oferece vários _loops_, que percorrem o código dentro do corpo do loop até o fim e, em seguida, recomeçam imediatamente do início. Para experimentar os loops, vamos criar um novo projeto chamado _loops_."
 
 #: src/ch03-05-control-flow.md
 msgid "Rust has three kinds of loops: `loop`, `while`, and `for`. Let’s try each one."
-msgstr ""
+msgstr "O Rust tem três tipos de loops: `loop`, `while` e `for`. Vamos experimentar cada um."
 
 #: src/ch03-05-control-flow.md
 msgid "Repeating Code with `loop`"
-msgstr ""
+msgstr "Repetindo código com `loop` {#repeating-code-with-loop}"
 
 #: src/ch03-05-control-flow.md
 msgid "The `loop` keyword tells Rust to execute a block of code over and over again either forever or until you explicitly tell it to stop."
-msgstr ""
+msgstr "A palavra-chave `loop` diz ao Rust para executar um bloco de código repetidamente, para sempre ou até que você lhe diga explicitamente para parar."
 
 #: src/ch03-05-control-flow.md
 msgid "As an example, change the _src/main.rs_ file in your _loops_ directory to look like this:"
-msgstr ""
+msgstr "Como exemplo, altere o arquivo _src/main.rs_ no seu diretório _loops_ para que fique assim:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"again!\""
@@ -3651,7 +3655,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "When we run this program, we’ll see `again!` printed over and over continuously until we stop the program manually. Most terminals support the keyboard shortcut <kbd>ctrl</kbd>\\-<kbd>C</kbd> to interrupt a program that is stuck in a continual loop. Give it a try:"
-msgstr ""
+msgstr "Quando executamos este programa, vamos ver `again!` impresso repetidamente, sem parar, até que interrompamos o programa manualmente. A maioria dos terminais aceita o atalho de teclado <kbd>ctrl</kbd>\\-<kbd>C</kbd> para interromper um programa que está preso em um loop contínuo. Experimente:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3679,29 +3683,31 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The symbol `^C` represents where you pressed <kbd>ctrl</kbd>\\-<kbd>C</kbd>."
-msgstr ""
+msgstr "O símbolo `^C` representa onde você pressionou <kbd>ctrl</kbd>\\-<kbd>C</kbd>."
 
 #: src/ch03-05-control-flow.md
 msgid "You may or may not see the word `again!` printed after the `^C`, depending on where the code was in the loop when it received the interrupt signal."
-msgstr ""
+msgstr "Você pode ou não ver a palavra `again!` impressa depois do `^C`, dependendo de onde o código estava no loop quando recebeu o sinal de interrupção."
 
 #: src/ch03-05-control-flow.md
 msgid ""
 "Fortunately, Rust also provides a way to break out of a loop using code. You can place the `break` keyword within the loop to tell the program when to stop executing the loop. Recall that we did this in the guessing game in the [“Quitting After a Correct Guess”](ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess)<!-- ignore\n"
 "--> section of Chapter 2 to exit the program when the user won the game by guessing the correct number."
 msgstr ""
+"Felizmente, o Rust também oferece uma forma de sair de um loop usando código. Você pode colocar a palavra-chave `break` dentro do loop para dizer ao programa quando parar de executar o loop. Lembre-se de que fizemos isso no jogo de adivinhação, na seção [“Encerrando após um palpite correto”](ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess)<!-- ignore\n"
+"--> do Capítulo 2 para encerrar o programa quando o usuário venceu o jogo ao adivinhar o número correto."
 
 #: src/ch03-05-control-flow.md
 msgid "We also used `continue` in the guessing game, which in a loop tells the program to skip over any remaining code in this iteration of the loop and go to the next iteration."
-msgstr ""
+msgstr "Também usamos `continue` no jogo de adivinhação, que, em um loop, diz ao programa para pular qualquer código restante nesta iteração do loop e ir para a próxima iteração."
 
 #: src/ch03-05-control-flow.md
 msgid "Returning Values from Loops"
-msgstr ""
+msgstr "Retornando valores de loops {#returning-values-from-loops}"
 
 #: src/ch03-05-control-flow.md
 msgid "One of the uses of a `loop` is to retry an operation you know might fail, such as checking whether a thread has completed its job. You might also need to pass the result of that operation out of the loop to the rest of your code. To do this, you can add the value you want returned after the `break` expression you use to stop the loop; that value will be returned out of the loop so that you can use it, as shown here:"
-msgstr ""
+msgstr "Um dos usos de um `loop` é tentar novamente uma operação que você sabe que pode falhar, como verificar se uma thread concluiu o seu job. Você também pode precisar passar o resultado dessa operação para fora do loop, para o restante do seu código. Para isso, você pode adicionar o valor que deseja retornar depois da expressão `break` que usa para interromper o loop; esse valor será retornado para fora do loop, para que você possa usá-lo, como mostrado aqui:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"The result is {result}\""
@@ -3709,11 +3715,11 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Before the loop, we declare a variable named `counter` and initialize it to `0`. Then, we declare a variable named `result` to hold the value returned from the loop. On every iteration of the loop, we add `1` to the `counter` variable, and then check whether the `counter` is equal to `10`. When it is, we use the `break` keyword with the value `counter * 2`. After the loop, we use a semicolon to end the statement that assigns the value to `result`. Finally, we print the value in `result`, which in this case is `20`."
-msgstr ""
+msgstr "Antes do loop, declaramos uma variável chamada `counter` e a inicializamos com `0`. Em seguida, declaramos uma variável chamada `result` para guardar o valor retornado pelo loop. Em cada iteração do loop, somamos `1` à variável `counter` e, então, verificamos se `counter` é igual a `10`. Quando isso acontece, usamos a palavra-chave `break` com o valor `counter * 2`. Depois do loop, usamos um ponto e vírgula para encerrar a instrução que atribui o valor a `result`. Por fim, imprimimos o valor de `result`, que, neste caso, é `20`."
 
 #: src/ch03-05-control-flow.md
 msgid "You can also `return` from inside a loop. While `break` only exits the current loop, `return` always exits the current function."
-msgstr ""
+msgstr "Você também pode usar `return` de dentro de um loop. Enquanto `break` apenas sai do loop atual, `return` sempre sai da função atual."
 
 #: src/ch03-05-control-flow.md
 msgid "<a id=\"loop-labels-to-disambiguate-between-multiple-loops\"></a>"
@@ -3721,11 +3727,11 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Disambiguating with Loop Labels"
-msgstr ""
+msgstr "Desambiguando com rótulos de loop {#disambiguating-with-loop-labels}"
 
 #: src/ch03-05-control-flow.md
 msgid "If you have loops within loops, `break` and `continue` apply to the innermost loop at that point. You can optionally specify a _loop label_ on a loop that you can then use with `break` or `continue` to specify that those keywords apply to the labeled loop instead of the innermost loop. Loop labels must begin with a single quote. Here’s an example with two nested loops:"
-msgstr ""
+msgstr "Se você tiver loops dentro de loops, `break` e `continue` se aplicam ao loop mais interno naquele ponto. Você pode, opcionalmente, especificar um _rótulo de loop_ em um loop, que então pode ser usado com `break` ou `continue` para indicar que essas palavras-chave se aplicam ao loop rotulado, em vez do loop mais interno. Rótulos de loop devem começar com uma aspa simples. Aqui está um exemplo com dois loops aninhados:"
 
 #: src/ch03-05-control-flow.md
 msgid "\"count = {count}\""
@@ -3741,7 +3747,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "The outer loop has the label `'counting_up`, and it will count up from 0 to 2. The inner loop without a label counts down from 10 to 9. The first `break` that doesn’t specify a label will exit the inner loop only. The `break 'counting_up;` statement will exit the outer loop. This code prints:"
-msgstr ""
+msgstr "O loop externo tem o rótulo `'counting_up`, e ele vai contar de 0 a 2. O loop interno, sem rótulo, faz a contagem regressiva de 10 a 9. O primeiro `break` que não especifica um rótulo vai sair apenas do loop interno. A instrução `break 'counting_up;` vai sair do loop externo. Este código imprime:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3768,15 +3774,15 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Streamlining Conditional Loops with while"
-msgstr ""
+msgstr "Simplificando loops condicionais com while {#streamlining-conditional-loops-with-while}"
 
 #: src/ch03-05-control-flow.md
 msgid "A program will often need to evaluate a condition within a loop. While the condition is `true`, the loop runs. When the condition ceases to be `true`, the program calls `break`, stopping the loop. It’s possible to implement behavior like this using a combination of `loop`, `if`, `else`, and `break`; you could try that now in a program, if you’d like. However, this pattern is so common that Rust has a built-in language construct for it, called a `while` loop. In Listing 3-3, we use `while` to loop the program three times, counting down each time, and then, after the loop, to print a message and exit."
-msgstr ""
+msgstr "Um programa muitas vezes precisa avaliar uma condição dentro de um loop. Enquanto a condição for `true`, o loop é executado. Quando a condição deixar de ser `true`, o programa chama `break`, interrompendo o loop. É possível implementar um comportamento como este usando uma combinação de `loop`, `if`, `else` e `break`; você pode experimentar isso agora, em um programa, se quiser. No entanto, esse padrão é tão comum que o Rust tem uma construção embutida na linguagem para isso, chamada de loop `while`. Na Listagem 3-3, usamos `while` para fazer o programa percorrer o loop três vezes, contando de forma regressiva a cada vez, e, depois do loop, para imprimir uma mensagem e sair."
 
 #: src/ch03-05-control-flow.md
 msgid "<Listing number=\"3-3\" file-name=\"src/main.rs\" caption=\"Using a `while` loop to run code while a condition evaluates to `true`\">\n"
-msgstr ""
+msgstr "<Listing number=\"3-3\" file-name=\"src/main.rs\" caption=\"Usando um loop `while` para executar código enquanto uma condição resulta em `true`\">\n"
 
 #: src/ch03-05-control-flow.md
 msgid "\"{number}!\""
@@ -3788,19 +3794,19 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "This construct eliminates a lot of nesting that would be necessary if you used `loop`, `if`, `else`, and `break`, and it’s clearer. While a condition evaluates to `true`, the code runs; otherwise, it exits the loop."
-msgstr ""
+msgstr "Essa construção elimina boa parte do aninhamento que seria necessário se você usasse `loop`, `if`, `else` e `break`, e é mais clara. Enquanto uma condição resulta em `true`, o código é executado; caso contrário, o loop é encerrado."
 
 #: src/ch03-05-control-flow.md
 msgid "Looping Through a Collection with `for`"
-msgstr ""
+msgstr "Percorrendo uma coleção com `for` {#looping-through-a-collection-with-for}"
 
 #: src/ch03-05-control-flow.md
 msgid "You can choose to use the `while` construct to loop over the elements of a collection, such as an array. For example, the loop in Listing 3-4 prints each element in the array `a`."
-msgstr ""
+msgstr "Você pode optar por usar a construção `while` para percorrer os elementos de uma coleção, como um array. Por exemplo, o loop da Listagem 3-4 imprime cada elemento do array `a`."
 
 #: src/ch03-05-control-flow.md
 msgid "<Listing number=\"3-4\" file-name=\"src/main.rs\" caption=\"Looping through each element of a collection using a `while` loop\">\n"
-msgstr ""
+msgstr "<Listing number=\"3-4\" file-name=\"src/main.rs\" caption=\"Percorrendo cada elemento de uma coleção usando um loop `while`\">\n"
 
 #: src/ch03-05-control-flow.md
 msgid "\"the value is: {}\""
@@ -3808,7 +3814,7 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "Here, the code counts up through the elements in the array. It starts at index `0` and then loops until it reaches the final index in the array (that is, when `index < 5` is no longer `true`). Running this code will print every element in the array:"
-msgstr ""
+msgstr "Aqui, o código avança pelos elementos do array contando de forma crescente. Ele começa no índice `0` e então repete o processo até chegar ao índice final do array (ou seja, quando `index < 5` não for mais `true`). Executar esse código vai imprimir todos os elementos do array:"
 
 #: src/ch03-05-control-flow.md
 msgid ""
@@ -3827,19 +3833,19 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "All five array values appear in the terminal, as expected. Even though `index` will reach a value of `5` at some point, the loop stops executing before trying to fetch a sixth value from the array."
-msgstr ""
+msgstr "Todos os cinco valores do array aparecem no terminal, como esperado. Embora `index` vá chegar ao valor `5` em algum momento, o loop para de executar antes de tentar buscar um sexto valor do array."
 
 #: src/ch03-05-control-flow.md
 msgid "However, this approach is error-prone; we could cause the program to panic if the index value or test condition is incorrect. For example, if you changed the definition of the `a` array to have four elements but forgot to update the condition to `while index < 4`, the code would panic. It’s also slow, because the compiler adds runtime code to perform the conditional check of whether the index is within the bounds of the array on every iteration through the loop."
-msgstr ""
+msgstr "No entanto, essa abordagem é propensa a erros; podemos fazer o programa entrar em pânico se o valor do índice ou a condição de teste estiverem incorretos. Por exemplo, se você mudasse a definição do array `a` para ter quatro elementos, mas esquecesse de atualizar a condição para `while index < 4`, o código entraria em pânico. Ela também é lenta, porque o compilador adiciona código em tempo de execução para verificar, a cada iteração do loop, se o índice está dentro dos limites do array."
 
 #: src/ch03-05-control-flow.md
 msgid "As a more concise alternative, you can use a `for` loop and execute some code for each item in a collection. A `for` loop looks like the code in Listing 3-5."
-msgstr ""
+msgstr "Como alternativa mais concisa, você pode usar um loop `for` e executar algum código para cada item de uma coleção. Um loop `for` se parece com o código da Listagem 3-5."
 
 #: src/ch03-05-control-flow.md
 msgid "<Listing number=\"3-5\" file-name=\"src/main.rs\" caption=\"Looping through each element of a collection using a `for` loop\">\n"
-msgstr ""
+msgstr "<Listing number=\"3-5\" file-name=\"src/main.rs\" caption=\"Percorrendo cada elemento de uma coleção usando um loop `for`\">\n"
 
 #: src/ch03-05-control-flow.md
 msgid "\"the value is: {element}\""
@@ -3847,43 +3853,43 @@ msgstr ""
 
 #: src/ch03-05-control-flow.md
 msgid "When we run this code, we’ll see the same output as in Listing 3-4. More importantly, we’ve now increased the safety of the code and eliminated the chance of bugs that might result from going beyond the end of the array or not going far enough and missing some items. Machine code generated from `for` loops can be more efficient as well because the index doesn’t need to be compared to the length of the array at every iteration."
-msgstr ""
+msgstr "Quando executarmos esse código, veremos a mesma saída da Listagem 3-4. Mais importante ainda, agora aumentamos a segurança do código e eliminamos a chance de bugs que poderiam resultar de ultrapassar o fim do array ou de não ir longe o suficiente e deixar de fora alguns itens. O código de máquina gerado a partir de loops `for` também pode ser mais eficiente, porque o índice não precisa ser comparado com o tamanho do array a cada iteração."
 
 #: src/ch03-05-control-flow.md
 msgid "Using the `for` loop, you wouldn’t need to remember to change any other code if you changed the number of values in the array, as you would with the method used in Listing 3-4."
-msgstr ""
+msgstr "Usando o loop `for`, você não precisaria lembrar de alterar nenhum outro código se mudasse a quantidade de valores do array, como aconteceria com o método usado na Listagem 3-4."
 
 #: src/ch03-05-control-flow.md
 msgid "The safety and conciseness of `for` loops make them the most commonly used loop construct in Rust. Even in situations in which you want to run some code a certain number of times, as in the countdown example that used a `while` loop in Listing 3-3, most Rustaceans would use a `for` loop. The way to do that would be to use a `Range`, provided by the standard library, which generates all numbers in sequence starting from one number and ending before another number."
-msgstr ""
+msgstr "A segurança e a concisão dos loops `for` fazem deles a construção de loop mais usada no Rust. Mesmo em situações em que você quer executar algum código um certo número de vezes, como no exemplo da contagem regressiva que usou um loop `while` na Listagem 3-3, a maioria dos rustáceos usaria um loop `for`. A forma de fazer isso seria usar um `Range`, fornecido pela biblioteca padrão, que gera todos os números em sequência, começando em um número e terminando antes de outro número."
 
 #: src/ch03-05-control-flow.md
 msgid "Here’s what the countdown would look like using a `for` loop and another method we’ve not yet talked about, `rev`, to reverse the range:"
-msgstr ""
+msgstr "Veja como ficaria a contagem regressiva usando um loop `for` e outro método que ainda não vimos, `rev`, para inverter o intervalo:"
 
 #: src/ch03-05-control-flow.md
 msgid "This code is a bit nicer, isn’t it?"
-msgstr ""
+msgstr "Este código é um pouco mais agradável, não é?"
 
 #: src/ch03-05-control-flow.md
 msgid "You made it! This was a sizable chapter: You learned about variables, scalar and compound data types, functions, comments, `if` expressions, and loops! To practice with the concepts discussed in this chapter, try building programs to do the following:"
-msgstr ""
+msgstr "Você conseguiu! Foi um capítulo e tanto: você aprendeu sobre variáveis, tipos de dados escalares e compostos, funções, comentários, expressões `if` e loops! Para praticar os conceitos discutidos neste capítulo, tente criar programas para fazer o seguinte:"
 
 #: src/ch03-05-control-flow.md
 msgid "Convert temperatures between Fahrenheit and Celsius."
-msgstr ""
+msgstr "Converter temperaturas entre Fahrenheit e Celsius."
 
 #: src/ch03-05-control-flow.md
 msgid "Generate the _n_th Fibonacci number."
-msgstr ""
+msgstr "Gerar o _n_-ésimo número de Fibonacci."
 
 #: src/ch03-05-control-flow.md
 msgid "Print the lyrics to the Christmas carol “The Twelve Days of Christmas,” taking advantage of the repetition in the song."
-msgstr ""
+msgstr "Imprimir a letra da canção natalina “Os doze dias de Natal”, aproveitando a repetição da música."
 
 #: src/ch03-05-control-flow.md
 msgid "When you’re ready to move on, we’ll talk about a concept in Rust that _doesn’t_ commonly exist in other programming languages: ownership."
-msgstr ""
+msgstr "Quando você estiver pronto para seguir em frente, vamos falar sobre um conceito do Rust que _não_ costuma existir em outras linguagens de programação: o ownership."
 
 #: src/ch04-00-understanding-ownership.md
 msgid "Ownership is Rust’s most unique feature and has deep implications for the rest of the language. It enables Rust to make memory safety guarantees without needing a garbage collector, so it’s important to understand how ownership works. In this chapter, we’ll talk about ownership as well as several related features: borrowing, slices, and how Rust lays data out in memory."
