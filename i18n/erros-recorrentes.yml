@@ -132,8 +132,8 @@ erros:
     correcao: "Figura N-M"
     explicacao: >-
       Referências e legendas de figuras ficam em português, no mesmo molde de “Listagem 3-1”:
-      “Figure 4-1” vira “Figura 4-1”. O livro tem 52 ocorrências (capítulos 4, 14, 15, 17 e 21), a
-      maioria em legendas `<span class="caption">`.
+      “Figure 4-1” vira “Figura 4-1”. O livro tem 52 ocorrências (capítulos 4, 14, 15, 17 e 21):
+      27 referências na prosa e 25 legendas (`<span class="caption">` e `<figcaption>`).
 
   - id: table-em-ingles
     regex: '(?-i:\bTable\s+\d)'
@@ -245,12 +245,15 @@ erros:
       collaboration”. Em português, reescreva a frase.
 
   - id: construir-sobre
-    regex: '(?i:\b(?:construímos|construiremos|construir|construindo|construída?s?)\s+sobre\s+(?:isso|esse|essa|esses|essas|o que|ele|ela)\b)'
+    regex: '(?i:\bconstr(?:oem|ói|uímos|uiremos|uirá|uirão|uir|uindo|uiu|uíram|uíd[oa]s?|ua|uam)\s+sobre\b)'
     severidade: aviso
     correcao: "partimos disso, com base nisso, se baseiam em"
     explicacao: >-
-      “Construímos sobre isso” (capítulo 0, duas vezes) é calque de “build on that”. Use “com base
-      nisso”, “partimos disso” ou “se baseiam em”.
+      “Construímos sobre isso” e “Capítulos posteriores constroem sobre conceitos em capítulos
+      anteriores” (capítulo 0, um caso de cada) são calques de “build on that” e “build on
+      concepts”. Reescreva: “partimos disso”, “com base nisso”, “Capítulos posteriores se baseiam
+      em conceitos de capítulos anteriores”. Construir algo de fato sobre outra coisa é legítimo
+      (“construído sobre o TCP”); confira.
 
   - id: troca-por-trade-off
     regex: '(?i:\btudo é uma troca\b|\beliminar (?:as )?trocas\b|\b(?:fazer|fazemos|faz|fazendo) trocas?\b)'

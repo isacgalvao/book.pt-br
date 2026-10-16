@@ -112,7 +112,8 @@ A lista completa, com as regex que o `check.py` aplica, está em
 - “package(s)” → “pacote(s)”; “fazer o build” → “compilar”.
 - Português dentro de code span; `Filename:`, `Figure 4-1`, `Table 3-1` deixados em inglês.
 - Decalques: “mutar”, “subótimo”, “Como tal”, “tem sido uma de colaboração”, “construímos sobre
-  isso”, “Tudo é uma troca” (de `trade-off`), “valores codificados diretamente” (de `hardcoded`).
+  isso” e “constroem sobre conceitos” (de `build on`), “Tudo é uma troca” (de `trade-off`),
+  “valores codificados diretamente” (de `hardcoded`).
 - Itálicos que o original não tem e glosas entre parênteses.
 
 ## Antes de entregar
