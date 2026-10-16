@@ -112,20 +112,20 @@ msgstr ""
 #: src/SUMMARY.md
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "Packages, Crates, and Modules"
-msgstr ""
+msgstr "Pacotes, crates e módulos {#packages-crates-and-modules}"
 
 #: src/SUMMARY.md src/ch07-01-packages-and-crates.md
 msgid "Packages and Crates"
-msgstr ""
+msgstr "Pacotes e crates {#packages-and-crates}"
 
 #: src/SUMMARY.md src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Control Scope and Privacy with Modules"
-msgstr ""
+msgstr "Controlando escopo e privacidade com módulos {#control-scope-and-privacy-with-modules}"
 
 #: src/SUMMARY.md
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Paths for Referring to an Item in the Module Tree"
-msgstr ""
+msgstr "Caminhos para referenciar um item na árvore de módulos {#paths-for-referring-to-an-item-in-the-module-tree}"
 
 #: src/SUMMARY.md
 msgid "Bringing Paths Into Scope with the `use` Keyword"
@@ -133,7 +133,7 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch07-05-separating-modules-into-different-files.md
 msgid "Separating Modules into Different Files"
-msgstr ""
+msgstr "Separando módulos em arquivos diferentes {#separating-modules-into-different-files}"
 
 #: src/SUMMARY.md src/ch08-00-common-collections.md
 msgid "Common Collections"
@@ -6452,85 +6452,87 @@ msgstr ""
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "As you write large programs, organizing your code will become increasingly important. By grouping related functionality and separating code with distinct features, you’ll clarify where to find code that implements a particular feature and where to go to change how a feature works."
-msgstr ""
+msgstr "À medida que você escreve programas grandes, organizar o seu código se torna cada vez mais importante. Ao agrupar funcionalidades relacionadas e separar o código por recursos distintos, você deixa mais claro onde encontrar o código que implementa um recurso específico e onde ir para mudar como esse recurso funciona."
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "The programs we’ve written so far have been in one module in one file. As a project grows, you should organize code by splitting it into multiple modules and then multiple files. A package can contain multiple binary crates and optionally one library crate. As a package grows, you can extract parts into separate crates that become external dependencies. This chapter covers all these techniques. For very large projects comprising a set of interrelated packages that evolve together, Cargo provides workspaces, which we’ll cover in [“Cargo Workspaces”](ch14-03-cargo-workspaces.html)<!-- ignore --> in Chapter 14."
-msgstr ""
+msgstr "Os programas que escrevemos até agora estavam todos em um único módulo, em um único arquivo. Quando um projeto cresce, você deve organizar o código dividindo-o em vários módulos e, depois, em vários arquivos. Um pacote pode conter vários crates binários e, opcionalmente, um crate de biblioteca. Conforme um pacote cresce, você pode extrair partes dele para crates separados, que se tornam dependências externas. Este capítulo aborda todas essas técnicas. Para projetos muito grandes, formados por um conjunto de pacotes inter-relacionados que evoluem juntos, o Cargo oferece workspaces, que veremos em [“Workspaces do Cargo”](ch14-03-cargo-workspaces.html)<!-- ignore --> no Capítulo 14."
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "We’ll also discuss encapsulating implementation details, which lets you reuse code at a higher level: Once you’ve implemented an operation, other code can call your code via its public interface without having to know how the implementation works. The way you write code defines which parts are public for other code to use and which parts are private implementation details that you reserve the right to change. This is another way to limit the amount of detail you have to keep in your head."
-msgstr ""
+msgstr "Também vamos discutir o encapsulamento de detalhes de implementação, o que permite reutilizar código em um nível mais alto: depois de implementar uma operação, outro código pode chamar o seu código por meio da interface pública, sem precisar saber como a implementação funciona. A maneira como você escreve o código define quais partes são públicas para outro código usar e quais partes são detalhes de implementação privados, que você se reserva o direito de alterar. Esta é outra forma de limitar a quantidade de detalhes que você precisa ter em mente."
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "A related concept is scope: The nested context in which code is written has a set of names that are defined as “in scope.” When reading, writing, and compiling code, programmers and compilers need to know whether a particular name at a particular spot refers to a variable, function, struct, enum, module, constant, or other item and what that item means. You can create scopes and change which names are in or out of scope. You can’t have two items with the same name in the same scope; tools are available to resolve name conflicts."
-msgstr ""
+msgstr "Um conceito relacionado é o de escopo: o contexto aninhado em que o código é escrito tem um conjunto de nomes definidos como “no escopo”. Ao ler, escrever e compilar código, programadores e compiladores precisam saber se um determinado nome, em um determinado ponto, se refere a uma variável, função, struct, enum, módulo, constante ou outro item, e o que esse item significa. Você pode criar escopos e alterar quais nomes estão ou não no escopo. Você não pode ter dois itens com o mesmo nome no mesmo escopo; existem ferramentas para resolver conflitos de nomes."
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "Rust has a number of features that allow you to manage your code’s organization, including which details are exposed, which details are private, and what names are in each scope in your programs. These features, sometimes collectively referred to as the _module system_, include:"
-msgstr ""
+msgstr "O Rust tem vários recursos que permitem gerenciar a organização do seu código, incluindo quais detalhes são expostos, quais são privados e quais nomes estão em cada escopo nos seus programas. Esses recursos, às vezes chamados coletivamente de _sistema de módulos_, incluem:"
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "**Packages**: A Cargo feature that lets you build, test, and share crates"
-msgstr ""
+msgstr "**Pacotes**: um recurso do Cargo que permite compilar, testar e compartilhar crates"
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "**Crates**: A tree of modules that produces a library or executable"
-msgstr ""
+msgstr "**Crates**: uma árvore de módulos que produz uma biblioteca ou um executável"
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "**Modules and use**: Let you control the organization, scope, and privacy of paths"
-msgstr ""
+msgstr "**Módulos e use**: permitem controlar a organização, o escopo e a privacidade dos caminhos"
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "**Paths**: A way of naming an item, such as a struct, function, or module"
-msgstr ""
+msgstr "**Caminhos**: uma forma de nomear um item, como um struct, uma função ou um módulo"
 
 #: src/ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
 msgid "In this chapter, we’ll cover all these features, discuss how they interact, and explain how to use them to manage scope. By the end, you should have a solid understanding of the module system and be able to work with scopes like a pro!"
-msgstr ""
+msgstr "Neste capítulo, vamos abordar todos esses recursos, discutir como eles interagem e explicar como usá-los para gerenciar o escopo. No final, você deve ter um entendimento sólido do sistema de módulos e ser capaz de trabalhar com escopos como um verdadeiro profissional!"
 
 #: src/ch07-01-packages-and-crates.md
 msgid "The first parts of the module system we’ll cover are packages and crates."
-msgstr ""
+msgstr "As primeiras partes do sistema de módulos que vamos abordar são os pacotes e os crates."
 
 #: src/ch07-01-packages-and-crates.md
 msgid ""
 "A _crate_ is the smallest amount of code that the Rust compiler considers at a time. Even if you run `rustc` rather than `cargo` and pass a single source code file (as we did all the way back in [“Rust Program Basics”](ch01-02-hello-world.html#rust-program-basics)<!-- ignore\n"
 "--> in Chapter 1), the compiler considers that file to be a crate. Crates can contain modules, and the modules may be defined in other files that get compiled with the crate, as we’ll see in the coming sections."
 msgstr ""
+"Um _crate_ é a menor quantidade de código que o compilador do Rust considera de cada vez. Mesmo que você execute `rustc` em vez de `cargo` e passe um único arquivo de código-fonte (como fizemos lá no começo, em [“Fundamentos de um programa Rust”](ch01-02-hello-world.html#rust-program-basics)<!-- ignore\n"
+"--> no Capítulo 1), o compilador considera esse arquivo um crate. Crates podem conter módulos, e os módulos podem ser definidos em outros arquivos que são compilados junto com o crate, como veremos nas próximas seções."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "A crate can come in one of two forms: a binary crate or a library crate. _Binary crates_ are programs you can compile to an executable that you can run, such as a command line program or a server. Each must have a function called `main` that defines what happens when the executable runs. All the crates we’ve created so far have been binary crates."
-msgstr ""
+msgstr "Um crate pode vir em uma de duas formas: um crate binário ou um crate de biblioteca. _Crates binários_ são programas que você pode compilar para um executável e depois executar, como um programa de linha de comando ou um servidor. Cada um deve ter uma função chamada `main` que define o que acontece quando o executável é executado. Todos os crates que criamos até agora foram crates binários."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "_Library crates_ don’t have a `main` function, and they don’t compile to an executable. Instead, they define functionality intended to be shared with multiple projects. For example, the `rand` crate we used in [Chapter 2](ch02-00-guessing-game-tutorial.html#generating-a-random-number)<!-- ignore --> provides functionality that generates random numbers. Most of the time when Rustaceans say “crate,” they mean library crate, and they use “crate” interchangeably with the general programming concept of a “library.”"
-msgstr ""
+msgstr "_Crates de biblioteca_ não têm uma função `main` e não são compilados para um executável. Em vez disso, eles definem funcionalidades destinadas a serem compartilhadas com vários projetos. Por exemplo, o crate `rand` que usamos no [Capítulo 2](ch02-00-guessing-game-tutorial.html#generating-a-random-number)<!-- ignore --> fornece funcionalidades que geram números aleatórios. Na maioria das vezes, quando os rustáceos dizem “crate”, eles se referem a um crate de biblioteca, e usam “crate” de forma intercambiável com o conceito geral de programação de uma “biblioteca”."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "The _crate root_ is a source file that the Rust compiler starts from and makes up the root module of your crate (we’ll explain modules in depth in [“Control Scope and Privacy with Modules”](ch07-02-defining-modules-to-control-scope-and-privacy.html)<!-- ignore -->)."
-msgstr ""
+msgstr "A _raiz do crate_ é um arquivo de código-fonte a partir do qual o compilador do Rust começa e que forma o módulo raiz do seu crate (vamos explicar os módulos em profundidade em [“Controlando escopo e privacidade com módulos”](ch07-02-defining-modules-to-control-scope-and-privacy.html)<!-- ignore -->)."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "A _package_ is a bundle of one or more crates that provides a set of functionality. A package contains a _Cargo.toml_ file that describes how to build those crates. Cargo is actually a package that contains the binary crate for the command line tool you’ve been using to build your code. The Cargo package also contains a library crate that the binary crate depends on. Other projects can depend on the Cargo library crate to use the same logic the Cargo command line tool uses."
-msgstr ""
+msgstr "Um _pacote_ é um agrupamento de um ou mais crates que oferece um conjunto de funcionalidades. Um pacote contém um arquivo _Cargo.toml_ que descreve como compilar esses crates. O Cargo é, na verdade, um pacote que contém o crate binário da ferramenta de linha de comando que você vem usando para compilar o seu código. O pacote do Cargo também contém um crate de biblioteca do qual o crate binário depende. Outros projetos podem depender do crate de biblioteca do Cargo para usar a mesma lógica que a ferramenta de linha de comando do Cargo usa."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "A package can contain as many binary crates as you like, but at most only one library crate. A package must contain at least one crate, whether that’s a library or binary crate."
-msgstr ""
+msgstr "Um pacote pode conter quantos crates binários você quiser, mas no máximo um crate de biblioteca. Um pacote deve conter pelo menos um crate, seja ele de biblioteca ou binário."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "Let’s walk through what happens when we create a package. First, we enter the command `cargo new my-project`:"
-msgstr ""
+msgstr "Vamos acompanhar o que acontece quando criamos um pacote. Primeiro, digitamos o comando `cargo new my-project`:"
 
 #: src/ch07-01-packages-and-crates.md
 msgid "After we run `cargo new my-project`, we use `ls` to see what Cargo creates. In the _my-project_ directory, there’s a _Cargo.toml_ file, giving us a package. There’s also a _src_ directory that contains _main.rs_. Open _Cargo.toml_ in your text editor and note that there’s no mention of _src/main.rs_. Cargo follows a convention that _src/main.rs_ is the crate root of a binary crate with the same name as the package. Likewise, Cargo knows that if the package directory contains _src/lib.rs_, the package contains a library crate with the same name as the package, and _src/lib.rs_ is its crate root. Cargo passes the crate root files to `rustc` to build the library or binary."
-msgstr ""
+msgstr "Depois de executar `cargo new my-project`, usamos `ls` para ver o que o Cargo cria. No diretório _my-project_, há um arquivo _Cargo.toml_, o que nos dá um pacote. Há também um diretório _src_ que contém _main.rs_. Abra _Cargo.toml_ no seu editor de texto e observe que não há nenhuma menção a _src/main.rs_. O Cargo segue a convenção de que _src/main.rs_ é a raiz de um crate binário com o mesmo nome do pacote. Da mesma forma, o Cargo sabe que, se o diretório do pacote contiver _src/lib.rs_, o pacote contém um crate de biblioteca com o mesmo nome do pacote, e _src/lib.rs_ é a raiz desse crate. O Cargo passa os arquivos da raiz do crate para o `rustc` para compilar a biblioteca ou o binário."
 
 #: src/ch07-01-packages-and-crates.md
 msgid "Here, we have a package that only contains _src/main.rs_, meaning it only contains a binary crate named `my-project`. If a package contains _src/main.rs_ and _src/lib.rs_, it has two crates: a binary and a library, both with the same name as the package. A package can have multiple binary crates by placing files in the _src/bin_ directory: Each file will be a separate binary crate."
-msgstr ""
+msgstr "Aqui, temos um pacote que contém apenas _src/main.rs_, o que significa que ele contém apenas um crate binário chamado `my-project`. Se um pacote contém _src/main.rs_ e _src/lib.rs_, ele tem dois crates: um binário e um de biblioteca, ambos com o mesmo nome do pacote. Um pacote pode ter vários crates binários colocando arquivos no diretório _src/bin_: cada arquivo será um crate binário separado."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "<a id=\"defining-modules-to-control-scope-and-privacy\"></a>"
@@ -6538,71 +6540,71 @@ msgstr ""
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In this section, we’ll talk about modules and other parts of the module system, namely _paths_, which allow you to name items; the `use` keyword that brings a path into scope; and the `pub` keyword to make items public. We’ll also discuss the `as` keyword, external packages, and the glob operator."
-msgstr ""
+msgstr "Nesta seção, vamos falar sobre módulos e outras partes do sistema de módulos, ou seja, _caminhos_, que permitem nomear itens; a palavra-chave `use`, que traz um caminho para o escopo; e a palavra-chave `pub`, que torna itens públicos. Também vamos discutir a palavra-chave `as`, pacotes externos e o operador glob."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Modules Cheat Sheet"
-msgstr ""
+msgstr "Referência rápida de módulos {#modules-cheat-sheet}"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Before we get to the details of modules and paths, here we provide a quick reference on how modules, paths, the `use` keyword, and the `pub` keyword work in the compiler, and how most developers organize their code. We’ll be going through examples of each of these rules throughout this chapter, but this is a great place to refer to as a reminder of how modules work."
-msgstr ""
+msgstr "Antes de chegarmos aos detalhes de módulos e caminhos, aqui apresentamos uma referência rápida sobre como módulos, caminhos, a palavra-chave `use` e a palavra-chave `pub` funcionam no compilador, e como a maioria dos desenvolvedores organiza o código. Vamos ver exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma ótima referência para lembrar como os módulos funcionam."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**Start from the crate root**: When compiling a crate, the compiler first looks in the crate root file (usually _src/lib.rs_ for a library crate and _src/main.rs_ for a binary crate) for code to compile."
-msgstr ""
+msgstr "**Comece pela raiz do crate**: ao compilar um crate, o compilador primeiro procura, no arquivo raiz do crate (geralmente _src/lib.rs_ para um crate de biblioteca e _src/main.rs_ para um crate binário), o código a ser compilado."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**Declaring modules**: In the crate root file, you can declare new modules; say you declare a “garden” module with `mod garden;`. The compiler will look for the module’s code in these places:"
-msgstr ""
+msgstr "**Declarando módulos**: no arquivo raiz do crate, você pode declarar novos módulos; digamos que você declare um módulo “garden” com `mod garden;`. O compilador vai procurar o código do módulo nestes lugares:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Inline, within curly brackets that replace the semicolon following `mod garden`"
-msgstr ""
+msgstr "Inline, dentro de chaves que substituem o ponto e vírgula depois de `mod garden`"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In the file _src/garden.rs_"
-msgstr ""
+msgstr "No arquivo _src/garden.rs_"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In the file _src/garden/mod.rs_"
-msgstr ""
+msgstr "No arquivo _src/garden/mod.rs_"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**Declaring submodules**: In any file other than the crate root, you can declare submodules. For example, you might declare `mod vegetables;` in _src/garden.rs_. The compiler will look for the submodule’s code within the directory named for the parent module in these places:"
-msgstr ""
+msgstr "**Declarando submódulos**: em qualquer arquivo que não seja a raiz do crate, você pode declarar submódulos. Por exemplo, você pode declarar `mod vegetables;` em _src/garden.rs_. O compilador vai procurar o código do submódulo dentro do diretório com o nome do módulo pai nestes lugares:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Inline, directly following `mod vegetables`, within curly brackets instead of the semicolon"
-msgstr ""
+msgstr "Inline, logo depois de `mod vegetables`, dentro de chaves em vez do ponto e vírgula"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In the file _src/garden/vegetables.rs_"
-msgstr ""
+msgstr "No arquivo _src/garden/vegetables.rs_"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In the file _src/garden/vegetables/mod.rs_"
-msgstr ""
+msgstr "No arquivo _src/garden/vegetables/mod.rs_"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**Paths to code in modules**: Once a module is part of your crate, you can refer to code in that module from anywhere else in that same crate, as long as the privacy rules allow, using the path to the code. For example, an `Asparagus` type in the garden vegetables module would be found at `crate::garden::vegetables::Asparagus`."
-msgstr ""
+msgstr "**Caminhos para o código em módulos**: uma vez que um módulo faz parte do seu crate, você pode se referir ao código desse módulo a partir de qualquer outro ponto do mesmo crate, desde que as regras de privacidade permitam, usando o caminho até o código. Por exemplo, um tipo `Asparagus` no módulo de vegetais do jardim seria encontrado em `crate::garden::vegetables::Asparagus`."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**Private vs. public**: Code within a module is private from its parent modules by default. To make a module public, declare it with `pub mod` instead of `mod`. To make items within a public module public as well, use `pub` before their declarations."
-msgstr ""
+msgstr "**Privado vs. público**: o código dentro de um módulo é privado em relação aos seus módulos pais, por padrão. Para tornar um módulo público, declare-o com `pub mod` em vez de `mod`. Para tornar públicos também os itens dentro de um módulo público, use `pub` antes das declarações deles."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "**The `use` keyword**: Within a scope, the `use` keyword creates shortcuts to items to reduce repetition of long paths. In any scope that can refer to `crate::garden::vegetables::Asparagus`, you can create a shortcut with `use crate::garden::vegetables::Asparagus;`, and from then on you only need to write `Asparagus` to make use of that type in the scope."
-msgstr ""
+msgstr "**A palavra-chave `use`**: dentro de um escopo, a palavra-chave `use` cria atalhos para itens, para reduzir a repetição de caminhos longos. Em qualquer escopo que possa se referir a `crate::garden::vegetables::Asparagus`, você pode criar um atalho com `use crate::garden::vegetables::Asparagus;` e, a partir daí, só precisa escrever `Asparagus` para usar esse tipo no escopo."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Here, we create a binary crate named `backyard` that illustrates these rules. The crate’s directory, also named _backyard_, contains these files and directories:"
-msgstr ""
+msgstr "Aqui, criamos um crate binário chamado `backyard` que ilustra essas regras. O diretório do crate, também chamado _backyard_, contém estes arquivos e diretórios:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "The crate root file in this case is _src/main.rs_, and it contains:"
-msgstr ""
+msgstr "Neste caso, o arquivo raiz do crate é _src/main.rs_, e ele contém:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "\"I'm growing {plant:?}!\""
@@ -6610,7 +6612,7 @@ msgstr ""
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "The `pub mod garden;` line tells the compiler to include the code it finds in _src/garden.rs_, which is:"
-msgstr ""
+msgstr "A linha `pub mod garden;` diz ao compilador para incluir o código que ele encontra em _src/garden.rs_, que é:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "<Listing file-name=\"src/garden.rs\">\n"
@@ -6618,99 +6620,99 @@ msgstr ""
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Here, `pub mod vegetables;` means the code in _src/garden/vegetables.rs_ is included too. That code is:"
-msgstr ""
+msgstr "Aqui, `pub mod vegetables;` significa que o código em _src/garden/vegetables.rs_ também é incluído. Esse código é:"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Now let’s get into the details of these rules and demonstrate them in action!"
-msgstr ""
+msgstr "Agora vamos entrar nos detalhes dessas regras e demonstrá-las na prática!"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Grouping Related Code in Modules"
-msgstr ""
+msgstr "Agrupando código relacionado em módulos {#grouping-related-code-in-modules}"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "_Modules_ let us organize code within a crate for readability and easy reuse. Modules also allow us to control the _privacy_ of items because code within a module is private by default. Private items are internal implementation details not available for outside use. We can choose to make modules and the items within them public, which exposes them to allow external code to use and depend on them."
-msgstr ""
+msgstr "_Módulos_ nos permitem organizar o código dentro de um crate para facilitar a leitura e a reutilização. Os módulos também nos permitem controlar a _privacidade_ dos itens, porque o código dentro de um módulo é privado por padrão. Itens privados são detalhes internos de implementação que não ficam disponíveis para uso externo. Podemos escolher tornar públicos os módulos e os itens dentro deles, o que os expõe para que código externo possa usá-los e depender deles."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "As an example, let’s write a library crate that provides the functionality of a restaurant. We’ll define the signatures of functions but leave their bodies empty to concentrate on the organization of the code rather than the implementation of a restaurant."
-msgstr ""
+msgstr "Como exemplo, vamos escrever um crate de biblioteca que fornece a funcionalidade de um restaurante. Vamos definir as assinaturas das funções, mas deixar os corpos vazios, para nos concentrarmos na organização do código, e não na implementação de um restaurante."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "In the restaurant industry, some parts of a restaurant are referred to as front of house and others as back of house. _Front of house_ is where customers are; this encompasses where the hosts seat customers, servers take orders and payment, and bartenders make drinks. _Back of house_ is where the chefs and cooks work in the kitchen, dishwashers clean up, and managers do administrative work."
-msgstr ""
+msgstr "No ramo de restaurantes, algumas partes de um restaurante são chamadas de salão e outras de bastidores. O _salão_ é onde estão os clientes; isso abrange onde os anfitriões acomodam os clientes, onde os garçons anotam os pedidos e recebem o pagamento, e onde os barmen preparam as bebidas. Os _bastidores_ são onde os chefs e cozinheiros trabalham na cozinha, os lavadores de louça fazem a limpeza, e os gerentes cuidam do trabalho administrativo."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "To structure our crate in this way, we can organize its functions into nested modules. Create a new library named `restaurant` by running `cargo new restaurant --lib`. Then, enter the code in Listing 7-1 into _src/lib.rs_ to define some modules and function signatures; this code is the front of house section."
-msgstr ""
+msgstr "Para estruturar o nosso crate dessa forma, podemos organizar as funções dele em módulos aninhados. Crie uma nova biblioteca chamada `restaurant` executando `cargo new restaurant --lib`. Depois, digite o código da Listagem 7-1 em _src/lib.rs_ para definir alguns módulos e assinaturas de funções; esse código é a parte do salão."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "<Listing number=\"7-1\" file-name=\"src/lib.rs\" caption=\"A `front_of_house` module containing other modules that then contain functions\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-1\" file-name=\"src/lib.rs\" caption=\"Um módulo `front_of_house` que contém outros módulos, os quais, por sua vez, contêm funções\">\n"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "We define a module with the `mod` keyword followed by the name of the module (in this case, `front_of_house`). The body of the module then goes inside curly brackets. Inside modules, we can place other modules, as in this case with the modules `hosting` and `serving`. Modules can also hold definitions for other items, such as structs, enums, constants, traits, and as in Listing 7-1, functions."
-msgstr ""
+msgstr "Definimos um módulo com a palavra-chave `mod`, seguida do nome do módulo (neste caso, `front_of_house`). O corpo do módulo fica, então, entre chaves. Dentro dos módulos, podemos colocar outros módulos, como neste caso com os módulos `hosting` e `serving`. Módulos também podem conter definições de outros itens, como structs, enums, constantes, traits e, como na Listagem 7-1, funções."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "By using modules, we can group related definitions together and name why they’re related. Programmers using this code can navigate the code based on the groups rather than having to read through all the definitions, making it easier to find the definitions relevant to them. Programmers adding new functionality to this code would know where to place the code to keep the program organized."
-msgstr ""
+msgstr "Ao usar módulos, podemos agrupar definições relacionadas e nomear por que elas estão relacionadas. Programadores que usam este código podem navegar por ele com base nos grupos, em vez de precisar ler todas as definições, o que facilita encontrar as definições relevantes para eles. Programadores que adicionam novas funcionalidades a este código saberiam onde colocar o código para manter o programa organizado."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Earlier, we mentioned that _src/main.rs_ and _src/lib.rs_ are called _crate roots_. The reason for their name is that the contents of either of these two files form a module named `crate` at the root of the crate’s module structure, known as the _module tree_."
-msgstr ""
+msgstr "Anteriormente, mencionamos que _src/main.rs_ e _src/lib.rs_ são chamados de _raízes do crate_. O motivo do nome é que o conteúdo de qualquer um desses dois arquivos forma um módulo chamado `crate` na raiz da estrutura de módulos do crate, conhecida como _árvore de módulos_."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "Listing 7-2 shows the module tree for the structure in Listing 7-1."
-msgstr ""
+msgstr "A Listagem 7-2 mostra a árvore de módulos da estrutura da Listagem 7-1."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "<Listing number=\"7-2\" caption=\"The module tree for the code in Listing 7-1\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-2\" caption=\"A árvore de módulos do código da Listagem 7-1\">\n"
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "This tree shows how some of the modules nest inside other modules; for example, `hosting` nests inside `front_of_house`. The tree also shows that some modules are _siblings_, meaning they’re defined in the same module; `hosting` and `serving` are siblings defined within `front_of_house`. If module A is contained inside module B, we say that module A is the _child_ of module B and that module B is the _parent_ of module A. Notice that the entire module tree is rooted under the implicit module named `crate`."
-msgstr ""
+msgstr "Esta árvore mostra como alguns módulos ficam aninhados dentro de outros módulos; por exemplo, `hosting` fica aninhado dentro de `front_of_house`. A árvore também mostra que alguns módulos são _irmãos_, ou seja, estão definidos no mesmo módulo; `hosting` e `serving` são irmãos definidos dentro de `front_of_house`. Se o módulo A está contido dentro do módulo B, dizemos que o módulo A é o _filho_ do módulo B e que o módulo B é o _pai_ do módulo A. Observe que toda a árvore de módulos tem como raiz o módulo implícito chamado `crate`."
 
 #: src/ch07-02-defining-modules-to-control-scope-and-privacy.md
 msgid "The module tree might remind you of the filesystem’s directory tree on your computer; this is a very apt comparison! Just like directories in a filesystem, you use modules to organize your code. And just like files in a directory, we need a way to find our modules."
-msgstr ""
+msgstr "A árvore de módulos pode lembrar a árvore de diretórios do sistema de arquivos do seu computador; essa é uma comparação muito adequada! Assim como os diretórios em um sistema de arquivos, você usa módulos para organizar o seu código. E, assim como os arquivos em um diretório, precisamos de uma forma de encontrar os nossos módulos."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "To show Rust where to find an item in a module tree, we use a path in the same way we use a path when navigating a filesystem. To call a function, we need to know its path."
-msgstr ""
+msgstr "Para mostrar ao Rust onde encontrar um item na árvore de módulos, usamos um caminho do mesmo modo que ao navegar em um sistema de arquivos. Para chamar uma função, precisamos saber o seu caminho."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "A path can take two forms:"
-msgstr ""
+msgstr "Um caminho pode ter duas formas:"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "An _absolute path_ is the full path starting from a crate root; for code from an external crate, the absolute path begins with the crate name, and for code from the current crate, it starts with the literal `crate`."
-msgstr ""
+msgstr "Um _caminho absoluto_ é o caminho completo a partir da raiz de um crate; para código de um crate externo, o caminho absoluto começa com o nome do crate, e, para código do crate atual, começa com a palavra `crate`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "A _relative path_ starts from the current module and uses `self`, `super`, or an identifier in the current module."
-msgstr ""
+msgstr "Um _caminho relativo_ começa a partir do módulo atual e usa `self`, `super` ou um identificador do módulo atual."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Both absolute and relative paths are followed by one or more identifiers separated by double colons (`::`)."
-msgstr ""
+msgstr "Tanto caminhos absolutos quanto relativos são seguidos de um ou mais identificadores separados por dois-pontos duplos (`::`)."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Returning to Listing 7-1, say we want to call the `add_to_waitlist` function. This is the same as asking: What’s the path of the `add_to_waitlist` function? Listing 7-3 contains Listing 7-1 with some of the modules and functions removed."
-msgstr ""
+msgstr "Voltando à Listagem 7-1, digamos que queremos chamar a função `add_to_waitlist`. Isso é o mesmo que perguntar: qual é o caminho da função `add_to_waitlist`? A Listagem 7-3 contém a Listagem 7-1 com alguns dos módulos e funções removidos."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "We’ll show two ways to call the `add_to_waitlist` function from a new function, `eat_at_restaurant`, defined in the crate root. These paths are correct, but there’s another problem remaining that will prevent this example from compiling as is. We’ll explain why in a bit."
-msgstr ""
+msgstr "Vamos mostrar duas formas de chamar a função `add_to_waitlist` a partir de uma nova função, `eat_at_restaurant`, definida na raiz do crate. Esses caminhos estão corretos, mas ainda há outro problema que impede este exemplo de compilar como está. Vamos explicar o motivo daqui a pouco."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The `eat_at_restaurant` function is part of our library crate’s public API, so we mark it with the `pub` keyword. In the [“Exposing Paths with the `pub` Keyword”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword)<!-- ignore --> section, we’ll go into more detail about `pub`."
-msgstr ""
+msgstr "A função `eat_at_restaurant` faz parte da API pública do nosso crate de biblioteca, por isso a marcamos com a palavra-chave `pub`. Na seção [“Expondo caminhos com a palavra-chave `pub`”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword)<!-- ignore -->, vamos entrar em mais detalhes sobre `pub`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-3\" file-name=\"src/lib.rs\" caption=\"Calling the `add_to_waitlist` function using absolute and relative paths\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-3\" file-name=\"src/lib.rs\" caption=\"Chamando a função `add_to_waitlist` usando caminhos absolutos e relativos\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "// Absolute path\n"
@@ -6722,23 +6724,23 @@ msgstr ""
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The first time we call the `add_to_waitlist` function in `eat_at_restaurant`, we use an absolute path. The `add_to_waitlist` function is defined in the same crate as `eat_at_restaurant`, which means we can use the `crate` keyword to start an absolute path. We then include each of the successive modules until we make our way to `add_to_waitlist`. You can imagine a filesystem with the same structure: We’d specify the path `/front_of_house/hosting/add_to_waitlist` to run the `add_to_waitlist` program; using the `crate` name to start from the crate root is like using `/` to start from the filesystem root in your shell."
-msgstr ""
+msgstr "A primeira vez que chamamos a função `add_to_waitlist` em `eat_at_restaurant`, usamos um caminho absoluto. A função `add_to_waitlist` é definida no mesmo crate que `eat_at_restaurant`, o que significa que podemos usar a palavra-chave `crate` para começar um caminho absoluto. Em seguida, incluímos cada um dos módulos sucessivos até chegar a `add_to_waitlist`. Você pode imaginar um sistema de arquivos com a mesma estrutura: especificaríamos o caminho `/front_of_house/hosting/add_to_waitlist` para executar o programa `add_to_waitlist`; usar o nome `crate` para começar a partir da raiz do crate é como usar `/` para começar a partir da raiz do sistema de arquivos no seu shell."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The second time we call `add_to_waitlist` in `eat_at_restaurant`, we use a relative path. The path starts with `front_of_house`, the name of the module defined at the same level of the module tree as `eat_at_restaurant`. Here the filesystem equivalent would be using the path `front_of_house/hosting/add_to_waitlist`. Starting with a module name means that the path is relative."
-msgstr ""
+msgstr "A segunda vez que chamamos `add_to_waitlist` em `eat_at_restaurant`, usamos um caminho relativo. O caminho começa com `front_of_house`, o nome do módulo definido no mesmo nível da árvore de módulos que `eat_at_restaurant`. Aqui, o equivalente no sistema de arquivos seria usar o caminho `front_of_house/hosting/add_to_waitlist`. Começar com o nome de um módulo significa que o caminho é relativo."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Choosing whether to use a relative or absolute path is a decision you’ll make based on your project, and it depends on whether you’re more likely to move item definition code separately from or together with the code that uses the item. For example, if we moved the `front_of_house` module and the `eat_at_restaurant` function into a module named `customer_experience`, we’d need to update the absolute path to `add_to_waitlist`, but the relative path would still be valid. However, if we moved the `eat_at_restaurant` function separately into a module named `dining`, the absolute path to the `add_to_waitlist` call would stay the same, but the relative path would need to be updated. Our preference in general is to specify absolute paths because it’s more likely we’ll want to move code definitions and item calls independently of each other."
-msgstr ""
+msgstr "Escolher entre usar um caminho relativo ou um absoluto é uma decisão que você vai tomar com base no seu projeto, e depende de você ser mais propenso a mover o código que define o item separadamente ou junto com o código que o usa. Por exemplo, se movêssemos o módulo `front_of_house` e a função `eat_at_restaurant` para um módulo chamado `customer_experience`, precisaríamos atualizar o caminho absoluto para `add_to_waitlist`, mas o caminho relativo continuaria válido. No entanto, se movêssemos a função `eat_at_restaurant` separadamente para um módulo chamado `dining`, o caminho absoluto para a chamada de `add_to_waitlist` permaneceria o mesmo, mas o caminho relativo precisaria ser atualizado. Nossa preferência, em geral, é especificar caminhos absolutos, porque é mais provável que queiramos mover as definições de código e as chamadas aos itens de forma independente umas das outras."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Let’s try to compile Listing 7-3 and find out why it won’t compile yet! The errors we get are shown in Listing 7-4."
-msgstr ""
+msgstr "Vamos tentar compilar a Listagem 7-3 e descobrir por que ela ainda não compila! Os erros que obtemos são mostrados na Listagem 7-4."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-4\" caption=\"Compiler errors from building the code in Listing 7-3\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-4\" caption=\"Erros de compilação gerados ao compilar o código da Listagem 7-3\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid ""
@@ -6780,35 +6782,35 @@ msgstr ""
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The error messages say that module `hosting` is private. In other words, we have the correct paths for the `hosting` module and the `add_to_waitlist` function, but Rust won’t let us use them because it doesn’t have access to the private sections. In Rust, all items (functions, methods, structs, enums, modules, and constants) are private to parent modules by default. If you want to make an item like a function or struct private, you put it in a module."
-msgstr ""
+msgstr "As mensagens de erro dizem que o módulo `hosting` é privado. Em outras palavras, temos os caminhos corretos para o módulo `hosting` e para a função `add_to_waitlist`, mas o Rust não nos deixa usá-los, porque não tem acesso às partes privadas. No Rust, todos os itens (funções, métodos, structs, enums, módulos e constantes) são privados em relação aos módulos pais, por padrão. Se você quiser tornar privado um item, como uma função ou um struct, você o coloca em um módulo."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Items in a parent module can’t use the private items inside child modules, but items in child modules can use the items in their ancestor modules. This is because child modules wrap and hide their implementation details, but the child modules can see the context in which they’re defined. To continue with our metaphor, think of the privacy rules as being like the back office of a restaurant: What goes on in there is private to restaurant customers, but office managers can see and do everything in the restaurant they operate."
-msgstr ""
+msgstr "Os itens de um módulo pai não podem usar os itens privados dentro de módulos filhos, mas os itens de módulos filhos podem usar os itens dos seus módulos ancestrais. Isso acontece porque os módulos filhos encapsulam e ocultam os seus detalhes de implementação, mas conseguem enxergar o contexto em que foram definidos. Para continuar com a nossa metáfora, pense nas regras de privacidade como se fossem a área administrativa de um restaurante: o que acontece lá dentro é privado para os clientes do restaurante, mas os gerentes administrativos podem ver e fazer tudo no restaurante que administram."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Rust chose to have the module system function this way so that hiding inner implementation details is the default. That way, you know which parts of the inner code you can change without breaking the outer code. However, Rust does give you the option to expose inner parts of child modules’ code to outer ancestor modules by using the `pub` keyword to make an item public."
-msgstr ""
+msgstr "O Rust optou por fazer o sistema de módulos funcionar dessa forma, para que ocultar detalhes internos de implementação seja o padrão. Assim, você sabe quais partes do código interno pode alterar sem quebrar o código externo. No entanto, o Rust dá a você a opção de expor partes internas do código dos módulos filhos aos módulos ancestrais mais externos, usando a palavra-chave `pub` para tornar um item público."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Exposing Paths with the `pub` Keyword"
-msgstr ""
+msgstr "Expondo caminhos com a palavra-chave `pub` {#exposing-paths-with-the-pub-keyword}"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Let’s return to the error in Listing 7-4 that told us the `hosting` module is private. We want the `eat_at_restaurant` function in the parent module to have access to the `add_to_waitlist` function in the child module, so we mark the `hosting` module with the `pub` keyword, as shown in Listing 7-5."
-msgstr ""
+msgstr "Vamos voltar ao erro da Listagem 7-4, que nos dizia que o módulo `hosting` é privado. Queremos que a função `eat_at_restaurant`, no módulo pai, tenha acesso à função `add_to_waitlist`, no módulo filho, então marcamos o módulo `hosting` com a palavra-chave `pub`, como mostrado na Listagem 7-5."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-5\" file-name=\"src/lib.rs\" caption=\"Declaring the `hosting` module as `pub` to use it from `eat_at_restaurant`\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-5\" file-name=\"src/lib.rs\" caption=\"Declarando o módulo `hosting` como `pub` para usá-lo em `eat_at_restaurant`\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Unfortunately, the code in Listing 7-5 still results in compiler errors, as shown in Listing 7-6."
-msgstr ""
+msgstr "Infelizmente, o código da Listagem 7-5 ainda gera erros de compilação, como mostrado na Listagem 7-6."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-6\" caption=\"Compiler errors from building the code in Listing 7-5\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-6\" caption=\"Erros de compilação gerados ao compilar o código da Listagem 7-5\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid ""
@@ -6846,83 +6848,83 @@ msgstr ""
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "What happened? Adding the `pub` keyword in front of `mod hosting` makes the module public. With this change, if we can access `front_of_house`, we can access `hosting`. But the _contents_ of `hosting` are still private; making the module public doesn’t make its contents public. The `pub` keyword on a module only lets code in its ancestor modules refer to it, not access its inner code. Because modules are containers, there’s not much we can do by only making the module public; we need to go further and choose to make one or more of the items within the module public as well."
-msgstr ""
+msgstr "O que aconteceu? Adicionar a palavra-chave `pub` antes de `mod hosting` torna o módulo público. Com essa mudança, se podemos acessar `front_of_house`, podemos acessar `hosting`. Mas o _conteúdo_ de `hosting` continua privado; tornar o módulo público não torna público o seu conteúdo. A palavra-chave `pub` em um módulo só permite que o código dos módulos ancestrais se refira a ele, não que acesse o código interno dele. Como os módulos são contêineres, não há muito que possamos fazer apenas tornando o módulo público; precisamos ir além e escolher tornar público também um ou mais dos itens dentro do módulo."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The errors in Listing 7-6 say that the `add_to_waitlist` function is private. The privacy rules apply to structs, enums, functions, and methods as well as modules."
-msgstr ""
+msgstr "Os erros da Listagem 7-6 dizem que a função `add_to_waitlist` é privada. As regras de privacidade se aplicam a structs, enums, funções e métodos, além de módulos."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Let’s also make the `add_to_waitlist` function public by adding the `pub` keyword before its definition, as in Listing 7-7."
-msgstr ""
+msgstr "Vamos também tornar a função `add_to_waitlist` pública, adicionando a palavra-chave `pub` antes da sua definição, como na Listagem 7-7."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-7\" file-name=\"src/lib.rs\" caption=\"Adding the `pub` keyword to `mod hosting` and `fn add_to_waitlist` lets us call the function from `eat_at_restaurant`.\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-7\" file-name=\"src/lib.rs\" caption=\"Adicionar a palavra-chave `pub` a `mod hosting` e a `fn add_to_waitlist` nos permite chamar a função a partir de `eat_at_restaurant`.\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Now the code will compile! To see why adding the `pub` keyword lets us use these paths in `eat_at_restaurant` with respect to the privacy rules, let’s look at the absolute and the relative paths."
-msgstr ""
+msgstr "Agora o código vai compilar! Para entender por que adicionar a palavra-chave `pub` nos permite usar esses caminhos em `eat_at_restaurant` em relação às regras de privacidade, vamos olhar para os caminhos absoluto e relativo."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "In the absolute path, we start with `crate`, the root of our crate’s module tree. The `front_of_house` module is defined in the crate root. While `front_of_house` isn’t public, because the `eat_at_restaurant` function is defined in the same module as `front_of_house` (that is, `eat_at_restaurant` and `front_of_house` are siblings), we can refer to `front_of_house` from `eat_at_restaurant`. Next is the `hosting` module marked with `pub`. We can access the parent module of `hosting`, so we can access `hosting`. Finally, the `add_to_waitlist` function is marked with `pub`, and we can access its parent module, so this function call works!"
-msgstr ""
+msgstr "No caminho absoluto, começamos com `crate`, a raiz da árvore de módulos do nosso crate. O módulo `front_of_house` é definido na raiz do crate. Embora `front_of_house` não seja público, como a função `eat_at_restaurant` é definida no mesmo módulo que `front_of_house` (ou seja, `eat_at_restaurant` e `front_of_house` são irmãos), podemos nos referir a `front_of_house` a partir de `eat_at_restaurant`. Em seguida, vem o módulo `hosting`, marcado com `pub`. Podemos acessar o módulo pai de `hosting`, então podemos acessar `hosting`. Por fim, a função `add_to_waitlist` é marcada com `pub`, e podemos acessar o módulo pai dela, então esta chamada de função funciona!"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "In the relative path, the logic is the same as the absolute path except for the first step: Rather than starting from the crate root, the path starts from `front_of_house`. The `front_of_house` module is defined within the same module as `eat_at_restaurant`, so the relative path starting from the module in which `eat_at_restaurant` is defined works. Then, because `hosting` and `add_to_waitlist` are marked with `pub`, the rest of the path works, and this function call is valid!"
-msgstr ""
+msgstr "No caminho relativo, a lógica é a mesma do caminho absoluto, exceto pelo primeiro passo: em vez de começar pela raiz do crate, o caminho começa em `front_of_house`. O módulo `front_of_house` é definido dentro do mesmo módulo que `eat_at_restaurant`, então o caminho relativo que começa no módulo em que `eat_at_restaurant` é definido funciona. Depois, como `hosting` e `add_to_waitlist` são marcados com `pub`, o restante do caminho funciona, e esta chamada de função é válida!"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "If you plan to share your library crate so that other projects can use your code, your public API is your contract with users of your crate that determines how they can interact with your code. There are many considerations around managing changes to your public API to make it easier for people to depend on your crate. These considerations are beyond the scope of this book; if you’re interested in this topic, see [the Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)."
-msgstr ""
+msgstr "Se você planeja compartilhar seu crate de biblioteca para que outros projetos possam usar seu código, sua API pública é o seu contrato com os usuários do seu crate, que determina como eles podem interagir com o seu código. Há muitas considerações sobre como gerenciar mudanças na sua API pública para facilitar que as pessoas dependam do seu crate. Essas considerações estão fora do escopo deste livro; se você tiver interesse nesse tema, veja [as Diretrizes de API do Rust](https://rust-lang.github.io/api-guidelines/)."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Best Practices for Packages with a Binary and a Library"
-msgstr ""
+msgstr "Boas práticas para pacotes com um binário e uma biblioteca {#best-practices-for-packages-with-a-binary-and-a-library}"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "We mentioned that a package can contain both a _src/main.rs_ binary crate root as well as a _src/lib.rs_ library crate root, and both crates will have the package name by default. Typically, packages with this pattern of containing both a library and a binary crate will have just enough code in the binary crate to start an executable that calls code defined in the library crate. This lets other projects benefit from the most functionality that the package provides because the library crate’s code can be shared."
-msgstr ""
+msgstr "Mencionamos que um pacote pode conter tanto a raiz do crate binário _src/main.rs_ quanto a raiz do crate de biblioteca _src/lib.rs_, e os dois crates terão o nome do pacote por padrão. Normalmente, pacotes com esse padrão de conter tanto uma biblioteca quanto um crate binário têm apenas o código suficiente no crate binário para iniciar um executável que chama código definido no crate de biblioteca. Isso permite que outros projetos aproveitem ao máximo a funcionalidade que o pacote oferece, porque o código do crate de biblioteca pode ser compartilhado."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The module tree should be defined in _src/lib.rs_. Then, any public items can be used in the binary crate by starting paths with the name of the package. The binary crate becomes a user of the library crate just like a completely external crate would use the library crate: It can only use the public API. This helps you design a good API; not only are you the author, but you’re also a client!"
-msgstr ""
+msgstr "A árvore de módulos deve ser definida em _src/lib.rs_. Então, quaisquer itens públicos podem ser usados no crate binário começando os caminhos com o nome do pacote. O crate binário se torna um usuário do crate de biblioteca, da mesma forma que um crate completamente externo usaria o crate de biblioteca: ele só pode usar a API pública. Isso ajuda você a projetar uma boa API; não só você é o autor, como também é um cliente!"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "In [Chapter 12](ch12-00-an-io-project.html)<!-- ignore -->, we’ll demonstrate this organizational practice with a command line program that will contain both a binary crate and a library crate."
-msgstr ""
+msgstr "No [Capítulo 12](ch12-00-an-io-project.html)<!-- ignore -->, vamos demonstrar essa prática de organização com um programa de linha de comando que terá tanto um crate binário quanto um crate de biblioteca."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Starting Relative Paths with `super`"
-msgstr ""
+msgstr "Começando caminhos relativos com `super` {#starting-relative-paths-with-super}"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "We can construct relative paths that begin in the parent module, rather than the current module or the crate root, by using `super` at the start of the path. This is like starting a filesystem path with the `..` syntax that means to go to the parent directory. Using `super` allows us to reference an item that we know is in the parent module, which can make rearranging the module tree easier when the module is closely related to the parent but the parent might be moved elsewhere in the module tree someday."
-msgstr ""
+msgstr "Podemos criar caminhos relativos que começam no módulo pai, em vez de começar no módulo atual ou na raiz do crate, usando `super` no início do caminho. Isso é como iniciar um caminho no sistema de arquivos com a sintaxe `..`, que significa ir ao diretório pai. Usar `super` nos permite referenciar um item que sabemos estar no módulo pai, o que pode facilitar a reorganização da árvore de módulos quando o módulo está intimamente relacionado ao pai, mas o pai pode ser movido para outro lugar da árvore de módulos algum dia."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Consider the code in Listing 7-8 that models the situation in which a chef fixes an incorrect order and personally brings it out to the customer. The function `fix_incorrect_order` defined in the `back_of_house` module calls the function `deliver_order` defined in the parent module by specifying the path to `deliver_order`, starting with `super`."
-msgstr ""
+msgstr "Considere o código da Listagem 7-8, que modela a situação em que um chef corrige um pedido incorreto e pessoalmente o leva até o cliente. A função `fix_incorrect_order`, definida no módulo `back_of_house`, chama a função `deliver_order`, definida no módulo pai, especificando o caminho até `deliver_order`, começando com `super`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-8\" file-name=\"src/lib.rs\" caption=\"Calling a function using a relative path starting with `super`\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-8\" file-name=\"src/lib.rs\" caption=\"Chamando uma função usando um caminho relativo que começa com `super`\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "The `fix_incorrect_order` function is in the `back_of_house` module, so we can use `super` to go to the parent module of `back_of_house`, which in this case is `crate`, the root. From there, we look for `deliver_order` and find it. Success! We think the `back_of_house` module and the `deliver_order` function are likely to stay in the same relationship to each other and get moved together should we decide to reorganize the crate’s module tree. Therefore, we used `super` so that we’ll have fewer places to update code in the future if this code gets moved to a different module."
-msgstr ""
+msgstr "A função `fix_incorrect_order` está no módulo `back_of_house`, então podemos usar `super` para ir ao módulo pai de `back_of_house`, que, neste caso, é `crate`, a raiz. A partir daí, procuramos `deliver_order` e a encontramos. Sucesso! Achamos que o módulo `back_of_house` e a função `deliver_order` provavelmente vão continuar na mesma relação entre si e serão movidos juntos caso decidamos reorganizar a árvore de módulos do crate. Por isso, usamos `super` para que tenhamos menos lugares para atualizar o código no futuro, caso ele seja movido para um módulo diferente."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Making Structs and Enums Public"
-msgstr ""
+msgstr "Tornando structs e enums públicos {#making-structs-and-enums-public}"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "We can also use `pub` to designate structs and enums as public, but there are a few extra details to the usage of `pub` with structs and enums. If we use `pub` before a struct definition, we make the struct public, but the struct’s fields will still be private. We can make each field public or not on a case-by-case basis. In Listing 7-9, we’ve defined a public `back_of_house::Breakfast` struct with a public `toast` field but a private `seasonal_fruit` field. This models the case in a restaurant where the customer can pick the type of bread that comes with a meal, but the chef decides which fruit accompanies the meal based on what’s in season and in stock. The available fruit changes quickly, so customers can’t choose the fruit or even see which fruit they’ll get."
-msgstr ""
+msgstr "Também podemos usar `pub` para designar structs e enums como públicos, mas há alguns detalhes extras no uso de `pub` com structs e enums. Se usarmos `pub` antes da definição de um struct, tornamos o struct público, mas os campos do struct continuarão privados. Podemos tornar cada campo público ou não, caso a caso. Na Listagem 7-9, definimos um struct público `back_of_house::Breakfast` com um campo público `toast`, mas um campo privado `seasonal_fruit`. Isso modela o caso de um restaurante em que o cliente pode escolher o tipo de pão que acompanha a refeição, mas o chef decide qual fruta acompanha a refeição com base no que é da estação e no que há em estoque. A fruta disponível muda rapidamente, então os clientes não podem escolher a fruta, nem mesmo ver qual fruta vão receber."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-9\" file-name=\"src/lib.rs\" caption=\"A struct with some public fields and some private fields\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-9\" file-name=\"src/lib.rs\" caption=\"Um struct com alguns campos públicos e alguns campos privados\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "\"peaches\""
@@ -6957,63 +6959,63 @@ msgstr ""
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Because the `toast` field in the `back_of_house::Breakfast` struct is public, in `eat_at_restaurant` we can write and read to the `toast` field using dot notation. Notice that we can’t use the `seasonal_fruit` field in `eat_at_restaurant`, because `seasonal_fruit` is private. Try uncommenting the line modifying the `seasonal_fruit` field value to see what error you get!"
-msgstr ""
+msgstr "Como o campo `toast` no struct `back_of_house::Breakfast` é público, em `eat_at_restaurant` podemos escrever e ler o campo `toast` usando a notação de ponto. Observe que não podemos usar o campo `seasonal_fruit` em `eat_at_restaurant`, porque `seasonal_fruit` é privado. Experimente descomentar a linha que modifica o valor do campo `seasonal_fruit` para ver qual erro você recebe!"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Also, note that because `back_of_house::Breakfast` has a private field, the struct needs to provide a public associated function that constructs an instance of `Breakfast` (we’ve named it `summer` here). If `Breakfast` didn’t have such a function, we couldn’t create an instance of `Breakfast` in `eat_at_restaurant`, because we couldn’t set the value of the private `seasonal_fruit` field in `eat_at_restaurant`."
-msgstr ""
+msgstr "Observe também que, como `back_of_house::Breakfast` tem um campo privado, o struct precisa fornecer uma função associada pública que cria uma instância de `Breakfast` (aqui, demos a ela o nome `summer`). Se `Breakfast` não tivesse essa função, não poderíamos criar uma instância de `Breakfast` em `eat_at_restaurant`, porque não conseguiríamos definir o valor do campo privado `seasonal_fruit` em `eat_at_restaurant`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "In contrast, if we make an enum public, all of its variants are then public. We only need the `pub` before the `enum` keyword, as shown in Listing 7-10."
-msgstr ""
+msgstr "Em contraste, se tornarmos um enum público, todas as suas variantes também passam a ser públicas. Só precisamos do `pub` antes da palavra-chave `enum`, como mostrado na Listagem 7-10."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "<Listing number=\"7-10\" file-name=\"src/lib.rs\" caption=\"Designating an enum as public makes all its variants public.\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-10\" file-name=\"src/lib.rs\" caption=\"Designar um enum como público torna todas as suas variantes públicas.\">\n"
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Because we made the `Appetizer` enum public, we can use the `Soup` and `Salad` variants in `eat_at_restaurant`."
-msgstr ""
+msgstr "Como tornamos o enum `Appetizer` público, podemos usar as variantes `Soup` e `Salad` em `eat_at_restaurant`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "Enums aren’t very useful unless their variants are public; it would be annoying to have to annotate all enum variants with `pub` in every case, so the default for enum variants is to be public. Structs are often useful without their fields being public, so struct fields follow the general rule of everything being private by default unless annotated with `pub`."
-msgstr ""
+msgstr "Enums não são muito úteis a menos que suas variantes sejam públicas; seria irritante ter que anotar todas as variantes do enum com `pub` em todos os casos, então, por padrão, as variantes de enum são públicas. Structs costumam ser úteis sem que os campos sejam públicos, então os campos de struct seguem a regra geral de que tudo é privado por padrão, a menos que seja anotado com `pub`."
 
 #: src/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md
 msgid "There’s one more situation involving `pub` that we haven’t covered, and that is our last module system feature: the `use` keyword. We’ll cover `use` by itself first, and then we’ll show how to combine `pub` and `use`."
-msgstr ""
+msgstr "Há mais uma situação envolvendo `pub` que ainda não abordamos, e ela é o último recurso do sistema de módulos: a palavra-chave `use`. Vamos abordar `use` sozinho primeiro e, depois, mostrar como combinar `pub` e `use`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Bringing Paths into Scope with the `use` Keyword"
-msgstr ""
+msgstr "Trazendo caminhos para o escopo com a palavra-chave `use` {#bringing-paths-into-scope-with-the-use-keyword}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Having to write out the paths to call functions can feel inconvenient and repetitive. In Listing 7-7, whether we chose the absolute or relative path to the `add_to_waitlist` function, every time we wanted to call `add_to_waitlist` we had to specify `front_of_house` and `hosting` too. Fortunately, there’s a way to simplify this process: We can create a shortcut to a path with the `use` keyword once and then use the shorter name everywhere else in the scope."
-msgstr ""
+msgstr "Ter que escrever os caminhos por extenso para chamar funções pode parecer inconveniente e repetitivo. Na Listagem 7-7, independentemente de termos escolhido o caminho absoluto ou o relativo para a função `add_to_waitlist`, toda vez que queríamos chamar `add_to_waitlist` tínhamos que especificar também `front_of_house` e `hosting`. Felizmente, há uma maneira de simplificar esse processo: podemos criar um atalho para um caminho com a palavra-chave `use` uma única vez e, depois, usar o nome mais curto em todo o restante do escopo."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "In Listing 7-11, we bring the `crate::front_of_house::hosting` module into the scope of the `eat_at_restaurant` function so that we only have to specify `hosting::add_to_waitlist` to call the `add_to_waitlist` function in `eat_at_restaurant`."
-msgstr ""
+msgstr "Na Listagem 7-11, trazemos o módulo `crate::front_of_house::hosting` para o escopo da função `eat_at_restaurant`, de modo que só precisamos especificar `hosting::add_to_waitlist` para chamar a função `add_to_waitlist` em `eat_at_restaurant`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-11\" file-name=\"src/lib.rs\" caption=\"Bringing a module into scope with `use`\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-11\" file-name=\"src/lib.rs\" caption=\"Trazendo um módulo para o escopo com `use`\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Adding `use` and a path in a scope is similar to creating a symbolic link in the filesystem. By adding `use crate::front_of_house::hosting` in the crate root, `hosting` is now a valid name in that scope, just as though the `hosting` module had been defined in the crate root. Paths brought into scope with `use` also check privacy, like any other paths."
-msgstr ""
+msgstr "Adicionar `use` com um caminho em um escopo é parecido com criar um link simbólico no sistema de arquivos. Ao adicionar `use crate::front_of_house::hosting` na raiz do crate, `hosting` passa a ser um nome válido nesse escopo, exatamente como se o módulo `hosting` tivesse sido definido na raiz do crate. Caminhos trazidos para o escopo com `use` também verificam a privacidade, assim como quaisquer outros caminhos."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Note that `use` only creates the shortcut for the particular scope in which the `use` occurs. Listing 7-12 moves the `eat_at_restaurant` function into a new child module named `customer`, which is then a different scope than the `use` statement, so the function body won’t compile."
-msgstr ""
+msgstr "Observe que `use` só cria o atalho para o escopo específico em que o `use` ocorre. A Listagem 7-12 move a função `eat_at_restaurant` para um novo módulo filho chamado `customer`, que passa a ser um escopo diferente da instrução `use`, então o corpo da função não vai compilar."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-12\" file-name=\"src/lib.rs\" caption=\"A `use` statement only applies in the scope it’s in.\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-12\" file-name=\"src/lib.rs\" caption=\"Uma instrução `use` se aplica apenas ao escopo em que está.\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "The compiler error shows that the shortcut no longer applies within the `customer` module:"
-msgstr ""
+msgstr "O erro de compilação mostra que o atalho não se aplica mais dentro do módulo `customer`:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid ""
@@ -7048,95 +7050,95 @@ msgstr ""
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Notice there’s also a warning that the `use` is no longer used in its scope! To fix this problem, move the `use` within the `customer` module too, or reference the shortcut in the parent module with `super::hosting` within the child `customer` module."
-msgstr ""
+msgstr "Observe também que há um aviso de que o `use` não é mais usado no seu escopo! Para resolver esse problema, mova também o `use` para dentro do módulo `customer`, ou referencie o atalho no módulo pai com `super::hosting`, dentro do módulo filho `customer`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Creating Idiomatic `use` Paths"
-msgstr ""
+msgstr "Criando caminhos `use` idiomáticos {#creating-idiomatic-use-paths}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "In Listing 7-11, you might have wondered why we specified `use crate::front_of_house::hosting` and then called `hosting::add_to_waitlist` in `eat_at_restaurant`, rather than specifying the `use` path all the way out to the `add_to_waitlist` function to achieve the same result, as in Listing 7-13."
-msgstr ""
+msgstr "Na Listagem 7-11, você pode ter se perguntado por que especificamos `use crate::front_of_house::hosting` e depois chamamos `hosting::add_to_waitlist` em `eat_at_restaurant`, em vez de especificar o caminho do `use` até a função `add_to_waitlist` para obter o mesmo resultado, como na Listagem 7-13."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-13\" file-name=\"src/lib.rs\" caption=\"Bringing the `add_to_waitlist` function into scope with `use`, which is unidiomatic\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-13\" file-name=\"src/lib.rs\" caption=\"Trazendo a função `add_to_waitlist` para o escopo com `use`, o que não é idiomático\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Although both Listing 7-11 and Listing 7-13 accomplish the same task, Listing 7-11 is the idiomatic way to bring a function into scope with `use`. Bringing the function’s parent module into scope with `use` means we have to specify the parent module when calling the function. Specifying the parent module when calling the function makes it clear that the function isn’t locally defined while still minimizing repetition of the full path. The code in Listing 7-13 is unclear as to where `add_to_waitlist` is defined."
-msgstr ""
+msgstr "Embora as Listagens 7-11 e 7-13 realizem a mesma tarefa, a Listagem 7-11 é a forma idiomática de trazer uma função para o escopo com `use`. Trazer o módulo pai da função para o escopo com `use` significa que temos que especificar o módulo pai ao chamar a função. Especificar o módulo pai ao chamar a função deixa claro que ela não é definida localmente, ao mesmo tempo que minimiza a repetição do caminho completo. O código da Listagem 7-13 não deixa claro onde `add_to_waitlist` é definida."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "On the other hand, when bringing in structs, enums, and other items with `use`, it’s idiomatic to specify the full path. Listing 7-14 shows the idiomatic way to bring the standard library’s `HashMap` struct into the scope of a binary crate."
-msgstr ""
+msgstr "Por outro lado, ao trazer structs, enums e outros itens com `use`, é idiomático especificar o caminho completo. A Listagem 7-14 mostra a forma idiomática de trazer o struct `HashMap` da biblioteca padrão para o escopo de um crate binário."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-14\" file-name=\"src/main.rs\" caption=\"Bringing `HashMap` into scope in an idiomatic way\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-14\" file-name=\"src/main.rs\" caption=\"Trazendo `HashMap` para o escopo de forma idiomática\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "There’s no strong reason behind this idiom: It’s just the convention that has emerged, and folks have gotten used to reading and writing Rust code this way."
-msgstr ""
+msgstr "Não há um motivo forte por trás dessa expressão idiomática: é apenas a convenção que surgiu, e as pessoas se acostumaram a ler e escrever código Rust dessa forma."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "The exception to this idiom is if we’re bringing two items with the same name into scope with `use` statements, because Rust doesn’t allow that. Listing 7-15 shows how to bring two `Result` types into scope that have the same name but different parent modules, and how to refer to them."
-msgstr ""
+msgstr "A exceção a essa expressão idiomática é quando trazemos para o escopo dois itens com o mesmo nome usando instruções `use`, porque o Rust não permite isso. A Listagem 7-15 mostra como trazer para o escopo dois tipos `Result` que têm o mesmo nome, mas módulos pais diferentes, e como se referir a eles."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-15\" file-name=\"src/lib.rs\" caption=\"Bringing two types with the same name into the same scope requires using their parent modules.\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-15\" file-name=\"src/lib.rs\" caption=\"Trazer dois tipos com o mesmo nome para o mesmo escopo exige usar seus módulos pais.\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "As you can see, using the parent modules distinguishes the two `Result` types. If instead we specified `use std::fmt::Result` and `use std::io::Result`, we’d have two `Result` types in the same scope, and Rust wouldn’t know which one we meant when we used `Result`."
-msgstr ""
+msgstr "Como você pode ver, usar os módulos pais diferencia os dois tipos `Result`. Se, em vez disso, especificássemos `use std::fmt::Result` e `use std::io::Result`, teríamos dois tipos `Result` no mesmo escopo, e o Rust não saberia a qual deles nos referíamos quando usássemos `Result`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Providing New Names with the `as` Keyword"
-msgstr ""
+msgstr "Fornecendo novos nomes com a palavra-chave `as` {#providing-new-names-with-the-as-keyword}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "There’s another solution to the problem of bringing two types of the same name into the same scope with `use`: After the path, we can specify `as` and a new local name, or _alias_, for the type. Listing 7-16 shows another way to write the code in Listing 7-15 by renaming one of the two `Result` types using `as`."
-msgstr ""
+msgstr "Há outra solução para o problema de trazer dois tipos com o mesmo nome para o mesmo escopo com `use`: depois do caminho, podemos especificar `as` e um novo nome local, ou _alias_, para o tipo. A Listagem 7-16 mostra outra forma de escrever o código da Listagem 7-15, renomeando um dos dois tipos `Result` com `as`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-16\" file-name=\"src/lib.rs\" caption=\"Renaming a type when it’s brought into scope with the `as` keyword\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-16\" file-name=\"src/lib.rs\" caption=\"Renomeando um tipo quando ele é trazido para o escopo com a palavra-chave `as`\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "In the second `use` statement, we chose the new name `IoResult` for the `std::io::Result` type, which won’t conflict with the `Result` from `std::fmt` that we’ve also brought into scope. Listing 7-15 and Listing 7-16 are considered idiomatic, so the choice is up to you!"
-msgstr ""
+msgstr "Na segunda instrução `use`, escolhemos o novo nome `IoResult` para o tipo `std::io::Result`, que não vai entrar em conflito com o `Result` de `std::fmt` que também trouxemos para o escopo. As Listagens 7-15 e 7-16 são consideradas idiomáticas, então a escolha é sua!"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Re-exporting Names with `pub use`"
-msgstr ""
+msgstr "Reexportando nomes com `pub use` {#re-exporting-names-with-pub-use}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "When we bring a name into scope with the `use` keyword, the name is private to the scope into which we imported it. To enable code outside that scope to refer to that name as if it had been defined in that scope, we can combine `pub` and `use`. This technique is called _re-exporting_ because we’re bringing an item into scope but also making that item available for others to bring into their scope."
-msgstr ""
+msgstr "Quando trazemos um nome para o escopo com a palavra-chave `use`, o nome fica privado para o escopo no qual o importamos. Para permitir que o código fora desse escopo se refira a esse nome como se ele tivesse sido definido nesse escopo, podemos combinar `pub` e `use`. Essa técnica é chamada de _reexportação_, porque estamos trazendo um item para o escopo, mas também tornando esse item disponível para que outros o tragam para o escopo deles."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Listing 7-17 shows the code in Listing 7-11 with `use` in the root module changed to `pub use`."
-msgstr ""
+msgstr "A Listagem 7-17 mostra o código da Listagem 7-11 com o `use` no módulo raiz alterado para `pub use`."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-17\" file-name=\"src/lib.rs\" caption=\"Making a name available for any code to use from a new scope with `pub use`\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-17\" file-name=\"src/lib.rs\" caption=\"Tornando um nome disponível para qualquer código usar a partir de um novo escopo com `pub use`\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Before this change, external code would have to call the `add_to_waitlist` function by using the path `restaurant::front_of_house::hosting::add_to_waitlist()`, which also would have required the `front_of_house` module to be marked as `pub`. Now that this `pub use` has re-exported the `hosting` module from the root module, external code can use the path `restaurant::hosting::add_to_waitlist()` instead."
-msgstr ""
+msgstr "Antes dessa mudança, código externo teria que chamar a função `add_to_waitlist` usando o caminho `restaurant::front_of_house::hosting::add_to_waitlist()`, o que também exigiria que o módulo `front_of_house` fosse marcado como `pub`. Agora que esse `pub use` reexportou o módulo `hosting` a partir do módulo raiz, código externo pode usar o caminho `restaurant::hosting::add_to_waitlist()` em vez disso."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Re-exporting is useful when the internal structure of your code is different from how programmers calling your code would think about the domain. For example, in this restaurant metaphor, the people running the restaurant think about “front of house” and “back of house.” But customers visiting a restaurant probably won’t think about the parts of the restaurant in those terms. With `pub use`, we can write our code with one structure but expose a different structure. Doing so makes our library well organized for programmers working on the library and programmers calling the library. We’ll look at another example of `pub use` and how it affects your crate’s documentation in [“Exporting a Convenient Public API”](ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api)<!-- ignore --> in Chapter 14."
-msgstr ""
+msgstr "Reexportar é útil quando a estrutura interna do seu código é diferente da forma como os programadores que chamam seu código pensam sobre o domínio. Por exemplo, nesta metáfora do restaurante, as pessoas que administram o restaurante pensam em “salão” e “bastidores”. Mas os clientes que visitam um restaurante provavelmente não vão pensar nas partes do restaurante nesses termos. Com `pub use`, podemos escrever nosso código com uma estrutura, mas expor outra. Fazer isso deixa nossa biblioteca bem organizada tanto para os programadores que trabalham nela quanto para os que a chamam. Vamos ver outro exemplo de `pub use` e como ele afeta a documentação do seu crate em [“Exportando uma API pública conveniente”](ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api)<!-- ignore --> no Capítulo 14."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Using External Packages"
-msgstr ""
+msgstr "Usando pacotes externos {#using-external-packages}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "In Chapter 2, we programmed a guessing game project that used an external package called `rand` to get random numbers. To use `rand` in our project, we added this line to _Cargo.toml_:"
-msgstr ""
+msgstr "No Capítulo 2, programamos um projeto de jogo de adivinhação que usava um pacote externo chamado `rand` para obter números aleatórios. Para usar `rand` no nosso projeto, adicionamos esta linha ao _Cargo.toml_:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid ""
@@ -7162,23 +7164,23 @@ msgstr ""
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Adding `rand` as a dependency in _Cargo.toml_ tells Cargo to download the `rand` package and any dependencies from [crates.io](https://crates.io/) and make `rand` available to our project."
-msgstr ""
+msgstr "Adicionar `rand` como dependência no _Cargo.toml_ diz ao Cargo para baixar o pacote `rand` e quaisquer dependências dele do [crates.io](https://crates.io/) e tornar `rand` disponível para o nosso projeto."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Then, to bring `rand` definitions into the scope of our package, we added a `use` line starting with the name of the crate, `rand`, and listed the items we wanted to bring into scope. Recall that in [“Generating a Random Number”](ch02-00-guessing-game-tutorial.html#generating-a-random-number)<!-- ignore --> in Chapter 2, we brought items in the `rand::prelude` module into scope and called the `rand::rng` function:"
-msgstr ""
+msgstr "Depois, para trazer as definições de `rand` para o escopo do nosso pacote, adicionamos uma linha `use` que começa com o nome do crate, `rand`, e listamos os itens que queríamos trazer para o escopo. Lembre-se de que, em [“Gerando um número aleatório”](ch02-00-guessing-game-tutorial.html#generating-a-random-number)<!-- ignore --> no Capítulo 2, trouxemos para o escopo os itens do módulo `rand::prelude` e chamamos a função `rand::rng`:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Members of the Rust community have made many packages available at [crates.io](https://crates.io/), and pulling any of them into your package involves these same steps: listing them in your package’s _Cargo.toml_ file and using `use` to bring items from their crates into scope."
-msgstr ""
+msgstr "Membros da comunidade Rust disponibilizaram muitos pacotes no [crates.io](https://crates.io/), e trazer qualquer um deles para o seu pacote envolve estes mesmos passos: listá-los no arquivo _Cargo.toml_ do seu pacote e usar `use` para trazer itens dos crates deles para o escopo."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Note that the standard `std` library is also a crate that’s external to our package. Because the standard library is shipped with the Rust language, we don’t need to change _Cargo.toml_ to include `std`. But we do need to refer to it with `use` to bring items from there into our package’s scope. For example, with `HashMap` we would use this line:"
-msgstr ""
+msgstr "Observe que a biblioteca padrão `std` também é um crate externo ao nosso pacote. Como a biblioteca padrão é distribuída com a linguagem Rust, não precisamos alterar o _Cargo.toml_ para incluir `std`. Mas precisamos, sim, nos referir a ela com `use` para trazer itens de lá para o escopo do nosso pacote. Por exemplo, com `HashMap`, usaríamos esta linha:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "This is an absolute path starting with `std`, the name of the standard library crate."
-msgstr ""
+msgstr "Este é um caminho absoluto que começa com `std`, o nome do crate da biblioteca padrão."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<a id=\"using-nested-paths-to-clean-up-large-use-lists\"></a>"
@@ -7186,43 +7188,43 @@ msgstr ""
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Using Nested Paths to Clean Up `use` Lists"
-msgstr ""
+msgstr "Usando caminhos aninhados para simplificar listas `use` {#using-nested-paths-to-clean-up-use-lists}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "If we’re using multiple items defined in the same crate or same module, listing each item on its own line can take up a lot of vertical space in our files. For example, these two `use` statements we had in the guessing game in Listing 2-4 bring items from `std` into scope:"
-msgstr ""
+msgstr "Se estivermos usando vários itens definidos no mesmo crate ou no mesmo módulo, listar cada item em uma linha separada pode ocupar muito espaço vertical nos nossos arquivos. Por exemplo, estas duas instruções `use` que tínhamos no jogo de adivinhação, na Listagem 2-4, trazem itens de `std` para o escopo:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Instead, we can use nested paths to bring the same items into scope in one line. We do this by specifying the common part of the path, followed by two colons, and then curly brackets around a list of the parts of the paths that differ, as shown in Listing 7-18."
-msgstr ""
+msgstr "Em vez disso, podemos usar caminhos aninhados para trazer os mesmos itens para o escopo em uma única linha. Fazemos isso especificando a parte comum do caminho, seguida de dois-pontos duplos e, depois, chaves envolvendo uma lista com as partes dos caminhos que diferem, como mostrado na Listagem 7-18."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-18\" file-name=\"src/main.rs\" caption=\"Specifying a nested path to bring multiple items with the same prefix into scope\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-18\" file-name=\"src/main.rs\" caption=\"Especificando um caminho aninhado para trazer vários itens com o mesmo prefixo para o escopo\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "In bigger programs, bringing many items into scope from the same crate or module using nested paths can reduce the number of separate `use` statements needed by a lot!"
-msgstr ""
+msgstr "Em programas maiores, trazer para o escopo muitos itens do mesmo crate ou módulo usando caminhos aninhados pode reduzir bastante o número de instruções `use` separadas necessárias!"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "We can use a nested path at any level in a path, which is useful when combining two `use` statements that share a subpath. For example, Listing 7-19 shows two `use` statements: one that brings `std::io` into scope and one that brings `std::io::Write` into scope."
-msgstr ""
+msgstr "Podemos usar um caminho aninhado em qualquer nível de um caminho, o que é útil ao combinar duas instruções `use` que compartilham um subcaminho. Por exemplo, a Listagem 7-19 mostra duas instruções `use`: uma que traz `std::io` para o escopo e outra que traz `std::io::Write` para o escopo."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-19\" file-name=\"src/lib.rs\" caption=\"Two `use` statements where one is a subpath of the other\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-19\" file-name=\"src/lib.rs\" caption=\"Duas instruções `use` em que uma é um subcaminho da outra\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "The common part of these two paths is `std::io`, and that’s the complete first path. To merge these two paths into one `use` statement, we can use `self` in the nested path, as shown in Listing 7-20."
-msgstr ""
+msgstr "A parte comum desses dois caminhos é `std::io`, e esse é o primeiro caminho por inteiro. Para combinar esses dois caminhos em uma única instrução `use`, podemos usar `self` no caminho aninhado, como mostrado na Listagem 7-20."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<Listing number=\"7-20\" file-name=\"src/lib.rs\" caption=\"Combining the paths in Listing 7-19 into one `use` statement\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-20\" file-name=\"src/lib.rs\" caption=\"Combinando os caminhos da Listagem 7-19 em uma única instrução `use`\">\n"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "This line brings `std::io` and `std::io::Write` into scope."
-msgstr ""
+msgstr "Esta linha traz `std::io` e `std::io::Write` para o escopo."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "<a id=\"the-glob-operator\"></a>"
@@ -7230,55 +7232,55 @@ msgstr ""
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "Importing Items with the Glob Operator"
-msgstr ""
+msgstr "Importando itens com o operador glob {#importing-items-with-the-glob-operator}"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "If we want to bring _all_ public items defined in a path into scope, we can specify that path followed by the `*` glob operator:"
-msgstr ""
+msgstr "Se quisermos trazer _todos_ os itens públicos definidos em um caminho para o escopo, podemos especificar esse caminho seguido do operador glob `*`:"
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "This `use` statement brings all public items defined in `std::collections` into the current scope. Be careful when using the glob operator! Glob can make it harder to tell what names are in scope and where a name used in your program was defined. Additionally, if the dependency changes its definitions, what you’ve imported changes as well, which may lead to compiler errors when you upgrade the dependency if the dependency adds a definition with the same name as a definition of yours in the same scope, for example."
-msgstr ""
+msgstr "Esta instrução `use` traz para o escopo atual todos os itens públicos definidos em `std::collections`. Cuidado ao usar o operador glob! O glob pode dificultar a identificação dos nomes que estão no escopo e do local onde um nome usado no seu programa foi definido. Além disso, se a dependência mudar as suas definições, aquilo que você importou também muda, o que pode levar a erros de compilação ao atualizar a dependência, se ela adicionar uma definição com o mesmo nome de uma definição sua no mesmo escopo, por exemplo."
 
 #: src/ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 msgid "The glob operator is often used when testing to bring everything under test into the `tests` module; we’ll talk about that in [“How to Write Tests”](ch11-01-writing-tests.html#how-to-write-tests)<!-- ignore --> in Chapter 11. The glob operator is also sometimes used as part of the prelude pattern: See [the standard library documentation](../std/prelude/index.html#other-preludes)<!-- ignore --> for more information on that pattern."
-msgstr ""
+msgstr "O operador glob costuma ser usado ao escrever testes, para trazer tudo o que está sendo testado para o módulo `tests`; vamos falar sobre isso em [“Como escrever testes”](ch11-01-writing-tests.html#how-to-write-tests)<!-- ignore --> no Capítulo 11. O operador glob também é, às vezes, usado como parte do padrão de prelúdio: veja [a documentação da biblioteca padrão](../std/prelude/index.html#other-preludes)<!-- ignore --> para mais informações sobre esse padrão."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "So far, all the examples in this chapter defined multiple modules in one file. When modules get large, you might want to move their definitions to a separate file to make the code easier to navigate."
-msgstr ""
+msgstr "Até aqui, todos os exemplos deste capítulo definiram vários módulos em um único arquivo. Quando os módulos ficam grandes, você pode querer mover suas definições para um arquivo separado, para tornar o código mais fácil de navegar."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "For example, let’s start from the code in Listing 7-17 that had multiple restaurant modules. We’ll extract modules into files instead of having all the modules defined in the crate root file. In this case, the crate root file is _src/lib.rs_, but this procedure also works with binary crates whose crate root file is _src/main.rs_."
-msgstr ""
+msgstr "Por exemplo, vamos partir do código da Listagem 7-17, que tinha vários módulos de restaurante. Vamos extrair os módulos para arquivos, em vez de deixar todos os módulos definidos no arquivo raiz do crate. Neste caso, o arquivo raiz do crate é _src/lib.rs_, mas este procedimento também funciona com crates binários cujo arquivo raiz do crate é _src/main.rs_."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "First, we’ll extract the `front_of_house` module to its own file. Remove the code inside the curly brackets for the `front_of_house` module, leaving only the `mod front_of_house;` declaration, so that _src/lib.rs_ contains the code shown in Listing 7-21. Note that this won’t compile until we create the _src/front_of_house.rs_ file in Listing 7-22."
-msgstr ""
+msgstr "Primeiro, vamos extrair o módulo `front_of_house` para o seu próprio arquivo. Remova o código entre as chaves do módulo `front_of_house`, deixando apenas a declaração `mod front_of_house;`, de modo que _src/lib.rs_ contenha o código mostrado na Listagem 7-21. Observe que isso não vai compilar até criarmos o arquivo _src/front_of_house.rs_ na Listagem 7-22."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "<Listing number=\"7-21\" file-name=\"src/lib.rs\" caption=\"Declaring the `front_of_house` module whose body will be in *src/front_of_house.rs*\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-21\" file-name=\"src/lib.rs\" caption=\"Declarando o módulo `front_of_house`, cujo corpo ficará em *src/front_of_house.rs*\">\n"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Next, place the code that was in the curly brackets into a new file named _src/front_of_house.rs_, as shown in Listing 7-22. The compiler knows to look in this file because it came across the module declaration in the crate root with the name `front_of_house`."
-msgstr ""
+msgstr "Em seguida, coloque o código que estava entre as chaves em um novo arquivo chamado _src/front_of_house.rs_, como mostrado na Listagem 7-22. O compilador sabe que deve procurar nesse arquivo porque encontrou, na raiz do crate, a declaração do módulo com o nome `front_of_house`."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "<Listing number=\"7-22\" file-name=\"src/front_of_house.rs\" caption=\"Definitions inside the `front_of_house` module in *src/front_of_house.rs*\">\n"
-msgstr ""
+msgstr "<Listing number=\"7-22\" file-name=\"src/front_of_house.rs\" caption=\"Definições dentro do módulo `front_of_house` em *src/front_of_house.rs*\">\n"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Note that you only need to load a file using a `mod` declaration _once_ in your module tree. Once the compiler knows the file is part of the project (and knows where in the module tree the code resides because of where you’ve put the `mod` statement), other files in your project should refer to the loaded file’s code using a path to where it was declared, as covered in the [“Paths for Referring to an Item in the Module Tree”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> section. In other words, `mod` is _not_ an “include” operation that you may have seen in other programming languages."
-msgstr ""
+msgstr "Observe que você só precisa carregar um arquivo usando uma declaração `mod` _uma vez_ na sua árvore de módulos. Quando o compilador souber que o arquivo faz parte do projeto (e souber onde, na árvore de módulos, o código se encontra por causa de onde você colocou a instrução `mod`), os outros arquivos do projeto devem se referir ao código do arquivo carregado usando um caminho até o ponto em que ele foi declarado, como abordado na seção [“Caminhos para referenciar um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore -->. Em outras palavras, `mod` _não_ é uma operação de “include” que você pode ter visto em outras linguagens de programação."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Next, we’ll extract the `hosting` module to its own file. The process is a bit different because `hosting` is a child module of `front_of_house`, not of the root module. We’ll place the file for `hosting` in a new directory that will be named for its ancestors in the module tree, in this case _src/front_of_house_."
-msgstr ""
+msgstr "Em seguida, vamos extrair o módulo `hosting` para o seu próprio arquivo. O processo é um pouco diferente, porque `hosting` é um módulo filho de `front_of_house`, e não do módulo raiz. Vamos colocar o arquivo de `hosting` em um novo diretório, que levará o nome dos seus ancestrais na árvore de módulos; neste caso, _src/front_of_house_."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "To start moving `hosting`, we change _src/front_of_house.rs_ to contain only the declaration of the `hosting` module:"
-msgstr ""
+msgstr "Para começar a mover `hosting`, alteramos _src/front_of_house.rs_ para que contenha apenas a declaração do módulo `hosting`:"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "<Listing file-name=\"src/front_of_house.rs\">\n"
@@ -7286,7 +7288,7 @@ msgstr ""
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Then, we create a _src/front_of_house_ directory and a _hosting.rs_ file to contain the definitions made in the `hosting` module:"
-msgstr ""
+msgstr "Em seguida, criamos um diretório _src/front_of_house_ e um arquivo _hosting.rs_ para conter as definições feitas no módulo `hosting`:"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "<Listing file-name=\"src/front_of_house/hosting.rs\">\n"
@@ -7294,59 +7296,59 @@ msgstr ""
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "If we instead put _hosting.rs_ in the _src_ directory, the compiler would expect the _hosting.rs_ code to be in a `hosting` module declared in the crate root and not declared as a child of the `front_of_house` module. The compiler’s rules for which files to check for which modules’ code mean the directories and files more closely match the module tree."
-msgstr ""
+msgstr "Se, em vez disso, colocássemos _hosting.rs_ no diretório _src_, o compilador esperaria que o código de _hosting.rs_ estivesse em um módulo `hosting` declarado na raiz do crate, e não declarado como filho do módulo `front_of_house`. As regras do compilador sobre quais arquivos verificar para o código de cada módulo fazem com que os diretórios e arquivos correspondam mais de perto à árvore de módulos."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Alternate File Paths"
-msgstr ""
+msgstr "Caminhos de arquivo alternativos {#alternate-file-paths}"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "So far we’ve covered the most idiomatic file paths the Rust compiler uses, but Rust also supports an older style of file path. For a module named `front_of_house` declared in the crate root, the compiler will look for the module’s code in:"
-msgstr ""
+msgstr "Até aqui, vimos os caminhos de arquivo mais idiomáticos usados pelo compilador do Rust, mas o Rust também oferece suporte a um estilo mais antigo de caminho de arquivo. Para um módulo chamado `front_of_house` declarado na raiz do crate, o compilador vai procurar o código do módulo em:"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "_src/front_of_house.rs_ (what we covered)"
-msgstr ""
+msgstr "_src/front_of_house.rs_ (o que vimos)"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "_src/front_of_house/mod.rs_ (older style, still supported path)"
-msgstr ""
+msgstr "_src/front_of_house/mod.rs_ (estilo mais antigo, caminho ainda suportado)"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "For a module named `hosting` that is a submodule of `front_of_house`, the compiler will look for the module’s code in:"
-msgstr ""
+msgstr "Para um módulo chamado `hosting` que é um submódulo de `front_of_house`, o compilador vai procurar o código do módulo em:"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "_src/front_of_house/hosting.rs_ (what we covered)"
-msgstr ""
+msgstr "_src/front_of_house/hosting.rs_ (o que vimos)"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "_src/front_of_house/hosting/mod.rs_ (older style, still supported path)"
-msgstr ""
+msgstr "_src/front_of_house/hosting/mod.rs_ (estilo mais antigo, caminho ainda suportado)"
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "If you use both styles for the same module, you’ll get a compiler error. Using a mix of both styles for different modules in the same project is allowed but might be confusing for people navigating your project."
-msgstr ""
+msgstr "Se você usar os dois estilos para o mesmo módulo, vai receber um erro de compilação. Usar uma mistura dos dois estilos para módulos diferentes no mesmo projeto é permitido, mas pode ser confuso para quem navega pelo projeto."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "The main downside to the style that uses files named _mod.rs_ is that your project can end up with many files named _mod.rs_, which can get confusing when you have them open in your editor at the same time."
-msgstr ""
+msgstr "A principal desvantagem do estilo que usa arquivos chamados _mod.rs_ é que o seu projeto pode acabar com muitos arquivos chamados _mod.rs_, o que pode causar confusão quando você os tem abertos no editor ao mesmo tempo."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "We’ve moved each module’s code to a separate file, and the module tree remains the same. The function calls in `eat_at_restaurant` will work without any modification, even though the definitions live in different files. This technique lets you move modules to new files as they grow in size."
-msgstr ""
+msgstr "Movemos o código de cada módulo para um arquivo separado, e a árvore de módulos continua a mesma. As chamadas de função em `eat_at_restaurant` vão funcionar sem nenhuma modificação, mesmo que as definições estejam em arquivos diferentes. Essa técnica permite mover módulos para novos arquivos à medida que eles crescem."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Note that the `pub use crate::front_of_house::hosting` statement in _src/lib.rs_ also hasn’t changed, nor does `use` have any impact on what files are compiled as part of the crate. The `mod` keyword declares modules, and Rust looks in a file with the same name as the module for the code that goes into that module."
-msgstr ""
+msgstr "Observe que a instrução `pub use crate::front_of_house::hosting` em _src/lib.rs_ também não mudou, nem o `use` tem qualquer impacto sobre quais arquivos são compilados como parte do crate. A palavra-chave `mod` declara módulos, e o Rust procura, em um arquivo com o mesmo nome do módulo, o código que vai dentro desse módulo."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "Rust lets you split a package into multiple crates and a crate into modules so that you can refer to items defined in one module from another module. You can do this by specifying absolute or relative paths. These paths can be brought into scope with a `use` statement so that you can use a shorter path for multiple uses of the item in that scope. Module code is private by default, but you can make definitions public by adding the `pub` keyword."
-msgstr ""
+msgstr "O Rust permite que você divida um pacote em vários crates e um crate em módulos, para que você possa se referir a itens definidos em um módulo a partir de outro módulo. Você pode fazer isso especificando caminhos absolutos ou relativos. Esses caminhos podem ser trazidos para o escopo com uma instrução `use`, de modo que você possa usar um caminho mais curto para vários usos do item naquele escopo. O código de módulo é privado por padrão, mas você pode tornar as definições públicas adicionando a palavra-chave `pub`."
 
 #: src/ch07-05-separating-modules-into-different-files.md
 msgid "In the next chapter, we’ll look at some collection data structures in the standard library that you can use in your neatly organized code."
-msgstr ""
+msgstr "No próximo capítulo, vamos ver algumas estruturas de dados de coleção da biblioteca padrão que você pode usar no seu código bem organizado."
 
 #: src/ch08-00-common-collections.md
 msgid "Rust’s standard library includes a number of very useful data structures called _collections_. Most other data types represent one specific value, but collections can contain multiple values. Unlike the built-in array and tuple types, the data that these collections point to is stored on the heap, which means the amount of data does not need to be known at compile time and can grow or shrink as the program runs. Each kind of collection has different capabilities and costs, and choosing an appropriate one for your current situation is a skill you’ll develop over time. In this chapter, we’ll discuss three collections that are used very often in Rust programs:"
