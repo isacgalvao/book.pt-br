@@ -229,23 +229,23 @@ msgstr "Redirecionando erros para a saída de erro padrão {#redirecting-errors-
 
 #: src/SUMMARY.md src/ch13-00-functional-features.md
 msgid "Functional Language Features: Iterators and Closures"
-msgstr ""
+msgstr "Recursos funcionais da linguagem: iteradores e closures {#functional-language-features-iterators-and-closures}"
 
 #: src/SUMMARY.md src/ch13-01-closures.md
 msgid "Closures"
-msgstr ""
+msgstr "Closures {#closures}"
 
 #: src/SUMMARY.md src/ch13-02-iterators.md
 msgid "Processing a Series of Items with Iterators"
-msgstr ""
+msgstr "Processando uma série de itens com iteradores {#processing-a-series-of-items-with-iterators}"
 
 #: src/SUMMARY.md src/ch13-03-improving-our-io-project.md
 msgid "Improving Our I/O Project"
-msgstr ""
+msgstr "Melhorando nosso projeto de E/S {#improving-our-io-project}"
 
 #: src/SUMMARY.md src/ch13-04-performance.md
 msgid "Performance in Loops vs. Iterators"
-msgstr ""
+msgstr "Desempenho em loops versus iteradores {#performance-in-loops-vs-iterators}"
 
 #: src/SUMMARY.md
 msgid "More about Cargo and Crates.io"
@@ -13065,35 +13065,35 @@ msgstr "Em seguida, vamos explorar alguns recursos do Rust que foram influenciad
 
 #: src/ch13-00-functional-features.md
 msgid "Rust’s design has taken inspiration from many existing languages and techniques, and one significant influence is _functional programming_. Programming in a functional style often includes using functions as values by passing them in arguments, returning them from other functions, assigning them to variables for later execution, and so forth."
-msgstr ""
+msgstr "O design do Rust se inspirou em muitas linguagens e técnicas existentes, e uma influência significativa é a _programação funcional_. Programar em estilo funcional costuma incluir o uso de funções como valores, passando-as como argumentos, retornando-as de outras funções, atribuindo-as a variáveis para execução posterior e assim por diante."
 
 #: src/ch13-00-functional-features.md
 msgid "In this chapter, we won’t debate the issue of what functional programming is or isn’t but will instead discuss some features of Rust that are similar to features in many languages often referred to as functional."
-msgstr ""
+msgstr "Neste capítulo, não vamos debater a questão do que é ou não é programação funcional, mas vamos discutir alguns recursos do Rust que são parecidos com recursos de muitas linguagens frequentemente chamadas de funcionais."
 
 #: src/ch13-00-functional-features.md
 msgid "More specifically, we’ll cover:"
-msgstr ""
+msgstr "Mais especificamente, vamos abordar:"
 
 #: src/ch13-00-functional-features.md
 msgid "_Closures_, a function-like construct you can store in a variable"
-msgstr ""
+msgstr "_Closures_, uma construção semelhante a uma função que você pode armazenar em uma variável"
 
 #: src/ch13-00-functional-features.md
 msgid "_Iterators_, a way of processing a series of elements"
-msgstr ""
+msgstr "_Iteradores_, uma forma de processar uma série de elementos"
 
 #: src/ch13-00-functional-features.md
 msgid "How to use closures and iterators to improve the I/O project in Chapter 12"
-msgstr ""
+msgstr "Como usar closures e iteradores para melhorar o projeto de E/S do Capítulo 12"
 
 #: src/ch13-00-functional-features.md
 msgid "The performance of closures and iterators (spoiler alert: They’re faster than you might think!)"
-msgstr ""
+msgstr "O desempenho de closures e iteradores (alerta de spoiler: eles são mais rápidos do que você imagina!)"
 
 #: src/ch13-00-functional-features.md
 msgid "We’ve already covered some other Rust features, such as pattern matching and enums, that are also influenced by the functional style. Because mastering closures and iterators is an important part of writing fast, idiomatic, Rust code, we’ll devote this entire chapter to them."
-msgstr ""
+msgstr "Já abordamos outros recursos do Rust, como a correspondência de padrões e os enums, que também são influenciados pelo estilo funcional. Como dominar closures e iteradores é uma parte importante da escrita de código Rust rápido e idiomático, vamos dedicar este capítulo inteiro a eles."
 
 #: src/ch13-01-closures.md
 msgid "<a id=\"closures-anonymous-functions-that-can-capture-their-environment\"></a> <a id=\"closures-anonymous-functions-that-capture-their-environment\"></a>"
@@ -13101,7 +13101,7 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Rust’s closures are anonymous functions you can save in a variable or pass as arguments to other functions. You can create the closure in one place and then call the closure elsewhere to evaluate it in a different context. Unlike functions, closures can capture values from the scope in which they’re defined. We’ll demonstrate how these closure features allow for code reuse and behavior customization."
-msgstr ""
+msgstr "Os closures do Rust são funções anônimas que você pode salvar em uma variável ou passar como argumentos para outras funções. Você pode criar o closure em um lugar e depois chamá-lo em outro para avaliá-lo em um contexto diferente. Ao contrário das funções, os closures podem capturar valores do escopo em que são definidos. Vamos demonstrar como esses recursos dos closures permitem reutilizar código e personalizar comportamentos."
 
 #: src/ch13-01-closures.md
 msgid "<a id=\"creating-an-abstraction-of-behavior-with-closures\"></a> <a id=\"refactoring-using-functions\"></a> <a id=\"refactoring-with-closures-to-store-code\"></a> <a id=\"capturing-the-environment-with-closures\"></a>"
@@ -13109,19 +13109,19 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Capturing the Environment"
-msgstr ""
+msgstr "Capturando o ambiente {#capturing-the-environment}"
 
 #: src/ch13-01-closures.md
 msgid "We’ll first examine how we can use closures to capture values from the environment they’re defined in for later use. Here’s the scenario: Every so often, our T-shirt company gives away an exclusive, limited-edition shirt to someone on our mailing list as a promotion. People on the mailing list can optionally add their favorite color to their profile. If the person chosen for a free shirt has their favorite color set, they get that color shirt. If the person hasn’t specified a favorite color, they get whatever color the company currently has the most of."
-msgstr ""
+msgstr "Primeiro, vamos examinar como podemos usar closures para capturar valores do ambiente em que são definidos, para uso posterior. Este é o cenário: de vez em quando, nossa empresa de camisetas dá, como promoção, uma camiseta exclusiva em edição limitada a alguém da nossa lista de e-mails. As pessoas da lista de e-mails podem, opcionalmente, adicionar sua cor favorita ao perfil. Se a pessoa escolhida para ganhar uma camiseta grátis tiver a cor favorita definida, ela recebe uma camiseta dessa cor. Se a pessoa não tiver especificado uma cor favorita, ela recebe a cor que a empresa tiver mais em estoque no momento."
 
 #: src/ch13-01-closures.md
 msgid "There are many ways to implement this. For this example, we’re going to use an enum called `ShirtColor` that has the variants `Red` and `Blue` (limiting the number of colors available for simplicity). We represent the company’s inventory with an `Inventory` struct that has a field named `shirts` that contains a `Vec<ShirtColor>` representing the shirt colors currently in stock. The method `giveaway` defined on `Inventory` gets the optional shirt color preference of the free-shirt winner, and it returns the shirt color the person will get. This setup is shown in Listing 13-1."
-msgstr ""
+msgstr "Há muitas formas de implementar isso. Para este exemplo, vamos usar um enum chamado `ShirtColor`, que tem as variantes `Red` e `Blue` (limitando o número de cores disponíveis para simplificar). Representamos o estoque da empresa com um struct `Inventory`, que tem um campo chamado `shirts`, que contém um `Vec<ShirtColor>` representando as cores das camisetas atualmente em estoque. O método `giveaway`, definido em `Inventory`, recebe a preferência opcional de cor de camiseta do ganhador da camiseta grátis e retorna a cor que a pessoa vai receber. Essa configuração é mostrada na Listagem 13-1."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-1\" file-name=\"src/main.rs\" caption=\"Shirt company giveaway situation\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-1\" file-name=\"src/main.rs\" caption=\"Situação da promoção de camisetas da empresa\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"The user with preference {:?} gets {:?}\""
@@ -13129,19 +13129,19 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "The `store` defined in `main` has two blue shirts and one red shirt remaining to distribute for this limited-edition promotion. We call the `giveaway` method for a user with a preference for a red shirt and a user without any preference."
-msgstr ""
+msgstr "O `store` definido em `main` tem duas camisetas azuis e uma vermelha restantes para distribuir nesta promoção em edição limitada. Chamamos o método `giveaway` para um usuário com preferência por camiseta vermelha e para um usuário sem nenhuma preferência."
 
 #: src/ch13-01-closures.md
 msgid "Again, this code could be implemented in many ways, and here, to focus on closures, we’ve stuck to concepts you’ve already learned, except for the body of the `giveaway` method that uses a closure. In the `giveaway` method, we get the user preference as a parameter of type `Option<ShirtColor>` and call the `unwrap_or_else` method on `user_preference`. The [`unwrap_or_else` method on `Option<T>`](../std/option/enum.Option.html#method.unwrap_or_else)<!-- ignore --> is defined by the standard library. It takes one argument: a closure without any arguments that returns a value `T` (the same type stored in the `Some` variant of the `Option<T>`, in this case `ShirtColor`). If the `Option<T>` is the `Some` variant, `unwrap_or_else` returns the value from within the `Some`. If the `Option<T>` is the `None` variant, `unwrap_or_else` calls the closure and returns the value returned by the closure."
-msgstr ""
+msgstr "Novamente, este código poderia ser implementado de muitas formas e, aqui, para focar nos closures, nos mantivemos em conceitos que você já aprendeu, exceto pelo corpo do método `giveaway`, que usa um closure. No método `giveaway`, recebemos a preferência do usuário como um parâmetro do tipo `Option<ShirtColor>` e chamamos o método `unwrap_or_else` em `user_preference`. O [método `unwrap_or_else` em `Option<T>`](../std/option/enum.Option.html#method.unwrap_or_else)<!-- ignore --> é definido pela biblioteca padrão. Ele recebe um argumento: um closure sem argumentos que retorna um valor `T` (o mesmo tipo armazenado na variante `Some` de `Option<T>`, neste caso `ShirtColor`). Se o `Option<T>` for a variante `Some`, `unwrap_or_else` retorna o valor que está dentro do `Some`. Se o `Option<T>` for a variante `None`, `unwrap_or_else` chama o closure e retorna o valor que é retornado pelo closure."
 
 #: src/ch13-01-closures.md
 msgid "We specify the closure expression `|| self.most_stocked()` as the argument to `unwrap_or_else`. This is a closure that takes no parameters itself (if the closure had parameters, they would appear between the two vertical pipes). The body of the closure calls `self.most_stocked()`. We’re defining the closure here, and the implementation of `unwrap_or_else` will evaluate the closure later if the result is needed."
-msgstr ""
+msgstr "Especificamos a expressão de closure `|| self.most_stocked()` como argumento de `unwrap_or_else`. Esse é um closure que não recebe parâmetros (se o closure tivesse parâmetros, eles apareceriam entre as duas barras verticais). O corpo do closure chama `self.most_stocked()`. Estamos definindo o closure aqui, e a implementação de `unwrap_or_else` vai avaliar o closure mais tarde, caso o resultado seja necessário."
 
 #: src/ch13-01-closures.md src/ch20-02-advanced-traits.md
 msgid "Running this code prints the following:"
-msgstr ""
+msgstr "Executar este código imprime o seguinte:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13157,7 +13157,7 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "One interesting aspect here is that we’ve passed a closure that calls `self.most_stocked()` on the current `Inventory` instance. The standard library didn’t need to know anything about the `Inventory` or `ShirtColor` types we defined, or the logic we want to use in this scenario. The closure captures an immutable reference to the `self` `Inventory` instance and passes it with the code we specify to the `unwrap_or_else` method. Functions, on the other hand, are not able to capture their environment in this way."
-msgstr ""
+msgstr "Um aspecto interessante aqui é que passamos um closure que chama `self.most_stocked()` na instância atual de `Inventory`. A biblioteca padrão não precisou saber nada sobre os tipos `Inventory` e `ShirtColor` que definimos, nem sobre a lógica que queremos usar neste cenário. O closure captura uma referência imutável à instância `self` de `Inventory` e a passa, junto com o código que especificamos, ao método `unwrap_or_else`. Já as funções não conseguem capturar o ambiente delas dessa forma."
 
 #: src/ch13-01-closures.md
 msgid "<a id=\"closure-type-inference-and-annotation\"></a>"
@@ -13165,23 +13165,23 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Inferring and Annotating Closure Types"
-msgstr ""
+msgstr "Inferindo e anotando tipos de closures {#inferring-and-annotating-closure-types}"
 
 #: src/ch13-01-closures.md
 msgid "There are more differences between functions and closures. Closures don’t usually require you to annotate the types of the parameters or the return value like `fn` functions do. Type annotations are required on functions because the types are part of an explicit interface exposed to your users. Defining this interface rigidly is important for ensuring that everyone agrees on what types of values a function uses and returns. Closures, on the other hand, aren’t used in an exposed interface like this: They’re stored in variables, and they’re used without naming them and exposing them to users of our library."
-msgstr ""
+msgstr "Há mais diferenças entre funções e closures. Os closures normalmente não exigem que você anote os tipos dos parâmetros ou do valor de retorno, como fazem as funções `fn`. As anotações de tipo são obrigatórias nas funções porque os tipos fazem parte de uma interface explícita exposta aos seus usuários. Definir essa interface de forma rígida é importante para garantir que todos concordem sobre quais tipos de valores uma função usa e retorna. Já os closures não são usados em uma interface exposta desse tipo: eles são armazenados em variáveis e usados sem serem nomeados nem expostos aos usuários da nossa biblioteca."
 
 #: src/ch13-01-closures.md
 msgid "Closures are typically short and relevant only within a narrow context rather than in any arbitrary scenario. Within these limited contexts, the compiler can infer the types of the parameters and the return type, similar to how it’s able to infer the types of most variables (there are rare cases where the compiler needs closure type annotations too)."
-msgstr ""
+msgstr "Os closures costumam ser curtos e relevantes apenas dentro de um contexto restrito, e não em qualquer cenário arbitrário. Dentro desses contextos limitados, o compilador consegue inferir os tipos dos parâmetros e o tipo de retorno, de forma semelhante a como consegue inferir os tipos da maioria das variáveis (há casos raros em que o compilador também precisa de anotações de tipo para closures)."
 
 #: src/ch13-01-closures.md
 msgid "As with variables, we can add type annotations if we want to increase explicitness and clarity at the cost of being more verbose than is strictly necessary. Annotating the types for a closure would look like the definition shown in Listing 13-2. In this example, we’re defining a closure and storing it in a variable rather than defining the closure in the spot we pass it as an argument, as we did in Listing 13-1."
-msgstr ""
+msgstr "Assim como com as variáveis, podemos adicionar anotações de tipo se quisermos mais explicitude e clareza, ao custo de ser mais verboso do que o estritamente necessário. Anotar os tipos de um closure ficaria como a definição mostrada na Listagem 13-2. Neste exemplo, estamos definindo um closure e armazenando-o em uma variável, em vez de defini-lo no lugar em que o passamos como argumento, como fizemos na Listagem 13-1."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-2\" file-name=\"src/main.rs\" caption=\"Adding optional type annotations of the parameter and return value types in the closure\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-2\" file-name=\"src/main.rs\" caption=\"Adicionando anotações de tipo opcionais aos tipos do parâmetro e do valor de retorno no closure\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"calculating slowly...\""
@@ -13205,23 +13205,23 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "With type annotations added, the syntax of closures looks more similar to the syntax of functions. Here, we define a function that adds 1 to its parameter and a closure that has the same behavior, for comparison. We’ve added some spaces to line up the relevant parts. This illustrates how closure syntax is similar to function syntax except for the use of pipes and the amount of syntax that is optional:"
-msgstr ""
+msgstr "Com as anotações de tipo adicionadas, a sintaxe dos closures fica mais parecida com a das funções. Aqui, definimos uma função que soma 1 ao seu parâmetro e um closure com o mesmo comportamento, para comparação. Acrescentamos alguns espaços para alinhar as partes relevantes. Isso ilustra como a sintaxe de closure é semelhante à sintaxe de função, exceto pelo uso das barras verticais e pela quantidade de sintaxe que é opcional:"
 
 #: src/ch13-01-closures.md
 msgid "The first line shows a function definition and the second line shows a fully annotated closure definition. In the third line, we remove the type annotations from the closure definition. In the fourth line, we remove the brackets, which are optional because the closure body has only one expression. These are all valid definitions that will produce the same behavior when they’re called. The `add_one_v3` and `add_one_v4` lines require the closures to be evaluated to be able to compile because the types will be inferred from their usage. This is similar to `let v = Vec::new();` needing either type annotations or values of some type to be inserted into the `Vec` for Rust to be able to infer the type."
-msgstr ""
+msgstr "A primeira linha mostra a definição de uma função, e a segunda, a definição de um closure totalmente anotada. Na terceira linha, removemos as anotações de tipo da definição do closure. Na quarta linha, removemos as chaves, que são opcionais porque o corpo do closure tem apenas uma expressão. Todas essas são definições válidas, que produzem o mesmo comportamento quando são chamadas. As linhas `add_one_v3` e `add_one_v4` exigem que os closures sejam avaliados para poderem compilar, porque os tipos serão inferidos a partir do seu uso. Isso é semelhante a `let v = Vec::new();`, que precisa de anotações de tipo ou de valores de algum tipo inseridos no `Vec` para que o Rust consiga inferir o tipo."
 
 #: src/ch13-01-closures.md
 msgid "For closure definitions, the compiler will infer one concrete type for each of their parameters and for their return value. For instance, Listing 13-3 shows the definition of a short closure that just returns the value it receives as a parameter. This closure isn’t very useful except for the purposes of this example. Note that we haven’t added any type annotations to the definition. Because there are no type annotations, we can call the closure with any type, which we’ve done here with `String` the first time. If we then try to call `example_closure` with an integer, we’ll get an error."
-msgstr ""
+msgstr "Nas definições de closures, o compilador vai inferir um tipo concreto para cada um dos seus parâmetros e para o valor de retorno. Por exemplo, a Listagem 13-3 mostra a definição de um closure curto que apenas retorna o valor que recebe como parâmetro. Esse closure não é muito útil, exceto para os fins deste exemplo. Observe que não adicionamos nenhuma anotação de tipo à definição. Como não há anotações de tipo, podemos chamar o closure com qualquer tipo, o que fizemos aqui com `String` na primeira vez. Se depois tentarmos chamar `example_closure` com um inteiro, vamos receber um erro."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-3\" file-name=\"src/main.rs\" caption=\"Attempting to call a closure whose types are inferred with two different types\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-3\" file-name=\"src/main.rs\" caption=\"Tentando chamar um closure cujos tipos são inferidos com dois tipos diferentes\">\n"
 
 #: src/ch13-01-closures.md
 msgid "The compiler gives us this error:"
-msgstr ""
+msgstr "O compilador nos dá este erro:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13260,23 +13260,23 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "The first time we call `example_closure` with the `String` value, the compiler infers the type of `x` and the return type of the closure to be `String`. Those types are then locked into the closure in `example_closure`, and we get a type error when we next try to use a different type with the same closure."
-msgstr ""
+msgstr "Na primeira vez que chamamos `example_closure` com o valor `String`, o compilador infere que o tipo de `x` e o tipo de retorno do closure são `String`. Esses tipos ficam então fixados no closure em `example_closure`, e recebemos um erro de tipo quando, em seguida, tentamos usar um tipo diferente com o mesmo closure."
 
 #: src/ch13-01-closures.md
 msgid "Capturing References or Moving Ownership"
-msgstr ""
+msgstr "Capturando referências ou movendo o ownership {#capturing-references-or-moving-ownership}"
 
 #: src/ch13-01-closures.md
 msgid "Closures can capture values from their environment in three ways, which directly map to the three ways a function can take a parameter: borrowing immutably, borrowing mutably, and taking ownership. The closure will decide which of these to use based on what the body of the function does with the captured values."
-msgstr ""
+msgstr "Os closures podem capturar valores do seu ambiente de três maneiras, que correspondem diretamente às três maneiras pelas quais uma função pode receber um parâmetro: pegando emprestado de forma imutável, pegando emprestado de forma mutável e assumindo o ownership. O closure vai decidir qual delas usar com base no que o corpo da função faz com os valores capturados."
 
 #: src/ch13-01-closures.md
 msgid "In Listing 13-4, we define a closure that captures an immutable reference to the vector named `list` because it only needs an immutable reference to print the value."
-msgstr ""
+msgstr "Na Listagem 13-4, definimos um closure que captura uma referência imutável ao vetor chamado `list`, porque ele só precisa de uma referência imutável para imprimir o valor."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-4\" file-name=\"src/main.rs\" caption=\"Defining and calling a closure that captures an immutable reference\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-4\" file-name=\"src/main.rs\" caption=\"Definindo e chamando um closure que captura uma referência imutável\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"Before defining closure: {list:?}\""
@@ -13296,11 +13296,11 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "This example also illustrates that a variable can bind to a closure definition, and we can later call the closure by using the variable name and parentheses as if the variable name were a function name."
-msgstr ""
+msgstr "Este exemplo também ilustra que uma variável pode ser vinculada a uma definição de closure, e que podemos chamar o closure depois usando o nome da variável seguido de parênteses, como se o nome da variável fosse o nome de uma função."
 
 #: src/ch13-01-closures.md
 msgid "Because we can have multiple immutable references to `list` at the same time, `list` is still accessible from the code before the closure definition, after the closure definition but before the closure is called, and after the closure is called. This code compiles, runs, and prints:"
-msgstr ""
+msgstr "Como podemos ter várias referências imutáveis a `list` ao mesmo tempo, `list` continua acessível no código antes da definição do closure, depois da definição do closure mas antes de ele ser chamado e depois de ele ser chamado. Este código compila, executa e imprime:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13318,15 +13318,15 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Next, in Listing 13-5, we change the closure body so that it adds an element to the `list` vector. The closure now captures a mutable reference."
-msgstr ""
+msgstr "Em seguida, na Listagem 13-5, alteramos o corpo do closure para que ele adicione um elemento ao vetor `list`. Agora, o closure captura uma referência mutável."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-5\" file-name=\"src/main.rs\" caption=\"Defining and calling a closure that captures a mutable reference\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-5\" file-name=\"src/main.rs\" caption=\"Definindo e chamando um closure que captura uma referência mutável\">\n"
 
 #: src/ch13-01-closures.md
 msgid "This code compiles, runs, and prints:"
-msgstr ""
+msgstr "Este código compila, executa e imprime:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13342,19 +13342,19 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Note that there’s no longer a `println!` between the definition and the call of the `borrows_mutably` closure: When `borrows_mutably` is defined, it captures a mutable reference to `list`. We don’t use the closure again after the closure is called, so the mutable borrow ends. Between the closure definition and the closure call, an immutable borrow to print isn’t allowed, because no other borrows are allowed when there’s a mutable borrow. Try adding a `println!` there to see what error message you get!"
-msgstr ""
+msgstr "Observe que não há mais um `println!` entre a definição e a chamada do closure `borrows_mutably`: quando `borrows_mutably` é definido, ele captura uma referência mutável a `list`. Não usamos mais o closure depois que ele é chamado, então o empréstimo mutável termina. Entre a definição do closure e a chamada, um empréstimo imutável para imprimir não é permitido, porque nenhum outro empréstimo é permitido quando há um empréstimo mutável. Tente adicionar um `println!` ali para ver que mensagem de erro você recebe!"
 
 #: src/ch13-01-closures.md
 msgid "If you want to force the closure to take ownership of the values it uses in the environment even though the body of the closure doesn’t strictly need ownership, you can use the `move` keyword before the parameter list."
-msgstr ""
+msgstr "Se você quiser forçar o closure a assumir o ownership dos valores que ele usa do ambiente, mesmo que o corpo do closure não precise estritamente do ownership, você pode usar a palavra-chave `move` antes da lista de parâmetros."
 
 #: src/ch13-01-closures.md
 msgid "This technique is mostly useful when passing a closure to a new thread to move the data so that it’s owned by the new thread. We’ll discuss threads and why you would want to use them in detail in Chapter 16 when we talk about concurrency, but for now, let’s briefly explore spawning a new thread using a closure that needs the `move` keyword. Listing 13-6 shows Listing 13-4 modified to print the vector in a new thread rather than in the main thread."
-msgstr ""
+msgstr "Essa técnica é útil principalmente quando passamos um closure para uma nova thread, para mover os dados de modo que a nova thread passe a ser a dona deles. Vamos discutir threads e por que você gostaria de usá-las em detalhes no Capítulo 16, quando falarmos sobre concorrência, mas, por enquanto, vamos explorar brevemente como criar uma nova thread usando um closure que precisa da palavra-chave `move`. A Listagem 13-6 mostra a Listagem 13-4 modificada para imprimir o vetor em uma nova thread, em vez de na thread principal."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-6\" file-name=\"src/main.rs\" caption=\"Using `move` to force the closure for the thread to take ownership of `list`\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-6\" file-name=\"src/main.rs\" caption=\"Usando `move` para forçar o closure da thread a assumir o ownership de `list`\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"From thread: {list:?}\""
@@ -13362,7 +13362,7 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "We spawn a new thread, giving the thread a closure to run as an argument. The closure body prints out the list. In Listing 13-4, the closure only captured `list` using an immutable reference because that's the least amount of access to `list` needed to print it. In this example, even though the closure body still only needs an immutable reference, we need to specify that `list` should be moved into the closure by putting the `move` keyword at the beginning of the closure definition. If the main thread performed more operations before calling `join` on the new thread, the new thread might finish before the rest of the main thread finishes, or the main thread might finish first. If the main thread maintained ownership of `list` but ended before the new thread and drops `list`, the immutable reference in the thread would be invalid. Therefore, the compiler requires that `list` be moved into the closure given to the new thread so that the reference will be valid. Try removing the `move` keyword or using `list` in the main thread after the closure is defined to see what compiler errors you get!"
-msgstr ""
+msgstr "Criamos uma nova thread e damos a ela um closure para executar como argumento. O corpo do closure imprime a lista. Na Listagem 13-4, o closure capturava `list` apenas usando uma referência imutável, porque esse é o menor acesso a `list` necessário para imprimi-la. Neste exemplo, mesmo que o corpo do closure ainda precise apenas de uma referência imutável, precisamos especificar que `list` deve ser movido para dentro do closure, colocando a palavra-chave `move` no início da definição do closure. Se a thread principal realizasse mais operações antes de chamar `join` na nova thread, a nova thread poderia terminar antes do restante da thread principal, ou a thread principal poderia terminar primeiro. Se a thread principal mantivesse o ownership de `list`, mas terminasse antes da nova thread e descartasse `list`, a referência imutável na thread ficaria inválida. Por isso, o compilador exige que `list` seja movido para o closure dado à nova thread, para que a referência seja válida. Tente remover a palavra-chave `move` ou usar `list` na thread principal depois que o closure for definido, para ver quais erros de compilação você recebe!"
 
 #: src/ch13-01-closures.md
 msgid "<a id=\"storing-closures-using-generic-parameters-and-the-fn-traits\"></a> <a id=\"limitations-of-the-cacher-implementation\"></a> <a id=\"moving-captured-values-out-of-the-closure-and-the-fn-traits\"></a> <a id=\"moving-captured-values-out-of-closures-and-the-fn-traits\"></a>"
@@ -13370,59 +13370,59 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "Moving Captured Values Out of Closures"
-msgstr ""
+msgstr "Movendo valores capturados para fora de closures {#moving-captured-values-out-of-closures}"
 
 #: src/ch13-01-closures.md
 msgid "Once a closure has captured a reference or captured ownership of a value from the environment where the closure is defined (thus affecting what, if anything, is moved _into_ the closure), the code in the body of the closure defines what happens to the references or values when the closure is evaluated later (thus affecting what, if anything, is moved _out of_ the closure)."
-msgstr ""
+msgstr "Depois que um closure tiver capturado uma referência ou o ownership de um valor do ambiente em que o closure é definido (afetando, assim, o que, se houver algo, é movido _para dentro_ do closure), o código no corpo do closure define o que acontece com as referências ou os valores quando o closure for avaliado mais tarde (afetando, assim, o que, se houver algo, é movido _para fora_ do closure)."
 
 #: src/ch13-01-closures.md
 msgid "A closure body can do any of the following: Move a captured value out of the closure, mutate the captured value, neither move nor mutate the value, or capture nothing from the environment to begin with."
-msgstr ""
+msgstr "O corpo de um closure pode fazer qualquer uma das seguintes coisas: mover um valor capturado para fora do closure, alterar o valor capturado, não mover nem alterar o valor, ou não capturar nada do ambiente desde o início."
 
 #: src/ch13-01-closures.md
 msgid "The way a closure captures and handles values from the environment affects which traits the closure implements, and traits are how functions and structs can specify what kinds of closures they can use. Closures will automatically implement one, two, or all three of these `Fn` traits, in an additive fashion, depending on how the closure’s body handles the values:"
-msgstr ""
+msgstr "A maneira como um closure captura e trata valores do ambiente afeta quais traits o closure implementa, e os traits são a forma como funções e structs podem especificar quais tipos de closures podem usar. Os closures vão implementar automaticamente um, dois ou os três desses traits `Fn`, de forma cumulativa, dependendo de como o corpo do closure trata os valores:"
 
 #: src/ch13-01-closures.md
 msgid "`FnOnce` applies to closures that can be called once. All closures implement at least this trait because all closures can be called. A closure that moves captured values out of its body will only implement `FnOnce` and none of the other `Fn` traits because it can only be called once."
-msgstr ""
+msgstr "`FnOnce` se aplica a closures que podem ser chamados uma vez. Todos os closures implementam pelo menos esse trait, porque todos podem ser chamados. Um closure que move valores capturados para fora do seu corpo vai implementar apenas `FnOnce` e nenhum dos outros traits `Fn`, porque só pode ser chamado uma vez."
 
 #: src/ch13-01-closures.md
 msgid "`FnMut` applies to closures that don’t move captured values out of their body but might mutate the captured values. These closures can be called more than once."
-msgstr ""
+msgstr "`FnMut` se aplica a closures que não movem valores capturados para fora do seu corpo, mas podem alterar os valores capturados. Esses closures podem ser chamados mais de uma vez."
 
 #: src/ch13-01-closures.md
 msgid "`Fn` applies to closures that don’t move captured values out of their body and don’t mutate captured values, as well as closures that capture nothing from their environment. These closures can be called more than once without mutating their environment, which is important in cases such as calling a closure multiple times concurrently."
-msgstr ""
+msgstr "`Fn` se aplica a closures que não movem valores capturados para fora do seu corpo e não alteram valores capturados, além de closures que não capturam nada do seu ambiente. Esses closures podem ser chamados mais de uma vez sem alterar o próprio ambiente, o que é importante em casos como chamar um closure várias vezes de forma concorrente."
 
 #: src/ch13-01-closures.md
 msgid "Let’s look at the definition of the `unwrap_or_else` method on `Option<T>` that we used in Listing 13-1:"
-msgstr ""
+msgstr "Vamos ver a definição do método `unwrap_or_else` em `Option<T>` que usamos na Listagem 13-1:"
 
 #: src/ch13-01-closures.md
 msgid "Recall that `T` is the generic type representing the type of the value in the `Some` variant of an `Option`. That type `T` is also the return type of the `unwrap_or_else` function: Code that calls `unwrap_or_else` on an `Option<String>`, for example, will get a `String`."
-msgstr ""
+msgstr "Lembre-se de que `T` é o tipo genérico que representa o tipo do valor na variante `Some` de um `Option`. Esse tipo `T` também é o tipo de retorno da função `unwrap_or_else`: o código que chama `unwrap_or_else` em um `Option<String>`, por exemplo, vai receber uma `String`."
 
 #: src/ch13-01-closures.md
 msgid "Next, notice that the `unwrap_or_else` function has the additional generic type parameter `F`. The `F` type is the type of the parameter named `f`, which is the closure we provide when calling `unwrap_or_else`."
-msgstr ""
+msgstr "Em seguida, observe que a função `unwrap_or_else` tem o parâmetro de tipo genérico adicional `F`. O tipo `F` é o tipo do parâmetro chamado `f`, que é o closure que fornecemos ao chamar `unwrap_or_else`."
 
 #: src/ch13-01-closures.md
 msgid "The trait bound specified on the generic type `F` is `FnOnce() -> T`, which means `F` must be able to be called once, take no arguments, and return a `T`. Using `FnOnce` in the trait bound expresses the constraint that `unwrap_or_else` will not call `f` more than once. In the body of `unwrap_or_else`, we can see that if the `Option` is `Some`, `f` won’t be called. If the `Option` is `None`, `f` will be called once. Because all closures implement `FnOnce`, `unwrap_or_else` accepts all three kinds of closures and is as flexible as it can be."
-msgstr ""
+msgstr "O limite de trait especificado no tipo genérico `F` é `FnOnce() -> T`, o que significa que `F` precisa poder ser chamado uma vez, não receber argumentos e retornar um `T`. Usar `FnOnce` no limite de trait expressa a restrição de que `unwrap_or_else` não vai chamar `f` mais de uma vez. No corpo de `unwrap_or_else`, podemos ver que, se o `Option` for `Some`, `f` não será chamado. Se o `Option` for `None`, `f` será chamado uma vez. Como todos os closures implementam `FnOnce`, `unwrap_or_else` aceita os três tipos de closures e é tão flexível quanto possível."
 
 #: src/ch13-01-closures.md
 msgid "Note: If what we want to do doesn’t require capturing a value from the environment, we can use the name of a function rather than a closure where we need something that implements one of the `Fn` traits. For example, on an `Option<Vec<T>>` value, we could call `unwrap_or_else(Vec::new)` to get a new, empty vector if the value is `None`. The compiler automatically implements whichever of the `Fn` traits is applicable for a function definition."
-msgstr ""
+msgstr "Nota: se o que queremos fazer não exige capturar um valor do ambiente, podemos usar o nome de uma função em vez de um closure onde precisarmos de algo que implemente um dos traits `Fn`. Por exemplo, em um valor `Option<Vec<T>>`, podemos chamar `unwrap_or_else(Vec::new)` para obter um vetor novo e vazio caso o valor seja `None`. O compilador implementa automaticamente o trait `Fn` que for aplicável a uma definição de função."
 
 #: src/ch13-01-closures.md
 msgid "Now let’s look at the standard library method `sort_by_key`, defined on slices, to see how that differs from `unwrap_or_else` and why `sort_by_key` uses `FnMut` instead of `FnOnce` for the trait bound. The closure gets one argument in the form of a reference to the current item in the slice being considered, and it returns a value of type `K` that can be ordered. This function is useful when you want to sort a slice by a particular attribute of each item. In Listing 13-7, we have a list of `Rectangle` instances, and we use `sort_by_key` to order them by their `width` attribute from low to high."
-msgstr ""
+msgstr "Agora vamos ver o método `sort_by_key`, da biblioteca padrão, definido em slices, para entender como ele difere de `unwrap_or_else` e por que `sort_by_key` usa `FnMut` em vez de `FnOnce` no limite de trait. O closure recebe um argumento na forma de uma referência ao item atual da slice que está sendo considerada, e retorna um valor do tipo `K` que pode ser ordenado. Esta função é útil quando você quer ordenar uma slice por um atributo específico de cada item. Na Listagem 13-7, temos uma lista de instâncias de `Rectangle`, e usamos `sort_by_key` para ordená-las pelo atributo `width`, do menor para o maior."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-7\" file-name=\"src/main.rs\" caption=\"Using `sort_by_key` to order rectangles by width\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-7\" file-name=\"src/main.rs\" caption=\"Usando `sort_by_key` para ordenar retângulos por largura\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"{list:#?}\""
@@ -13430,7 +13430,7 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "This code prints:"
-msgstr ""
+msgstr "Este código imprime:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13458,15 +13458,15 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "The reason `sort_by_key` is defined to take an `FnMut` closure is that it calls the closure multiple times: once for each item in the slice. The closure `|r| r.width` doesn’t capture, mutate, or move anything out from its environment, so it meets the trait bound requirements."
-msgstr ""
+msgstr "O motivo de `sort_by_key` ser definido para receber um closure `FnMut` é que ele chama o closure várias vezes: uma vez para cada item da slice. O closure `|r| r.width` não captura, não altera nem move nada do seu ambiente, então atende aos requisitos do limite de trait."
 
 #: src/ch13-01-closures.md
 msgid "In contrast, Listing 13-8 shows an example of a closure that implements just the `FnOnce` trait, because it moves a value out of the environment. The compiler won’t let us use this closure with `sort_by_key`."
-msgstr ""
+msgstr "Em contraste, a Listagem 13-8 mostra um exemplo de closure que implementa apenas o trait `FnOnce`, porque move um valor para fora do ambiente. O compilador não nos deixa usar esse closure com `sort_by_key`."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-8\" file-name=\"src/main.rs\" caption=\"Attempting to use an `FnOnce` closure with `sort_by_key`\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-8\" file-name=\"src/main.rs\" caption=\"Tentando usar um closure `FnOnce` com `sort_by_key`\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"closure called\""
@@ -13474,7 +13474,7 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "This is a contrived, convoluted way (that doesn’t work) to try to count the number of times `sort_by_key` calls the closure when sorting `list`. This code attempts to do this counting by pushing `value`—a `String` from the closure’s environment—into the `sort_operations` vector. The closure captures `value` and then moves `value` out of the closure by transferring ownership of `value` to the `sort_operations` vector. This closure can be called once; trying to call it a second time wouldn’t work, because `value` would no longer be in the environment to be pushed into `sort_operations` again! Therefore, this closure only implements `FnOnce`. When we try to compile this code, we get this error that `value` can’t be moved out of the closure because the closure must implement `FnMut`:"
-msgstr ""
+msgstr "Esta é uma forma artificial e rebuscada (que não funciona) de tentar contar quantas vezes `sort_by_key` chama o closure ao ordenar `list`. Este código tenta fazer essa contagem adicionando `value` — uma `String` do ambiente do closure — ao vetor `sort_operations`. O closure captura `value` e, em seguida, move `value` para fora do closure, transferindo o ownership de `value` para o vetor `sort_operations`. Esse closure só pode ser chamado uma vez; tentar chamá-lo uma segunda vez não funcionaria, porque `value` não estaria mais no ambiente para ser adicionado a `sort_operations` novamente! Por isso, este closure implementa apenas `FnOnce`. Quando tentamos compilar este código, recebemos um erro dizendo que `value` não pode ser movido para fora do closure porque o closure precisa implementar `FnMut`:"
 
 #: src/ch13-01-closures.md
 msgid ""
@@ -13508,11 +13508,11 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "The error points to the line in the closure body that moves `value` out of the environment. To fix this, we need to change the closure body so that it doesn’t move values out of the environment. Keeping a counter in the environment and incrementing its value in the closure body is a more straightforward way to count the number of times the closure is called. The closure in Listing 13-9 works with `sort_by_key` because it is only capturing a mutable reference to the `num_sort_operations` counter and can therefore be called more than once."
-msgstr ""
+msgstr "O erro aponta para a linha no corpo do closure que move `value` para fora do ambiente. Para corrigir isso, precisamos alterar o corpo do closure para que ele não mova valores para fora do ambiente. Manter um contador no ambiente e incrementar o valor dele no corpo do closure é uma forma mais direta de contar quantas vezes o closure é chamado. O closure da Listagem 13-9 funciona com `sort_by_key` porque ele captura apenas uma referência mutável ao contador `num_sort_operations` e, por isso, pode ser chamado mais de uma vez."
 
 #: src/ch13-01-closures.md
 msgid "<Listing number=\"13-9\" file-name=\"src/main.rs\" caption=\"Using an `FnMut` closure with `sort_by_key` is allowed.\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-9\" file-name=\"src/main.rs\" caption=\"Usar um closure `FnMut` com `sort_by_key` é permitido.\">\n"
 
 #: src/ch13-01-closures.md
 msgid "\"{list:#?}, sorted in {num_sort_operations} operations\""
@@ -13520,31 +13520,31 @@ msgstr ""
 
 #: src/ch13-01-closures.md
 msgid "The `Fn` traits are important when defining or using functions or types that make use of closures. In the next section, we’ll discuss iterators. Many iterator methods take closure arguments, so keep these closure details in mind as we continue!"
-msgstr ""
+msgstr "Os traits `Fn` são importantes ao definir ou usar funções ou tipos que fazem uso de closures. Na próxima seção, vamos falar sobre iteradores. Muitos métodos de iterador recebem closures como argumentos, então mantenha esses detalhes sobre closures em mente conforme avançamos!"
 
 #: src/ch13-02-iterators.md
 msgid "The iterator pattern allows you to perform some task on a sequence of items in turn. An iterator is responsible for the logic of iterating over each item and determining when the sequence has finished. When you use iterators, you don’t have to reimplement that logic yourself."
-msgstr ""
+msgstr "O padrão iterador permite que você execute uma tarefa sobre uma sequência de itens, um após o outro. Um iterador é responsável pela lógica de iterar sobre cada item e de determinar quando a sequência terminou. Quando você usa iteradores, não precisa reimplementar essa lógica por conta própria."
 
 #: src/ch13-02-iterators.md
 msgid "In Rust, iterators are _lazy_, meaning they have no effect until you call methods that consume the iterator to use it up. For example, the code in Listing 13-10 creates an iterator over the items in the vector `v1` by calling the `iter` method defined on `Vec<T>`. This code by itself doesn’t do anything useful."
-msgstr ""
+msgstr "No Rust, os iteradores são _preguiçosos_, o que significa que eles não têm efeito até que você chame métodos que consomem o iterador até esgotá-lo. Por exemplo, o código da Listagem 13-10 cria um iterador sobre os itens do vetor `v1` chamando o método `iter` definido em `Vec<T>`. Esse código, por si só, não faz nada útil."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-10\" file-name=\"src/main.rs\" caption=\"Creating an iterator\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-10\" file-name=\"src/main.rs\" caption=\"Criando um iterador\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "The iterator is stored in the `v1_iter` variable. Once we’ve created an iterator, we can use it in a variety of ways. In Listing 3-5, we iterated over an array using a `for` loop to execute some code on each of its items. Under the hood, this implicitly created and then consumed an iterator, but we glossed over how exactly that works until now."
-msgstr ""
+msgstr "O iterador é armazenado na variável `v1_iter`. Depois de criar um iterador, podemos usá-lo de várias formas. Na Listagem 3-5, percorremos um array com um loop `for` para executar algum código em cada um dos seus itens. Por baixo dos panos, isso criou e depois consumiu um iterador de forma implícita, mas passamos por cima de como exatamente isso funciona até agora."
 
 #: src/ch13-02-iterators.md
 msgid "In the example in Listing 13-11, we separate the creation of the iterator from the use of the iterator in the `for` loop. When the `for` loop is called using the iterator in `v1_iter`, each element in the iterator is used in one iteration of the loop, which prints out each value."
-msgstr ""
+msgstr "No exemplo da Listagem 13-11, separamos a criação do iterador do uso do iterador no loop `for`. Quando o loop `for` é executado usando o iterador em `v1_iter`, cada elemento do iterador é usado em uma iteração do loop, que imprime cada valor."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-11\" file-name=\"src/main.rs\" caption=\"Using an iterator in a `for` loop\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-11\" file-name=\"src/main.rs\" caption=\"Usando um iterador em um loop `for`\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "\"Got: {val}\""
@@ -13552,19 +13552,19 @@ msgstr ""
 
 #: src/ch13-02-iterators.md
 msgid "In languages that don’t have iterators provided by their standard libraries, you would likely write this same functionality by starting a variable at index 0, using that variable to index into the vector to get a value, and incrementing the variable value in a loop until it reached the total number of items in the vector."
-msgstr ""
+msgstr "Em linguagens que não têm iteradores fornecidos por suas bibliotecas padrão, você provavelmente escreveria essa mesma funcionalidade começando uma variável no índice 0, usando essa variável para indexar o vetor e obter um valor, e incrementando o valor da variável em um loop até que ele alcançasse o número total de itens do vetor."
 
 #: src/ch13-02-iterators.md
 msgid "Iterators handle all of that logic for you, cutting down on repetitive code you could potentially mess up. Iterators give you more flexibility to use the same logic with many different kinds of sequences, not just data structures you can index into, like vectors. Let’s examine how iterators do that."
-msgstr ""
+msgstr "Os iteradores cuidam de toda essa lógica para você, o que reduz o código repetitivo em que você poderia cometer erros. Os iteradores dão mais flexibilidade para usar a mesma lógica com muitos tipos diferentes de sequências, e não apenas com estruturas de dados que você pode indexar, como os vetores. Vamos examinar como os iteradores fazem isso."
 
 #: src/ch13-02-iterators.md
 msgid "The `Iterator` Trait and the `next` Method"
-msgstr ""
+msgstr "O trait `Iterator` e o método `next` {#the-iterator-trait-and-the-next-method}"
 
 #: src/ch13-02-iterators.md
 msgid "All iterators implement a trait named `Iterator` that is defined in the standard library. The definition of the trait looks like this:"
-msgstr ""
+msgstr "Todos os iteradores implementam um trait chamado `Iterator`, definido na biblioteca padrão. A definição do trait fica assim:"
 
 #: src/ch13-02-iterators.md
 msgid "// methods with default implementations elided\n"
@@ -13572,67 +13572,67 @@ msgstr ""
 
 #: src/ch13-02-iterators.md
 msgid "Notice that this definition uses some new syntax: `type Item` and `Self::Item`, which are defining an associated type with this trait. We’ll talk about associated types in depth in Chapter 20. For now, all you need to know is that this code says implementing the `Iterator` trait requires that you also define an `Item` type, and this `Item` type is used in the return type of the `next` method. In other words, the `Item` type will be the type returned from the iterator."
-msgstr ""
+msgstr "Observe que essa definição usa uma sintaxe nova: `type Item` e `Self::Item`, que definem um tipo associado a este trait. Vamos falar sobre tipos associados em detalhes no Capítulo 20. Por enquanto, tudo o que você precisa saber é que este código diz que implementar o trait `Iterator` exige que você também defina um tipo `Item`, e esse tipo `Item` é usado no tipo de retorno do método `next`. Em outras palavras, o tipo `Item` será o tipo retornado pelo iterador."
 
 #: src/ch13-02-iterators.md
 msgid "The `Iterator` trait only requires implementors to define one method: the `next` method, which returns one item of the iterator at a time, wrapped in `Some`, and, when iteration is over, returns `None`."
-msgstr ""
+msgstr "O trait `Iterator` exige apenas que os implementadores definam um método: o método `next`, que retorna um item do iterador de cada vez, envolvido em `Some`, e, quando a iteração termina, retorna `None`."
 
 #: src/ch13-02-iterators.md
 msgid "We can call the `next` method on iterators directly; Listing 13-12 demonstrates what values are returned from repeated calls to `next` on the iterator created from the vector."
-msgstr ""
+msgstr "Podemos chamar o método `next` diretamente nos iteradores; a Listagem 13-12 demonstra quais valores são retornados em chamadas repetidas a `next` no iterador criado a partir do vetor."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-12\" file-name=\"src/lib.rs\" caption=\"Calling the `next` method on an iterator\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-12\" file-name=\"src/lib.rs\" caption=\"Chamando o método `next` em um iterador\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "Note that we needed to make `v1_iter` mutable: Calling the `next` method on an iterator changes internal state that the iterator uses to keep track of where it is in the sequence. In other words, this code _consumes_, or uses up, the iterator. Each call to `next` eats up an item from the iterator. We didn’t need to make `v1_iter` mutable when we used a `for` loop, because the loop took ownership of `v1_iter` and made it mutable behind the scenes."
-msgstr ""
+msgstr "Observe que precisamos tornar `v1_iter` mutável: chamar o método `next` em um iterador altera o estado interno que o iterador usa para acompanhar em que posição está na sequência. Em outras palavras, esse código _consome_, ou esgota, o iterador. Cada chamada a `next` consome um item do iterador. Não precisamos tornar `v1_iter` mutável quando usamos um loop `for`, porque o loop assumiu o ownership de `v1_iter` e tornou esse iterador mutável nos bastidores."
 
 #: src/ch13-02-iterators.md
 msgid "Also note that the values we get from the calls to `next` are immutable references to the values in the vector. The `iter` method produces an iterator over immutable references. If we want to create an iterator that takes ownership of `v1` and returns owned values, we can call `into_iter` instead of `iter`. Similarly, if we want to iterate over mutable references, we can call `iter_mut` instead of `iter`."
-msgstr ""
+msgstr "Observe também que os valores que obtemos das chamadas a `next` são referências imutáveis aos valores do vetor. O método `iter` produz um iterador sobre referências imutáveis. Se quisermos criar um iterador que assuma o ownership de `v1` e retorne valores com ownership, podemos chamar `into_iter` em vez de `iter`. Da mesma forma, se quisermos iterar sobre referências mutáveis, podemos chamar `iter_mut` em vez de `iter`."
 
 #: src/ch13-02-iterators.md
 msgid "Methods That Consume the Iterator"
-msgstr ""
+msgstr "Métodos que consomem o iterador {#methods-that-consume-the-iterator}"
 
 #: src/ch13-02-iterators.md
 msgid "The `Iterator` trait has a number of different methods with default implementations provided by the standard library; you can find out about these methods by looking in the standard library API documentation for the `Iterator` trait. Some of these methods call the `next` method in their definition, which is why you’re required to implement the `next` method when implementing the `Iterator` trait."
-msgstr ""
+msgstr "O trait `Iterator` tem uma série de métodos diferentes com implementações padrão fornecidas pela biblioteca padrão; você pode descobrir mais sobre esses métodos consultando a documentação da API da biblioteca padrão para o trait `Iterator`. Alguns desses métodos chamam o método `next` na definição deles, e é por isso que você precisa implementar o método `next` ao implementar o trait `Iterator`."
 
 #: src/ch13-02-iterators.md
 msgid "Methods that call `next` are called _consuming adapters_ because calling them uses up the iterator. One example is the `sum` method, which takes ownership of the iterator and iterates through the items by repeatedly calling `next`, thus consuming the iterator. As it iterates through, it adds each item to a running total and returns the total when iteration is complete. Listing 13-13 has a test illustrating a use of the `sum` method."
-msgstr ""
+msgstr "Os métodos que chamam `next` são chamados de _adaptadores consumidores_, porque chamá-los esgota o iterador. Um exemplo é o método `sum`, que assume o ownership do iterador e percorre os itens chamando `next` repetidamente, consumindo assim o iterador. Enquanto percorre, ele soma cada item a um total acumulado e retorna o total quando a iteração termina. A Listagem 13-13 tem um teste que ilustra um uso do método `sum`."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-13\" file-name=\"src/lib.rs\" caption=\"Calling the `sum` method to get the total of all items in the iterator\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-13\" file-name=\"src/lib.rs\" caption=\"Chamando o método `sum` para obter o total de todos os itens do iterador\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "We aren’t allowed to use `v1_iter` after the call to `sum`, because `sum` takes ownership of the iterator we call it on."
-msgstr ""
+msgstr "Não podemos usar `v1_iter` depois da chamada a `sum`, porque `sum` assume o ownership do iterador no qual o chamamos."
 
 #: src/ch13-02-iterators.md
 msgid "Methods That Produce Other Iterators"
-msgstr ""
+msgstr "Métodos que produzem outros iteradores {#methods-that-produce-other-iterators}"
 
 #: src/ch13-02-iterators.md
 msgid "_Iterator adapters_ are methods defined on the `Iterator` trait that don’t consume the iterator. Instead, they produce different iterators by changing some aspect of the original iterator."
-msgstr ""
+msgstr "_Adaptadores de iterador_ são métodos definidos no trait `Iterator` que não consomem o iterador. Em vez disso, eles produzem iteradores diferentes ao alterar algum aspecto do iterador original."
 
 #: src/ch13-02-iterators.md
 msgid "Listing 13-14 shows an example of calling the iterator adapter method `map`, which takes a closure to call on each item as the items are iterated through. The `map` method returns a new iterator that produces the modified items. The closure here creates a new iterator in which each item from the vector will be incremented by 1."
-msgstr ""
+msgstr "A Listagem 13-14 mostra um exemplo de chamada ao método adaptador de iterador `map`, que recebe um closure para chamar em cada item conforme os itens são percorridos. O método `map` retorna um novo iterador que produz os itens modificados. O closure aqui cria um novo iterador no qual cada item do vetor será incrementado em 1."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-14\" file-name=\"src/main.rs\" caption=\"Calling the iterator adapter `map` to create a new iterator\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-14\" file-name=\"src/main.rs\" caption=\"Chamando o adaptador de iterador `map` para criar um novo iterador\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "However, this code produces a warning:"
-msgstr ""
+msgstr "No entanto, este código produz um aviso:"
 
 #: src/ch13-02-iterators.md
 msgid ""
@@ -13660,27 +13660,27 @@ msgstr ""
 
 #: src/ch13-02-iterators.md
 msgid "The code in Listing 13-14 doesn’t do anything; the closure we’ve specified never gets called. The warning reminds us why: Iterator adapters are lazy, and we need to consume the iterator here."
-msgstr ""
+msgstr "O código da Listagem 13-14 não faz nada; o closure que especificamos nunca é chamado. O aviso nos lembra o motivo: adaptadores de iterador são preguiçosos, e precisamos consumir o iterador aqui."
 
 #: src/ch13-02-iterators.md
 msgid "To fix this warning and consume the iterator, we’ll use the `collect` method, which we used with `env::args` in Listing 12-1. This method consumes the iterator and collects the resultant values into a collection data type."
-msgstr ""
+msgstr "Para corrigir esse aviso e consumir o iterador, vamos usar o método `collect`, que usamos com `env::args` na Listagem 12-1. Esse método consome o iterador e coleta os valores resultantes em um tipo de coleção."
 
 #: src/ch13-02-iterators.md
 msgid "In Listing 13-15, we collect the results of iterating over the iterator that’s returned from the call to `map` into a vector. This vector will end up containing each item from the original vector, incremented by 1."
-msgstr ""
+msgstr "Na Listagem 13-15, coletamos os resultados da iteração sobre o iterador retornado pela chamada a `map` em um vetor. Esse vetor vai acabar contendo cada item do vetor original, incrementado em 1."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-15\" file-name=\"src/main.rs\" caption=\"Calling the `map` method to create a new iterator, and then calling the `collect` method to consume the new iterator and create a vector\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-15\" file-name=\"src/main.rs\" caption=\"Chamando o método `map` para criar um novo iterador e, em seguida, chamando o método `collect` para consumir o novo iterador e criar um vetor\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "Because `map` takes a closure, we can specify any operation we want to perform on each item. This is a great example of how closures let you customize some behavior while reusing the iteration behavior that the `Iterator` trait provides."
-msgstr ""
+msgstr "Como `map` recebe um closure, podemos especificar qualquer operação que queremos realizar em cada item. Este é um ótimo exemplo de como os closures permitem que você personalize algum comportamento enquanto reutiliza o comportamento de iteração fornecido pelo trait `Iterator`."
 
 #: src/ch13-02-iterators.md
 msgid "You can chain multiple calls to iterator adapters to perform complex actions in a readable way. But because all iterators are lazy, you have to call one of the consuming adapter methods to get results from calls to iterator adapters."
-msgstr ""
+msgstr "Você pode encadear várias chamadas a adaptadores de iterador para realizar ações complexas de forma legível. Mas, como todos os iteradores são preguiçosos, você precisa chamar um dos métodos adaptadores consumidores para obter resultados das chamadas aos adaptadores de iterador."
 
 #: src/ch13-02-iterators.md
 msgid "<a id=\"using-closures-that-capture-their-environment\"></a>"
@@ -13688,23 +13688,23 @@ msgstr ""
 
 #: src/ch13-02-iterators.md
 msgid "Closures That Capture Their Environment"
-msgstr ""
+msgstr "Closures que capturam o próprio ambiente {#closures-that-capture-their-environment}"
 
 #: src/ch13-02-iterators.md
 msgid "Many iterator adapters take closures as arguments, and commonly the closures we’ll specify as arguments to iterator adapters will be closures that capture their environment."
-msgstr ""
+msgstr "Muitos adaptadores de iterador recebem closures como argumentos e, normalmente, os closures que vamos especificar como argumentos para adaptadores de iterador serão closures que capturam o próprio ambiente."
 
 #: src/ch13-02-iterators.md
 msgid "For this example, we’ll use the `filter` method that takes a closure. The closure gets an item from the iterator and returns a `bool`. If the closure returns `true`, the value will be included in the iterator produced by `filter`. If the closure returns `false`, the value won’t be included."
-msgstr ""
+msgstr "Para este exemplo, vamos usar o método `filter`, que recebe um closure. O closure recebe um item do iterador e retorna um `bool`. Se o closure retornar `true`, o valor será incluído no iterador produzido por `filter`. Se o closure retornar `false`, o valor não será incluído."
 
 #: src/ch13-02-iterators.md
 msgid "In Listing 13-16, we use `filter` with a closure that captures the `shoe_size` variable from its environment to iterate over a collection of `Shoe` struct instances. It will return only shoes that are the specified size."
-msgstr ""
+msgstr "Na Listagem 13-16, usamos `filter` com um closure que captura a variável `shoe_size` do próprio ambiente para iterar sobre uma coleção de instâncias do struct `Shoe`. Ele vai retornar apenas os sapatos que têm o tamanho especificado."
 
 #: src/ch13-02-iterators.md
 msgid "<Listing number=\"13-16\" file-name=\"src/lib.rs\" caption=\"Using the `filter` method with a closure that captures `shoe_size`\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-16\" file-name=\"src/lib.rs\" caption=\"Usando o método `filter` com um closure que captura `shoe_size`\">\n"
 
 #: src/ch13-02-iterators.md
 msgid "\"sneaker\""
@@ -13720,91 +13720,91 @@ msgstr ""
 
 #: src/ch13-02-iterators.md
 msgid "The `shoes_in_size` function takes ownership of a vector of shoes and a shoe size as parameters. It returns a vector containing only shoes of the specified size."
-msgstr ""
+msgstr "A função `shoes_in_size` assume o ownership de um vetor de sapatos e de um tamanho de sapato como parâmetros. Ela retorna um vetor contendo apenas sapatos do tamanho especificado."
 
 #: src/ch13-02-iterators.md
 msgid "In the body of `shoes_in_size`, we call `into_iter` to create an iterator that takes ownership of the vector. Then, we call `filter` to adapt that iterator into a new iterator that only contains elements for which the closure returns `true`."
-msgstr ""
+msgstr "No corpo de `shoes_in_size`, chamamos `into_iter` para criar um iterador que assume o ownership do vetor. Em seguida, chamamos `filter` para adaptar esse iterador em um novo iterador que contém apenas os elementos para os quais o closure retorna `true`."
 
 #: src/ch13-02-iterators.md
 msgid "The closure captures the `shoe_size` parameter from the environment and compares the value with each shoe’s size, keeping only shoes of the size specified. Finally, calling `collect` gathers the values returned by the adapted iterator into a vector that’s returned by the function."
-msgstr ""
+msgstr "O closure captura o parâmetro `shoe_size` do ambiente e compara o valor com o tamanho de cada sapato, mantendo apenas os sapatos do tamanho especificado. Por fim, chamar `collect` reúne os valores retornados pelo iterador adaptado em um vetor, que é retornado pela função."
 
 #: src/ch13-02-iterators.md
 msgid "The test shows that when we call `shoes_in_size`, we get back only shoes that have the same size as the value we specified."
-msgstr ""
+msgstr "O teste mostra que, quando chamamos `shoes_in_size`, recebemos de volta apenas sapatos com o mesmo tamanho do valor que especificamos."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "With this new knowledge about iterators, we can improve the I/O project in Chapter 12 by using iterators to make places in the code clearer and more concise. Let’s look at how iterators can improve our implementation of the `Config::build` function and the `search` function."
-msgstr ""
+msgstr "Com esse novo conhecimento sobre iteradores, podemos melhorar o projeto de E/S do Capítulo 12, usando iteradores para tornar alguns trechos do código mais claros e concisos. Vamos ver como os iteradores podem melhorar nossa implementação da função `Config::build` e da função `search`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Removing a `clone` Using an Iterator"
-msgstr ""
+msgstr "Removendo um `clone` usando um iterador {#removing-a-clone-using-an-iterator}"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "In Listing 12-6, we added code that took a slice of `String` values and created an instance of the `Config` struct by indexing into the slice and cloning the values, allowing the `Config` struct to own those values. In Listing 13-17, we’ve reproduced the implementation of the `Config::build` function as it was in Listing 12-23."
-msgstr ""
+msgstr "Na Listagem 12-6, adicionamos código que recebia uma slice de valores `String` e criava uma instância do struct `Config` indexando a slice e clonando os valores, o que permitia que o struct `Config` fosse dono desses valores. Na Listagem 13-17, reproduzimos a implementação da função `Config::build` como ela estava na Listagem 12-23."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-17\" file-name=\"src/main.rs\" caption=\"Reproduction of the `Config::build` function from Listing 12-23\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-17\" file-name=\"src/main.rs\" caption=\"Reprodução da função `Config::build` da Listagem 12-23\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "At the time, we said not to worry about the inefficient `clone` calls because we would remove them in the future. Well, that time is now!"
-msgstr ""
+msgstr "Na época, dissemos para não nos preocuparmos com as chamadas ineficientes a `clone`, porque as removeríamos no futuro. Pois bem, esse momento chegou!"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "We needed `clone` here because we have a slice with `String` elements in the parameter `args`, but the `build` function doesn’t own `args`. To return ownership of a `Config` instance, we had to clone the values from the `query` and `file_path` fields of `Config` so that the `Config` instance can own its values."
-msgstr ""
+msgstr "Precisávamos de `clone` aqui porque temos uma slice com elementos `String` no parâmetro `args`, mas a função `build` não é dona de `args`. Para retornar o ownership de uma instância de `Config`, tivemos de clonar os valores dos campos `query` e `file_path` de `Config`, para que a instância de `Config` pudesse ser dona dos próprios valores."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "With our new knowledge about iterators, we can change the `build` function to take ownership of an iterator as its argument instead of borrowing a slice. We’ll use the iterator functionality instead of the code that checks the length of the slice and indexes into specific locations. This will clarify what the `Config::build` function is doing because the iterator will access the values."
-msgstr ""
+msgstr "Com nosso novo conhecimento sobre iteradores, podemos alterar a função `build` para que ela assuma o ownership de um iterador como argumento, em vez de pegar uma slice emprestada. Vamos usar a funcionalidade de iteradores em vez do código que verifica o tamanho da slice e indexa posições específicas. Isso vai deixar mais claro o que a função `Config::build` faz, porque o iterador vai acessar os valores."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Once `Config::build` takes ownership of the iterator and stops using indexing operations that borrow, we can move the `String` values from the iterator into `Config` rather than calling `clone` and making a new allocation."
-msgstr ""
+msgstr "Depois que `Config::build` assumir o ownership do iterador e deixar de usar operações de indexação que pegam emprestado, podemos mover os valores `String` do iterador para `Config`, em vez de chamar `clone` e fazer uma nova alocação."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Using the Returned Iterator Directly"
-msgstr ""
+msgstr "Usando diretamente o iterador retornado {#using-the-returned-iterator-directly}"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Open your I/O project’s _src/main.rs_ file, which should look like this:"
-msgstr ""
+msgstr "Abra o arquivo _src/main.rs_ do seu projeto de E/S, que deve ter esta aparência:"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "We’ll first change the start of the `main` function that we had in Listing 12-24 to the code in Listing 13-18, which this time uses an iterator. This won’t compile until we update `Config::build` as well."
-msgstr ""
+msgstr "Primeiro, vamos alterar o início da função `main` que tínhamos na Listagem 12-24 para o código da Listagem 13-18, que desta vez usa um iterador. Isso não vai compilar até atualizarmos também `Config::build`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-18\" file-name=\"src/main.rs\" caption=\"Passing the return value of `env::args` to `Config::build`\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-18\" file-name=\"src/main.rs\" caption=\"Passando o valor de retorno de `env::args` para `Config::build`\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "The `env::args` function returns an iterator! Rather than collecting the iterator values into a vector and then passing a slice to `Config::build`, now we’re passing ownership of the iterator returned from `env::args` to `Config::build` directly."
-msgstr ""
+msgstr "A função `env::args` retorna um iterador! Em vez de coletar os valores do iterador em um vetor e depois passar uma slice para `Config::build`, agora estamos passando o ownership do iterador retornado por `env::args` diretamente para `Config::build`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Next, we need to update the definition of `Config::build`. Let’s change the signature of `Config::build` to look like Listing 13-19. This still won’t compile, because we need to update the function body."
-msgstr ""
+msgstr "Em seguida, precisamos atualizar a definição de `Config::build`. Vamos mudar a assinatura de `Config::build` para ficar como a Listagem 13-19. Isso ainda não vai compilar, porque precisamos atualizar o corpo da função."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-19\" file-name=\"src/main.rs\" caption=\"Updating the signature of `Config::build` to expect an iterator\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-19\" file-name=\"src/main.rs\" caption=\"Atualizando a assinatura de `Config::build` para esperar um iterador\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "The standard library documentation for the `env::args` function shows that the type of the iterator it returns is `std::env::Args`, and that type implements the `Iterator` trait and returns `String` values."
-msgstr ""
+msgstr "A documentação da biblioteca padrão para a função `env::args` mostra que o tipo do iterador que ela retorna é `std::env::Args`, e que esse tipo implementa o trait `Iterator` e retorna valores `String`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "We’ve updated the signature of the `Config::build` function so that the parameter `args` has a generic type with the trait bounds `impl Iterator<Item = String>` instead of `&[String]`. This usage of the `impl Trait` syntax we discussed in the [“Using Traits as Parameters”](ch10-02-traits.html#traits-as-parameters)<!-- ignore --> section of Chapter 10 means that `args` can be any type that implements the `Iterator` trait and returns `String` items."
-msgstr ""
+msgstr "Atualizamos a assinatura da função `Config::build` para que o parâmetro `args` tenha um tipo genérico com os limites de trait `impl Iterator<Item = String>`, em vez de `&[String]`. Esse uso da sintaxe `impl Trait`, que discutimos na seção [“Usando traits como parâmetros”](ch10-02-traits.html#traits-as-parameters)<!-- ignore --> do Capítulo 10, significa que `args` pode ser qualquer tipo que implemente o trait `Iterator` e retorne itens `String`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Because we’re taking ownership of `args` and we’ll be mutating `args` by iterating over it, we can add the `mut` keyword into the specification of the `args` parameter to make it mutable."
-msgstr ""
+msgstr "Como estamos assumindo o ownership de `args` e vamos alterar `args` ao iterar sobre ele, podemos adicionar a palavra-chave `mut` na especificação do parâmetro `args` para torná-lo mutável."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<a id=\"using-iterator-trait-methods-instead-of-indexing\"></a>"
@@ -13812,15 +13812,15 @@ msgstr ""
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Using `Iterator` Trait Methods"
-msgstr ""
+msgstr "Usando métodos do trait `Iterator` {#using-iterator-trait-methods}"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Next, we’ll fix the body of `Config::build`. Because `args` implements the `Iterator` trait, we know we can call the `next` method on it! Listing 13-20 updates the code from Listing 12-23 to use the `next` method."
-msgstr ""
+msgstr "Em seguida, vamos corrigir o corpo de `Config::build`. Como `args` implementa o trait `Iterator`, sabemos que podemos chamar o método `next` nele! A Listagem 13-20 atualiza o código da Listagem 12-23 para usar o método `next`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-20\" file-name=\"src/main.rs\" caption=\"Changing the body of `Config::build` to use iterator methods\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-20\" file-name=\"src/main.rs\" caption=\"Alterando o corpo de `Config::build` para usar métodos de iterador\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "\"Didn't get a query string\""
@@ -13832,7 +13832,7 @@ msgstr ""
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Remember that the first value in the return value of `env::args` is the name of the program. We want to ignore that and get to the next value, so first we call `next` and do nothing with the return value. Then, we call `next` to get the value we want to put in the `query` field of `Config`. If `next` returns `Some`, we use a `match` to extract the value. If it returns `None`, it means not enough arguments were given, and we return early with an `Err` value. We do the same thing for the `file_path` value."
-msgstr ""
+msgstr "Lembre-se de que o primeiro valor retornado por `env::args` é o nome do programa. Queremos ignorar esse valor e avançar para o próximo, então primeiro chamamos `next` e não fazemos nada com o valor de retorno. Em seguida, chamamos `next` para obter o valor que queremos colocar no campo `query` de `Config`. Se `next` retornar `Some`, usamos um `match` para extrair o valor. Se ele retornar `None`, isso significa que não foram fornecidos argumentos suficientes, e retornamos antecipadamente com um valor `Err`. Fazemos o mesmo para o valor `file_path`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<a id=\"making-code-clearer-with-iterator-adapters\"></a>"
@@ -13840,31 +13840,31 @@ msgstr ""
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Clarifying Code with Iterator Adapters"
-msgstr ""
+msgstr "Esclarecendo o código com adaptadores de iterador {#clarifying-code-with-iterator-adapters}"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "We can also take advantage of iterators in the `search` function in our I/O project, which is reproduced here in Listing 13-21 as it was in Listing 12-19."
-msgstr ""
+msgstr "Também podemos aproveitar os iteradores na função `search` do nosso projeto de E/S, que é reproduzida aqui na Listagem 13-21 como estava na Listagem 12-19."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-21\" file-name=\"src/lib.rs\" caption=\"The implementation of the `search` function from Listing 12-19\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-21\" file-name=\"src/lib.rs\" caption=\"A implementação da função `search` da Listagem 12-19\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "We can write this code in a more concise way using iterator adapter methods. Doing so also lets us avoid having a mutable intermediate `results` vector. The functional programming style prefers to minimize the amount of mutable state to make code clearer. Removing the mutable state might enable a future enhancement to make searching happen in parallel because we wouldn’t have to manage concurrent access to the `results` vector. Listing 13-22 shows this change."
-msgstr ""
+msgstr "Podemos escrever este código de forma mais concisa usando métodos adaptadores de iterador. Fazer isso também nos permite evitar um vetor intermediário mutável `results`. O estilo de programação funcional prefere minimizar a quantidade de estado mutável para tornar o código mais claro. Remover o estado mutável pode possibilitar uma melhoria futura para fazer a busca acontecer em paralelo, porque não precisaríamos gerenciar o acesso concorrente ao vetor `results`. A Listagem 13-22 mostra essa mudança."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<Listing number=\"13-22\" file-name=\"src/lib.rs\" caption=\"Using iterator adapter methods in the implementation of the `search` function\">\n"
-msgstr ""
+msgstr "<Listing number=\"13-22\" file-name=\"src/lib.rs\" caption=\"Usando métodos adaptadores de iterador na implementação da função `search`\">\n"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Recall that the purpose of the `search` function is to return all lines in `contents` that contain the `query`. Similar to the `filter` example in Listing 13-16, this code uses the `filter` adapter to keep only the lines for which `line.contains(query)` returns `true`. We then collect the matching lines into another vector with `collect`. Much simpler! Feel free to make the same change to use iterator methods in the `search_case_insensitive` function as well."
-msgstr ""
+msgstr "Lembre-se de que a finalidade da função `search` é retornar todas as linhas de `contents` que contêm `query`. De forma semelhante ao exemplo de `filter` da Listagem 13-16, este código usa o adaptador `filter` para manter apenas as linhas para as quais `line.contains(query)` retorna `true`. Em seguida, coletamos as linhas correspondentes em outro vetor com `collect`. Muito mais simples! Fique à vontade para fazer a mesma mudança e usar métodos de iterador também na função `search_case_insensitive`."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "For a further improvement, return an iterator from the `search` function by removing the call to `collect` and changing the return type to `impl Iterator<Item = &'a str>` so that the function becomes an iterator adapter. Note that you’ll also need to update the tests! Search through a large file using your `minigrep` tool before and after making this change to observe the difference in behavior. Before this change, the program won’t print any results until it has collected all of the results, but after the change, the results will be printed as each matching line is found because the `for` loop in the `run` function is able to take advantage of the laziness of the iterator."
-msgstr ""
+msgstr "Como uma melhoria adicional, retorne um iterador a partir da função `search`, removendo a chamada a `collect` e alterando o tipo de retorno para `impl Iterator<Item = &'a str>`, de modo que a função se torne um adaptador de iterador. Observe que você também vai precisar atualizar os testes! Pesquise em um arquivo grande usando sua ferramenta `minigrep` antes e depois dessa mudança para observar a diferença de comportamento. Antes dessa mudança, o programa não imprime nenhum resultado até ter coletado todos os resultados, mas, depois da mudança, os resultados são impressos conforme cada linha correspondente é encontrada, porque o loop `for` na função `run` consegue aproveitar o comportamento preguiçoso do iterador."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "<a id=\"choosing-between-loops-or-iterators\"></a>"
@@ -13872,15 +13872,15 @@ msgstr ""
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "Choosing Between Loops and Iterators"
-msgstr ""
+msgstr "Escolhendo entre loops e iteradores {#choosing-between-loops-and-iterators}"
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "The next logical question is which style you should choose in your own code and why: the original implementation in Listing 13-21 or the version using iterators in Listing 13-22 (assuming we’re collecting all the results before returning them rather than returning the iterator). Most Rust programmers prefer to use the iterator style. It’s a bit tougher to get the hang of at first, but once you get a feel for the various iterator adapters and what they do, iterators can be easier to understand. Instead of fiddling with the various bits of looping and building new vectors, the code focuses on the high-level objective of the loop. This abstracts away some of the commonplace code so that it’s easier to see the concepts that are unique to this code, such as the filtering condition each element in the iterator must pass."
-msgstr ""
+msgstr "A próxima pergunta lógica é qual estilo você deve escolher no seu próprio código e por quê: a implementação original da Listagem 13-21 ou a versão que usa iteradores da Listagem 13-22 (supondo que estejamos coletando todos os resultados antes de retorná-los, em vez de retornar o iterador). A maioria dos programadores Rust prefere o estilo com iteradores. No começo, é um pouco mais difícil pegar o jeito, mas, quando você entende os vários adaptadores de iterador e o que eles fazem, os iteradores podem ser mais fáceis de entender. Em vez de mexer com os vários detalhes de loops e de construir novos vetores, o código se concentra no objetivo de alto nível do loop. Isso abstrai parte do código corriqueiro, para que seja mais fácil ver os conceitos exclusivos deste código, como a condição de filtragem que cada elemento do iterador precisa satisfazer."
 
 #: src/ch13-03-improving-our-io-project.md
 msgid "But are the two implementations truly equivalent? The intuitive assumption might be that the lower-level loop will be faster. Let’s talk about performance."
-msgstr ""
+msgstr "Mas as duas implementações são realmente equivalentes? A suposição intuitiva pode ser que o loop de nível mais baixo seja mais rápido. Vamos falar sobre desempenho."
 
 #: src/ch13-04-performance.md
 msgid "<a id=\"comparing-performance-loops-vs-iterators\"></a>"
@@ -13888,35 +13888,35 @@ msgstr ""
 
 #: src/ch13-04-performance.md
 msgid "To determine whether to use loops or iterators, you need to know which implementation is faster: the version of the `search` function with an explicit `for` loop or the version with iterators."
-msgstr ""
+msgstr "Para determinar se deve usar loops ou iteradores, você precisa saber qual implementação é mais rápida: a versão da função `search` com um loop `for` explícito ou a versão com iteradores."
 
 #: src/ch13-04-performance.md
 msgid "We ran a benchmark by loading the entire contents of _The Adventures of Sherlock Holmes_ by Sir Arthur Conan Doyle into a `String` and looking for the word _the_ in the contents. Here are the results of the benchmark on the version of `search` using the `for` loop and the version using iterators:"
-msgstr ""
+msgstr "Executamos um benchmark carregando todo o conteúdo de _As Aventuras de Sherlock Holmes_, de Sir Arthur Conan Doyle, em uma `String` e procurando a palavra _the_ no conteúdo. Aqui estão os resultados do benchmark da versão de `search` que usa o loop `for` e da versão que usa iteradores:"
 
 #: src/ch13-04-performance.md
 msgid "The two implementations have similar performance! We won’t explain the benchmark code here because the point is not to prove that the two versions are equivalent but to get a general sense of how these two implementations compare performance-wise."
-msgstr ""
+msgstr "As duas implementações têm desempenho parecido! Não vamos explicar o código do benchmark aqui, porque o objetivo não é provar que as duas versões são equivalentes, mas ter uma noção geral de como essas duas implementações se comparam em termos de desempenho."
 
 #: src/ch13-04-performance.md
 msgid "For a more comprehensive benchmark, you should check using various texts of various sizes as the `contents`, different words and words of different lengths as the `query`, and all kinds of other variations. The point is this: Iterators, although a high-level abstraction, get compiled down to roughly the same code as if you’d written the lower-level code yourself. Iterators are one of Rust’s _zero-cost abstractions_, by which we mean that using the abstraction imposes no additional runtime overhead. This is analogous to how Bjarne Stroustrup, the original designer and implementor of C++, defines zero-overhead in his 2012 ETAPS keynote presentation “Foundations of C++”:"
-msgstr ""
+msgstr "Para um benchmark mais abrangente, você deve testar com textos de vários tamanhos como `contents`, com palavras diferentes e palavras de comprimentos diferentes como `query`, e com todos os tipos de outras variações. O ponto é este: os iteradores, embora sejam uma abstração de alto nível, são compilados para aproximadamente o mesmo código que você teria escrito por conta própria no nível mais baixo. Os iteradores são uma das _abstrações de custo zero_ do Rust, o que significa que usar a abstração não impõe nenhum custo adicional em tempo de execução. Isso é análogo à forma como Bjarne Stroustrup, o projetista e implementador original do C++, define o princípio do custo zero em sua apresentação de keynote na ETAPS de 2012, “Foundations of C++”:"
 
 #: src/ch13-04-performance.md
 msgid "In general, C++ implementations obey the zero-overhead principle: What you don’t use, you don’t pay for. And further: What you do use, you couldn’t hand code any better."
-msgstr ""
+msgstr "Em geral, as implementações de C++ seguem o princípio do custo zero: o que você não usa, você não paga por. E, além disso: o que você usa, você não conseguiria escrever à mão de forma melhor."
 
 #: src/ch13-04-performance.md
 msgid "In many cases, Rust code using iterators compiles to the same assembly you’d write by hand. Optimizations such as loop unrolling and eliminating bounds checking on array access apply and make the resultant code extremely efficient. Now that you know this, you can use iterators and closures without fear! They make code seem like it’s higher level but don’t impose a runtime performance penalty for doing so."
-msgstr ""
+msgstr "Em muitos casos, o código Rust que usa iteradores compila para o mesmo assembly que você escreveria à mão. Otimizações como o desenrolamento de loops e a eliminação de verificações de limites no acesso a arrays se aplicam e tornam o código resultante extremamente eficiente. Agora que você sabe disso, pode usar iteradores e closures sem medo! Eles fazem o código parecer de mais alto nível, mas não impõem nenhuma penalidade de desempenho em tempo de execução por isso."
 
 #: src/ch13-04-performance.md
 msgid "Closures and iterators are Rust features inspired by functional programming language ideas. They contribute to Rust’s capability to clearly express high-level ideas at low-level performance. The implementations of closures and iterators are such that runtime performance is not affected. This is part of Rust’s goal to strive to provide zero-cost abstractions."
-msgstr ""
+msgstr "Closures e iteradores são recursos do Rust inspirados em ideias de linguagens de programação funcional. Eles contribuem para a capacidade do Rust de expressar com clareza ideias de alto nível com desempenho de baixo nível. A forma como closures e iteradores são implementados faz com que o desempenho em tempo de execução não seja afetado. Isso faz parte do objetivo do Rust de se esforçar para oferecer abstrações de custo zero."
 
 #: src/ch13-04-performance.md
 msgid "Now that we’ve improved the expressiveness of our I/O project, let’s look at some more features of `cargo` that will help us share the project with the world."
-msgstr ""
+msgstr "Agora que melhoramos a expressividade do nosso projeto de E/S, vamos conhecer mais alguns recursos do `cargo` que vão nos ajudar a compartilhar o projeto com o mundo."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "More About Cargo and Crates.io"
