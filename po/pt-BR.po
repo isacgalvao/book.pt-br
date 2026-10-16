@@ -67,7 +67,7 @@ msgstr "Entendendo o ownership {#understanding-ownership}"
 
 #: src/SUMMARY.md
 msgid "What is Ownership?"
-msgstr ""
+msgstr "O que é ownership?"
 
 #: src/SUMMARY.md src/ch04-02-references-and-borrowing.md
 msgid "References and Borrowing"
@@ -129,7 +129,7 @@ msgstr "Caminhos para referenciar um item na árvore de módulos {#paths-for-ref
 
 #: src/SUMMARY.md
 msgid "Bringing Paths Into Scope with the `use` Keyword"
-msgstr ""
+msgstr "Trazendo caminhos para o escopo com a palavra-chave `use`"
 
 #: src/SUMMARY.md src/ch07-05-separating-modules-into-different-files.md
 msgid "Separating Modules into Different Files"
@@ -217,7 +217,7 @@ msgstr "Refatorando para melhorar a modularidade e o tratamento de erros {#refac
 
 #: src/SUMMARY.md
 msgid "Adding Functionality with Test Driven Development"
-msgstr ""
+msgstr "Adicionando funcionalidade com desenvolvimento orientado a testes"
 
 #: src/SUMMARY.md src/ch12-05-working-with-environment-variables.md
 msgid "Working with Environment Variables"
@@ -249,7 +249,7 @@ msgstr "Desempenho em loops versus iteradores {#performance-in-loops-vs-iterator
 
 #: src/SUMMARY.md
 msgid "More about Cargo and Crates.io"
-msgstr ""
+msgstr "Mais sobre o Cargo e o crates.io"
 
 #: src/SUMMARY.md src/ch14-01-release-profiles.md
 msgid "Customizing Builds with Release Profiles"
@@ -289,7 +289,7 @@ msgstr "Executando código durante a limpeza com o trait `Drop` {#running-code-o
 
 #: src/SUMMARY.md
 msgid "`Rc<T>`, the Reference Counted Smart Pointer"
-msgstr ""
+msgstr "`Rc<T>`, o ponteiro inteligente de contagem de referências"
 
 #: src/SUMMARY.md src/ch15-05-interior-mutability.md
 msgid "`RefCell<T>` and the Interior Mutability Pattern"
@@ -333,7 +333,7 @@ msgstr "Aplicando concorrência com async {#applying-concurrency-with-async}"
 
 #: src/SUMMARY.md
 msgid "Working With Any Number of Futures"
-msgstr ""
+msgstr "Trabalhando com qualquer número de futures"
 
 #: src/SUMMARY.md src/ch17-04-streams.md
 msgid "Streams: Futures in Sequence"
@@ -345,11 +345,11 @@ msgstr "Um olhar mais detalhado sobre os traits de async {#a-closer-look-at-the-
 
 #: src/SUMMARY.md
 msgid "Futures, Tasks, and Threads"
-msgstr ""
+msgstr "Futures, tarefas e threads"
 
 #: src/SUMMARY.md
 msgid "Object Oriented Programming Features"
-msgstr ""
+msgstr "Recursos de programação orientada a objetos"
 
 #: src/SUMMARY.md src/ch18-01-what-is-oo.md
 msgid "Characteristics of Object-Oriented Languages"
@@ -413,7 +413,7 @@ msgstr ""
 
 #: src/SUMMARY.md
 msgid "From Single-Threaded to Multithreaded Server"
-msgstr ""
+msgstr "De servidor de thread única a servidor multithread"
 
 #: src/SUMMARY.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Graceful Shutdown and Cleanup"
@@ -425,31 +425,31 @@ msgstr ""
 
 #: src/SUMMARY.md
 msgid "A - Keywords"
-msgstr ""
+msgstr "A - Palavras-chave"
 
 #: src/SUMMARY.md
 msgid "B - Operators and Symbols"
-msgstr ""
+msgstr "B - Operadores e símbolos"
 
 #: src/SUMMARY.md
 msgid "C - Derivable Traits"
-msgstr ""
+msgstr "C - Traits deriváveis"
 
 #: src/SUMMARY.md
 msgid "D - Useful Development Tools"
-msgstr ""
+msgstr "D - Ferramentas úteis para desenvolvimento"
 
 #: src/SUMMARY.md
 msgid "E - Editions"
-msgstr ""
+msgstr "E - Edições"
 
 #: src/SUMMARY.md
 msgid "F - Translations of the Book"
-msgstr ""
+msgstr "F - Traduções do livro"
 
 #: src/SUMMARY.md
 msgid "G - How Rust is Made and “Nightly Rust”"
-msgstr ""
+msgstr "G - Como o Rust é feito e o “Rust nightly”"
 
 #: src/title-page.md
 msgid "_by Steve Klabnik, Carol Nichols, and Chris Krycho, with contributions from the Rust Community_"
