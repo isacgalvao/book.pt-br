@@ -13,14 +13,15 @@ As 8 regras mais importantes:
    traduções no PO. Entregue os JSON validados num commit em `i18n/entregas/<CAP>/` (pasta criada
    pelo seu PR), no branch do seu PR; é o único lugar em que você escreve.
 3. **Siga o “Protocolo do tradutor”** numa cópia do PO, num diretório novo fora do repositório.
-   Entrada rejeitada pelo `apply.py` não é gravada: fica como estava (vazia, e o livro mostra o
-   inglês); ela não vira fuzzy.
+   Rode o `--dry-run` até sair com código 0, no máximo 2 tentativas; o que continuar rejeitado fica
+   explicado em `notas`. Entrada rejeitada pelo `apply.py` não é gravada e não vira fuzzy: a vazia
+   continua vazia e a que já era fuzzy continua fuzzy (nos dois casos o livro mostra o inglês).
 
    ```bash
    RUN=$(mktemp -d); cp po/pt-BR.po "$RUN/copia.po"
    python3 i18n/tools/lotes.py --capitulo CAP --saida "$RUN/lotes" --po "$RUN/copia.po"
    python3 i18n/tools/apply.py --po "$RUN/copia.po" --traducoes "$RUN/trad/CAP-NN.json" \
-     --modo capitulo --capitulo CAP --dry-run   # repita até sair com código 0
+     --modo capitulo --capitulo CAP --dry-run   # no máximo 2 tentativas
    ```
 4. **Nunca toque um caminho do upstream** (`src/`, `listings/`, `packages/`, `tools/`, `ci/`,
    `book.toml`, `README.md`, `.github/workflows/main.yml` e os demais): eles ficam idênticos ao

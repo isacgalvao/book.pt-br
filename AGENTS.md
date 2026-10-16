@@ -116,8 +116,8 @@ O orquestrador aplica esses JSON, roda `slugs.py` e `check.py`, cola a saída no
   com razão (`{"ok", "falhas", "resumo"}`). No máximo 2 ciclos E2–E3 por lote.
 - **E4 Aplicar e checar** (orquestrador): aplica no PO real, um lote de cada vez; no fim do capítulo,
   `slugs.py` e `check.py --capitulo` (bloqueante; o relatório volta ao tradutor até 2 vezes).
-- **E5 Validar**: o capítulo inteiro, por um modelo diferente do tradutor; depois, revisão humana do
-  mantenedor (caps. 0 a 10: integral; 11 a 21: as sinalizadas e mais 15% sorteadas) e o registro.
+- **E5 Validar**: o capítulo inteiro, por um modelo diferente do tradutor; depois, a revisão humana
+  do mantenedor (profundidade ainda pendente: P5 em `i18n/DECISOES.md`) e o registro dela.
 - **E6 Varrer** (mensal ou depois de mudar o glossário): `check.py --so glossario` no PO inteiro e,
   se houver violações, uma rodada de E1 no modo normalizar.
 
@@ -145,10 +145,10 @@ python3 i18n/tools/check.py --capitulo ch04 --json "$RUN/check-ch04.json"
 python3 i18n/tools/status.py
 ```
 
-Entrada rejeitada pelo `apply.py` não é gravada: o msgstr fica como estava. Numa tradução de
-capítulo isso quer dizer VAZIA (o livro mostra o inglês); ela **não vira fuzzy** e volta no próximo
-`lotes.py` porque continua sem tradução (uma entrada que já era fuzzy continua fuzzy). Rejeitada em
-2 rodadas, fica vazia e entra nas pendências do capítulo em `i18n/PROGRESSO.md`.
+Entrada rejeitada pelo `apply.py` não é gravada: o msgstr fica exatamente como estava, a entrada
+**não vira fuzzy** e volta no próximo `lotes.py`. Numa tradução de capítulo, a vazia continua VAZIA
+e a que já era fuzzy continua fuzzy (nos dois casos o livro mostra o inglês). Rejeitada em 2 rodadas,
+fica como estava e entra nas pendências do capítulo em `i18n/PROGRESSO.md`.
 
 Sync (só o orquestrador ou o `ptbr-sync.yml`, quando existir; nunca num PR de capítulo):
 `atualiza_po.sh` → `autoport.py` → `slugs.py` → `delta.py` → `traduz_delta.py` →
