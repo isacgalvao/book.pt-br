@@ -12,7 +12,7 @@
 Este repositório é um fork de [rust-lang/book](https://github.com/rust-lang/book) e traduz
 *The Rust Programming Language* (o “Rust Book”), de Steve Klabnik, Carol Nichols e Chris Krycho,
 com contribuições da comunidade Rust. O livro também existe impresso, pela
-[No Starch Press](https://nostarch.com/rust-programming-language-2nd-edition).
+[No Starch Press](https://nostarch.com/rust-programming-language-3rd-edition).
 
 O objetivo é traduzir o livro inteiro, num tom de documentação de ferramentas para quem
 desenvolve, mantendo a estrutura do original e acompanhando as mudanças do upstream.
@@ -46,9 +46,9 @@ conferida; o livro mostra o inglês) e quantas faltam, além do status:
 | `alterado após revisão` | o capítulo foi revisado, mas a tradução mudou depois |
 
 As revisões ficam em [`i18n/revisao.yml`](/i18n/revisao.yml). Código, âncoras e comentários de
-código **não** são traduzidos nesta fase (é o padrão adotado), e por isso não entram na conta. Pelo
-mesmo motivo, não use o `msgfmt --statistics` como medida de progresso: ele nunca chega a zero
-mensagens não traduzidas.
+código **não** são traduzidos nesta fase (é um padrão provisório, veja as
+[decisões](/i18n/DECISOES.md)), e por isso não entram na conta. Pelo mesmo motivo, não use o
+`msgfmt --statistics` como medida de progresso: ele nunca chega a zero mensagens não traduzidas.
 
 ## Como funciona
 
@@ -91,12 +91,12 @@ Pré-requisitos (o `build.sh` foi testado apenas em Linux):
 
 | Ferramenta | Observação |
 | --- | --- |
-| [Rust](https://rustup.rs) 1.98 e `cargo` | a versão vem de `rust-toolchain`; o `book.toml` do livro chama os preprocessors `mdbook-trpl` com `cargo run` |
+| [Rust](https://rustup.rs) 1.98 e `cargo` | a versão vem de `rust-toolchain`; o `book.toml` do livro chama os pré-processadores `mdbook-trpl` com `cargo run` |
 | [mdBook](https://github.com/rust-lang/mdBook) 0.5.1 | `cargo install mdbook --version 0.5.1 --locked`, ou o binário das [releases](https://github.com/rust-lang/mdBook/releases) |
 | `mdbook-i18n-helpers` na revisão fixada | `cargo install --locked --git https://github.com/google/mdbook-i18n-helpers --rev 5025680762103f7da119fe6579e9a533299e2d8a mdbook-i18n-helpers` (a versão 0.4.0 do crates.io não serve: não extrai as legendas das listagens) |
 | gettext | `msgcat`, `msgmerge` e `msgfmt`; no Debian/Ubuntu, `apt install gettext` |
 | Python 3.10 ou mais novo, `polib` e `pyyaml` | `python3 -m pip install polib pyyaml` |
-| `git`, `flock` e `realpath` | o `build.sh` exige os três; vêm dos pacotes `git`, `util-linux` e `coreutils` |
+| `git`, `flock` e `realpath` | o `i18n/build.sh pt` exige os três; vêm dos pacotes `git`, `util-linux` e `coreutils` |
 
 Com tudo instalado, compile o livro em português para um diretório **novo**:
 
@@ -105,7 +105,7 @@ $ i18n/build.sh pt ~/livro-rust-ptbr
 ```
 
 Depois abra `~/livro-rust-ptbr/index.html` no navegador. A primeira execução demora: o `cargo`
-compila os preprocessors do livro e uma cópia corrigida do preprocessor das listagens (que põe
+compila os pré-processadores do livro e uma cópia corrigida do pré-processador das listagens (que põe
 os rótulos “Listagem N” e “Nome do arquivo:”), e o resultado fica em cache. As seguintes são
 rápidas.
 
@@ -127,6 +127,11 @@ $ i18n/build.sh --help
 
 ## Como contribuir
 
+> [!NOTE]
+> Por enquanto não há pull requests de capítulo: o trabalho é feito pelo mantenedor no branch
+> `spike/migracao-po`, e nada vai para a `main` sem ele. As regras abaixo valem depois que a
+> migração para o formato PO entrar na `main`.
+
 Antes de traduzir, leia:
 
 1. [`AGENTS.md`](/AGENTS.md), o ponto de entrada para quem traduz (pessoas e agentes de IA), com as
@@ -138,7 +143,8 @@ Antes de traduzir, leia:
 Regras principais:
 
 - **Um capítulo por pull request.** Os capítulos são `title-page`, `foreword`, `ch00` a `ch21`,
-  `appendix` e `summary`; o `status.py` mostra a lista.
+  `appendix` e `summary`; o `status.py` mostra a lista. O PR contém só `msgstr` desse capítulo em
+  `po/pt-BR.po`: sem `msgmerge` e sem tocar em arquivos do upstream.
 - **Na tradução, mexa só no `msgstr` do `po/pt-BR.po`.** Nunca altere um `msgid` nem os arquivos
   que vêm do upstream (`src/`, `listings/`, `book.toml` e outros). Para corrigir o texto em
   inglês, abra a contribuição em [rust-lang/book](https://github.com/rust-lang/book).
@@ -158,7 +164,11 @@ Regras principais:
   ```
 
   O check da fronteira compara o seu branch com `upstream/main`; se essa referência não existir
-  no seu clone, a mensagem dele explica como buscá-la.
+  no seu clone, a mensagem dele explica como buscá-la. Cole no PR a saída do
+  `check.py --capitulo CAP` e, se houver, uma seção “Termos propostos”.
+- **Responda a cada achado da revisão**, corrigindo ou recusando com motivo. Não aceite
+  sugestões automáticas (como o Autofix do Copilot) sem ler: uma delas já inverteu o sentido de
+  uma frase.
 - A revisão humana é registrada só pelo mantenedor, com
   `python3 i18n/tools/status.py --registrar CAP --tipo integral|amostragem --revisor NOME`.
 
@@ -173,8 +183,8 @@ Ferramentas principais, todas com `--help` em português:
 
 As demais ferramentas de `i18n/tools/` (lotes, aplicação de traduções, sincronização com o
 upstream) servem ao fluxo de tradução e também têm `--help` em português. A especificação
-técnica completa, em inglês, é o [`i18n/CONTRATO.md`](/i18n/CONTRATO.md); o diário do que já foi
-feito é o [`i18n/PROGRESSO.md`](/i18n/PROGRESSO.md).
+técnica, em inglês, é o [`i18n/CONTRATO.md`](/i18n/CONTRATO.md); o diário do que já foi feito é o
+[`i18n/PROGRESSO.md`](/i18n/PROGRESSO.md).
 
 ## Licença e créditos
 
