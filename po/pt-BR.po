@@ -137,19 +137,19 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch08-00-common-collections.md
 msgid "Common Collections"
-msgstr ""
+msgstr "Coleções comuns {#common-collections}"
 
 #: src/SUMMARY.md src/ch08-01-vectors.md
 msgid "Storing Lists of Values with Vectors"
-msgstr ""
+msgstr "Armazenando listas de valores com vetores {#storing-lists-of-values-with-vectors}"
 
 #: src/SUMMARY.md src/ch08-02-strings.md
 msgid "Storing UTF-8 Encoded Text with Strings"
-msgstr ""
+msgstr "Armazenando texto codificado em UTF-8 com strings {#storing-utf-8-encoded-text-with-strings}"
 
 #: src/SUMMARY.md src/ch08-03-hash-maps.md
 msgid "Storing Keys with Associated Values in Hash Maps"
-msgstr ""
+msgstr "Armazenando chaves com valores associados em hash maps {#storing-keys-with-associated-values-in-hash-maps}"
 
 #: src/SUMMARY.md src/ch09-00-error-handling.md
 msgid "Error Handling"
@@ -7314,91 +7314,91 @@ msgstr ""
 
 #: src/ch08-00-common-collections.md
 msgid "Rust’s standard library includes a number of very useful data structures called _collections_. Most other data types represent one specific value, but collections can contain multiple values. Unlike the built-in array and tuple types, the data that these collections point to is stored on the heap, which means the amount of data does not need to be known at compile time and can grow or shrink as the program runs. Each kind of collection has different capabilities and costs, and choosing an appropriate one for your current situation is a skill you’ll develop over time. In this chapter, we’ll discuss three collections that are used very often in Rust programs:"
-msgstr ""
+msgstr "A biblioteca padrão do Rust inclui várias estruturas de dados muito úteis chamadas _coleções_. A maioria dos outros tipos de dados representa um valor específico, mas as coleções podem conter vários valores. Diferentemente dos tipos embutidos array e tupla, os dados para os quais essas coleções apontam são armazenados no heap, o que significa que a quantidade de dados não precisa ser conhecida em tempo de compilação e pode crescer ou diminuir enquanto o programa está sendo executado. Cada tipo de coleção tem capacidades e custos diferentes, e escolher a mais adequada para a sua situação atual é uma habilidade que você vai desenvolver com o tempo. Neste capítulo, vamos discutir três coleções que são usadas com muita frequência em programas Rust:"
 
 #: src/ch08-00-common-collections.md
 msgid "A _vector_ allows you to store a variable number of values next to each other."
-msgstr ""
+msgstr "Um _vetor_ permite que você armazene uma quantidade variável de valores lado a lado."
 
 #: src/ch08-00-common-collections.md
 msgid "A _string_ is a collection of characters. We’ve mentioned the `String` type previously, but in this chapter, we’ll talk about it in depth."
-msgstr ""
+msgstr "Uma _string_ é uma coleção de caracteres. Já mencionamos o tipo `String` anteriormente, mas neste capítulo vamos falar dele em profundidade."
 
 #: src/ch08-00-common-collections.md
 msgid "A _hash map_ allows you to associate a value with a specific key. It’s a particular implementation of the more general data structure called a _map_."
-msgstr ""
+msgstr "Um _hash map_ permite que você associe um valor a uma chave específica. Ele é uma implementação específica da estrutura de dados mais geral chamada _map_."
 
 #: src/ch08-00-common-collections.md
 msgid "To learn about the other kinds of collections provided by the standard library, see [the documentation](../std/collections/index.html)."
-msgstr ""
+msgstr "Para saber sobre os outros tipos de coleções fornecidos pela biblioteca padrão, veja [a documentação](../std/collections/index.html)."
 
 #: src/ch08-00-common-collections.md
 msgid "We’ll discuss how to create and update vectors, strings, and hash maps, as well as what makes each special."
-msgstr ""
+msgstr "Vamos discutir como criar e atualizar vetores, strings e hash maps, além do que torna cada um especial."
 
 #: src/ch08-01-vectors.md
 msgid "The first collection type we’ll look at is `Vec<T>`, also known as a vector. Vectors allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type. They are useful when you have a list of items, such as the lines of text in a file or the prices of items in a shopping cart."
-msgstr ""
+msgstr "O primeiro tipo de coleção que vamos ver é `Vec<T>`, também conhecido como vetor. Vetores permitem que você armazene mais de um valor em uma única estrutura de dados que coloca todos os valores lado a lado na memória. Vetores só podem armazenar valores do mesmo tipo. Eles são úteis quando você tem uma lista de itens, como as linhas de texto de um arquivo ou os preços dos itens em um carrinho de compras."
 
 #: src/ch08-01-vectors.md
 msgid "Creating a New Vector"
-msgstr ""
+msgstr "Criando um novo vetor {#creating-a-new-vector}"
 
 #: src/ch08-01-vectors.md
 msgid "To create a new, empty vector, we call the `Vec::new` function, as shown in Listing 8-1."
-msgstr ""
+msgstr "Para criar um vetor novo e vazio, chamamos a função `Vec::new`, como mostrado na Listagem 8-1."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-1\" caption=\"Creating a new, empty vector to hold values of type `i32`\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-1\" caption=\"Criando um vetor novo e vazio para armazenar valores do tipo `i32`\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "Note that we added a type annotation here. Because we aren’t inserting any values into this vector, Rust doesn’t know what kind of elements we intend to store. This is an important point. Vectors are implemented using generics; we’ll cover how to use generics with your own types in Chapter 10. For now, know that the `Vec<T>` type provided by the standard library can hold any type. When we create a vector to hold a specific type, we can specify the type within angle brackets. In Listing 8-1, we’ve told Rust that the `Vec<T>` in `v` will hold elements of the `i32` type."
-msgstr ""
+msgstr "Observe que adicionamos uma anotação de tipo aqui. Como não estamos inserindo nenhum valor neste vetor, o Rust não sabe que tipo de elementos pretendemos armazenar. Este é um ponto importante. Vetores são implementados usando genéricos; vamos ver como usar genéricos com seus próprios tipos no Capítulo 10. Por enquanto, saiba que o tipo `Vec<T>` fornecido pela biblioteca padrão pode conter qualquer tipo. Quando criamos um vetor para armazenar um tipo específico, podemos especificar o tipo entre colchetes angulares. Na Listagem 8-1, dissemos ao Rust que o `Vec<T>` em `v` vai armazenar elementos do tipo `i32`."
 
 #: src/ch08-01-vectors.md
 msgid "More often, you’ll create a `Vec<T>` with initial values, and Rust will infer the type of value you want to store, so you rarely need to do this type annotation. Rust conveniently provides the `vec!` macro, which will create a new vector that holds the values you give it. Listing 8-2 creates a new `Vec<i32>` that holds the values `1`, `2`, and `3`. The integer type is `i32` because that’s the default integer type, as we discussed in the [“Data Types”](ch03-02-data-types.html#data-types)<!-- ignore --> section of Chapter 3."
-msgstr ""
+msgstr "Com mais frequência, você vai criar um `Vec<T>` com valores iniciais, e o Rust vai inferir o tipo do valor que você quer armazenar, então raramente é preciso fazer essa anotação de tipo. O Rust oferece, de forma prática, a macro `vec!`, que cria um novo vetor com os valores que você fornecer. A Listagem 8-2 cria um novo `Vec<i32>` que contém os valores `1`, `2` e `3`. O tipo inteiro é `i32` porque esse é o tipo inteiro padrão, como discutimos na seção [“Tipos de dados”](ch03-02-data-types.html#data-types)<!-- ignore --> do Capítulo 3."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-2\" caption=\"Creating a new vector containing values\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-2\" caption=\"Criando um vetor novo contendo valores\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "Because we’ve given initial `i32` values, Rust can infer that the type of `v` is `Vec<i32>`, and the type annotation isn’t necessary. Next, we’ll look at how to modify a vector."
-msgstr ""
+msgstr "Como fornecemos valores iniciais do tipo `i32`, o Rust consegue inferir que o tipo de `v` é `Vec<i32>`, e a anotação de tipo não é necessária. Em seguida, vamos ver como modificar um vetor."
 
 #: src/ch08-01-vectors.md
 msgid "Updating a Vector"
-msgstr ""
+msgstr "Atualizando um vetor {#updating-a-vector}"
 
 #: src/ch08-01-vectors.md
 msgid "To create a vector and then add elements to it, we can use the `push` method, as shown in Listing 8-3."
-msgstr ""
+msgstr "Para criar um vetor e depois adicionar elementos a ele, podemos usar o método `push`, como mostrado na Listagem 8-3."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-3\" caption=\"Using the `push` method to add values to a vector\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-3\" caption=\"Usando o método `push` para adicionar valores a um vetor\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "As with any variable, if we want to be able to change its value, we need to make it mutable using the `mut` keyword, as discussed in Chapter 3. The numbers we place inside are all of type `i32`, and Rust infers this from the data, so we don’t need the `Vec<i32>` annotation."
-msgstr ""
+msgstr "Assim como acontece com qualquer variável, se quisermos poder alterar o valor dela, precisamos torná-la mutável usando a palavra-chave `mut`, como discutido no Capítulo 3. Os números que colocamos dentro são todos do tipo `i32`, e o Rust infere isso a partir dos dados, então não precisamos da anotação `Vec<i32>`."
 
 #: src/ch08-01-vectors.md
 msgid "Reading Elements of Vectors"
-msgstr ""
+msgstr "Lendo elementos de vetores {#reading-elements-of-vectors}"
 
 #: src/ch08-01-vectors.md
 msgid "There are two ways to reference a value stored in a vector: via indexing or by using the `get` method. In the following examples, we’ve annotated the types of the values that are returned from these functions for extra clarity."
-msgstr ""
+msgstr "Há duas maneiras de acessar um valor armazenado em um vetor: usando indexação ou o método `get`. Nos exemplos a seguir, anotamos os tipos dos valores retornados por essas funções para maior clareza."
 
 #: src/ch08-01-vectors.md
 msgid "Listing 8-4 shows both methods of accessing a value in a vector, with indexing syntax and the `get` method."
-msgstr ""
+msgstr "A Listagem 8-4 mostra os dois métodos de acessar um valor em um vetor, com a sintaxe de indexação e com o método `get`."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-4\" caption=\"Using indexing syntax and using the `get` method to access an item in a vector\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-4\" caption=\"Usando a sintaxe de indexação e o método `get` para acessar um item de um vetor\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "\"The third element is {third}\""
@@ -7410,31 +7410,31 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "Note a few details here. We use the index value of `2` to get the third element because vectors are indexed by number, starting at zero. Using `&` and `[]` gives us a reference to the element at the index value. When we use the `get` method with the index passed as an argument, we get an `Option<&T>` that we can use with `match`."
-msgstr ""
+msgstr "Observe alguns detalhes aqui. Usamos o índice `2` para obter o terceiro elemento, porque os vetores são indexados por número, começando em zero. Usar `&` e `[]` nos dá uma referência ao elemento no índice indicado. Quando usamos o método `get` com o índice passado como argumento, obtemos um `Option<&T>` que podemos usar com `match`."
 
 #: src/ch08-01-vectors.md
 msgid "Rust provides these two ways to reference an element so that you can choose how the program behaves when you try to use an index value outside the range of existing elements. As an example, let’s see what happens when we have a vector of five elements and then we try to access an element at index 100 with each technique, as shown in Listing 8-5."
-msgstr ""
+msgstr "O Rust oferece essas duas formas de acessar um elemento para que você possa escolher como o programa se comporta quando tenta usar um valor de índice fora do intervalo dos elementos existentes. Como exemplo, vamos ver o que acontece quando temos um vetor de cinco elementos e tentamos acessar um elemento no índice 100 com cada técnica, como mostrado na Listagem 8-5."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-5\" caption=\"Attempting to access the element at index 100 in a vector containing five elements\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-5\" caption=\"Tentando acessar o elemento no índice 100 de um vetor que contém cinco elementos\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "When we run this code, the first `[]` method will cause the program to panic because it references a nonexistent element. This method is best used when you want your program to crash if there’s an attempt to access an element past the end of the vector."
-msgstr ""
+msgstr "Quando executamos este código, o primeiro método `[]` vai fazer o programa entrar em pânico porque ele referencia um elemento inexistente. Esse método é mais indicado quando você quer que o programa falhe caso haja uma tentativa de acessar um elemento além do fim do vetor."
 
 #: src/ch08-01-vectors.md
 msgid "When the `get` method is passed an index that is outside the vector, it returns `None` without panicking. You would use this method if accessing an element beyond the range of the vector may happen occasionally under normal circumstances. Your code will then have logic to handle having either `Some(&element)` or `None`, as discussed in Chapter 6. For example, the index could be coming from a person entering a number. If they accidentally enter a number that’s too large and the program gets a `None` value, you could tell the user how many items are in the current vector and give them another chance to enter a valid value. That would be more user-friendly than crashing the program due to a typo!"
-msgstr ""
+msgstr "Quando o método `get` recebe um índice que está fora do vetor, ele retorna `None` sem entrar em pânico. Você usaria esse método se acessar um elemento além do intervalo do vetor pudesse acontecer de vez em quando, em circunstâncias normais. Seu código terá então uma lógica para tratar tanto `Some(&element)` quanto `None`, como discutido no Capítulo 6. Por exemplo, o índice poderia vir de uma pessoa digitando um número. Se ela digitar por engano um número muito grande e o programa receber um valor `None`, você poderia informar ao usuário quantos itens há no vetor atual e dar a ela outra chance de digitar um valor válido. Isso seria mais amigável ao usuário do que fazer o programa falhar por causa de um erro de digitação!"
 
 #: src/ch08-01-vectors.md
 msgid "When the program has a valid reference, the borrow checker enforces the ownership and borrowing rules (covered in Chapter 4) to ensure that this reference and any other references to the contents of the vector remain valid. Recall the rule that states you can’t have mutable and immutable references in the same scope. That rule applies in Listing 8-6, where we hold an immutable reference to the first element in a vector and try to add an element to the end. This program won’t work if we also try to refer to that element later in the function."
-msgstr ""
+msgstr "Quando o programa tem uma referência válida, o verificador de empréstimos aplica as regras de ownership e de empréstimo (abordadas no Capítulo 4) para garantir que essa referência e quaisquer outras referências ao conteúdo do vetor continuem válidas. Lembre-se da regra que diz que você não pode ter referências mutáveis e imutáveis no mesmo escopo. Essa regra se aplica na Listagem 8-6, em que mantemos uma referência imutável ao primeiro elemento de um vetor e tentamos adicionar um elemento ao final. Este programa não vai funcionar se também tentarmos acessar esse elemento mais adiante na função."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-6\" caption=\"Attempting to add an element to a vector while holding a reference to an item\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-6\" caption=\"Tentando adicionar um elemento a um vetor enquanto mantém uma referência a um item\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "\"The first element is: {first}\""
@@ -7442,7 +7442,7 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "Compiling this code will result in this error:"
-msgstr ""
+msgstr "Compilar este código vai resultar neste erro:"
 
 #: src/ch08-01-vectors.md
 msgid ""
@@ -7468,23 +7468,23 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "The code in Listing 8-6 might look like it should work: Why should a reference to the first element care about changes at the end of the vector? This error is due to the way vectors work: Because vectors put the values next to each other in memory, adding a new element onto the end of the vector might require allocating new memory and copying the old elements to the new space, if there isn’t enough room to put all the elements next to each other where the vector is currently stored. In that case, the reference to the first element would be pointing to deallocated memory. The borrowing rules prevent programs from ending up in that situation."
-msgstr ""
+msgstr "O código da Listagem 8-6 pode parecer que deveria funcionar: por que uma referência ao primeiro elemento se importaria com mudanças no fim do vetor? Esse erro se deve à forma como os vetores funcionam: já que eles colocam os valores lado a lado na memória, adicionar um novo elemento no fim do vetor pode exigir alocar nova memória e copiar os elementos antigos para o novo espaço, caso não haja espaço suficiente para colocar todos os elementos lado a lado no lugar onde o vetor está armazenado no momento. Nesse caso, a referência ao primeiro elemento estaria apontando para memória desalocada. As regras de empréstimo impedem que os programas cheguem a essa situação."
 
 #: src/ch08-01-vectors.md
 msgid "Note: For more on the implementation details of the `Vec<T>` type, see [“The Rustonomicon”](../nomicon/vec/vec.html)."
-msgstr ""
+msgstr "Nota: para mais detalhes sobre a implementação do tipo `Vec<T>`, veja [“The Rustonomicon”](../nomicon/vec/vec.html)."
 
 #: src/ch08-01-vectors.md
 msgid "Iterating Over the Values in a Vector"
-msgstr ""
+msgstr "Percorrendo os valores de um vetor {#iterating-over-the-values-in-a-vector}"
 
 #: src/ch08-01-vectors.md
 msgid "To access each element in a vector in turn, we would iterate through all of the elements rather than use indices to access one at a time. Listing 8-7 shows how to use a `for` loop to get immutable references to each element in a vector of `i32` values and print them."
-msgstr ""
+msgstr "Para acessar cada elemento de um vetor em sequência, percorreríamos todos os elementos em vez de usar índices para acessar um de cada vez. A Listagem 8-7 mostra como usar um loop `for` para obter referências imutáveis a cada elemento de um vetor de valores `i32` e imprimi-los."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-7\" caption=\"Printing each element in a vector by iterating over the elements using a `for` loop\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-7\" caption=\"Imprimindo cada elemento de um vetor percorrendo os elementos com um loop `for`\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "\"{i}\""
@@ -7492,35 +7492,35 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "We can also iterate over mutable references to each element in a mutable vector in order to make changes to all the elements. The `for` loop in Listing 8-8 will add `50` to each element."
-msgstr ""
+msgstr "Também podemos percorrer referências mutáveis a cada elemento de um vetor mutável para fazer alterações em todos os elementos. O loop `for` da Listagem 8-8 vai somar `50` a cada elemento."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-8\" caption=\"Iterating over mutable references to elements in a vector\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-8\" caption=\"Percorrendo referências mutáveis aos elementos de um vetor\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "To change the value that the mutable reference refers to, we have to use the `*` dereference operator to get to the value in `i` before we can use the `+=` operator. We’ll talk more about the dereference operator in the [“Following the Reference to the Value”](ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator)<!-- ignore --> section of Chapter 15."
-msgstr ""
+msgstr "Para alterar o valor ao qual a referência mutável se refere, precisamos usar o operador de desreferência `*` para acessar o valor em `i` antes de podermos usar o operador `+=`. Vamos falar mais sobre o operador de desreferência na seção [“Seguindo a referência até o valor”](ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator)<!-- ignore --> do Capítulo 15."
 
 #: src/ch08-01-vectors.md
 msgid "Iterating over a vector, whether immutably or mutably, is safe because of the borrow checker’s rules. If we attempted to insert or remove items in the `for` loop bodies in Listing 8-7 and Listing 8-8, we would get a compiler error similar to the one we got with the code in Listing 8-6. The reference to the vector that the `for` loop holds prevents simultaneous modification of the whole vector."
-msgstr ""
+msgstr "Percorrer um vetor, seja de forma imutável ou mutável, é seguro por causa das regras do verificador de empréstimos. Se tentássemos inserir ou remover itens nos corpos dos loops `for` das Listagens 8-7 e 8-8, receberíamos um erro de compilação semelhante ao que recebemos com o código da Listagem 8-6. A referência ao vetor que o loop `for` mantém impede a modificação simultânea de todo o vetor."
 
 #: src/ch08-01-vectors.md
 msgid "Using an Enum to Store Multiple Types"
-msgstr ""
+msgstr "Usando um enum para armazenar vários tipos {#using-an-enum-to-store-multiple-types}"
 
 #: src/ch08-01-vectors.md
 msgid "Vectors can only store values that are of the same type. This can be inconvenient; there are definitely use cases for needing to store a list of items of different types. Fortunately, the variants of an enum are defined under the same enum type, so when we need one type to represent elements of different types, we can define and use an enum!"
-msgstr ""
+msgstr "Vetores só podem armazenar valores que são do mesmo tipo. Isso pode ser inconveniente; há, sem dúvida, casos de uso em que é preciso armazenar uma lista de itens de tipos diferentes. Felizmente, as variantes de um enum são definidas dentro do mesmo tipo enum, então, quando precisamos de um tipo que represente elementos de tipos diferentes, podemos definir e usar um enum!"
 
 #: src/ch08-01-vectors.md
 msgid "For example, say we want to get values from a row in a spreadsheet in which some of the columns in the row contain integers, some floating-point numbers, and some strings. We can define an enum whose variants will hold the different value types, and all the enum variants will be considered the same type: that of the enum. Then, we can create a vector to hold that enum and so, ultimately, hold different types. We’ve demonstrated this in Listing 8-9."
-msgstr ""
+msgstr "Por exemplo, suponha que queiramos obter valores de uma linha de uma planilha em que algumas das colunas da linha contêm inteiros, outras contêm números de ponto flutuante e outras contêm strings. Podemos definir um enum cujas variantes vão armazenar os diferentes tipos de valor, e todas as variantes do enum serão consideradas do mesmo tipo: o do próprio enum. Então, podemos criar um vetor para armazenar esse enum e, no fim das contas, armazenar tipos diferentes. Demonstramos isso na Listagem 8-9."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-9\" caption=\"Defining an enum to store values of different types in one vector\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-9\" caption=\"Definindo um enum para armazenar valores de tipos diferentes em um único vetor\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "\"blue\""
@@ -7528,27 +7528,27 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "Rust needs to know what types will be in the vector at compile time so that it knows exactly how much memory on the heap will be needed to store each element. We must also be explicit about what types are allowed in this vector. If Rust allowed a vector to hold any type, there would be a chance that one or more of the types would cause errors with the operations performed on the elements of the vector. Using an enum plus a `match` expression means that Rust will ensure at compile time that every possible case is handled, as discussed in Chapter 6."
-msgstr ""
+msgstr "O Rust precisa saber quais tipos estarão no vetor em tempo de compilação, para saber exatamente quanta memória no heap será necessária para armazenar cada elemento. Também precisamos ser explícitos sobre quais tipos são permitidos nesse vetor. Se o Rust permitisse que um vetor contivesse qualquer tipo, haveria a chance de um ou mais desses tipos causarem erros nas operações realizadas sobre os elementos do vetor. Usar um enum junto com uma expressão `match` significa que o Rust vai garantir, em tempo de compilação, que todos os casos possíveis sejam tratados, como discutido no Capítulo 6."
 
 #: src/ch08-01-vectors.md
 msgid "If you don’t know the exhaustive set of types a program will get at runtime to store in a vector, the enum technique won’t work. Instead, you can use a trait object, which we’ll cover in Chapter 18."
-msgstr ""
+msgstr "Se você não souber o conjunto exaustivo de tipos que um programa vai receber em tempo de execução para armazenar em um vetor, a técnica do enum não vai funcionar. Em vez disso, você pode usar um objeto de trait, que vamos abordar no Capítulo 18."
 
 #: src/ch08-01-vectors.md
 msgid "Now that we’ve discussed some of the most common ways to use vectors, be sure to review [the API documentation](../std/vec/struct.Vec.html)<!-- ignore --> for all of the many useful methods defined on `Vec<T>` by the standard library. For example, in addition to `push`, a `pop` method removes and returns the last element."
-msgstr ""
+msgstr "Agora que discutimos algumas das formas mais comuns de usar vetores, não deixe de consultar [a documentação da API](../std/vec/struct.Vec.html)<!-- ignore --> sobre os muitos métodos úteis definidos em `Vec<T>` pela biblioteca padrão. Por exemplo, além de `push`, o método `pop` remove e retorna o último elemento."
 
 #: src/ch08-01-vectors.md
 msgid "Dropping a Vector Drops Its Elements"
-msgstr ""
+msgstr "Descartar um vetor descarta seus elementos {#dropping-a-vector-drops-its-elements}"
 
 #: src/ch08-01-vectors.md
 msgid "Like any other `struct`, a vector is freed when it goes out of scope, as annotated in Listing 8-10."
-msgstr ""
+msgstr "Assim como qualquer outro `struct`, um vetor é descartado quando sai do escopo, como indicado na Listagem 8-10."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-10\" caption=\"Showing where the vector and its elements are dropped\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-10\" caption=\"Mostrando onde o vetor e seus elementos são descartados\">\n"
 
 #: src/ch08-01-vectors.md
 msgid "// do stuff with v\n"
@@ -7560,19 +7560,19 @@ msgstr ""
 
 #: src/ch08-01-vectors.md
 msgid "When the vector gets dropped, all of its contents are also dropped, meaning the integers it holds will be cleaned up. The borrow checker ensures that any references to contents of a vector are only used while the vector itself is valid."
-msgstr ""
+msgstr "Quando o vetor é descartado, todo o seu conteúdo também é descartado, o que significa que os inteiros que ele contém serão liberados. O verificador de empréstimos garante que quaisquer referências ao conteúdo de um vetor só sejam usadas enquanto o próprio vetor for válido."
 
 #: src/ch08-01-vectors.md
 msgid "Let’s move on to the next collection type: `String`!"
-msgstr ""
+msgstr "Vamos passar para o próximo tipo de coleção: `String`!"
 
 #: src/ch08-02-strings.md
 msgid "We talked about strings in Chapter 4, but we’ll look at them in more depth now. New Rustaceans commonly get stuck on strings for a combination of three reasons: Rust’s propensity for exposing possible errors, strings being a more complicated data structure than many programmers give them credit for, and UTF-8. These factors combine in a way that can seem difficult when you’re coming from other programming languages."
-msgstr ""
+msgstr "Já falamos sobre strings no Capítulo 4, mas agora vamos analisá-las com mais profundidade. Novos rustáceos costumam ter dificuldade com strings por uma combinação de três motivos: a propensão do Rust a expor possíveis erros, o fato de strings serem uma estrutura de dados mais complicada do que muitos programadores supõem, e o UTF-8. Esses fatores se combinam de um jeito que pode parecer difícil quando você vem de outras linguagens de programação."
 
 #: src/ch08-02-strings.md
 msgid "We discuss strings in the context of collections because strings are implemented as a collection of bytes, plus some methods to provide useful functionality when those bytes are interpreted as text. In this section, we’ll talk about the operations on `String` that every collection type has, such as creating, updating, and reading. We’ll also discuss the ways in which `String` is different from the other collections, namely, how indexing into a `String` is complicated by the differences between how people and computers interpret `String` data."
-msgstr ""
+msgstr "Discutimos strings no contexto das coleções porque elas são implementadas como uma coleção de bytes, além de alguns métodos que oferecem funcionalidades úteis quando esses bytes são interpretados como texto. Nesta seção, vamos falar sobre as operações de `String` que todo tipo de coleção tem, como criar, atualizar e ler. Também vamos discutir as maneiras como `String` é diferente das outras coleções, ou seja, como a indexação em uma `String` é complicada pelas diferenças entre a forma como as pessoas e os computadores interpretam os dados de `String`."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"what-is-a-string\"></a>"
@@ -7580,35 +7580,35 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Defining Strings"
-msgstr ""
+msgstr "Definindo strings {#defining-strings}"
 
 #: src/ch08-02-strings.md
 msgid "We’ll first define what we mean by the term _string_. Rust has only one string type in the core language, which is the string slice `str` that is usually seen in its borrowed form, `&str`. In Chapter 4, we talked about string slices, which are references to some UTF-8 encoded string data stored elsewhere. String literals, for example, are stored in the program’s binary and are therefore string slices."
-msgstr ""
+msgstr "Primeiro, vamos definir o que queremos dizer com o termo _string_. O Rust tem apenas um tipo string na linguagem central, que é a slice de string `str`, normalmente vista em sua forma emprestada, `&str`. No Capítulo 4, falamos sobre slices de string, que são referências a alguns dados de string codificados em UTF-8 armazenados em outro lugar. Literais de string, por exemplo, são armazenados no binário do programa e, por isso, são slices de string."
 
 #: src/ch08-02-strings.md
 msgid "The `String` type, which is provided by Rust’s standard library rather than coded into the core language, is a growable, mutable, owned, UTF-8 encoded string type. When Rustaceans refer to “strings” in Rust, they might be referring to either the `String` or the string slice `&str` types, not just one of those types. Although this section is largely about `String`, both types are used heavily in Rust’s standard library, and both `String` and string slices are UTF-8 encoded."
-msgstr ""
+msgstr "O tipo `String`, que é fornecido pela biblioteca padrão do Rust em vez de estar embutido na linguagem central, é um tipo de string expansível, mutável, dono dos próprios dados e codificado em UTF-8. Quando os rustáceos falam de “strings” no Rust, podem estar se referindo tanto ao tipo `String` quanto ao tipo slice de string `&str`, e não apenas a um desses tipos. Embora esta seção trate principalmente de `String`, os dois tipos são amplamente usados na biblioteca padrão do Rust, e tanto `String` quanto as slices de string são codificadas em UTF-8."
 
 #: src/ch08-02-strings.md
 msgid "Creating a New String"
-msgstr ""
+msgstr "Criando uma nova string {#creating-a-new-string}"
 
 #: src/ch08-02-strings.md
 msgid "Many of the same operations available with `Vec<T>` are available with `String` as well because `String` is actually implemented as a wrapper around a vector of bytes with some extra guarantees, restrictions, and capabilities. An example of a function that works the same way with `Vec<T>` and `String` is the `new` function to create an instance, shown in Listing 8-11."
-msgstr ""
+msgstr "Muitas das mesmas operações disponíveis com `Vec<T>` também estão disponíveis com `String`, porque `String` é, na verdade, implementada como um wrapper em torno de um vetor de bytes, com algumas garantias, restrições e capacidades extras. Um exemplo de função que funciona da mesma maneira com `Vec<T>` e com `String` é a função `new`, que cria uma instância, como mostrado na Listagem 8-11."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-11\" caption=\"Creating a new, empty `String`\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-11\" caption=\"Criando uma `String` nova e vazia\">\n"
 
 #: src/ch08-02-strings.md
 msgid "This line creates a new, empty string called `s`, into which we can then load data. Often, we’ll have some initial data with which we want to start the string. For that, we use the `to_string` method, which is available on any type that implements the `Display` trait, as string literals do. Listing 8-12 shows two examples."
-msgstr ""
+msgstr "Esta linha cria uma string nova e vazia chamada `s`, na qual podemos depois inserir dados. Com frequência, teremos alguns dados iniciais com os quais queremos começar a string. Para isso, usamos o método `to_string`, que está disponível para qualquer tipo que implemente o trait `Display`, como fazem os literais de string. A Listagem 8-12 mostra dois exemplos."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-12\" caption=\"Using the `to_string` method to create a `String` from a string literal\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-12\" caption=\"Usando o método `to_string` para criar uma `String` a partir de um literal de string\">\n"
 
 #: src/ch08-02-strings.md
 msgid "\"initial contents\""
@@ -7620,27 +7620,27 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "This code creates a string containing `initial contents`."
-msgstr ""
+msgstr "Este código cria uma string que contém `initial contents`."
 
 #: src/ch08-02-strings.md
 msgid "We can also use the function `String::from` to create a `String` from a string literal. The code in Listing 8-13 is equivalent to the code in Listing 8-12 that uses `to_string`."
-msgstr ""
+msgstr "Também podemos usar a função `String::from` para criar uma `String` a partir de um literal de string. O código da Listagem 8-13 é equivalente ao código da Listagem 8-12 que usa `to_string`."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-13\" caption=\"Using the `String::from` function to create a `String` from a string literal\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-13\" caption=\"Usando a função `String::from` para criar uma `String` a partir de um literal de string\">\n"
 
 #: src/ch08-02-strings.md
 msgid "Because strings are used for so many things, we can use many different generic APIs for strings, providing us with a lot of options. Some of them can seem redundant, but they all have their place! In this case, `String::from` and `to_string` do the same thing, so which one you choose is a matter of style and readability."
-msgstr ""
+msgstr "Como strings são usadas para tantas coisas, podemos usar muitas APIs genéricas diferentes para strings, o que nos dá muitas opções. Algumas delas podem parecer redundantes, mas todas têm o seu lugar! Neste caso, `String::from` e `to_string` fazem a mesma coisa, então qual dos dois você escolhe é uma questão de estilo e de legibilidade."
 
 #: src/ch08-02-strings.md
 msgid "Remember that strings are UTF-8 encoded, so we can include any properly encoded data in them, as shown in Listing 8-14."
-msgstr ""
+msgstr "Lembre-se de que strings são codificadas em UTF-8, então podemos incluir nelas quaisquer dados devidamente codificados, como mostrado na Listagem 8-14."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-14\" caption=\"Storing greetings in different languages in strings\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-14\" caption=\"Armazenando saudações em diferentes idiomas em strings\">\n"
 
 #: src/ch08-02-strings.md
 msgid "\"السلام عليكم\""
@@ -7688,15 +7688,15 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "All of these are valid `String` values."
-msgstr ""
+msgstr "Todos esses são valores `String` válidos."
 
 #: src/ch08-02-strings.md
 msgid "Updating a String"
-msgstr ""
+msgstr "Atualizando uma string {#updating-a-string}"
 
 #: src/ch08-02-strings.md
 msgid "A `String` can grow in size and its contents can change, just like the contents of a `Vec<T>`, if you push more data into it. In addition, you can conveniently use the `+` operator or the `format!` macro to concatenate `String` values."
-msgstr ""
+msgstr "Uma `String` pode crescer de tamanho e seu conteúdo pode mudar, assim como o conteúdo de um `Vec<T>`, se você adicionar mais dados a ela. Além disso, você pode usar, de forma prática, o operador `+` ou a macro `format!` para concatenar valores `String`."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"appending-to-a-string-with-push_str-and-push\"></a>"
@@ -7704,15 +7704,15 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Appending with `push_str` or `push`"
-msgstr ""
+msgstr "Acrescentando com `push_str` ou `push` {#appending-with-push_str-or-push}"
 
 #: src/ch08-02-strings.md
 msgid "We can grow a `String` by using the `push_str` method to append a string slice, as shown in Listing 8-15."
-msgstr ""
+msgstr "Podemos fazer uma `String` crescer usando o método `push_str` para acrescentar uma slice de string, como mostrado na Listagem 8-15."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-15\" caption=\"Appending a string slice to a `String` using the `push_str` method\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-15\" caption=\"Acrescentando uma slice de string a uma `String` usando o método `push_str`\">\n"
 
 #: src/ch08-02-strings.md src/appendix-01-keywords.md
 msgid "\"foo\""
@@ -7724,11 +7724,11 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "After these two lines, `s` will contain `foobar`. The `push_str` method takes a string slice because we don’t necessarily want to take ownership of the parameter. For example, in the code in Listing 8-16, we want to be able to use `s2` after appending its contents to `s1`."
-msgstr ""
+msgstr "Depois dessas duas linhas, `s` vai conter `foobar`. O método `push_str` recebe uma slice de string porque não necessariamente queremos assumir o ownership do parâmetro. Por exemplo, no código da Listagem 8-16, queremos poder usar `s2` depois de acrescentar seu conteúdo a `s1`."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-16\" caption=\"Using a string slice after appending its contents to a `String`\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-16\" caption=\"Usando uma slice de string depois de acrescentar seu conteúdo a uma `String`\">\n"
 
 #: src/ch08-02-strings.md
 msgid "\"s2 is {s2}\""
@@ -7736,15 +7736,15 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "If the `push_str` method took ownership of `s2`, we wouldn’t be able to print its value on the last line. However, this code works as we’d expect!"
-msgstr ""
+msgstr "Se o método `push_str` assumisse o ownership de `s2`, não conseguiríamos imprimir o valor dela na última linha. No entanto, este código funciona como esperamos!"
 
 #: src/ch08-02-strings.md
 msgid "The `push` method takes a single character as a parameter and adds it to the `String`. Listing 8-17 adds the letter _l_ to a `String` using the `push` method."
-msgstr ""
+msgstr "O método `push` recebe um único caractere como parâmetro e o adiciona à `String`. A Listagem 8-17 adiciona a letra _l_ a uma `String` usando o método `push`."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-17\" caption=\"Adding one character to a `String` value using `push`\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-17\" caption=\"Adicionando um caractere a um valor `String` usando `push`\">\n"
 
 #: src/ch08-02-strings.md
 msgid "\"lo\""
@@ -7756,7 +7756,7 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "As a result, `s` will contain `lol`."
-msgstr ""
+msgstr "Como resultado, `s` vai conter `lol`."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"concatenation-with-the--operator-or-the-format-macro\"></a>"
@@ -7764,15 +7764,15 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Concatenating with `+` or `format!`"
-msgstr ""
+msgstr "Concatenando com `+` ou `format!` {#concatenating-with--or-format}"
 
 #: src/ch08-02-strings.md
 msgid "Often, you’ll want to combine two existing strings. One way to do so is to use the `+` operator, as shown in Listing 8-18."
-msgstr ""
+msgstr "Com frequência, você vai querer combinar duas strings existentes. Uma maneira de fazer isso é usar o operador `+`, como mostrado na Listagem 8-18."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-18\" caption=\"Using the `+` operator to combine two `String` values into a new `String` value\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-18\" caption=\"Usando o operador `+` para combinar dois valores `String` em um novo valor `String`\">\n"
 
 #: src/ch08-02-strings.md
 msgid "\"Hello, \""
@@ -7788,27 +7788,27 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "The string `s3` will contain `Hello, world!`. The reason `s1` is no longer valid after the addition, and the reason we used a reference to `s2`, has to do with the signature of the method that’s called when we use the `+` operator. The `+` operator uses the `add` method, whose signature looks something like this:"
-msgstr ""
+msgstr "A string `s3` vai conter `Hello, world!`. O motivo de `s1` deixar de ser válida depois da soma, e o motivo de usarmos uma referência para `s2`, têm a ver com a assinatura do método chamado quando usamos o operador `+`. O operador `+` usa o método `add`, cuja assinatura se parece mais ou menos com isto:"
 
 #: src/ch08-02-strings.md
 msgid "In the standard library, you’ll see `add` defined using generics and associated types. Here, we’ve substituted in concrete types, which is what happens when we call this method with `String` values. We’ll discuss generics in Chapter 10. This signature gives us the clues we need in order to understand the tricky bits of the `+` operator."
-msgstr ""
+msgstr "Na biblioteca padrão, você vai ver `add` definido usando genéricos e tipos associados. Aqui, já substituímos pelos tipos concretos, o que acontece quando chamamos esse método com valores `String`. Vamos discutir genéricos no Capítulo 10. Essa assinatura nos dá as pistas de que precisamos para entender as partes complicadas do operador `+`."
 
 #: src/ch08-02-strings.md
 msgid "First, `s2` has an `&`, meaning that we’re adding a reference of the second string to the first string. This is because of the `s` parameter in the `add` function: We can only add a string slice to a `String`; we can’t add two `String` values together. But wait—the type of `&s2` is `&String`, not `&str`, as specified in the second parameter to `add`. So, why does Listing 8-18 compile?"
-msgstr ""
+msgstr "Primeiro, `s2` tem um `&`, o que significa que estamos adicionando uma referência da segunda string à primeira. Isso acontece por causa do parâmetro `s` da função `add`: só podemos adicionar uma slice de string a uma `String`; não podemos somar dois valores `String`. Mas espere — o tipo de `&s2` é `&String`, e não `&str`, como especificado no segundo parâmetro de `add`. Então, por que a Listagem 8-18 compila?"
 
 #: src/ch08-02-strings.md
 msgid "The reason we’re able to use `&s2` in the call to `add` is that the compiler can coerce the `&String` argument into a `&str`. When we call the `add` method, Rust uses a deref coercion, which here turns `&s2` into `&s2[..]`. We’ll discuss deref coercion in more depth in Chapter 15. Because `add` does not take ownership of the `s` parameter, `s2` will still be a valid `String` after this operation."
-msgstr ""
+msgstr "O motivo de conseguirmos usar `&s2` na chamada de `add` é que o compilador consegue converter o argumento `&String` em um `&str`. Quando chamamos o método `add`, o Rust usa uma coerção de desreferência, que, aqui, transforma `&s2` em `&s2[..]`. Vamos discutir a coerção de desreferência com mais profundidade no Capítulo 15. Como `add` não assume o ownership do parâmetro `s`, `s2` continuará sendo uma `String` válida depois dessa operação."
 
 #: src/ch08-02-strings.md
 msgid "Second, we can see in the signature that `add` takes ownership of `self` because `self` does _not_ have an `&`. This means `s1` in Listing 8-18 will be moved into the `add` call and will no longer be valid after that. So, although `let s3 = s1 + &s2;` looks like it will copy both strings and create a new one, this statement actually takes ownership of `s1`, appends a copy of the contents of `s2`, and then returns ownership of the result. In other words, it looks like it’s making a lot of copies, but it isn’t; the implementation is more efficient than copying."
-msgstr ""
+msgstr "Em segundo lugar, podemos ver na assinatura que `add` assume o ownership de `self`, porque `self` _não_ tem um `&`. Isso significa que `s1` na Listagem 8-18 vai ser movida para a chamada de `add` e não vai mais ser válida depois disso. Então, embora `let s3 = s1 + &s2;` pareça que vai copiar as duas strings e criar uma nova, essa instrução na verdade assume o ownership de `s1`, acrescenta uma cópia do conteúdo de `s2` e depois retorna o ownership do resultado. Em outras palavras, parece que está fazendo muitas cópias, mas não está; a implementação é mais eficiente do que copiar."
 
 #: src/ch08-02-strings.md
 msgid "If we need to concatenate multiple strings, the behavior of the `+` operator gets unwieldy:"
-msgstr ""
+msgstr "Se precisarmos concatenar várias strings, o comportamento do operador `+` fica desajeitado:"
 
 #: src/ch08-02-strings.md
 msgid "\"tic\""
@@ -7828,7 +7828,7 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "At this point, `s` will be `tic-tac-toe`. With all of the `+` and `\"` characters, it’s difficult to see what’s going on. For combining strings in more complicated ways, we can instead use the `format!` macro:"
-msgstr ""
+msgstr "Neste ponto, `s` vai ser `tic-tac-toe`. Com todos os caracteres `+` e `\"`, é difícil ver o que está acontecendo. Para combinar strings de maneiras mais complicadas, podemos, em vez disso, usar a macro `format!`:"
 
 #: src/ch08-02-strings.md
 msgid "\"{s1}-{s2}-{s3}\""
@@ -7836,19 +7836,19 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "This code also sets `s` to `tic-tac-toe`. The `format!` macro works like `println!`, but instead of printing the output to the screen, it returns a `String` with the contents. The version of the code using `format!` is much easier to read, and the code generated by the `format!` macro uses references so that this call doesn’t take ownership of any of its parameters."
-msgstr ""
+msgstr "Este código também define `s` como `tic-tac-toe`. A macro `format!` funciona como `println!`, mas, em vez de imprimir a saída na tela, ela retorna uma `String` com o conteúdo. A versão do código que usa `format!` é bem mais fácil de ler, e o código gerado pela macro `format!` usa referências para que essa chamada não assuma o ownership de nenhum dos seus parâmetros."
 
 #: src/ch08-02-strings.md
 msgid "Indexing into Strings"
-msgstr ""
+msgstr "Indexando strings {#indexing-into-strings}"
 
 #: src/ch08-02-strings.md
 msgid "In many other programming languages, accessing individual characters in a string by referencing them by index is a valid and common operation. However, if you try to access parts of a `String` using indexing syntax in Rust, you’ll get an error. Consider the invalid code in Listing 8-19."
-msgstr ""
+msgstr "Em muitas outras linguagens de programação, acessar caracteres individuais de uma string referenciando-os por índice é uma operação válida e comum. No entanto, se você tentar acessar partes de uma `String` usando a sintaxe de indexação no Rust, vai receber um erro. Considere o código inválido da Listagem 8-19."
 
 #: src/ch08-02-strings.md
 msgid "<Listing number=\"8-19\" caption=\"Attempting to use indexing syntax with a `String`\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-19\" caption=\"Tentando usar a sintaxe de indexação com uma `String`\">\n"
 
 #: src/ch08-02-strings.md src/ch16-02-message-passing.md
 #: src/ch17-02-concurrency-with-async.md src/ch17-05-traits-for-async.md
@@ -7858,7 +7858,7 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "This code will result in the following error:"
-msgstr ""
+msgstr "Este código vai gerar o seguinte erro:"
 
 #: src/ch08-02-strings.md
 msgid ""
@@ -7890,31 +7890,31 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "The error tells the story: Rust strings don’t support indexing. But why not? To answer that question, we need to discuss how Rust stores strings in memory."
-msgstr ""
+msgstr "O erro já conta a história: strings do Rust não suportam indexação. Mas por que não? Para responder a essa pergunta, precisamos discutir como o Rust armazena strings na memória."
 
 #: src/ch08-02-strings.md
 msgid "Internal Representation"
-msgstr ""
+msgstr "Representação interna {#internal-representation}"
 
 #: src/ch08-02-strings.md
 msgid "A `String` is a wrapper over a `Vec<u8>`. Let’s look at some of our properly encoded UTF-8 example strings from Listing 8-14. First, this one:"
-msgstr ""
+msgstr "Uma `String` é um wrapper sobre um `Vec<u8>`. Vamos dar uma olhada em algumas das nossas strings de exemplo, codificadas corretamente em UTF-8, da Listagem 8-14. Primeiro, esta:"
 
 #: src/ch08-02-strings.md
 msgid "In this case, `len` will be `4`, which means the vector storing the string `\"Hola\"` is 4 bytes long. Each of these letters takes 1 byte when encoded in UTF-8. The following line, however, may surprise you (note that this string begins with the capital Cyrillic letter _Ze_, not the number 3):"
-msgstr ""
+msgstr "Neste caso, `len` vai ser `4`, o que significa que o vetor que armazena a string `\"Hola\"` tem 4 bytes de comprimento. Cada uma dessas letras ocupa 1 byte quando codificada em UTF-8. A próxima linha, porém, pode surpreender você (observe que esta string começa com a letra maiúscula cirílica _Ze_, e não com o número 3):"
 
 #: src/ch08-02-strings.md
 msgid "If you were asked how long the string is, you might say 12. In fact, Rust’s answer is 24: That’s the number of bytes it takes to encode “Здравствуйте” in UTF-8, because each Unicode scalar value in that string takes 2 bytes of storage. Therefore, an index into the string’s bytes will not always correlate to a valid Unicode scalar value. To demonstrate, consider this invalid Rust code:"
-msgstr ""
+msgstr "Se perguntassem qual é o comprimento da string, você poderia responder 12. Na verdade, a resposta do Rust é 24: esse é o número de bytes necessários para codificar “Здравствуйте” em UTF-8, porque cada valor escalar Unicode nessa string ocupa 2 bytes de armazenamento. Por isso, um índice nos bytes da string nem sempre vai corresponder a um valor escalar Unicode válido. Para demonstrar, considere este código Rust inválido:"
 
 #: src/ch08-02-strings.md
 msgid "You already know that `answer` will not be `З`, the first letter. When encoded in UTF-8, the first byte of `З` is `208` and the second is `151`, so it would seem that `answer` should in fact be `208`, but `208` is not a valid character on its own. Returning `208` is likely not what a user would want if they asked for the first letter of this string; however, that’s the only data that Rust has at byte index 0. Users generally don’t want the byte value returned, even if the string contains only Latin letters: If `&\"hi\"[0]` were valid code that returned the byte value, it would return `104`, not `h`."
-msgstr ""
+msgstr "Você já sabe que `answer` não vai ser `З`, a primeira letra. Quando codificada em UTF-8, o primeiro byte de `З` é `208` e o segundo é `151`, então pareceria que `answer` deveria, na verdade, ser `208`, mas `208` não é um caractere válido por si só. Retornar `208` provavelmente não é o que um usuário gostaria de obter se pedisse a primeira letra desta string; no entanto, esse é o único dado que o Rust tem no índice de byte 0. Os usuários geralmente não querem que o valor do byte seja retornado, mesmo que a string contenha apenas letras latinas: se `&\"hi\"[0]` fosse um código válido que retornasse o valor do byte, ele retornaria `104`, e não `h`."
 
 #: src/ch08-02-strings.md
 msgid "The answer, then, is that to avoid returning an unexpected value and causing bugs that might not be discovered immediately, Rust doesn’t compile this code at all and prevents misunderstandings early in the development process."
-msgstr ""
+msgstr "A resposta, então, é que, para evitar retornar um valor inesperado e causar bugs que talvez não sejam descobertos imediatamente, o Rust nem chega a compilar este código e evita mal-entendidos logo no início do processo de desenvolvimento."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"bytes-and-scalar-values-and-grapheme-clusters-oh-my\"></a>"
@@ -7922,23 +7922,23 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Bytes, Scalar Values, and Grapheme Clusters"
-msgstr ""
+msgstr "Bytes, valores escalares e agrupamentos de grafemas {#bytes-scalar-values-and-grapheme-clusters}"
 
 #: src/ch08-02-strings.md
 msgid "Another point about UTF-8 is that there are actually three relevant ways to look at strings from Rust’s perspective: as bytes, scalar values, and grapheme clusters (the closest thing to what we would call _letters_)."
-msgstr ""
+msgstr "Outro ponto sobre UTF-8 é que, na verdade, existem três maneiras relevantes de olhar para strings do ponto de vista do Rust: como bytes, valores escalares e agrupamentos de grafemas (o que mais se aproxima do que chamaríamos de _letras_)."
 
 #: src/ch08-02-strings.md
 msgid "If we look at the Hindi word “नमस्ते” written in the Devanagari script, it is stored as a vector of `u8` values that looks like this:"
-msgstr ""
+msgstr "Se olharmos para a palavra em hindi “नमस्ते”, escrita em devanágari, ela é armazenada como um vetor de valores `u8` que se parece com isto:"
 
 #: src/ch08-02-strings.md
 msgid "That’s 18 bytes and is how computers ultimately store this data. If we look at them as Unicode scalar values, which are what Rust’s `char` type is, those bytes look like this:"
-msgstr ""
+msgstr "São 18 bytes, e é assim que os computadores armazenam esses dados no fim das contas. Se olharmos para eles como valores escalares Unicode, que correspondem ao tipo `char` do Rust, esses bytes se parecem com isto:"
 
 #: src/ch08-02-strings.md
 msgid "There are six `char` values here, but the fourth and sixth are not letters: They’re diacritics that don’t make sense on their own. Finally, if we look at them as grapheme clusters, we’d get what a person would call the four letters that make up the Hindi word:"
-msgstr ""
+msgstr "Há seis valores `char` aqui, mas o quarto e o sexto não são letras: são diacríticos que não fazem sentido por si sós. Por fim, se olharmos para eles como agrupamentos de grafemas, obteríamos o que uma pessoa reconheceria como as quatro letras que formam a palavra em hindi:"
 
 #: src/ch08-02-strings.md
 msgid ""
@@ -7949,31 +7949,31 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Rust provides different ways of interpreting the raw string data that computers store so that each program can choose the interpretation it needs, no matter what human language the data is in."
-msgstr ""
+msgstr "O Rust oferece diferentes maneiras de interpretar os dados brutos de string que os computadores armazenam, para que cada programa possa escolher a interpretação de que precisa, independentemente da língua humana em que os dados estejam."
 
 #: src/ch08-02-strings.md
 msgid "A final reason Rust doesn’t allow us to index into a `String` to get a character is that indexing operations are expected to always take constant time (O(1)). But it isn’t possible to guarantee that performance with a `String`, because Rust would have to walk through the contents from the beginning to the index to determine how many valid characters there were."
-msgstr ""
+msgstr "Um último motivo pelo qual o Rust não nos permite indexar uma `String` para obter um caractere é que se espera que operações de indexação sempre levem tempo constante (O(1)). Mas não é possível garantir esse desempenho com uma `String`, porque o Rust precisaria percorrer o conteúdo desde o início até o índice para determinar quantos caracteres válidos existem."
 
 #: src/ch08-02-strings.md
 msgid "Slicing Strings"
-msgstr ""
+msgstr "Criando slices de strings {#slicing-strings}"
 
 #: src/ch08-02-strings.md
 msgid "Indexing into a string is often a bad idea because it’s not clear what the return type of the string-indexing operation should be: a byte value, a character, a grapheme cluster, or a string slice. If you really need to use indices to create string slices, therefore, Rust asks you to be more specific."
-msgstr ""
+msgstr "Indexar uma string costuma ser uma má ideia, porque não fica claro qual deveria ser o tipo de retorno da operação de indexação de strings: um valor de byte, um caractere, um agrupamento de grafemas ou uma slice de string. Se você realmente precisar usar índices para criar slices de string, portanto, o Rust pede que você seja mais específico."
 
 #: src/ch08-02-strings.md
 msgid "Rather than indexing using `[]` with a single number, you can use `[]` with a range to create a string slice containing particular bytes:"
-msgstr ""
+msgstr "Em vez de indexar usando `[]` com um único número, você pode usar `[]` com um intervalo para criar uma slice de string que contenha bytes específicos:"
 
 #: src/ch08-02-strings.md
 msgid "Here, `s` will be a `&str` that contains the first 4 bytes of the string. Earlier, we mentioned that each of these characters was 2 bytes, which means `s` will be `Зд`."
-msgstr ""
+msgstr "Aqui, `s` vai ser um `&str` que contém os primeiros 4 bytes da string. Antes, mencionamos que cada um desses caracteres tinha 2 bytes, o que significa que `s` vai ser `Зд`."
 
 #: src/ch08-02-strings.md
 msgid "If we were to try to slice only part of a character’s bytes with something like `&hello[0..1]`, Rust would panic at runtime in the same way as if an invalid index were accessed in a vector:"
-msgstr ""
+msgstr "Se tentássemos criar uma slice só com parte dos bytes de um caractere, usando algo como `&hello[0..1]`, o Rust entraria em pânico em tempo de execução, do mesmo jeito que aconteceria se um índice inválido fosse acessado em um vetor:"
 
 #: src/ch08-02-strings.md
 msgid ""
@@ -7991,7 +7991,7 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "You should use caution when creating string slices with ranges, because doing so can crash your program."
-msgstr ""
+msgstr "Você deve ter cuidado ao criar slices de string com intervalos, porque isso pode fazer o seu programa falhar."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"methods-for-iterating-over-strings\"></a>"
@@ -7999,11 +7999,11 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Iterating Over Strings"
-msgstr ""
+msgstr "Iterando sobre strings {#iterating-over-strings}"
 
 #: src/ch08-02-strings.md
 msgid "The best way to operate on pieces of strings is to be explicit about whether you want characters or bytes. For individual Unicode scalar values, use the `chars` method. Calling `chars` on “Зд” separates out and returns two values of type `char`, and you can iterate over the result to access each element:"
-msgstr ""
+msgstr "A melhor maneira de operar sobre partes de strings é ser explícito quanto a querer caracteres ou bytes. Para valores escalares Unicode individuais, use o método `chars`. Chamar `chars` em “Зд” separa e retorna dois valores do tipo `char`, e você pode iterar sobre o resultado para acessar cada elemento:"
 
 #: src/ch08-02-strings.md
 msgid "\"Зд\""
@@ -8015,11 +8015,11 @@ msgstr ""
 
 #: src/ch08-02-strings.md src/ch16-03-shared-state.md
 msgid "This code will print the following:"
-msgstr ""
+msgstr "Este código vai imprimir o seguinte:"
 
 #: src/ch08-02-strings.md
 msgid "Alternatively, the `bytes` method returns each raw byte, which might be appropriate for your domain:"
-msgstr ""
+msgstr "Como alternativa, o método `bytes` retorna cada byte bruto, o que pode ser apropriado para o seu domínio:"
 
 #: src/ch08-02-strings.md
 msgid "\"{b}\""
@@ -8027,15 +8027,15 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "This code will print the 4 bytes that make up this string:"
-msgstr ""
+msgstr "Este código vai imprimir os 4 bytes que compõem esta string:"
 
 #: src/ch08-02-strings.md
 msgid "But be sure to remember that valid Unicode scalar values may be made up of more than 1 byte."
-msgstr ""
+msgstr "Mas lembre-se de que valores escalares Unicode válidos podem ser compostos por mais de 1 byte."
 
 #: src/ch08-02-strings.md
 msgid "Getting grapheme clusters from strings, as with the Devanagari script, is complex, so this functionality is not provided by the standard library. Crates are available on [crates.io](https://crates.io/)<!-- ignore --> if this is the functionality you need."
-msgstr ""
+msgstr "Obter agrupamentos de grafemas de strings, como acontece com a escrita devanágari, é complexo, então essa funcionalidade não é fornecida pela biblioteca padrão. Há crates disponíveis no [crates.io](https://crates.io/)<!-- ignore --> se essa for a funcionalidade de que você precisa."
 
 #: src/ch08-02-strings.md
 msgid "<a id=\"strings-are-not-so-simple\"></a>"
@@ -8043,43 +8043,43 @@ msgstr ""
 
 #: src/ch08-02-strings.md
 msgid "Handling the Complexities of Strings"
-msgstr ""
+msgstr "Lidando com as complexidades das strings {#handling-the-complexities-of-strings}"
 
 #: src/ch08-02-strings.md
 msgid "To summarize, strings are complicated. Different programming languages make different choices about how to present this complexity to the programmer. Rust has chosen to make the correct handling of `String` data the default behavior for all Rust programs, which means programmers have to put more thought into handling UTF-8 data up front. This trade-off exposes more of the complexity of strings than is apparent in other programming languages, but it prevents you from having to handle errors involving non-ASCII characters later in your development life cycle."
-msgstr ""
+msgstr "Resumindo, strings são complicadas. Diferentes linguagens de programação fazem escolhas diferentes sobre como apresentar essa complexidade ao programador. O Rust escolheu tornar o tratamento correto de dados `String` o comportamento padrão de todos os programas Rust, o que significa que os programadores precisam pensar mais, logo no começo, em como tratar dados UTF-8. Essa concessão expõe mais da complexidade das strings do que é aparente em outras linguagens de programação, mas evita que você precise tratar erros envolvendo caracteres não ASCII mais tarde no ciclo de vida do desenvolvimento."
 
 #: src/ch08-02-strings.md
 msgid "The good news is that the standard library offers a lot of functionality built off the `String` and `&str` types to help handle these complex situations correctly. Be sure to check out the documentation for useful methods like `contains` for searching in a string and `replace` for substituting parts of a string with another string."
-msgstr ""
+msgstr "A boa notícia é que a biblioteca padrão oferece muitas funcionalidades construídas a partir dos tipos `String` e `&str` para ajudar a tratar essas situações complexas corretamente. Não deixe de conferir a documentação de métodos úteis, como `contains`, para pesquisar em uma string, e `replace`, para substituir partes de uma string por outra string."
 
 #: src/ch08-02-strings.md
 msgid "Let’s switch to something a bit less complex: hash maps!"
-msgstr ""
+msgstr "Vamos passar para algo um pouco menos complexo: hash maps!"
 
 #: src/ch08-03-hash-maps.md
 msgid "The last of our common collections is the hash map. The type `HashMap<K, V>` stores a mapping of keys of type `K` to values of type `V` using a _hashing function_, which determines how it places these keys and values into memory. Many programming languages support this kind of data structure, but they often use a different name, such as _hash_, _map_, _object_, _hash table_, _dictionary_, or _associative array_, just to name a few."
-msgstr ""
+msgstr "A última das nossas coleções comuns é o hash map. O tipo `HashMap<K, V>` armazena um mapeamento de chaves do tipo `K` para valores do tipo `V` usando uma _função de hash_, que determina como ele posiciona essas chaves e valores na memória. Muitas linguagens de programação oferecem suporte a esse tipo de estrutura de dados, mas costumam usar outro nome, como _hash_, _map_, _objeto_, _tabela hash_, _dicionário_ ou _array associativo_, só para citar alguns."
 
 #: src/ch08-03-hash-maps.md
 msgid "Hash maps are useful when you want to look up data not by using an index, as you can with vectors, but by using a key that can be of any type. For example, in a game, you could keep track of each team’s score in a hash map in which each key is a team’s name and the values are each team’s score. Given a team name, you can retrieve its score."
-msgstr ""
+msgstr "Hash maps são úteis quando você quer buscar dados não usando um índice, como você faz com vetores, mas usando uma chave que pode ser de qualquer tipo. Por exemplo, em um jogo, você poderia acompanhar a pontuação de cada time em um hash map em que cada chave é o nome de um time e os valores são a pontuação de cada time. Dado o nome de um time, você pode recuperar a pontuação dele."
 
 #: src/ch08-03-hash-maps.md
 msgid "We’ll go over the basic API of hash maps in this section, but many more goodies are hiding in the functions defined on `HashMap<K, V>` by the standard library. As always, check the standard library documentation for more information."
-msgstr ""
+msgstr "Vamos ver a API básica dos hash maps nesta seção, mas muitos outros recursos estão escondidos nas funções definidas em `HashMap<K, V>` pela biblioteca padrão. Como sempre, consulte a documentação da biblioteca padrão para mais informações."
 
 #: src/ch08-03-hash-maps.md
 msgid "Creating a New Hash Map"
-msgstr ""
+msgstr "Criando um novo hash map {#creating-a-new-hash-map}"
 
 #: src/ch08-03-hash-maps.md
 msgid "One way to create an empty hash map is to use `new` and to add elements with `insert`. In Listing 8-20, we’re keeping track of the scores of two teams whose names are _Blue_ and _Yellow_. The Blue team starts with 10 points, and the Yellow team starts with 50."
-msgstr ""
+msgstr "Uma maneira de criar um hash map vazio é usar `new` e adicionar elementos com `insert`. Na Listagem 8-20, estamos acompanhando as pontuações de dois times cujos nomes são _Blue_ e _Yellow_. O time Blue começa com 10 pontos, e o time Yellow começa com 50."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-20\" caption=\"Creating a new hash map and inserting some keys and values\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-20\" caption=\"Criando um novo hash map e inserindo algumas chaves e valores\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "\"Blue\""
@@ -8091,31 +8091,31 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "Note that we need to first `use` the `HashMap` from the collections portion of the standard library. Of our three common collections, this one is the least often used, so it’s not included in the features brought into scope automatically in the prelude. Hash maps also have less support from the standard library; there’s no built-in macro to construct them, for example."
-msgstr ""
+msgstr "Observe que precisamos primeiro fazer `use` do `HashMap` da parte de coleções da biblioteca padrão. Das nossas três coleções comuns, esta é a menos usada, por isso ela não está incluída nos recursos trazidos para o escopo automaticamente pelo prelúdio. Os hash maps também têm menos suporte da biblioteca padrão; não há, por exemplo, nenhuma macro embutida para construí-los."
 
 #: src/ch08-03-hash-maps.md
 msgid "Just like vectors, hash maps store their data on the heap. This `HashMap` has keys of type `String` and values of type `i32`. Like vectors, hash maps are homogeneous: All of the keys must have the same type, and all of the values must have the same type."
-msgstr ""
+msgstr "Assim como os vetores, os hash maps armazenam seus dados no heap. Este `HashMap` tem chaves do tipo `String` e valores do tipo `i32`. Como os vetores, os hash maps são homogêneos: todas as chaves devem ter o mesmo tipo, e todos os valores também devem ter o mesmo tipo."
 
 #: src/ch08-03-hash-maps.md
 msgid "Accessing Values in a Hash Map"
-msgstr ""
+msgstr "Acessando valores em um hash map {#accessing-values-in-a-hash-map}"
 
 #: src/ch08-03-hash-maps.md
 msgid "We can get a value out of the hash map by providing its key to the `get` method, as shown in Listing 8-21."
-msgstr ""
+msgstr "Podemos obter um valor do hash map fornecendo a sua chave ao método `get`, como mostrado na Listagem 8-21."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-21\" caption=\"Accessing the score for the Blue team stored in the hash map\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-21\" caption=\"Acessando a pontuação do time Blue armazenada no hash map\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "Here, `score` will have the value that’s associated with the Blue team, and the result will be `10`. The `get` method returns an `Option<&V>`; if there’s no value for that key in the hash map, `get` will return `None`. This program handles the `Option` by calling `copied` to get an `Option<i32>` rather than an `Option<&i32>`, then `unwrap_or` to set `score` to zero if `scores` doesn’t have an entry for the key."
-msgstr ""
+msgstr "Aqui, `score` vai ter o valor associado ao time Blue, e o resultado vai ser `10`. O método `get` retorna um `Option<&V>`; se não houver valor para essa chave no hash map, `get` vai retornar `None`. Este programa trata o `Option` chamando `copied` para obter um `Option<i32>` em vez de um `Option<&i32>`, e depois `unwrap_or` para definir `score` como zero caso `scores` não tenha uma entrada para a chave."
 
 #: src/ch08-03-hash-maps.md
 msgid "We can iterate over each key-value pair in a hash map in a similar manner as we do with vectors, using a `for` loop:"
-msgstr ""
+msgstr "Podemos iterar sobre cada par chave-valor em um hash map de maneira semelhante à que usamos com vetores, usando um loop `for`:"
 
 #: src/ch08-03-hash-maps.md
 msgid "\"{key}: {value}\""
@@ -8123,7 +8123,7 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "This code will print each pair in an arbitrary order:"
-msgstr ""
+msgstr "Este código vai imprimir cada par em uma ordem arbitrária:"
 
 #: src/ch08-03-hash-maps.md
 msgid "<a id=\"hash-maps-and-ownership\"></a>"
@@ -8131,15 +8131,15 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "Managing Ownership in Hash Maps"
-msgstr ""
+msgstr "Gerenciando o ownership em hash maps {#managing-ownership-in-hash-maps}"
 
 #: src/ch08-03-hash-maps.md
 msgid "For types that implement the `Copy` trait, like `i32`, the values are copied into the hash map. For owned values like `String`, the values will be moved and the hash map will be the owner of those values, as demonstrated in Listing 8-22."
-msgstr ""
+msgstr "Para tipos que implementam o trait `Copy`, como `i32`, os valores são copiados para dentro do hash map. Para valores que têm dono, como `String`, os valores serão movidos e o hash map será o dono desses valores, como demonstrado na Listagem 8-22."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-22\" caption=\"Showing that keys and values are owned by the hash map once they’re inserted\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-22\" caption=\"Mostrando que as chaves e os valores pertencem ao hash map depois que são inseridos\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "\"Favorite color\""
@@ -8153,35 +8153,35 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "We aren’t able to use the variables `field_name` and `field_value` after they’ve been moved into the hash map with the call to `insert`."
-msgstr ""
+msgstr "Não conseguimos usar as variáveis `field_name` e `field_value` depois que elas foram movidas para o hash map com a chamada de `insert`."
 
 #: src/ch08-03-hash-maps.md
 msgid "If we insert references to values into the hash map, the values won’t be moved into the hash map. The values that the references point to must be valid for at least as long as the hash map is valid. We’ll talk more about these issues in [“Validating References with Lifetimes”](ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)<!-- ignore --> in Chapter 10."
-msgstr ""
+msgstr "Se inserirmos referências para valores no hash map, os valores não serão movidos para dentro dele. Os valores para os quais as referências apontam precisam ser válidos pelo menos enquanto o hash map for válido. Vamos falar mais sobre essas questões em [“Validando referências com tempos de vida”](ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)<!-- ignore --> no Capítulo 10."
 
 #: src/ch08-03-hash-maps.md
 msgid "Updating a Hash Map"
-msgstr ""
+msgstr "Atualizando um hash map {#updating-a-hash-map}"
 
 #: src/ch08-03-hash-maps.md
 msgid "Although the number of key and value pairs is growable, each unique key can only have one value associated with it at a time (but not vice versa: For example, both the Blue team and the Yellow team could have the value `10` stored in the `scores` hash map)."
-msgstr ""
+msgstr "Embora a quantidade de pares chave-valor possa crescer, cada chave única só pode ter um valor associado a ela por vez (mas não o contrário: por exemplo, tanto o time Blue quanto o time Yellow poderiam ter o valor `10` armazenado no hash map `scores`)."
 
 #: src/ch08-03-hash-maps.md
 msgid "When you want to change the data in a hash map, you have to decide how to handle the case when a key already has a value assigned. You could replace the old value with the new value, completely disregarding the old value. You could keep the old value and ignore the new value, only adding the new value if the key _doesn’t_ already have a value. Or you could combine the old value and the new value. Let’s look at how to do each of these!"
-msgstr ""
+msgstr "Quando você quiser alterar os dados de um hash map, precisa decidir como tratar o caso em que uma chave já tem um valor atribuído. Você pode substituir o valor antigo pelo novo, desconsiderando completamente o valor antigo. Você pode manter o valor antigo e ignorar o novo, adicionando o novo valor apenas se a chave ainda _não_ tiver um valor. Ou você pode combinar o valor antigo com o novo. Vamos ver como fazer cada uma dessas opções!"
 
 #: src/ch08-03-hash-maps.md
 msgid "Overwriting a Value"
-msgstr ""
+msgstr "Sobrescrevendo um valor {#overwriting-a-value}"
 
 #: src/ch08-03-hash-maps.md
 msgid "If we insert a key and a value into a hash map and then insert that same key with a different value, the value associated with that key will be replaced. Even though the code in Listing 8-23 calls `insert` twice, the hash map will only contain one key-value pair because we’re inserting the value for the Blue team’s key both times."
-msgstr ""
+msgstr "Se inserirmos uma chave e um valor em um hash map e depois inserirmos essa mesma chave com um valor diferente, o valor associado a essa chave será substituído. Embora o código da Listagem 8-23 chame `insert` duas vezes, o hash map vai conter apenas um par chave-valor, porque, nas duas vezes, estamos inserindo um valor para a chave do time Blue."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-23\" caption=\"Replacing a value stored with a particular key\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-23\" caption=\"Substituindo um valor armazenado com uma chave específica\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "\"{scores:?}\""
@@ -8189,7 +8189,7 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "This code will print `{\"Blue\": 25}`. The original value of `10` has been overwritten."
-msgstr ""
+msgstr "Este código vai imprimir `{\"Blue\": 25}`. O valor original, `10`, foi sobrescrito."
 
 #: src/ch08-03-hash-maps.md
 msgid "<a id=\"only-inserting-a-value-if-the-key-has-no-value\"></a>"
@@ -8197,39 +8197,39 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "Adding a Key and Value Only If a Key Isn’t Present"
-msgstr ""
+msgstr "Adicionando uma chave e um valor apenas se a chave não estiver presente {#adding-a-key-and-value-only-if-a-key-isnt-present}"
 
 #: src/ch08-03-hash-maps.md
 msgid "It’s common to check whether a particular key already exists in the hash map with a value and then to take the following actions: If the key does exist in the hash map, the existing value should remain the way it is; if the key doesn’t exist, insert it and a value for it."
-msgstr ""
+msgstr "É comum verificar se uma chave específica já existe no hash map com um valor e, então, tomar as seguintes ações: se a chave existir no hash map, o valor existente deve permanecer como está; se a chave não existir, inserir a chave e um valor para ela."
 
 #: src/ch08-03-hash-maps.md
 msgid "Hash maps have a special API for this called `entry` that takes the key you want to check as a parameter. The return value of the `entry` method is an enum called `Entry` that represents a value that might or might not exist. Let’s say we want to check whether the key for the Yellow team has a value associated with it. If it doesn’t, we want to insert the value `50`, and the same for the Blue team. Using the `entry` API, the code looks like Listing 8-24."
-msgstr ""
+msgstr "Os hash maps têm uma API especial para isso, chamada `entry`, que recebe como parâmetro a chave que você quer verificar. O valor de retorno do método `entry` é um enum chamado `Entry`, que representa um valor que pode ou não existir. Digamos que queremos verificar se a chave do time Yellow tem um valor associado a ela. Se ela não tiver, queremos inserir o valor `50`, e o mesmo para o time Blue. Usando a API `entry`, o código fica como na Listagem 8-24."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-24\" caption=\"Using the `entry` method to only insert if the key does not already have a value\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-24\" caption=\"Usando o método `entry` para inserir somente se a chave ainda não tiver um valor\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "The `or_insert` method on `Entry` is defined to return a mutable reference to the value for the corresponding `Entry` key if that key exists, and if not, it inserts the parameter as the new value for this key and returns a mutable reference to the new value. This technique is much cleaner than writing the logic ourselves and, in addition, plays more nicely with the borrow checker."
-msgstr ""
+msgstr "O método `or_insert` em `Entry` é definido para retornar uma referência mutável ao valor correspondente à chave do `Entry`, se essa chave existir; se não existir, ele insere o parâmetro como o novo valor dessa chave e retorna uma referência mutável ao novo valor. Essa técnica é bem mais limpa do que escrever a lógica por conta própria e, além disso, se dá melhor com o verificador de empréstimos."
 
 #: src/ch08-03-hash-maps.md
 msgid "Running the code in Listing 8-24 will print `{\"Yellow\": 50, \"Blue\": 10}`. The first call to `entry` will insert the key for the Yellow team with the value `50` because the Yellow team doesn’t have a value already. The second call to `entry` will not change the hash map, because the Blue team already has the value `10`."
-msgstr ""
+msgstr "Executar o código da Listagem 8-24 vai imprimir `{\"Yellow\": 50, \"Blue\": 10}`. A primeira chamada a `entry` vai inserir a chave do time Yellow com o valor `50`, porque o time Yellow ainda não tem um valor. A segunda chamada a `entry` não vai alterar o hash map, porque o time Blue já tem o valor `10`."
 
 #: src/ch08-03-hash-maps.md
 msgid "Updating a Value Based on the Old Value"
-msgstr ""
+msgstr "Atualizando um valor com base no valor antigo {#updating-a-value-based-on-the-old-value}"
 
 #: src/ch08-03-hash-maps.md
 msgid "Another common use case for hash maps is to look up a key’s value and then update it based on the old value. For instance, Listing 8-25 shows code that counts how many times each word appears in some text. We use a hash map with the words as keys and increment the value to keep track of how many times we’ve seen that word. If it’s the first time we’ve seen a word, we’ll first insert the value `0`."
-msgstr ""
+msgstr "Outro caso de uso comum para hash maps é buscar o valor de uma chave e, em seguida, atualizá-lo com base no valor antigo. Por exemplo, a Listagem 8-25 mostra um código que conta quantas vezes cada palavra aparece em um texto. Usamos um hash map com as palavras como chaves e incrementamos o valor para registrar quantas vezes vimos aquela palavra. Se for a primeira vez que vemos uma palavra, primeiro vamos inserir o valor `0`."
 
 #: src/ch08-03-hash-maps.md
 msgid "<Listing number=\"8-25\" caption=\"Counting occurrences of words using a hash map that stores words and counts\">\n"
-msgstr ""
+msgstr "<Listing number=\"8-25\" caption=\"Contando ocorrências de palavras usando um hash map que armazena palavras e contagens\">\n"
 
 #: src/ch08-03-hash-maps.md
 msgid "\"hello world wonderful world\""
@@ -8241,47 +8241,47 @@ msgstr ""
 
 #: src/ch08-03-hash-maps.md
 msgid "This code will print `{\"world\": 2, \"hello\": 1, \"wonderful\": 1}`. You might see the same key-value pairs printed in a different order: Recall from [“Accessing Values in a Hash Map”](#accessing-values-in-a-hash-map)<!-- ignore --> that iterating over a hash map happens in an arbitrary order."
-msgstr ""
+msgstr "Este código vai imprimir `{\"world\": 2, \"hello\": 1, \"wonderful\": 1}`. Você pode ver os mesmos pares chave-valor impressos em uma ordem diferente: lembre-se, em [“Acessando valores em um hash map”](#accessing-values-in-a-hash-map)<!-- ignore -->, de que a iteração sobre um hash map acontece em uma ordem arbitrária."
 
 #: src/ch08-03-hash-maps.md
 msgid "The `split_whitespace` method returns an iterator over subslices, separated by whitespace, of the value in `text`. The `or_insert` method returns a mutable reference (`&mut V`) to the value for the specified key. Here, we store that mutable reference in the `count` variable, so in order to assign to that value, we must first dereference `count` using the asterisk (`*`). The mutable reference goes out of scope at the end of the `for` loop, so all of these changes are safe and allowed by the borrowing rules."
-msgstr ""
+msgstr "O método `split_whitespace` retorna um iterador sobre subslices, separadas por espaços em branco, do valor em `text`. O método `or_insert` retorna uma referência mutável (`&mut V`) ao valor da chave especificada. Aqui, armazenamos essa referência mutável na variável `count`; assim, para alterar esse valor, primeiro precisamos desreferenciar `count` usando o asterisco (`*`). A referência mutável sai do escopo no fim do loop `for`, então todas essas alterações são seguras e permitidas pelas regras de empréstimo."
 
 #: src/ch08-03-hash-maps.md
 msgid "Hashing Functions"
-msgstr ""
+msgstr "Funções de hash {#hashing-functions}"
 
 #: src/ch08-03-hash-maps.md
 msgid "By default, `HashMap` uses a hashing function called _SipHash_ that can provide resistance to denial-of-service (DoS) attacks involving hash tables[^siphash]<!-- ignore -->. This is not the fastest hashing algorithm available, but the trade-off for better security that comes with the drop in performance is worth it. If you profile your code and find that the default hash function is too slow for your purposes, you can switch to another function by specifying a different hasher. A _hasher_ is a type that implements the `BuildHasher` trait. We’ll talk about traits and how to implement them in [Chapter 10](ch10-02-traits.html)<!-- ignore -->. You don’t necessarily have to implement your own hasher from scratch; [crates.io](https://crates.io/)<!-- ignore --> has libraries shared by other Rust users that provide hashers implementing many common hashing algorithms."
-msgstr ""
+msgstr "Por padrão, o `HashMap` usa uma função de hash chamada _SipHash_, que pode oferecer resistência a ataques de negação de serviço (DoS) envolvendo tabelas hash[^siphash]<!-- ignore -->. Este não é o algoritmo de hash mais rápido disponível, mas a queda de desempenho que vem com a maior segurança compensa. Se você medir o desempenho do seu código e perceber que a função de hash padrão é lenta demais para as suas necessidades, pode mudar para outra função especificando um hasher diferente. Um _hasher_ é um tipo que implementa o trait `BuildHasher`. Vamos falar sobre traits e como implementá-los no [Capítulo 10](ch10-02-traits.html)<!-- ignore -->. Você não precisa necessariamente implementar o seu próprio hasher do zero; o [crates.io](https://crates.io/)<!-- ignore --> tem bibliotecas compartilhadas por outros usuários do Rust que fornecem hashers que implementam muitos algoritmos de hash comuns."
 
 #: src/ch08-03-hash-maps.md
 msgid "[https://en.wikipedia.org/wiki/SipHash](https://en.wikipedia.org/wiki/SipHash)"
-msgstr ""
+msgstr "[https://en.wikipedia.org/wiki/SipHash](https://en.wikipedia.org/wiki/SipHash)"
 
 #: src/ch08-03-hash-maps.md
 msgid "Vectors, strings, and hash maps will provide a large amount of functionality necessary in programs when you need to store, access, and modify data. Here are some exercises you should now be equipped to solve:"
-msgstr ""
+msgstr "Vetores, strings e hash maps vão oferecer uma grande quantidade de funcionalidades necessárias nos programas quando você precisar armazenar, acessar e modificar dados. Aqui estão alguns exercícios que você agora está preparado para resolver:"
 
 #: src/ch08-03-hash-maps.md
 msgid "Given a list of integers, use a vector and return the median (when sorted, the value in the middle position) and mode (the value that occurs most often; a hash map will be helpful here) of the list."
-msgstr ""
+msgstr "Dada uma lista de inteiros, use um vetor e retorne a mediana (quando ordenada, o valor na posição do meio) e a moda (o valor que ocorre com mais frequência; um hash map será útil aqui) da lista."
 
 #: src/ch08-03-hash-maps.md
 msgid "Convert strings to Pig Latin. The first consonant of each word is moved to the end of the word and _ay_ is added, so _first_ becomes _irst-fay_. Words that start with a vowel have _hay_ added to the end instead (_apple_ becomes _apple-hay_). Keep in mind the details about UTF-8 encoding!"
-msgstr ""
+msgstr "Converta strings para Pig Latin. A primeira consoante de cada palavra é movida para o fim da palavra e _ay_ é acrescentado, então _first_ vira _irst-fay_. Palavras que começam com vogal, em vez disso, têm _hay_ acrescentado ao fim (_apple_ vira _apple-hay_). Tenha em mente os detalhes sobre a codificação UTF-8!"
 
 #: src/ch08-03-hash-maps.md
 msgid "Using a hash map and vectors, create a text interface to allow a user to add employee names to a department in a company; for example, “Add Sally to Engineering” or “Add Amir to Sales.” Then, let the user retrieve a list of all people in a department or all people in the company by department, sorted alphabetically."
-msgstr ""
+msgstr "Usando um hash map e vetores, crie uma interface de texto que permita ao usuário adicionar nomes de funcionários a um departamento de uma empresa; por exemplo, “Adicionar Sally a Engenharia” ou “Adicionar Amir a Vendas.” Depois, permita que o usuário obtenha uma lista de todas as pessoas de um departamento ou de todas as pessoas da empresa, por departamento, em ordem alfabética."
 
 #: src/ch08-03-hash-maps.md
 msgid "The standard library API documentation describes methods that vectors, strings, and hash maps have that will be helpful for these exercises!"
-msgstr ""
+msgstr "A documentação da API da biblioteca padrão descreve métodos que vetores, strings e hash maps têm e que serão úteis para estes exercícios!"
 
 #: src/ch08-03-hash-maps.md
 msgid "We’re getting into more complex programs in which operations can fail, so it’s a perfect time to discuss error handling. We’ll do that next!"
-msgstr ""
+msgstr "Estamos entrando em programas mais complexos, nos quais as operações podem falhar, então este é o momento perfeito para discutir o tratamento de erros. Vamos ver isso a seguir!"
 
 #: src/ch09-00-error-handling.md
 msgid "Errors are a fact of life in software, so Rust has a number of features for handling situations in which something goes wrong. In many cases, Rust requires you to acknowledge the possibility of an error and take some action before your code will compile. This requirement makes your program more robust by ensuring that you’ll discover errors and handle them appropriately before deploying your code to production!"
