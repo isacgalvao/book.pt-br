@@ -169,19 +169,19 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch10-00-generics.md
 msgid "Generic Types, Traits, and Lifetimes"
-msgstr ""
+msgstr "Tipos genéricos, traits e tempos de vida {#generic-types-traits-and-lifetimes}"
 
 #: src/SUMMARY.md src/ch10-01-syntax.md
 msgid "Generic Data Types"
-msgstr ""
+msgstr "Tipos de dados genéricos {#generic-data-types}"
 
 #: src/SUMMARY.md src/ch10-02-traits.md
 msgid "Defining Shared Behavior with Traits"
-msgstr ""
+msgstr "Definindo comportamento compartilhado com traits {#defining-shared-behavior-with-traits}"
 
 #: src/SUMMARY.md src/ch10-03-lifetime-syntax.md
 msgid "Validating References with Lifetimes"
-msgstr ""
+msgstr "Validando referências com tempos de vida {#validating-references-with-lifetimes}"
 
 #: src/SUMMARY.md src/ch11-00-testing.md
 msgid "Writing Automated Tests"
@@ -9007,39 +9007,39 @@ msgstr ""
 
 #: src/ch10-00-generics.md
 msgid "Every programming language has tools for effectively handling the duplication of concepts. In Rust, one such tool is _generics_: abstract stand-ins for concrete types or other properties. We can express the behavior of generics or how they relate to other generics without knowing what will be in their place when compiling and running the code."
-msgstr ""
+msgstr "Toda linguagem de programação tem ferramentas para lidar de forma eficaz com a duplicação de conceitos. No Rust, uma dessas ferramentas são os _genéricos_: substitutos abstratos de tipos concretos ou de outras propriedades. Podemos expressar o comportamento dos genéricos, ou como eles se relacionam com outros genéricos, sem saber o que vai ocupar o lugar deles ao compilar e executar o código."
 
 #: src/ch10-00-generics.md
 msgid "Functions can take parameters of some generic type, instead of a concrete type like `i32` or `String`, in the same way they take parameters with unknown values to run the same code on multiple concrete values. In fact, we already used generics in Chapter 6 with `Option<T>`, in Chapter 8 with `Vec<T>` and `HashMap<K, V>`, and in Chapter 9 with `Result<T, E>`. In this chapter, you’ll explore how to define your own types, functions, and methods with generics!"
-msgstr ""
+msgstr "Funções podem receber parâmetros de algum tipo genérico, em vez de um tipo concreto como `i32` ou `String`, do mesmo modo que recebem parâmetros com valores desconhecidos para executar o mesmo código sobre vários valores concretos. Na verdade, já usamos genéricos no Capítulo 6, com `Option<T>`, no Capítulo 8, com `Vec<T>` e `HashMap<K, V>`, e no Capítulo 9, com `Result<T, E>`. Neste capítulo, você vai explorar como definir os seus próprios tipos, funções e métodos com genéricos!"
 
 #: src/ch10-00-generics.md
 msgid "First, we’ll review how to extract a function to reduce code duplication. We’ll then use the same technique to make a generic function from two functions that differ only in the types of their parameters. We’ll also explain how to use generic types in struct and enum definitions."
-msgstr ""
+msgstr "Primeiro, vamos revisar como extrair uma função para reduzir a duplicação de código. Em seguida, vamos usar a mesma técnica para criar uma função genérica a partir de duas funções que diferem apenas nos tipos dos seus parâmetros. Também vamos explicar como usar tipos genéricos nas definições de struct e de enum."
 
 #: src/ch10-00-generics.md
 msgid "Then, you’ll learn how to use traits to define behavior in a generic way. You can combine traits with generic types to constrain a generic type to accept only those types that have a particular behavior, as opposed to just any type."
-msgstr ""
+msgstr "Depois, você vai aprender a usar traits para definir comportamento de forma genérica. Você pode combinar traits com tipos genéricos para restringir um tipo genérico, de modo que ele aceite apenas tipos que tenham determinado comportamento, em vez de qualquer tipo."
 
 #: src/ch10-00-generics.md
 msgid "Finally, we’ll discuss _lifetimes_: a variety of generics that give the compiler information about how references relate to each other. Lifetimes allow us to give the compiler enough information about borrowed values so that it can ensure that references will be valid in more situations than it could without our help."
-msgstr ""
+msgstr "Por fim, vamos discutir _tempos de vida_: uma variedade de genéricos que dão ao compilador informações sobre como as referências se relacionam entre si. Os tempos de vida nos permitem dar ao compilador informações suficientes sobre valores emprestados, de modo que ele consiga garantir que as referências serão válidas em mais situações do que conseguiria sem a nossa ajuda."
 
 #: src/ch10-00-generics.md
 msgid "Removing Duplication by Extracting a Function"
-msgstr ""
+msgstr "Removendo duplicação extraindo uma função {#removing-duplication-by-extracting-a-function}"
 
 #: src/ch10-00-generics.md
 msgid "Generics allow us to replace specific types with a placeholder that represents multiple types to remove code duplication. Before diving into generics syntax, let’s first look at how to remove duplication in a way that doesn’t involve generic types by extracting a function that replaces specific values with a placeholder that represents multiple values. Then, we’ll apply the same technique to extract a generic function! By looking at how to recognize duplicated code you can extract into a function, you’ll start to recognize duplicated code that can use generics."
-msgstr ""
+msgstr "Os genéricos nos permitem substituir tipos específicos por um espaço reservado que representa vários tipos, para remover a duplicação de código. Antes de mergulhar na sintaxe dos genéricos, vamos ver primeiro como remover duplicação de um modo que não envolva tipos genéricos, extraindo uma função que substitui valores específicos por um espaço reservado que representa vários valores. Em seguida, vamos aplicar a mesma técnica para extrair uma função genérica! Ao observar como reconhecer código duplicado que você pode extrair para uma função, você vai começar a reconhecer código duplicado que pode usar genéricos."
 
 #: src/ch10-00-generics.md
 msgid "We’ll begin with the short program in Listing 10-1 that finds the largest number in a list."
-msgstr ""
+msgstr "Vamos começar com o programa curto da Listagem 10-1, que encontra o maior número em uma lista."
 
 #: src/ch10-00-generics.md
 msgid "<Listing number=\"10-1\" file-name=\"src/main.rs\" caption=\"Finding the largest number in a list of numbers\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-1\" file-name=\"src/main.rs\" caption=\"Encontrando o maior número em uma lista de números\">\n"
 
 #: src/ch10-00-generics.md
 msgid "\"The largest number is {largest}\""
@@ -9047,31 +9047,31 @@ msgstr ""
 
 #: src/ch10-00-generics.md
 msgid "We store a list of integers in the variable `number_list` and place a reference to the first number in the list in a variable named `largest`. We then iterate through all the numbers in the list, and if the current number is greater than the number stored in `largest`, we replace the reference in that variable. However, if the current number is less than or equal to the largest number seen so far, the variable doesn’t change, and the code moves on to the next number in the list. After considering all the numbers in the list, `largest` should refer to the largest number, which in this case is 100."
-msgstr ""
+msgstr "Armazenamos uma lista de inteiros na variável `number_list` e colocamos uma referência ao primeiro número da lista em uma variável chamada `largest`. Em seguida, percorremos todos os números da lista e, se o número atual for maior que o número armazenado em `largest`, substituímos a referência nessa variável. No entanto, se o número atual for menor ou igual ao maior número visto até então, a variável não muda, e o código passa para o próximo número da lista. Depois de considerar todos os números da lista, `largest` deve se referir ao maior número, que, neste caso, é 100."
 
 #: src/ch10-00-generics.md
 msgid "We’ve now been tasked with finding the largest number in two different lists of numbers. To do so, we can choose to duplicate the code in Listing 10-1 and use the same logic at two different places in the program, as shown in Listing 10-2."
-msgstr ""
+msgstr "Recebemos a tarefa de encontrar o maior número em duas listas diferentes de números. Para isso, podemos optar por duplicar o código da Listagem 10-1 e usar a mesma lógica em dois lugares diferentes do programa, como mostra a Listagem 10-2."
 
 #: src/ch10-00-generics.md
 msgid "<Listing number=\"10-2\" file-name=\"src/main.rs\" caption=\"Code to find the largest number in *two* lists of numbers\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-2\" file-name=\"src/main.rs\" caption=\"Código para encontrar o maior número em *duas* listas de números\">\n"
 
 #: src/ch10-00-generics.md
 msgid "Although this code works, duplicating code is tedious and error-prone. We also have to remember to update the code in multiple places when we want to change it."
-msgstr ""
+msgstr "Embora este código funcione, duplicar código é tedioso e propenso a erros. Também precisamos lembrar de atualizar o código em vários lugares sempre que quisermos alterá-lo."
 
 #: src/ch10-00-generics.md
 msgid "To eliminate this duplication, we’ll create an abstraction by defining a function that operates on any list of integers passed in as a parameter. This solution makes our code clearer and lets us express the concept of finding the largest number in a list abstractly."
-msgstr ""
+msgstr "Para eliminar essa duplicação, vamos criar uma abstração definindo uma função que opera sobre qualquer lista de inteiros passada como parâmetro. Essa solução deixa nosso código mais claro e nos permite expressar o conceito de encontrar o maior número em uma lista de forma abstrata."
 
 #: src/ch10-00-generics.md
 msgid "In Listing 10-3, we extract the code that finds the largest number into a function named `largest`. Then, we call the function to find the largest number in the two lists from Listing 10-2. We could also use the function on any other list of `i32` values we might have in the future."
-msgstr ""
+msgstr "Na Listagem 10-3, extraímos o código que encontra o maior número para uma função chamada `largest`. Depois, chamamos a função para encontrar o maior número nas duas listas da Listagem 10-2. Também poderíamos usar a função em qualquer outra lista de valores `i32` que possamos ter no futuro."
 
 #: src/ch10-00-generics.md
 msgid "<Listing number=\"10-3\" file-name=\"src/main.rs\" caption=\"Abstracted code to find the largest number in two lists\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-3\" file-name=\"src/main.rs\" caption=\"Código abstraído para encontrar o maior número em duas listas\">\n"
 
 #: src/ch10-00-generics.md src/ch10-01-syntax.md
 msgid "\"The largest number is {result}\""
@@ -9079,51 +9079,51 @@ msgstr ""
 
 #: src/ch10-00-generics.md
 msgid "The `largest` function has a parameter called `list`, which represents any concrete slice of `i32` values we might pass into the function. As a result, when we call the function, the code runs on the specific values that we pass in."
-msgstr ""
+msgstr "A função `largest` tem um parâmetro chamado `list`, que representa qualquer slice concreta de valores `i32` que possamos passar para a função. Por isso, quando chamamos a função, o código é executado com os valores específicos que passamos."
 
 #: src/ch10-00-generics.md
 msgid "In summary, here are the steps we took to change the code from Listing 10-2 to Listing 10-3:"
-msgstr ""
+msgstr "Em resumo, estes são os passos que seguimos para transformar o código da Listagem 10-2 no da Listagem 10-3:"
 
 #: src/ch10-00-generics.md
 msgid "Identify duplicate code."
-msgstr ""
+msgstr "Identifique o código duplicado."
 
 #: src/ch10-00-generics.md
 msgid "Extract the duplicate code into the body of the function, and specify the inputs and return values of that code in the function signature."
-msgstr ""
+msgstr "Extraia o código duplicado para o corpo da função e especifique as entradas e os valores de retorno desse código na assinatura da função."
 
 #: src/ch10-00-generics.md
 msgid "Update the two instances of duplicated code to call the function instead."
-msgstr ""
+msgstr "Atualize as duas instâncias do código duplicado para que chamem a função."
 
 #: src/ch10-00-generics.md
 msgid "Next, we’ll use these same steps with generics to reduce code duplication. In the same way that the function body can operate on an abstract `list` instead of specific values, generics allow code to operate on abstract types."
-msgstr ""
+msgstr "Em seguida, vamos usar esses mesmos passos com genéricos para reduzir a duplicação de código. Assim como o corpo da função pode operar sobre uma `list` abstrata em vez de valores específicos, os genéricos permitem que o código opere sobre tipos abstratos."
 
 #: src/ch10-00-generics.md
 msgid "For example, say we had two functions: one that finds the largest item in a slice of `i32` values and one that finds the largest item in a slice of `char` values. How would we eliminate that duplication? Let’s find out!"
-msgstr ""
+msgstr "Por exemplo, suponha que tivéssemos duas funções: uma que encontra o maior item em uma slice de valores `i32` e outra que encontra o maior item em uma slice de valores `char`. Como eliminaríamos essa duplicação? Vamos descobrir!"
 
 #: src/ch10-01-syntax.md
 msgid "We use generics to create definitions for items like function signatures or structs, which we can then use with many different concrete data types. Let’s first look at how to define functions, structs, enums, and methods using generics. Then, we’ll discuss how generics affect code performance."
-msgstr ""
+msgstr "Usamos genéricos para criar definições de itens como assinaturas de função ou structs, que podemos então usar com muitos tipos de dados concretos diferentes. Vamos ver primeiro como definir funções, structs, enums e métodos usando genéricos. Em seguida, vamos discutir como os genéricos afetam o desempenho do código."
 
 #: src/ch10-01-syntax.md
 msgid "In Function Definitions"
-msgstr ""
+msgstr "Em definições de função {#in-function-definitions}"
 
 #: src/ch10-01-syntax.md
 msgid "When defining a function that uses generics, we place the generics in the signature of the function where we would usually specify the data types of the parameters and return value. Doing so makes our code more flexible and provides more functionality to callers of our function while preventing code duplication."
-msgstr ""
+msgstr "Ao definir uma função que usa genéricos, colocamos os genéricos na assinatura da função, no lugar onde normalmente especificaríamos os tipos de dados dos parâmetros e do valor de retorno. Fazer isso torna nosso código mais flexível e oferece mais funcionalidade a quem chama nossa função, ao mesmo tempo que evita a duplicação de código."
 
 #: src/ch10-01-syntax.md
 msgid "Continuing with our `largest` function, Listing 10-4 shows two functions that both find the largest value in a slice. We’ll then combine these into a single function that uses generics."
-msgstr ""
+msgstr "Continuando com a nossa função `largest`, a Listagem 10-4 mostra duas funções que encontram o maior valor em uma slice. Em seguida, vamos combiná-las em uma única função que usa genéricos."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-4\" file-name=\"src/main.rs\" caption=\"Two functions that differ only in their names and in the types in their signatures\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-4\" file-name=\"src/main.rs\" caption=\"Duas funções que diferem apenas nos nomes e nos tipos em suas assinaturas\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "'y'"
@@ -9148,31 +9148,31 @@ msgstr ""
 
 #: src/ch10-01-syntax.md
 msgid "The `largest_i32` function is the one we extracted in Listing 10-3 that finds the largest `i32` in a slice. The `largest_char` function finds the largest `char` in a slice. The function bodies have the same code, so let’s eliminate the duplication by introducing a generic type parameter in a single function."
-msgstr ""
+msgstr "A função `largest_i32` é a que extraímos na Listagem 10-3 e que encontra o maior `i32` em uma slice. A função `largest_char` encontra o maior `char` em uma slice. Os corpos das funções têm o mesmo código, então vamos eliminar a duplicação introduzindo um parâmetro de tipo genérico em uma única função."
 
 #: src/ch10-01-syntax.md
 msgid "To parameterize the types in a new single function, we need to name the type parameter, just as we do for the value parameters to a function. You can use any identifier as a type parameter name. But we’ll use `T` because, by convention, type parameter names in Rust are short, often just one letter, and Rust’s type-naming convention is UpperCamelCase. Short for _type_, `T` is the default choice of most Rust programmers."
-msgstr ""
+msgstr "Para parametrizar os tipos em uma única função nova, precisamos dar um nome ao parâmetro de tipo, assim como fazemos com os parâmetros de valor de uma função. Você pode usar qualquer identificador como nome de parâmetro de tipo. Mas vamos usar `T` porque, por convenção, os nomes de parâmetros de tipo no Rust são curtos, muitas vezes com apenas uma letra, e a convenção de nomes de tipos do Rust é UpperCamelCase. Abreviação de _type_, `T` é a escolha padrão da maioria dos programadores Rust."
 
 #: src/ch10-01-syntax.md
 msgid "When we use a parameter in the body of the function, we have to declare the parameter name in the signature so that the compiler knows what that name means. Similarly, when we use a type parameter name in a function signature, we have to declare the type parameter name before we use it. To define the generic `largest` function, we place type name declarations inside angle brackets, `<>`, between the name of the function and the parameter list, like this:"
-msgstr ""
+msgstr "Quando usamos um parâmetro no corpo da função, precisamos declarar o nome do parâmetro na assinatura para que o compilador saiba o que esse nome significa. Da mesma forma, quando usamos o nome de um parâmetro de tipo em uma assinatura de função, precisamos declarar esse nome de parâmetro de tipo antes de usá-lo. Para definir a função genérica `largest`, colocamos as declarações de nomes de tipo dentro de colchetes angulares, `<>`, entre o nome da função e a lista de parâmetros, assim:"
 
 #: src/ch10-01-syntax.md
 msgid "We read this definition as “The function `largest` is generic over some type `T`.” This function has one parameter named `list`, which is a slice of values of type `T`. The `largest` function will return a reference to a value of the same type `T`."
-msgstr ""
+msgstr "Lemos esta definição como “A função `largest` é genérica sobre algum tipo `T`.” Esta função tem um parâmetro chamado `list`, que é uma slice de valores do tipo `T`. A função `largest` vai retornar uma referência a um valor do mesmo tipo `T`."
 
 #: src/ch10-01-syntax.md
 msgid "Listing 10-5 shows the combined `largest` function definition using the generic data type in its signature. The listing also shows how we can call the function with either a slice of `i32` values or `char` values. Note that this code won’t compile yet."
-msgstr ""
+msgstr "A Listagem 10-5 mostra a definição combinada da função `largest`, usando o tipo de dado genérico em sua assinatura. A listagem também mostra como podemos chamar a função com uma slice de valores `i32` ou de valores `char`. Observe que este código ainda não vai compilar."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-5\" file-name=\"src/main.rs\" caption=\"The `largest` function using generic type parameters; this doesn’t compile yet\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-5\" file-name=\"src/main.rs\" caption=\"A função `largest` com parâmetros de tipo genéricos; este código ainda não compila\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "If we compile this code right now, we’ll get this error:"
-msgstr ""
+msgstr "Se compilarmos este código agora mesmo, vamos receber este erro:"
 
 #: src/ch10-01-syntax.md
 msgid ""
@@ -9199,35 +9199,35 @@ msgstr ""
 
 #: src/ch10-01-syntax.md
 msgid "The help text mentions `std::cmp::PartialOrd`, which is a trait, and we’re going to talk about traits in the next section. For now, know that this error states that the body of `largest` won’t work for all possible types that `T` could be. Because we want to compare values of type `T` in the body, we can only use types whose values can be ordered. To enable comparisons, the standard library has the `std::cmp::PartialOrd` trait that you can implement on types (see Appendix C for more on this trait). To fix Listing 10-5, we can follow the help text’s suggestion and restrict the types valid for `T` to only those that implement `PartialOrd`. The listing will then compile, because the standard library implements `PartialOrd` on both `i32` and `char`."
-msgstr ""
+msgstr "O texto de ajuda menciona `std::cmp::PartialOrd`, que é um trait, e vamos falar sobre traits na próxima seção. Por enquanto, saiba que este erro informa que o corpo de `largest` não vai funcionar para todos os tipos possíveis que `T` poderia ser. Como queremos comparar valores do tipo `T` no corpo da função, só podemos usar tipos cujos valores possam ser ordenados. Para permitir comparações, a biblioteca padrão tem o trait `std::cmp::PartialOrd`, que você pode implementar nos tipos (veja o Apêndice C para saber mais sobre esse trait). Para corrigir a Listagem 10-5, podemos seguir a sugestão do texto de ajuda e restringir os tipos válidos para `T` apenas àqueles que implementam `PartialOrd`. A listagem então vai compilar, porque a biblioteca padrão implementa `PartialOrd` tanto para `i32` quanto para `char`."
 
 #: src/ch10-01-syntax.md src/ch10-03-lifetime-syntax.md
 msgid "In Struct Definitions"
-msgstr ""
+msgstr "Em definições de struct {#in-struct-definitions}"
 
 #: src/ch10-01-syntax.md
 msgid "We can also define structs to use a generic type parameter in one or more fields using the `<>` syntax. Listing 10-6 defines a `Point<T>` struct to hold `x` and `y` coordinate values of any type."
-msgstr ""
+msgstr "Também podemos definir structs para usar um parâmetro de tipo genérico em um ou mais campos, usando a sintaxe `<>`. A Listagem 10-6 define um struct `Point<T>` para armazenar valores de coordenadas `x` e `y` de qualquer tipo."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-6\" file-name=\"src/main.rs\" caption=\"A `Point<T>` struct that holds `x` and `y` values of type `T`\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-6\" file-name=\"src/main.rs\" caption=\"Um struct `Point<T>` que armazena os valores `x` e `y` do tipo `T`\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "The syntax for using generics in struct definitions is similar to that used in function definitions. First, we declare the name of the type parameter inside angle brackets just after the name of the struct. Then, we use the generic type in the struct definition where we would otherwise specify concrete data types."
-msgstr ""
+msgstr "A sintaxe para usar genéricos em definições de struct é semelhante à usada em definições de função. Primeiro, declaramos o nome do parâmetro de tipo dentro de colchetes angulares, logo após o nome do struct. Em seguida, usamos o tipo genérico na definição do struct, no lugar onde, do contrário, especificaríamos tipos de dados concretos."
 
 #: src/ch10-01-syntax.md
 msgid "Note that because we’ve used only one generic type to define `Point<T>`, this definition says that the `Point<T>` struct is generic over some type `T`, and the fields `x` and `y` are _both_ that same type, whatever that type may be. If we create an instance of a `Point<T>` that has values of different types, as in Listing 10-7, our code won’t compile."
-msgstr ""
+msgstr "Observe que, como usamos apenas um tipo genérico para definir `Point<T>`, esta definição diz que o struct `Point<T>` é genérico sobre algum tipo `T`, e os campos `x` e `y` são _ambos_ desse mesmo tipo, seja qual for esse tipo. Se criarmos uma instância de `Point<T>` que tenha valores de tipos diferentes, como na Listagem 10-7, nosso código não vai compilar."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-7\" file-name=\"src/main.rs\" caption=\"The fields `x` and `y` must be the same type because both have the same generic data type `T`.\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-7\" file-name=\"src/main.rs\" caption=\"Os campos `x` e `y` devem ser do mesmo tipo, porque ambos têm o mesmo tipo de dado genérico `T`.\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "In this example, when we assign the integer value `5` to `x`, we let the compiler know that the generic type `T` will be an integer for this instance of `Point<T>`. Then, when we specify `4.0` for `y`, which we’ve defined to have the same type as `x`, we’ll get a type mismatch error like this:"
-msgstr ""
+msgstr "Neste exemplo, quando atribuímos o valor inteiro `5` a `x`, informamos ao compilador que o tipo genérico `T` será um inteiro para esta instância de `Point<T>`. Depois, quando especificamos `4.0` para `y`, que definimos como sendo do mesmo tipo de `x`, vamos receber um erro de incompatibilidade de tipos, assim:"
 
 #: src/ch10-01-syntax.md
 msgid ""
@@ -9247,51 +9247,51 @@ msgstr ""
 
 #: src/ch10-01-syntax.md
 msgid "To define a `Point` struct where `x` and `y` are both generics but could have different types, we can use multiple generic type parameters. For example, in Listing 10-8, we change the definition of `Point` to be generic over types `T` and `U` where `x` is of type `T` and `y` is of type `U`."
-msgstr ""
+msgstr "Para definir um struct `Point` em que `x` e `y` são ambos genéricos, mas podem ter tipos diferentes, podemos usar vários parâmetros de tipo genéricos. Por exemplo, na Listagem 10-8, mudamos a definição de `Point` para que seja genérica sobre os tipos `T` e `U`, em que `x` é do tipo `T` e `y` é do tipo `U`."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-8\" file-name=\"src/main.rs\" caption=\"A `Point<T, U>` generic over two types so that `x` and `y` can be values of different types\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-8\" file-name=\"src/main.rs\" caption=\"Um `Point<T, U>` genérico sobre dois tipos, para que `x` e `y` possam ser valores de tipos diferentes\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "Now all the instances of `Point` shown are allowed! You can use as many generic type parameters in a definition as you want, but using more than a few makes your code hard to read. If you’re finding you need lots of generic types in your code, it could indicate that your code needs restructuring into smaller pieces."
-msgstr ""
+msgstr "Agora, todas as instâncias de `Point` mostradas são permitidas! Você pode usar quantos parâmetros de tipo genéricos quiser em uma definição, mas usar mais do que alguns torna seu código difícil de ler. Se você perceber que precisa de muitos tipos genéricos no seu código, isso pode indicar que ele precisa ser reestruturado em partes menores."
 
 #: src/ch10-01-syntax.md
 msgid "In Enum Definitions"
-msgstr ""
+msgstr "Em definições de enum {#in-enum-definitions}"
 
 #: src/ch10-01-syntax.md
 msgid "As we did with structs, we can define enums to hold generic data types in their variants. Let’s take another look at the `Option<T>` enum that the standard library provides, which we used in Chapter 6:"
-msgstr ""
+msgstr "Assim como fizemos com structs, podemos definir enums para armazenar tipos de dados genéricos em suas variantes. Vamos dar outra olhada no enum `Option<T>`, que a biblioteca padrão fornece e que usamos no Capítulo 6:"
 
 #: src/ch10-01-syntax.md
 msgid "This definition should now make more sense to you. As you can see, the `Option<T>` enum is generic over type `T` and has two variants: `Some`, which holds one value of type `T`, and a `None` variant that doesn’t hold any value. By using the `Option<T>` enum, we can express the abstract concept of an optional value, and because `Option<T>` is generic, we can use this abstraction no matter what the type of the optional value is."
-msgstr ""
+msgstr "Esta definição deve fazer mais sentido para você agora. Como você pode ver, o enum `Option<T>` é genérico sobre o tipo `T` e tem duas variantes: `Some`, que armazena um valor do tipo `T`, e uma variante `None`, que não armazena valor algum. Usando o enum `Option<T>`, podemos expressar o conceito abstrato de um valor opcional e, como `Option<T>` é genérico, podemos usar essa abstração independentemente do tipo do valor opcional."
 
 #: src/ch10-01-syntax.md
 msgid "Enums can use multiple generic types as well. The definition of the `Result` enum that we used in Chapter 9 is one example:"
-msgstr ""
+msgstr "Enums também podem usar vários tipos genéricos. A definição do enum `Result`, que usamos no Capítulo 9, é um exemplo:"
 
 #: src/ch10-01-syntax.md
 msgid "The `Result` enum is generic over two types, `T` and `E`, and has two variants: `Ok`, which holds a value of type `T`, and `Err`, which holds a value of type `E`. This definition makes it convenient to use the `Result` enum anywhere we have an operation that might succeed (return a value of some type `T`) or fail (return an error of some type `E`). In fact, this is what we used to open a file in Listing 9-3, where `T` was filled in with the type `std::fs::File` when the file was opened successfully and `E` was filled in with the type `std::io::Error` when there were problems opening the file."
-msgstr ""
+msgstr "O enum `Result` é genérico sobre dois tipos, `T` e `E`, e tem duas variantes: `Ok`, que armazena um valor do tipo `T`, e `Err`, que armazena um valor do tipo `E`. Essa definição facilita o uso do enum `Result` em qualquer lugar onde tenhamos uma operação que pode ter sucesso (retornando um valor de algum tipo `T`) ou falhar (retornando um erro de algum tipo `E`). Na verdade, foi isso que usamos para abrir um arquivo na Listagem 9-3, em que `T` foi preenchido com o tipo `std::fs::File` quando o arquivo foi aberto com sucesso, e `E` foi preenchido com o tipo `std::io::Error` quando houve problemas ao abrir o arquivo."
 
 #: src/ch10-01-syntax.md
 msgid "When you recognize situations in your code with multiple struct or enum definitions that differ only in the types of the values they hold, you can avoid duplication by using generic types instead."
-msgstr ""
+msgstr "Quando você identificar situações no seu código com várias definições de struct ou de enum que diferem apenas nos tipos dos valores que elas armazenam, você pode evitar a duplicação usando tipos genéricos em vez disso."
 
 #: src/ch10-01-syntax.md src/ch10-03-lifetime-syntax.md
 msgid "In Method Definitions"
-msgstr ""
+msgstr "Em definições de método {#in-method-definitions}"
 
 #: src/ch10-01-syntax.md
 msgid "We can implement methods on structs and enums (as we did in Chapter 5) and use generic types in their definitions too. Listing 10-9 shows the `Point<T>` struct we defined in Listing 10-6 with a method named `x` implemented on it."
-msgstr ""
+msgstr "Podemos implementar métodos em structs e enums (como fizemos no Capítulo 5) e também usar tipos genéricos nas definições deles. A Listagem 10-9 mostra o struct `Point<T>` que definimos na Listagem 10-6, com um método chamado `x` implementado nele."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-9\" file-name=\"src/main.rs\" caption=\"Implementing a method named `x` on the `Point<T>` struct that will return a reference to the `x` field of type `T`\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-9\" file-name=\"src/main.rs\" caption=\"Implementando um método chamado `x` no struct `Point<T>`, que vai retornar uma referência ao campo `x` do tipo `T`\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "\"p.x = {}\""
@@ -9299,31 +9299,31 @@ msgstr ""
 
 #: src/ch10-01-syntax.md
 msgid "Here, we’ve defined a method named `x` on `Point<T>` that returns a reference to the data in the field `x`."
-msgstr ""
+msgstr "Aqui, definimos um método chamado `x` em `Point<T>` que retorna uma referência aos dados do campo `x`."
 
 #: src/ch10-01-syntax.md
 msgid "Note that we have to declare `T` just after `impl` so that we can use `T` to specify that we’re implementing methods on the type `Point<T>`. By declaring `T` as a generic type after `impl`, Rust can identify that the type in the angle brackets in `Point` is a generic type rather than a concrete type. We could have chosen a different name for this generic parameter than the generic parameter declared in the struct definition, but using the same name is conventional. If you write a method within an `impl` that declares a generic type, that method will be defined on any instance of the type, no matter what concrete type ends up substituting for the generic type."
-msgstr ""
+msgstr "Observe que precisamos declarar `T` logo após `impl`, para que possamos usar `T` para especificar que estamos implementando métodos no tipo `Point<T>`. Ao declarar `T` como um tipo genérico depois de `impl`, o Rust consegue identificar que o tipo entre colchetes angulares em `Point` é um tipo genérico, e não um tipo concreto. Poderíamos ter escolhido para esse parâmetro genérico um nome diferente do declarado na definição do struct, mas usar o mesmo nome é a convenção. Se você escrever um método dentro de um `impl` que declara um tipo genérico, esse método será definido em qualquer instância do tipo, não importa qual tipo concreto acabe substituindo o tipo genérico."
 
 #: src/ch10-01-syntax.md
 msgid "We can also specify constraints on generic types when defining methods on the type. We could, for example, implement methods only on `Point<f32>` instances rather than on `Point<T>` instances with any generic type. In Listing 10-10, we use the concrete type `f32`, meaning we don’t declare any types after `impl`."
-msgstr ""
+msgstr "Também podemos especificar restrições em tipos genéricos ao definir métodos no tipo. Poderíamos, por exemplo, implementar métodos apenas em instâncias de `Point<f32>`, em vez de em instâncias de `Point<T>` com qualquer tipo genérico. Na Listagem 10-10, usamos o tipo concreto `f32`, o que significa que não declaramos nenhum tipo depois de `impl`."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-10\" file-name=\"src/main.rs\" caption=\"An `impl` block that only applies to a struct with a particular concrete type for the generic type parameter `T`\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-10\" file-name=\"src/main.rs\" caption=\"Um bloco `impl` que se aplica apenas a um struct com um tipo concreto específico para o parâmetro de tipo genérico `T`\">\n"
 
 #: src/ch10-01-syntax.md
 msgid "This code means the type `Point<f32>` will have a `distance_from_origin` method; other instances of `Point<T>` where `T` is not of type `f32` will not have this method defined. The method measures how far our point is from the point at coordinates (0.0, 0.0) and uses mathematical operations that are available only for floating-point types."
-msgstr ""
+msgstr "Isso significa que o tipo `Point<f32>` terá um método `distance_from_origin`; outras instâncias de `Point<T>` em que `T` não seja do tipo `f32` não terão esse método definido. O método mede a que distância nosso ponto está do ponto de coordenadas (0.0, 0.0) e usa operações matemáticas que estão disponíveis apenas para tipos de ponto flutuante."
 
 #: src/ch10-01-syntax.md
 msgid "Generic type parameters in a struct definition aren’t always the same as those you use in that same struct’s method signatures. Listing 10-11 uses the generic types `X1` and `Y1` for the `Point` struct and `X2` and `Y2` for the `mixup` method signature to make the example clearer. The method creates a new `Point` instance with the `x` value from the `self` `Point` (of type `X1`) and the `y` value from the passed-in `Point` (of type `Y2`)."
-msgstr ""
+msgstr "Os parâmetros de tipo genéricos em uma definição de struct nem sempre são os mesmos que você usa nas assinaturas de método desse mesmo struct. A Listagem 10-11 usa os tipos genéricos `X1` e `Y1` para o struct `Point` e `X2` e `Y2` para a assinatura do método `mixup`, para deixar o exemplo mais claro. O método cria uma nova instância de `Point` com o valor de `x` do `Point` `self` (do tipo `X1`) e o valor de `y` do `Point` recebido como argumento (do tipo `Y2`)."
 
 #: src/ch10-01-syntax.md
 msgid "<Listing number=\"10-11\" file-name=\"src/main.rs\" caption=\"A method that uses generic types that are different from its struct’s definition\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-11\" file-name=\"src/main.rs\" caption=\"Um método que usa tipos genéricos diferentes dos da definição do struct\">\n"
 
 #: src/ch10-01-syntax.md src/ch19-01-all-the-places-for-patterns.md
 #: src/ch19-03-pattern-syntax.md
@@ -9336,39 +9336,39 @@ msgstr ""
 
 #: src/ch10-01-syntax.md
 msgid "In `main`, we’ve defined a `Point` that has an `i32` for `x` (with value `5`) and an `f64` for `y` (with value `10.4`). The `p2` variable is a `Point` struct that has a string slice for `x` (with value `\"Hello\"`) and a `char` for `y` (with value `c`). Calling `mixup` on `p1` with the argument `p2` gives us `p3`, which will have an `i32` for `x` because `x` came from `p1`. The `p3` variable will have a `char` for `y` because `y` came from `p2`. The `println!` macro call will print `p3.x = 5, p3.y = c`."
-msgstr ""
+msgstr "Em `main`, definimos um `Point` que tem um `i32` para `x` (com o valor `5`) e um `f64` para `y` (com o valor `10.4`). A variável `p2` é um struct `Point` que tem uma slice de string para `x` (com o valor `\"Hello\"`) e um `char` para `y` (com o valor `c`). Chamar `mixup` em `p1` com o argumento `p2` nos dá `p3`, que terá um `i32` para `x`, porque `x` veio de `p1`. A variável `p3` terá um `char` para `y`, porque `y` veio de `p2`. A chamada da macro `println!` vai imprimir `p3.x = 5, p3.y = c`."
 
 #: src/ch10-01-syntax.md
 msgid "The purpose of this example is to demonstrate a situation in which some generic parameters are declared with `impl` and some are declared with the method definition. Here, the generic parameters `X1` and `Y1` are declared after `impl` because they go with the struct definition. The generic parameters `X2` and `Y2` are declared after `fn mixup` because they’re only relevant to the method."
-msgstr ""
+msgstr "O objetivo deste exemplo é demonstrar uma situação em que alguns parâmetros genéricos são declarados com `impl` e outros são declarados na definição do método. Aqui, os parâmetros genéricos `X1` e `Y1` são declarados depois de `impl` porque pertencem à definição do struct. Os parâmetros genéricos `X2` e `Y2` são declarados depois de `fn mixup` porque são relevantes apenas para o método."
 
 #: src/ch10-01-syntax.md
 msgid "Performance of Code Using Generics"
-msgstr ""
+msgstr "Desempenho do código que usa genéricos {#performance-of-code-using-generics}"
 
 #: src/ch10-01-syntax.md
 msgid "You might be wondering whether there is a runtime cost when using generic type parameters. The good news is that using generic types won’t make your program run any slower than it would with concrete types."
-msgstr ""
+msgstr "Você pode estar se perguntando se há um custo em tempo de execução ao usar parâmetros de tipo genéricos. A boa notícia é que usar tipos genéricos não vai deixar o seu programa mais lento do que seria com tipos concretos."
 
 #: src/ch10-01-syntax.md
 msgid "Rust accomplishes this by performing monomorphization of the code using generics at compile time. _Monomorphization_ is the process of turning generic code into specific code by filling in the concrete types that are used when compiled. In this process, the compiler does the opposite of the steps we used to create the generic function in Listing 10-5: The compiler looks at all the places where generic code is called and generates code for the concrete types the generic code is called with."
-msgstr ""
+msgstr "O Rust faz isso realizando a monomorfização do código que usa genéricos em tempo de compilação. _Monomorfização_ é o processo de transformar código genérico em código específico, preenchendo os tipos concretos que são usados na compilação. Nesse processo, o compilador faz o oposto dos passos que usamos para criar a função genérica na Listagem 10-5: o compilador examina todos os lugares em que o código genérico é chamado e gera código para os tipos concretos com os quais o código genérico é chamado."
 
 #: src/ch10-01-syntax.md
 msgid "Let’s look at how this works by using the standard library’s generic `Option<T>` enum:"
-msgstr ""
+msgstr "Vamos ver como isso funciona usando o enum genérico `Option<T>` da biblioteca padrão:"
 
 #: src/ch10-01-syntax.md
 msgid "When Rust compiles this code, it performs monomorphization. During that process, the compiler reads the values that have been used in `Option<T>` instances and identifies two kinds of `Option<T>`: One is `i32` and the other is `f64`. As such, it expands the generic definition of `Option<T>` into two definitions specialized to `i32` and `f64`, thereby replacing the generic definition with the specific ones."
-msgstr ""
+msgstr "Quando o Rust compila este código, ele realiza a monomorfização. Durante esse processo, o compilador lê os valores que foram usados em instâncias de `Option<T>` e identifica dois tipos de `Option<T>`: um é `i32` e o outro é `f64`. Por isso, ele expande a definição genérica de `Option<T>` em duas definições especializadas para `i32` e `f64`, substituindo assim a definição genérica pelas específicas."
 
 #: src/ch10-01-syntax.md
 msgid "The monomorphized version of the code looks similar to the following (the compiler uses different names than what we’re using here for illustration):"
-msgstr ""
+msgstr "A versão monomorfizada do código se parece com a seguinte (o compilador usa nomes diferentes dos que estamos usando aqui, para ilustrar):"
 
 #: src/ch10-01-syntax.md
 msgid "The generic `Option<T>` is replaced with the specific definitions created by the compiler. Because Rust compiles generic code into code that specifies the type in each instance, we pay no runtime cost for using generics. When the code runs, it performs just as it would if we had duplicated each definition by hand. The process of monomorphization makes Rust’s generics extremely efficient at runtime."
-msgstr ""
+msgstr "O `Option<T>` genérico é substituído pelas definições específicas criadas pelo compilador. Como o Rust compila código genérico em código que especifica o tipo em cada instância, não pagamos nenhum custo em tempo de execução por usar genéricos. Quando o código é executado, ele tem o mesmo desempenho que teria se tivéssemos duplicado cada definição manualmente. O processo de monomorfização torna os genéricos do Rust extremamente eficientes em tempo de execução."
 
 #: src/ch10-02-traits.md
 msgid "<a id=\"traits-defining-shared-behavior\"></a>"
@@ -9376,55 +9376,55 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "A _trait_ defines the functionality a particular type has and can share with other types. We can use traits to define shared behavior in an abstract way. We can use _trait bounds_ to specify that a generic type can be any type that has certain behavior."
-msgstr ""
+msgstr "Um _trait_ define a funcionalidade que determinado tipo tem e pode compartilhar com outros tipos. Podemos usar traits para definir comportamento compartilhado de forma abstrata. Podemos usar _limites de trait_ para especificar que um tipo genérico pode ser qualquer tipo que tenha determinado comportamento."
 
 #: src/ch10-02-traits.md
 msgid "Note: Traits are similar to a feature often called _interfaces_ in other languages, although with some differences."
-msgstr ""
+msgstr "Nota: os traits são parecidos com um recurso frequentemente chamado de _interfaces_ em outras linguagens, embora com algumas diferenças."
 
 #: src/ch10-02-traits.md
 msgid "Defining a Trait"
-msgstr ""
+msgstr "Definindo um trait {#defining-a-trait}"
 
 #: src/ch10-02-traits.md
 msgid "A type’s behavior consists of the methods we can call on that type. Different types share the same behavior if we can call the same methods on all of those types. Trait definitions are a way to group method signatures together to define a set of behaviors necessary to accomplish some purpose."
-msgstr ""
+msgstr "O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo. Tipos diferentes compartilham o mesmo comportamento se pudermos chamar os mesmos métodos em todos esses tipos. Definições de trait são uma forma de agrupar assinaturas de métodos para definir um conjunto de comportamentos necessários para atingir algum objetivo."
 
 #: src/ch10-02-traits.md
 msgid "For example, let’s say we have multiple structs that hold various kinds and amounts of text: a `NewsArticle` struct that holds a news story filed in a particular location and a `SocialPost` that can have, at most, 280 characters along with metadata that indicates whether it was a new post, a repost, or a reply to another post."
-msgstr ""
+msgstr "Por exemplo, digamos que temos vários structs que armazenam diferentes tipos e quantidades de texto: um struct `NewsArticle`, que guarda uma notícia enviada de determinado local, e um `SocialPost`, que pode ter no máximo 280 caracteres, junto com metadados que indicam se era uma nova postagem, um repost ou uma resposta a outra postagem."
 
 #: src/ch10-02-traits.md
 msgid "We want to make a media aggregator library crate named `aggregator` that can display summaries of data that might be stored in a `NewsArticle` or `SocialPost` instance. To do this, we need a summary from each type, and we’ll request that summary by calling a `summarize` method on an instance. Listing 10-12 shows the definition of a public `Summary` trait that expresses this behavior."
-msgstr ""
+msgstr "Queremos criar um crate de biblioteca agregador de mídia chamado `aggregator`, que possa exibir resumos de dados que podem estar armazenados em uma instância de `NewsArticle` ou de `SocialPost`. Para isso, precisamos de um resumo de cada tipo, e vamos solicitar esse resumo chamando um método `summarize` em uma instância. A Listagem 10-12 mostra a definição de um trait `Summary` público que expressa esse comportamento."
 
 #: src/ch10-02-traits.md
 msgid "<Listing number=\"10-12\" file-name=\"src/lib.rs\" caption=\"A `Summary` trait that consists of the behavior provided by a `summarize` method\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-12\" file-name=\"src/lib.rs\" caption=\"Um trait `Summary` que consiste no comportamento fornecido por um método `summarize`\">\n"
 
 #: src/ch10-02-traits.md
 msgid "Here, we declare a trait using the `trait` keyword and then the trait’s name, which is `Summary` in this case. We also declare the trait as `pub` so that crates depending on this crate can make use of this trait too, as we’ll see in a few examples. Inside the curly brackets, we declare the method signatures that describe the behaviors of the types that implement this trait, which in this case is `fn summarize(&self) -> String`."
-msgstr ""
+msgstr "Aqui, declaramos um trait usando a palavra-chave `trait` e, em seguida, o nome do trait, que neste caso é `Summary`. Também declaramos o trait como `pub` para que crates que dependem deste crate possam usar esse trait também, como veremos em alguns exemplos. Dentro das chaves, declaramos as assinaturas de métodos que descrevem os comportamentos dos tipos que implementam esse trait, que neste caso é `fn summarize(&self) -> String`."
 
 #: src/ch10-02-traits.md
 msgid "After the method signature, instead of providing an implementation within curly brackets, we use a semicolon. Each type implementing this trait must provide its own custom behavior for the body of the method. The compiler will enforce that any type that has the `Summary` trait will have the method `summarize` defined with this signature exactly."
-msgstr ""
+msgstr "Depois da assinatura do método, em vez de fornecer uma implementação entre chaves, usamos um ponto e vírgula. Cada tipo que implementa esse trait deve fornecer seu próprio comportamento personalizado para o corpo do método. O compilador vai garantir que todo tipo com o trait `Summary` tenha o método `summarize` definido exatamente com esta assinatura."
 
 #: src/ch10-02-traits.md
 msgid "A trait can have multiple methods in its body: The method signatures are listed one per line, and each line ends in a semicolon."
-msgstr ""
+msgstr "Um trait pode ter vários métodos em seu corpo: as assinaturas dos métodos são listadas uma por linha, e cada linha termina com ponto e vírgula."
 
 #: src/ch10-02-traits.md
 msgid "Implementing a Trait on a Type"
-msgstr ""
+msgstr "Implementando um trait em um tipo {#implementing-a-trait-on-a-type}"
 
 #: src/ch10-02-traits.md
 msgid "Now that we’ve defined the desired signatures of the `Summary` trait’s methods, we can implement it on the types in our media aggregator. Listing 10-13 shows an implementation of the `Summary` trait on the `NewsArticle` struct that uses the headline, the author, and the location to create the return value of `summarize`. For the `SocialPost` struct, we define `summarize` as the username followed by the entire text of the post, assuming that the post content is already limited to 280 characters."
-msgstr ""
+msgstr "Agora que definimos as assinaturas desejadas dos métodos do trait `Summary`, podemos implementá-lo nos tipos do nosso agregador de mídia. A Listagem 10-13 mostra uma implementação do trait `Summary` no struct `NewsArticle`, que usa a manchete, o autor e o local para criar o valor de retorno de `summarize`. Para o struct `SocialPost`, definimos `summarize` como o nome de usuário seguido de todo o texto da postagem, presumindo que o conteúdo da postagem já esteja limitado a 280 caracteres."
 
 #: src/ch10-02-traits.md
 msgid "<Listing number=\"10-13\" file-name=\"src/lib.rs\" caption=\"Implementing the `Summary` trait on the `NewsArticle` and `SocialPost` types\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-13\" file-name=\"src/lib.rs\" caption=\"Implementando o trait `Summary` nos tipos `NewsArticle` e `SocialPost`\">\n"
 
 #: src/ch10-02-traits.md
 msgid "\"{}, by {} ({})\""
@@ -9436,11 +9436,11 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Implementing a trait on a type is similar to implementing regular methods. The difference is that after `impl`, we put the trait name we want to implement, then use the `for` keyword, and then specify the name of the type we want to implement the trait for. Within the `impl` block, we put the method signatures that the trait definition has defined. Instead of adding a semicolon after each signature, we use curly brackets and fill in the method body with the specific behavior that we want the methods of the trait to have for the particular type."
-msgstr ""
+msgstr "Implementar um trait em um tipo é parecido com implementar métodos comuns. A diferença é que, depois de `impl`, colocamos o nome do trait que queremos implementar, usamos a palavra-chave `for` e, então, especificamos o nome do tipo para o qual queremos implementar o trait. Dentro do bloco `impl`, colocamos as assinaturas de métodos que a definição do trait estabeleceu. Em vez de adicionar um ponto e vírgula depois de cada assinatura, usamos chaves e preenchemos o corpo do método com o comportamento específico que queremos que os métodos do trait tenham para o tipo em questão."
 
 #: src/ch10-02-traits.md
 msgid "Now that the library has implemented the `Summary` trait on `NewsArticle` and `SocialPost`, users of the crate can call the trait methods on instances of `NewsArticle` and `SocialPost` in the same way we call regular methods. The only difference is that the user must bring the trait into scope as well as the types. Here’s an example of how a binary crate could use our `aggregator` library crate:"
-msgstr ""
+msgstr "Agora que a biblioteca implementou o trait `Summary` em `NewsArticle` e `SocialPost`, os usuários do crate podem chamar os métodos do trait em instâncias de `NewsArticle` e `SocialPost` da mesma forma que chamamos métodos comuns. A única diferença é que o usuário precisa trazer para o escopo o trait, assim como os tipos. Veja um exemplo de como um crate binário poderia usar nosso crate de biblioteca `aggregator`:"
 
 #: src/ch10-02-traits.md
 msgid "\"horse_ebooks\""
@@ -9456,15 +9456,15 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "This code prints `1 new post: horse_ebooks: of course, as you probably already know, people`."
-msgstr ""
+msgstr "Este código imprime `1 new post: horse_ebooks: of course, as you probably already know, people`."
 
 #: src/ch10-02-traits.md
 msgid "Other crates that depend on the `aggregator` crate can also bring the `Summary` trait into scope to implement `Summary` on their own types. One restriction to note is that we can implement a trait on a type only if either the trait or the type, or both, are local to our crate. For example, we can implement standard library traits like `Display` on a custom type like `SocialPost` as part of our `aggregator` crate functionality because the type `SocialPost` is local to our `aggregator` crate. We can also implement `Summary` on `Vec<T>` in our `aggregator` crate because the trait `Summary` is local to our `aggregator` crate."
-msgstr ""
+msgstr "Outros crates que dependem do crate `aggregator` também podem trazer o trait `Summary` para o escopo, a fim de implementar `Summary` em seus próprios tipos. Uma restrição a observar é que só podemos implementar um trait em um tipo se o trait, o tipo ou ambos forem locais ao nosso crate. Por exemplo, podemos implementar traits da biblioteca padrão, como `Display`, em um tipo personalizado, como `SocialPost`, como parte da funcionalidade do nosso crate `aggregator`, porque o tipo `SocialPost` é local ao nosso crate `aggregator`. Também podemos implementar `Summary` em `Vec<T>` no nosso crate `aggregator`, porque o trait `Summary` é local ao nosso crate `aggregator`."
 
 #: src/ch10-02-traits.md
 msgid "But we can’t implement external traits on external types. For example, we can’t implement the `Display` trait on `Vec<T>` within our `aggregator` crate, because `Display` and `Vec<T>` are both defined in the standard library and aren’t local to our `aggregator` crate. This restriction is part of a property called _coherence_, and more specifically the _orphan rule_, so named because the parent type is not present. This rule ensures that other people’s code can’t break your code and vice versa. Without the rule, two crates could implement the same trait for the same type, and Rust wouldn’t know which implementation to use."
-msgstr ""
+msgstr "Mas não podemos implementar traits externos em tipos externos. Por exemplo, não podemos implementar o trait `Display` em `Vec<T>` dentro do nosso crate `aggregator`, porque `Display` e `Vec<T>` são definidos na biblioteca padrão e não são locais ao nosso crate `aggregator`. Essa restrição faz parte de uma propriedade chamada _coerência_ e, mais especificamente, da _regra do órfão_, que tem esse nome porque o tipo pai não está presente. Essa regra garante que o código de outras pessoas não consiga quebrar o seu código, e vice-versa. Sem a regra, dois crates poderiam implementar o mesmo trait para o mesmo tipo, e o Rust não saberia qual implementação usar."
 
 #: src/ch10-02-traits.md
 msgid "<a id=\"default-implementations\"></a>"
@@ -9472,19 +9472,19 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Using Default Implementations"
-msgstr ""
+msgstr "Usando implementações padrão {#using-default-implementations}"
 
 #: src/ch10-02-traits.md
 msgid "Sometimes it’s useful to have default behavior for some or all of the methods in a trait instead of requiring implementations for all methods on every type. Then, as we implement the trait on a particular type, we can keep or override each method’s default behavior."
-msgstr ""
+msgstr "Às vezes é útil ter um comportamento padrão para alguns ou todos os métodos de um trait, em vez de exigir implementações para todos os métodos em cada tipo. Assim, ao implementar o trait em um tipo específico, podemos manter ou sobrescrever o comportamento padrão de cada método."
 
 #: src/ch10-02-traits.md
 msgid "In Listing 10-14, we specify a default string for the `summarize` method of the `Summary` trait instead of only defining the method signature, as we did in Listing 10-12."
-msgstr ""
+msgstr "Na Listagem 10-14, especificamos uma string padrão para o método `summarize` do trait `Summary`, em vez de apenas definir a assinatura do método, como fizemos na Listagem 10-12."
 
 #: src/ch10-02-traits.md
 msgid "<Listing number=\"10-14\" file-name=\"src/lib.rs\" caption=\"Defining a `Summary` trait with a default implementation of the `summarize` method\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-14\" file-name=\"src/lib.rs\" caption=\"Definindo um trait `Summary` com uma implementação padrão do método `summarize`\">\n"
 
 #: src/ch10-02-traits.md
 msgid "\"(Read more...)\""
@@ -9492,11 +9492,11 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "To use a default implementation to summarize instances of `NewsArticle`, we specify an empty `impl` block with `impl Summary for NewsArticle {}`."
-msgstr ""
+msgstr "Para usar uma implementação padrão para resumir instâncias de `NewsArticle`, especificamos um bloco `impl` vazio com `impl Summary for NewsArticle {}`."
 
 #: src/ch10-02-traits.md
 msgid "Even though we’re no longer defining the `summarize` method on `NewsArticle` directly, we’ve provided a default implementation and specified that `NewsArticle` implements the `Summary` trait. As a result, we can still call the `summarize` method on an instance of `NewsArticle`, like this:"
-msgstr ""
+msgstr "Mesmo que não estejamos mais definindo o método `summarize` diretamente em `NewsArticle`, fornecemos uma implementação padrão e especificamos que `NewsArticle` implementa o trait `Summary`. Por isso, ainda podemos chamar o método `summarize` em uma instância de `NewsArticle`, assim:"
 
 #: src/ch10-02-traits.md
 msgid "\"Penguins win the Stanley Cup Championship!\""
@@ -9522,15 +9522,15 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "This code prints `New article available! (Read more...)`."
-msgstr ""
+msgstr "Este código imprime `New article available! (Read more...)`."
 
 #: src/ch10-02-traits.md
 msgid "Creating a default implementation doesn’t require us to change anything about the implementation of `Summary` on `SocialPost` in Listing 10-13. The reason is that the syntax for overriding a default implementation is the same as the syntax for implementing a trait method that doesn’t have a default implementation."
-msgstr ""
+msgstr "Criar uma implementação padrão não exige que mudemos nada na implementação de `Summary` em `SocialPost` da Listagem 10-13. O motivo é que a sintaxe para sobrescrever uma implementação padrão é a mesma sintaxe para implementar um método de trait que não tem implementação padrão."
 
 #: src/ch10-02-traits.md
 msgid "Default implementations can call other methods in the same trait, even if those other methods don’t have a default implementation. In this way, a trait can provide a lot of useful functionality and only require implementors to specify a small part of it. For example, we could define the `Summary` trait to have a `summarize_author` method whose implementation is required, and then define a `summarize` method that has a default implementation that calls the `summarize_author` method:"
-msgstr ""
+msgstr "Implementações padrão podem chamar outros métodos do mesmo trait, mesmo que esses outros métodos não tenham implementação padrão. Desse modo, um trait pode oferecer muita funcionalidade útil e exigir dos implementadores que especifiquem apenas uma pequena parte dela. Por exemplo, poderíamos definir o trait `Summary` com um método `summarize_author`, cuja implementação é obrigatória, e depois definir um método `summarize` que tem uma implementação padrão que chama o método `summarize_author`:"
 
 #: src/ch10-02-traits.md
 msgid "\"(Read more from {}...)\""
@@ -9542,19 +9542,19 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "To use this version of `Summary`, we only need to define `summarize_author` when we implement the trait on a type:"
-msgstr ""
+msgstr "Para usar esta versão de `Summary`, precisamos apenas definir `summarize_author` ao implementar o trait em um tipo:"
 
 #: src/ch10-02-traits.md
 msgid "After we define `summarize_author`, we can call `summarize` on instances of the `SocialPost` struct, and the default implementation of `summarize` will call the definition of `summarize_author` that we’ve provided. Because we’ve implemented `summarize_author`, the `Summary` trait has given us the behavior of the `summarize` method without requiring us to write any more code. Here’s what that looks like:"
-msgstr ""
+msgstr "Depois de definirmos `summarize_author`, podemos chamar `summarize` em instâncias do struct `SocialPost`, e a implementação padrão de `summarize` vai chamar a definição de `summarize_author` que fornecemos. Como implementamos `summarize_author`, o trait `Summary` nos deu o comportamento do método `summarize` sem precisarmos escrever mais nenhum código. Veja como isso fica:"
 
 #: src/ch10-02-traits.md
 msgid "This code prints `1 new post: (Read more from @horse_ebooks...)`."
-msgstr ""
+msgstr "Este código imprime `1 new post: (Read more from @horse_ebooks...)`."
 
 #: src/ch10-02-traits.md
 msgid "Note that it isn’t possible to call the default implementation from an overriding implementation of that same method."
-msgstr ""
+msgstr "Observe que não é possível chamar a implementação padrão a partir de uma implementação que sobrescreve esse mesmo método."
 
 #: src/ch10-02-traits.md
 msgid "<a id=\"traits-as-parameters\"></a>"
@@ -9562,11 +9562,11 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Using Traits as Parameters"
-msgstr ""
+msgstr "Usando traits como parâmetros {#using-traits-as-parameters}"
 
 #: src/ch10-02-traits.md
 msgid "Now that you know how to define and implement traits, we can explore how to use traits to define functions that accept many different types. We’ll use the `Summary` trait we implemented on the `NewsArticle` and `SocialPost` types in Listing 10-13 to define a `notify` function that calls the `summarize` method on its `item` parameter, which is of some type that implements the `Summary` trait. To do this, we use the `impl Trait` syntax, like this:"
-msgstr ""
+msgstr "Agora que você sabe como definir e implementar traits, podemos explorar como usar traits para definir funções que aceitam muitos tipos diferentes. Vamos usar o trait `Summary` que implementamos nos tipos `NewsArticle` e `SocialPost` na Listagem 10-13 para definir uma função `notify` que chama o método `summarize` em seu parâmetro `item`, que é de algum tipo que implementa o trait `Summary`. Para isso, usamos a sintaxe `impl Trait`, assim:"
 
 #: src/ch10-02-traits.md
 msgid "\"Breaking news! {}\""
@@ -9574,7 +9574,7 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Instead of a concrete type for the `item` parameter, we specify the `impl` keyword and the trait name. This parameter accepts any type that implements the specified trait. In the body of `notify`, we can call any methods on `item` that come from the `Summary` trait, such as `summarize`. We can call `notify` and pass in any instance of `NewsArticle` or `SocialPost`. Code that calls the function with any other type, such as a `String` or an `i32`, won’t compile, because those types don’t implement `Summary`."
-msgstr ""
+msgstr "Em vez de um tipo concreto para o parâmetro `item`, especificamos a palavra-chave `impl` e o nome do trait. Esse parâmetro aceita qualquer tipo que implemente o trait especificado. No corpo de `notify`, podemos chamar quaisquer métodos de `item` que venham do trait `Summary`, como `summarize`. Podemos chamar `notify` e passar qualquer instância de `NewsArticle` ou de `SocialPost`. Código que chame a função com qualquer outro tipo, como uma `String` ou um `i32`, não vai compilar, porque esses tipos não implementam `Summary`."
 
 #: src/ch10-02-traits.md
 msgid "<a id=\"fixing-the-largest-function-with-trait-bounds\"></a>"
@@ -9582,27 +9582,27 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Trait Bound Syntax"
-msgstr ""
+msgstr "Sintaxe de limite de trait {#trait-bound-syntax}"
 
 #: src/ch10-02-traits.md
 msgid "The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form known as a _trait bound_; it looks like this:"
-msgstr ""
+msgstr "A sintaxe `impl Trait` funciona para casos simples, mas na verdade é um açúcar sintático para uma forma mais longa conhecida como _limite de trait_; ela fica assim:"
 
 #: src/ch10-02-traits.md
 msgid "This longer form is equivalent to the example in the previous section but is more verbose. We place trait bounds with the declaration of the generic type parameter after a colon and inside angle brackets."
-msgstr ""
+msgstr "Essa forma mais longa é equivalente ao exemplo da seção anterior, mas é mais verbosa. Colocamos os limites de trait na declaração do parâmetro de tipo genérico, depois de dois-pontos e dentro de colchetes angulares."
 
 #: src/ch10-02-traits.md
 msgid "The `impl Trait` syntax is convenient and makes for more concise code in simple cases, while the fuller trait bound syntax can express more complexity in other cases. For example, we can have two parameters that implement `Summary`. Doing so with the `impl Trait` syntax looks like this:"
-msgstr ""
+msgstr "A sintaxe `impl Trait` é prática e deixa o código mais conciso em casos simples, enquanto a sintaxe completa de limites de trait consegue expressar mais complexidade em outros casos. Por exemplo, podemos ter dois parâmetros que implementam `Summary`. Fazer isso com a sintaxe `impl Trait` fica assim:"
 
 #: src/ch10-02-traits.md
 msgid "Using `impl Trait` is appropriate if we want this function to allow `item1` and `item2` to have different types (as long as both types implement `Summary`). If we want to force both parameters to have the same type, however, we must use a trait bound, like this:"
-msgstr ""
+msgstr "Usar `impl Trait` é adequado se quisermos que esta função permita que `item1` e `item2` tenham tipos diferentes (desde que ambos os tipos implementem `Summary`). Se quisermos forçar os dois parâmetros a terem o mesmo tipo, no entanto, precisamos usar um limite de trait, assim:"
 
 #: src/ch10-02-traits.md
 msgid "The generic type `T` specified as the type of the `item1` and `item2` parameters constrains the function such that the concrete type of the value passed as an argument for `item1` and `item2` must be the same."
-msgstr ""
+msgstr "O tipo genérico `T`, especificado como o tipo dos parâmetros `item1` e `item2`, restringe a função de modo que o tipo concreto do valor passado como argumento para `item1` e `item2` precisa ser o mesmo."
 
 #: src/ch10-02-traits.md
 msgid "<a id=\"specifying-multiple-trait-bounds-with-the--syntax\"></a>"
@@ -9610,55 +9610,55 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Multiple Trait Bounds with the `+` Syntax"
-msgstr ""
+msgstr "Vários limites de trait com a sintaxe `+` {#multiple-trait-bounds-with-the--syntax}"
 
 #: src/ch10-02-traits.md
 msgid "We can also specify more than one trait bound. Say we wanted `notify` to use display formatting as well as `summarize` on `item`: We specify in the `notify` definition that `item` must implement both `Display` and `Summary`. We can do so using the `+` syntax:"
-msgstr ""
+msgstr "Também podemos especificar mais de um limite de trait. Digamos que quiséssemos que `notify` usasse a formatação de exibição, assim como `summarize`, em `item`: especificamos na definição de `notify` que `item` deve implementar tanto `Display` quanto `Summary`. Podemos fazer isso usando a sintaxe `+`:"
 
 #: src/ch10-02-traits.md
 msgid "The `+` syntax is also valid with trait bounds on generic types:"
-msgstr ""
+msgstr "A sintaxe `+` também é válida com limites de trait em tipos genéricos:"
 
 #: src/ch10-02-traits.md
 msgid "With the two trait bounds specified, the body of `notify` can call `summarize` and use `{}` to format `item`."
-msgstr ""
+msgstr "Com os dois limites de trait especificados, o corpo de `notify` pode chamar `summarize` e usar `{}` para formatar `item`."
 
 #: src/ch10-02-traits.md
 msgid "Clearer Trait Bounds with `where` Clauses"
-msgstr ""
+msgstr "Limites de trait mais claros com cláusulas `where` {#clearer-trait-bounds-with-where-clauses}"
 
 #: src/ch10-02-traits.md
 msgid "Using too many trait bounds has its downsides. Each generic has its own trait bounds, so functions with multiple generic type parameters can contain lots of trait bound information between the function’s name and its parameter list, making the function signature hard to read. For this reason, Rust has alternate syntax for specifying trait bounds inside a `where` clause after the function signature. So, instead of writing this:"
-msgstr ""
+msgstr "Usar limites de trait em excesso tem suas desvantagens. Cada parâmetro de tipo genérico tem seus próprios limites de trait, então funções com vários parâmetros de tipo genéricos podem conter muitas informações de limites de trait entre o nome da função e a lista de parâmetros, o que torna a assinatura da função difícil de ler. Por esse motivo, o Rust tem uma sintaxe alternativa para especificar limites de trait dentro de uma cláusula `where`, depois da assinatura da função. Assim, em vez de escrever isto:"
 
 #: src/ch10-02-traits.md
 msgid "we can use a `where` clause, like this:"
-msgstr ""
+msgstr "podemos usar uma cláusula `where`, assim:"
 
 #: src/ch10-02-traits.md
 msgid "This function’s signature is less cluttered: The function name, parameter list, and return type are close together, similar to a function without lots of trait bounds."
-msgstr ""
+msgstr "A assinatura dessa função fica mais limpa: o nome da função, a lista de parâmetros e o tipo de retorno ficam próximos, de forma parecida com uma função sem muitos limites de trait."
 
 #: src/ch10-02-traits.md
 msgid "Returning Types That Implement Traits"
-msgstr ""
+msgstr "Retornando tipos que implementam traits {#returning-types-that-implement-traits}"
 
 #: src/ch10-02-traits.md
 msgid "We can also use the `impl Trait` syntax in the return position to return a value of some type that implements a trait, as shown here:"
-msgstr ""
+msgstr "Também podemos usar a sintaxe `impl Trait` na posição de retorno para retornar um valor de algum tipo que implemente um trait, como mostrado aqui:"
 
 #: src/ch10-02-traits.md
 msgid "By using `impl Summary` for the return type, we specify that the `returns_summarizable` function returns some type that implements the `Summary` trait without naming the concrete type. In this case, `returns_summarizable` returns a `SocialPost`, but the code calling this function doesn’t need to know that."
-msgstr ""
+msgstr "Ao usar `impl Summary` como tipo de retorno, especificamos que a função `returns_summarizable` retorna algum tipo que implementa o trait `Summary`, sem nomear o tipo concreto. Neste caso, `returns_summarizable` retorna um `SocialPost`, mas o código que chama essa função não precisa saber disso."
 
 #: src/ch10-02-traits.md
 msgid "The ability to specify a return type only by the trait it implements is especially useful in the context of closures and iterators, which we cover in Chapter 13. Closures and iterators create types that only the compiler knows or types that are very long to specify. The `impl Trait` syntax lets you concisely specify that a function returns some type that implements the `Iterator` trait without needing to write out a very long type."
-msgstr ""
+msgstr "A capacidade de especificar um tipo de retorno apenas pelo trait que ele implementa é especialmente útil no contexto de closures e iteradores, que abordamos no Capítulo 13. Closures e iteradores criam tipos que só o compilador conhece, ou tipos muito longos para especificar. A sintaxe `impl Trait` permite que você especifique de forma concisa que uma função retorna algum tipo que implementa o trait `Iterator`, sem precisar escrever um tipo muito longo."
 
 #: src/ch10-02-traits.md
 msgid "However, you can only use `impl Trait` if you’re returning a single type. For example, this code that returns either a `NewsArticle` or a `SocialPost` with the return type specified as `impl Summary` wouldn’t work:"
-msgstr ""
+msgstr "No entanto, você só pode usar `impl Trait` se estiver retornando um único tipo. Por exemplo, este código, que retorna um `NewsArticle` ou um `SocialPost` com o tipo de retorno especificado como `impl Summary`, não funcionaria:"
 
 #: src/ch10-02-traits.md
 msgid ""
@@ -9668,19 +9668,19 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "Returning either a `NewsArticle` or a `SocialPost` isn’t allowed due to restrictions around how the `impl Trait` syntax is implemented in the compiler. We’ll cover how to write a function with this behavior in the [“Using Trait Objects to Abstract over Shared Behavior”](ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior)<!-- ignore --> section of Chapter 18."
-msgstr ""
+msgstr "Retornar um `NewsArticle` ou um `SocialPost` não é permitido por causa de restrições sobre a forma como a sintaxe `impl Trait` é implementada no compilador. Vamos ver como escrever uma função com esse comportamento na seção [“Usando objetos de trait para abstrair comportamento compartilhado”](ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior)<!-- ignore --> do Capítulo 18."
 
 #: src/ch10-02-traits.md
 msgid "Using Trait Bounds to Conditionally Implement Methods"
-msgstr ""
+msgstr "Usando limites de trait para implementar métodos condicionalmente {#using-trait-bounds-to-conditionally-implement-methods}"
 
 #: src/ch10-02-traits.md
 msgid "By using a trait bound with an `impl` block that uses generic type parameters, we can implement methods conditionally for types that implement the specified traits. For example, the type `Pair<T>` in Listing 10-15 always implements the `new` function to return a new instance of `Pair<T>` (recall from the [“Method Syntax”](ch05-03-method-syntax.html#method-syntax)<!-- ignore --> section of Chapter 5 that `Self` is a type alias for the type of the `impl` block, which in this case is `Pair<T>`). But in the next `impl` block, `Pair<T>` only implements the `cmp_display` method if its inner type `T` implements the `PartialOrd` trait that enables comparison _and_ the `Display` trait that enables printing."
-msgstr ""
+msgstr "Ao usar um limite de trait com um bloco `impl` que usa parâmetros de tipo genéricos, podemos implementar métodos condicionalmente para tipos que implementam os traits especificados. Por exemplo, o tipo `Pair<T>` da Listagem 10-15 sempre implementa a função `new`, que retorna uma nova instância de `Pair<T>` (lembre-se, da seção [“Sintaxe de método”](ch05-03-method-syntax.html#method-syntax)<!-- ignore --> do Capítulo 5, de que `Self` é um alias de tipo para o tipo do bloco `impl`, que neste caso é `Pair<T>`). Mas, no próximo bloco `impl`, `Pair<T>` só implementa o método `cmp_display` se o seu tipo interno `T` implementar o trait `PartialOrd`, que permite a comparação, _e_ o trait `Display`, que permite a impressão."
 
 #: src/ch10-02-traits.md
 msgid "<Listing number=\"10-15\" file-name=\"src/lib.rs\" caption=\"Conditionally implementing methods on a generic type depending on trait bounds\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-15\" file-name=\"src/lib.rs\" caption=\"Implementando métodos condicionalmente em um tipo genérico, dependendo dos limites de trait\">\n"
 
 #: src/ch10-02-traits.md
 msgid "\"The largest member is x = {}\""
@@ -9692,31 +9692,31 @@ msgstr ""
 
 #: src/ch10-02-traits.md
 msgid "We can also conditionally implement a trait for any type that implements another trait. Implementations of a trait on any type that satisfies the trait bounds are called _blanket implementations_ and are used extensively in the Rust standard library. For example, the standard library implements the `ToString` trait on any type that implements the `Display` trait. The `impl` block in the standard library looks similar to this code:"
-msgstr ""
+msgstr "Também podemos implementar condicionalmente um trait para qualquer tipo que implemente outro trait. Implementações de um trait para qualquer tipo que satisfaça os limites de trait são chamadas de _implementações abrangentes_ e são usadas extensivamente na biblioteca padrão do Rust. Por exemplo, a biblioteca padrão implementa o trait `ToString` para qualquer tipo que implemente o trait `Display`. O bloco `impl` da biblioteca padrão se parece com este código:"
 
 #: src/ch10-02-traits.md
 msgid "Because the standard library has this blanket implementation, we can call the `to_string` method defined by the `ToString` trait on any type that implements the `Display` trait. For example, we can turn integers into their corresponding `String` values like this because integers implement `Display`:"
-msgstr ""
+msgstr "Como a biblioteca padrão tem essa implementação abrangente, podemos chamar o método `to_string`, definido pelo trait `ToString`, em qualquer tipo que implemente o trait `Display`. Por exemplo, podemos transformar inteiros em seus valores `String` correspondentes assim, porque inteiros implementam `Display`:"
 
 #: src/ch10-02-traits.md
 msgid "Blanket implementations appear in the documentation for the trait in the “Implementors” section."
-msgstr ""
+msgstr "Implementações abrangentes aparecem na documentação do trait, na seção “Implementors”."
 
 #: src/ch10-02-traits.md
 msgid "Traits and trait bounds let us write code that uses generic type parameters to reduce duplication but also specify to the compiler that we want the generic type to have particular behavior. The compiler can then use the trait bound information to check that all the concrete types used with our code provide the correct behavior. In dynamically typed languages, we would get an error at runtime if we called a method on a type that didn’t define the method. But Rust moves these errors to compile time so that we’re forced to fix the problems before our code is even able to run. Additionally, we don’t have to write code that checks for behavior at runtime, because we’ve already checked at compile time. Doing so improves performance without having to give up the flexibility of generics."
-msgstr ""
+msgstr "Traits e limites de trait nos permitem escrever código que usa parâmetros de tipo genéricos para reduzir a duplicação, mas também informar ao compilador que queremos que o tipo genérico tenha um comportamento específico. O compilador pode então usar as informações do limite de trait para verificar se todos os tipos concretos usados com o nosso código oferecem o comportamento correto. Em linguagens de tipagem dinâmica, receberíamos um erro em tempo de execução se chamássemos um método em um tipo que não definisse esse método. Mas o Rust move esses erros para o tempo de compilação, de modo que somos obrigados a corrigir os problemas antes mesmo de o nosso código conseguir executar. Além disso, não precisamos escrever código que verifique o comportamento em tempo de execução, porque já verificamos isso em tempo de compilação. Fazer isso melhora o desempenho sem que seja preciso abrir mão da flexibilidade dos genéricos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetimes are another kind of generic that we’ve already been using. Rather than ensuring that a type has the behavior we want, lifetimes ensure that references are valid as long as we need them to be."
-msgstr ""
+msgstr "Os tempos de vida são outro tipo de genérico que já estamos usando. Em vez de garantir que um tipo tenha o comportamento que queremos, os tempos de vida garantem que as referências sejam válidas pelo tempo que precisarmos delas."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "One detail we didn’t discuss in the [“References and Borrowing”](ch04-02-references-and-borrowing.html#references-and-borrowing)<!-- ignore --> section in Chapter 4 is that every reference in Rust has a lifetime, which is the scope for which that reference is valid. Most of the time, lifetimes are implicit and inferred, just like most of the time, types are inferred. We are only required to annotate types when multiple types are possible. In a similar way, we must annotate lifetimes when the lifetimes of references could be related in a few different ways. Rust requires us to annotate the relationships using generic lifetime parameters to ensure that the actual references used at runtime will definitely be valid."
-msgstr ""
+msgstr "Um detalhe que não discutimos na seção [“Referências e empréstimos”](ch04-02-references-and-borrowing.html#references-and-borrowing)<!-- ignore --> do Capítulo 4 é que toda referência no Rust tem um tempo de vida, que é o escopo no qual essa referência é válida. Na maioria das vezes, os tempos de vida são implícitos e inferidos, assim como os tipos, que na maioria das vezes também são inferidos. Só somos obrigados a anotar tipos quando vários tipos são possíveis. De maneira semelhante, precisamos anotar os tempos de vida quando eles podem se relacionar de algumas maneiras diferentes. O Rust exige que anotemos essas relações usando parâmetros de tempo de vida genéricos, para garantir que as referências reais usadas em tempo de execução sejam de fato válidas."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Annotating lifetimes is not even a concept most other programming languages have, so this is going to feel unfamiliar. Although we won’t cover lifetimes in their entirety in this chapter, we’ll discuss common ways you might encounter lifetime syntax so that you can get comfortable with the concept."
-msgstr ""
+msgstr "Anotar tempos de vida nem sequer é um conceito que a maioria das outras linguagens de programação tem, então isso vai parecer estranho. Embora não vamos cobrir os tempos de vida por completo neste capítulo, vamos discutir as formas comuns como você pode encontrar a sintaxe de tempo de vida, para que você se familiarize com o conceito."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"preventing-dangling-references-with-lifetimes\"></a>"
@@ -9724,11 +9724,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The main aim of lifetimes is to prevent dangling references, which, if they were allowed to exist, would cause a program to reference data other than the data it’s intended to reference. Consider the program in Listing 10-16, which has an outer scope and an inner scope."
-msgstr ""
+msgstr "O principal objetivo dos tempos de vida é impedir referências pendentes, que, se fosse permitido que existissem, fariam um programa referenciar dados diferentes dos que ele pretende referenciar. Considere o programa da Listagem 10-16, que tem um escopo externo e um escopo interno."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-16\" caption=\"An attempt to use a reference whose value has gone out of scope\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-16\" caption=\"Uma tentativa de usar uma referência cujo valor saiu do escopo\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"r: {r}\""
@@ -9736,11 +9736,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Note: The examples in Listings 10-16, 10-17, and 10-23 declare variables without giving them an initial value, so the variable name exists in the outer scope. At first glance, this might appear to be in conflict with Rust having no null values. However, if we try to use a variable before giving it a value, we’ll get a compile-time error, which shows that indeed Rust does not allow null values."
-msgstr ""
+msgstr "Nota: os exemplos das Listagens 10-16, 10-17 e 10-23 declaram variáveis sem dar a elas um valor inicial, então o nome da variável existe no escopo externo. À primeira vista, isso pode parecer estar em conflito com o fato de o Rust não ter valores nulos. No entanto, se tentarmos usar uma variável antes de dar a ela um valor, vamos receber um erro em tempo de compilação, o que mostra que, de fato, o Rust não permite valores nulos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The outer scope declares a variable named `r` with no initial value, and the inner scope declares a variable named `x` with the initial value of `5`. Inside the inner scope, we attempt to set the value of `r` as a reference to `x`. Then, the inner scope ends, and we attempt to print the value in `r`. This code won’t compile, because the value that `r` is referring to has gone out of scope before we try to use it. Here is the error message:"
-msgstr ""
+msgstr "O escopo externo declara uma variável chamada `r` sem valor inicial, e o escopo interno declara uma variável chamada `x` com o valor inicial `5`. Dentro do escopo interno, tentamos definir o valor de `r` como uma referência a `x`. Depois, o escopo interno termina, e tentamos imprimir o valor em `r`. Este código não vai compilar, porque o valor ao qual `r` se refere saiu do escopo antes de tentarmos usá-lo. Esta é a mensagem de erro:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -9767,19 +9767,19 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The error message says that the variable `x` “does not live long enough.” The reason is that `x` will be out of scope when the inner scope ends on line 7. But `r` is still valid for the outer scope; because its scope is larger, we say that it “lives longer.” If Rust allowed this code to work, `r` would be referencing memory that was deallocated when `x` went out of scope, and anything we tried to do with `r` wouldn’t work correctly. So, how does Rust determine that this code is invalid? It uses a borrow checker."
-msgstr ""
+msgstr "A mensagem de erro diz que a variável `x` “não vive por tempo suficiente.” O motivo é que `x` vai sair do escopo quando o escopo interno terminar, na linha 7. Mas `r` ainda é válida no escopo externo; como o escopo dela é maior, dizemos que ela “vive mais tempo”. Se o Rust permitisse que este código funcionasse, `r` estaria referenciando uma memória que foi desalocada quando `x` saiu do escopo, e qualquer coisa que tentássemos fazer com `r` não funcionaria corretamente. Então, como o Rust determina que este código é inválido? Ele usa um verificador de empréstimos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The Borrow Checker"
-msgstr ""
+msgstr "O verificador de empréstimos {#the-borrow-checker}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The Rust compiler has a _borrow checker_ that compares scopes to determine whether all borrows are valid. Listing 10-17 shows the same code as Listing 10-16 but with annotations showing the lifetimes of the variables."
-msgstr ""
+msgstr "O compilador do Rust tem um _verificador de empréstimos_ que compara escopos para determinar se todos os empréstimos são válidos. A Listagem 10-17 mostra o mesmo código da Listagem 10-16, mas com anotações que mostram os tempos de vida das variáveis."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-17\" caption=\"Annotations of the lifetimes of `r` and `x`, named `'a` and `'b`, respectively\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-17\" caption=\"Anotações dos tempos de vida de `r` e `x`, chamados `'a` e `'b`, respectivamente\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -9811,15 +9811,15 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Here, we’ve annotated the lifetime of `r` with `'a` and the lifetime of `x` with `'b`. As you can see, the inner `'b` block is much smaller than the outer `'a` lifetime block. At compile time, Rust compares the size of the two lifetimes and sees that `r` has a lifetime of `'a` but that it refers to memory with a lifetime of `'b`. The program is rejected because `'b` is shorter than `'a`: The subject of the reference doesn’t live as long as the reference."
-msgstr ""
+msgstr "Aqui, anotamos o tempo de vida de `r` com `'a` e o tempo de vida de `x` com `'b`. Como você pode ver, o bloco interno `'b` é bem menor que o bloco externo de tempo de vida `'a`. Em tempo de compilação, o Rust compara o tamanho dos dois tempos de vida e percebe que `r` tem um tempo de vida `'a`, mas se refere a uma memória com um tempo de vida `'b`. O programa é rejeitado porque `'b` é menor que `'a`: o dado referenciado não vive tanto quanto a referência."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Listing 10-18 fixes the code so that it doesn’t have a dangling reference and it compiles without any errors."
-msgstr ""
+msgstr "A Listagem 10-18 corrige o código para que ele não tenha uma referência pendente e compile sem nenhum erro."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-18\" caption=\"A valid reference because the data has a longer lifetime than the reference\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-18\" caption=\"Uma referência válida, porque os dados têm um tempo de vida maior que a referência\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -9845,23 +9845,23 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Here, `x` has the lifetime `'b`, which in this case is larger than `'a`. This means `r` can reference `x` because Rust knows that the reference in `r` will always be valid while `x` is valid."
-msgstr ""
+msgstr "Aqui, `x` tem o tempo de vida `'b`, que, neste caso, é maior que `'a`. Isso significa que `r` pode referenciar `x`, porque o Rust sabe que a referência em `r` sempre será válida enquanto `x` for válida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Now that you know where the lifetimes of references are and how Rust analyzes lifetimes to ensure that references will always be valid, let’s explore generic lifetimes in function parameters and return values."
-msgstr ""
+msgstr "Agora que você sabe onde estão os tempos de vida das referências e como o Rust analisa os tempos de vida para garantir que as referências sempre serão válidas, vamos explorar os tempos de vida genéricos em parâmetros e valores de retorno de funções."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Generic Lifetimes in Functions"
-msgstr ""
+msgstr "Tempos de vida genéricos em funções {#generic-lifetimes-in-functions}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "We’ll write a function that returns the longer of two string slices. This function will take two string slices and return a single string slice. After we’ve implemented the `longest` function, the code in Listing 10-19 should print `The longest string is abcd`."
-msgstr ""
+msgstr "Vamos escrever uma função que retorna a mais longa entre duas slices de string. Essa função vai receber duas slices de string e retornar uma única slice de string. Depois de implementarmos a função `longest`, o código da Listagem 10-19 deve imprimir `The longest string is abcd`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-19\" file-name=\"src/main.rs\" caption=\"A `main` function that calls the `longest` function to find the longer of two string slices\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-19\" file-name=\"src/main.rs\" caption=\"Uma função `main` que chama a função `longest` para encontrar a mais longa entre duas slices de string\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"abcd\""
@@ -9877,19 +9877,19 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Note that we want the function to take string slices, which are references, rather than strings, because we don’t want the `longest` function to take ownership of its parameters. Refer to [“String Slices as Parameters”](ch04-03-slices.html#string-slices-as-parameters)<!-- ignore --> in Chapter 4 for more discussion about why the parameters we use in Listing 10-19 are the ones we want."
-msgstr ""
+msgstr "Observe que queremos que a função receba slices de string, que são referências, em vez de strings, porque não queremos que a função `longest` assuma o ownership dos seus parâmetros. Consulte [“Slices de string como parâmetros”](ch04-03-slices.html#string-slices-as-parameters)<!-- ignore --> no Capítulo 4 para uma discussão mais aprofundada sobre por que os parâmetros que usamos na Listagem 10-19 são os que queremos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "If we try to implement the `longest` function as shown in Listing 10-20, it won’t compile."
-msgstr ""
+msgstr "Se tentarmos implementar a função `longest` como mostrado na Listagem 10-20, o código não vai compilar."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-20\" file-name=\"src/main.rs\" caption=\"An implementation of the `longest` function that returns the longer of two string slices but does not yet compile\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-20\" file-name=\"src/main.rs\" caption=\"Uma implementação da função `longest` que retorna a mais longa entre duas slices de string, mas que ainda não compila\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Instead, we get the following error that talks about lifetimes:"
-msgstr ""
+msgstr "Em vez disso, recebemos o seguinte erro, que fala sobre tempos de vida:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -9915,27 +9915,27 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The help text reveals that the return type needs a generic lifetime parameter on it because Rust can’t tell whether the reference being returned refers to `x` or `y`. Actually, we don’t know either, because the `if` block in the body of this function returns a reference to `x` and the `else` block returns a reference to `y`!"
-msgstr ""
+msgstr "O texto de ajuda revela que o tipo de retorno precisa de um parâmetro de tempo de vida genérico, porque o Rust não consegue saber se a referência retornada se refere a `x` ou a `y`. Na verdade, nós também não sabemos, porque o bloco `if` no corpo desta função retorna uma referência a `x`, e o bloco `else` retorna uma referência a `y`!"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we’re defining this function, we don’t know the concrete values that will be passed into this function, so we don’t know whether the `if` case or the `else` case will execute. We also don’t know the concrete lifetimes of the references that will be passed in, so we can’t look at the scopes as we did in Listings 10-17 and 10-18 to determine whether the reference we return will always be valid. The borrow checker can’t determine this either, because it doesn’t know how the lifetimes of `x` and `y` relate to the lifetime of the return value. To fix this error, we’ll add generic lifetime parameters that define the relationship between the references so that the borrow checker can perform its analysis."
-msgstr ""
+msgstr "Quando estamos definindo esta função, não sabemos quais valores concretos serão passados para ela, então não sabemos se o caso `if` ou o caso `else` vai ser executado. Também não sabemos os tempos de vida concretos das referências que serão passadas, então não podemos analisar os escopos como fizemos nas Listagens 10-17 e 10-18 para determinar se a referência que retornamos sempre será válida. O verificador de empréstimos também não consegue determinar isso, porque não sabe como os tempos de vida de `x` e `y` se relacionam com o tempo de vida do valor de retorno. Para corrigir esse erro, vamos adicionar parâmetros de tempo de vida genéricos que definam a relação entre as referências, para que o verificador de empréstimos possa realizar sua análise."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetime Annotation Syntax"
-msgstr ""
+msgstr "Sintaxe de anotação de tempo de vida {#lifetime-annotation-syntax}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetime annotations don’t change how long any of the references live. Rather, they describe the relationships of the lifetimes of multiple references to each other without affecting the lifetimes. Just as functions can accept any type when the signature specifies a generic type parameter, functions can accept references with any lifetime by specifying a generic lifetime parameter."
-msgstr ""
+msgstr "As anotações de tempo de vida não mudam por quanto tempo qualquer uma das referências vive. Em vez disso, elas descrevem as relações entre os tempos de vida de várias referências, sem afetar esses tempos de vida. Assim como funções podem aceitar qualquer tipo quando a assinatura especifica um parâmetro de tipo genérico, as funções também podem aceitar referências com qualquer tempo de vida ao especificar um parâmetro de tempo de vida genérico."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetime annotations have a slightly unusual syntax: The names of lifetime parameters must start with an apostrophe (`'`) and are usually all lowercase and very short, like generic types. Most people use the name `'a` for the first lifetime annotation. We place lifetime parameter annotations after the `&` of a reference, using a space to separate the annotation from the reference’s type."
-msgstr ""
+msgstr "As anotações de tempo de vida têm uma sintaxe um pouco incomum: os nomes dos parâmetros de tempo de vida devem começar com um apóstrofo (`'`) e geralmente são todos em minúsculas e muito curtos, como os tipos genéricos. A maioria das pessoas usa o nome `'a` para a primeira anotação de tempo de vida. Colocamos as anotações de parâmetro de tempo de vida depois do `&` de uma referência, usando um espaço para separar a anotação do tipo da referência."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Here are some examples—a reference to an `i32` without a lifetime parameter, a reference to an `i32` that has a lifetime parameter named `'a`, and a mutable reference to an `i32` that also has the lifetime `'a`:"
-msgstr ""
+msgstr "Aqui estão alguns exemplos: uma referência a um `i32` sem parâmetro de tempo de vida, uma referência a um `i32` que tem um parâmetro de tempo de vida chamado `'a` e uma referência mutável a um `i32` que também tem o tempo de vida `'a`:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "// a reference\n"
@@ -9951,7 +9951,7 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "One lifetime annotation by itself doesn’t have much meaning, because the annotations are meant to tell Rust how generic lifetime parameters of multiple references relate to each other. Let’s examine how the lifetime annotations relate to each other in the context of the `longest` function."
-msgstr ""
+msgstr "Uma anotação de tempo de vida sozinha não tem muito significado, porque as anotações servem para dizer ao Rust como os parâmetros de tempo de vida genéricos de várias referências se relacionam entre si. Vamos examinar como as anotações de tempo de vida se relacionam no contexto da função `longest`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"lifetime-annotations-in-function-signatures\"></a>"
@@ -9959,47 +9959,47 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "In Function Signatures"
-msgstr ""
+msgstr "Em assinaturas de função {#in-function-signatures}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "To use lifetime annotations in function signatures, we need to declare the generic lifetime parameters inside angle brackets between the function name and the parameter list, just as we did with generic type parameters."
-msgstr ""
+msgstr "Para usar anotações de tempo de vida em assinaturas de função, precisamos declarar os parâmetros de tempo de vida genéricos dentro de colchetes angulares, entre o nome da função e a lista de parâmetros, assim como fizemos com os parâmetros de tipo genéricos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "We want the signature to express the following constraint: The returned reference will be valid as long as both of the parameters are valid. This is the relationship between lifetimes of the parameters and the return value. We’ll name the lifetime `'a` and then add it to each reference, as shown in Listing 10-21."
-msgstr ""
+msgstr "Queremos que a assinatura expresse a seguinte restrição: a referência retornada será válida enquanto os dois parâmetros forem válidos. Esta é a relação entre os tempos de vida dos parâmetros e o valor de retorno. Vamos nomear o tempo de vida `'a` e depois adicioná-lo a cada referência, como mostrado na Listagem 10-21."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-21\" file-name=\"src/main.rs\" caption=\"The `longest` function definition specifying that all the references in the signature must have the same lifetime `'a`\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-21\" file-name=\"src/main.rs\" caption=\"A definição da função `longest`, especificando que todas as referências na assinatura devem ter o mesmo tempo de vida `'a`\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "This code should compile and produce the result we want when we use it with the `main` function in Listing 10-19."
-msgstr ""
+msgstr "Este código deve compilar e produzir o resultado que queremos quando o usarmos com a função `main` da Listagem 10-19."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The function signature now tells Rust that for some lifetime `'a`, the function takes two parameters, both of which are string slices that live at least as long as lifetime `'a`. The function signature also tells Rust that the string slice returned from the function will live at least as long as lifetime `'a`. In practice, it means that the lifetime of the reference returned by the `longest` function is the same as the smaller of the lifetimes of the values referred to by the function arguments. These relationships are what we want Rust to use when analyzing this code."
-msgstr ""
+msgstr "A assinatura da função agora diz ao Rust que, para algum tempo de vida `'a`, a função recebe dois parâmetros, ambos slices de string que vivem pelo menos tanto quanto o tempo de vida `'a`. A assinatura da função também diz ao Rust que a slice de string retornada pela função vai viver pelo menos tanto quanto o tempo de vida `'a`. Na prática, isso significa que o tempo de vida da referência retornada pela função `longest` é igual ao menor dos tempos de vida dos valores referenciados pelos argumentos da função. São essas as relações que queremos que o Rust use ao analisar este código."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Remember, when we specify the lifetime parameters in this function signature, we’re not changing the lifetimes of any values passed in or returned. Rather, we’re specifying that the borrow checker should reject any values that don’t adhere to these constraints. Note that the `longest` function doesn’t need to know exactly how long `x` and `y` will live, only that some scope can be substituted for `'a` that will satisfy this signature."
-msgstr ""
+msgstr "Lembre-se de que, quando especificamos os parâmetros de tempo de vida nesta assinatura de função, não estamos mudando os tempos de vida de nenhum valor passado ou retornado. Em vez disso, estamos especificando que o verificador de empréstimos deve rejeitar quaisquer valores que não respeitem essas restrições. Observe que a função `longest` não precisa saber exatamente por quanto tempo `x` e `y` vão viver, apenas que algum escopo possa ser substituído por `'a` de modo a satisfazer esta assinatura."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When annotating lifetimes in functions, the annotations go in the function signature, not in the function body. The lifetime annotations become part of the contract of the function, much like the types in the signature. Having function signatures contain the lifetime contract means the analysis the Rust compiler does can be simpler. If there’s a problem with the way a function is annotated or the way it is called, the compiler errors can point to the part of our code and the constraints more precisely. If, instead, the Rust compiler made more inferences about what we intended the relationships of the lifetimes to be, the compiler might only be able to point to a use of our code many steps away from the cause of the problem."
-msgstr ""
+msgstr "Ao anotar tempos de vida em funções, as anotações vão na assinatura da função, não no corpo da função. As anotações de tempo de vida passam a fazer parte do contrato da função, assim como os tipos da assinatura. Ter o contrato de tempo de vida nas assinaturas de função significa que a análise feita pelo compilador do Rust pode ser mais simples. Se houver um problema na forma como uma função está anotada ou na forma como ela é chamada, os erros de compilação podem apontar para a parte do nosso código e para as restrições com mais precisão. Se, em vez disso, o compilador do Rust fizesse mais inferências sobre o que pretendíamos que fossem as relações entre os tempos de vida, ele talvez só conseguisse apontar para um uso do nosso código a muitos passos de distância da causa do problema."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we pass concrete references to `longest`, the concrete lifetime that is substituted for `'a` is the part of the scope of `x` that overlaps with the scope of `y`. In other words, the generic lifetime `'a` will get the concrete lifetime that is equal to the smaller of the lifetimes of `x` and `y`. Because we’ve annotated the returned reference with the same lifetime parameter `'a`, the returned reference will also be valid for the length of the smaller of the lifetimes of `x` and `y`."
-msgstr ""
+msgstr "Quando passamos referências concretas para `longest`, o tempo de vida concreto que é substituído por `'a` é a parte do escopo de `x` que se sobrepõe ao escopo de `y`. Em outras palavras, o tempo de vida genérico `'a` vai receber o tempo de vida concreto que é igual ao menor dos tempos de vida de `x` e `y`. Como anotamos a referência retornada com o mesmo parâmetro de tempo de vida `'a`, a referência retornada também será válida pelo período do menor dos tempos de vida de `x` e `y`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s look at how the lifetime annotations restrict the `longest` function by passing in references that have different concrete lifetimes. Listing 10-22 is a straightforward example."
-msgstr ""
+msgstr "Vamos ver como as anotações de tempo de vida restringem a função `longest` ao passar referências que têm tempos de vida concretos diferentes. A Listagem 10-22 é um exemplo direto."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-22\" file-name=\"src/main.rs\" caption=\"Using the `longest` function with references to `String` values that have different concrete lifetimes\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-22\" file-name=\"src/main.rs\" caption=\"Usando a função `longest` com referências a valores `String` que têm tempos de vida concretos diferentes\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"long string is long\""
@@ -10007,19 +10007,19 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "In this example, `string1` is valid until the end of the outer scope, `string2` is valid until the end of the inner scope, and `result` references something that is valid until the end of the inner scope. Run this code and you’ll see that the borrow checker approves; it will compile and print `The longest string is long string is long`."
-msgstr ""
+msgstr "Neste exemplo, `string1` é válida até o fim do escopo externo, `string2` é válida até o fim do escopo interno, e `result` referencia algo que é válido até o fim do escopo interno. Execute este código e você vai ver que o verificador de empréstimos aprova: ele vai compilar e imprimir `The longest string is long string is long`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Next, let’s try an example that shows that the lifetime of the reference in `result` must be the smaller lifetime of the two arguments. We’ll move the declaration of the `result` variable outside the inner scope but leave the assignment of the value to the `result` variable inside the scope with `string2`. Then, we’ll move the `println!` that uses `result` to outside the inner scope, after the inner scope has ended. The code in Listing 10-23 will not compile."
-msgstr ""
+msgstr "Em seguida, vamos tentar um exemplo que mostra que o tempo de vida da referência em `result` precisa ser o menor dos tempos de vida dos dois argumentos. Vamos mover a declaração da variável `result` para fora do escopo interno, mas deixar a atribuição do valor à variável `result` dentro do escopo com `string2`. Depois, vamos mover o `println!` que usa `result` para fora do escopo interno, depois que ele terminar. O código da Listagem 10-23 não vai compilar."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-23\" file-name=\"src/main.rs\" caption=\"Attempting to use `result` after `string2` has gone out of scope\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-23\" file-name=\"src/main.rs\" caption=\"Tentativa de usar `result` depois que `string2` saiu do escopo\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we try to compile this code, we get this error:"
-msgstr ""
+msgstr "Quando tentamos compilar este código, recebemos este erro:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -10045,15 +10045,15 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The error shows that for `result` to be valid for the `println!` statement, `string2` would need to be valid until the end of the outer scope. Rust knows this because we annotated the lifetimes of the function parameters and return values using the same lifetime parameter `'a`."
-msgstr ""
+msgstr "O erro mostra que, para `result` ser válida na instrução `println!`, `string2` precisaria ser válida até o fim do escopo externo. O Rust sabe disso porque anotamos os tempos de vida dos parâmetros e dos valores de retorno da função usando o mesmo parâmetro de tempo de vida `'a`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "As humans, we can look at this code and see that `string1` is longer than `string2`, and therefore, `result` will contain a reference to `string1`. Because `string1` has not gone out of scope yet, a reference to `string1` will still be valid for the `println!` statement. However, the compiler can’t see that the reference is valid in this case. We’ve told Rust that the lifetime of the reference returned by the `longest` function is the same as the smaller of the lifetimes of the references passed in. Therefore, the borrow checker disallows the code in Listing 10-23 as possibly having an invalid reference."
-msgstr ""
+msgstr "Como seres humanos, podemos olhar para este código e ver que `string1` é mais longa que `string2`, e, portanto, `result` vai conter uma referência a `string1`. Como `string1` ainda não saiu do escopo, uma referência a `string1` ainda será válida para a instrução `println!`. No entanto, o compilador não consegue ver que a referência é válida neste caso. Dissemos ao Rust que o tempo de vida da referência retornada pela função `longest` é igual ao menor dos tempos de vida das referências passadas. Por isso, o verificador de empréstimos proíbe o código da Listagem 10-23, por considerar que ele pode conter uma referência inválida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Try designing more experiments that vary the values and lifetimes of the references passed in to the `longest` function and how the returned reference is used. Make hypotheses about whether or not your experiments will pass the borrow checker before you compile; then, check to see if you’re right!"
-msgstr ""
+msgstr "Tente criar mais experimentos que variem os valores e os tempos de vida das referências passadas para a função `longest` e a forma como a referência retornada é usada. Formule hipóteses sobre se seus experimentos vão ou não passar pelo verificador de empréstimos antes de compilar; depois, verifique se você acertou!"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"thinking-in-terms-of-lifetimes\"></a>"
@@ -10061,11 +10061,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Relationships"
-msgstr ""
+msgstr "Relações {#relationships}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The way in which you need to specify lifetime parameters depends on what your function is doing. For example, if we changed the implementation of the `longest` function to always return the first parameter rather than the longest string slice, we wouldn’t need to specify a lifetime on the `y` parameter. The following code will compile:"
-msgstr ""
+msgstr "A forma como você precisa especificar os parâmetros de tempo de vida depende do que a sua função faz. Por exemplo, se mudássemos a implementação da função `longest` para sempre retornar o primeiro parâmetro, em vez da slice de string mais longa, não precisaríamos especificar um tempo de vida no parâmetro `y`. O código a seguir vai compilar:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"efghijklmnopqrstuvwxyz\""
@@ -10073,11 +10073,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "We’ve specified a lifetime parameter `'a` for the parameter `x` and the return type, but not for the parameter `y`, because the lifetime of `y` does not have any relationship with the lifetime of `x` or the return value."
-msgstr ""
+msgstr "Especificamos um parâmetro de tempo de vida `'a` para o parâmetro `x` e para o tipo de retorno, mas não para o parâmetro `y`, porque o tempo de vida de `y` não tem nenhuma relação com o tempo de vida de `x` nem com o valor de retorno."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When returning a reference from a function, the lifetime parameter for the return type needs to match the lifetime parameter for one of the parameters. If the reference returned does _not_ refer to one of the parameters, it must refer to a value created within this function. However, this would be a dangling reference because the value will go out of scope at the end of the function. Consider this attempted implementation of the `longest` function that won’t compile:"
-msgstr ""
+msgstr "Ao retornar uma referência a partir de uma função, o parâmetro de tempo de vida do tipo de retorno precisa corresponder ao de um dos parâmetros. Se a referência retornada _não_ se referir a um dos parâmetros, ela precisa se referir a um valor criado dentro desta função. No entanto, isso seria uma referência pendente, porque o valor vai sair do escopo no fim da função. Considere esta tentativa de implementação da função `longest` que não vai compilar:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"really long string\""
@@ -10085,7 +10085,7 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Here, even though we’ve specified a lifetime parameter `'a` for the return type, this implementation will fail to compile because the return value lifetime is not related to the lifetime of the parameters at all. Here is the error message we get:"
-msgstr ""
+msgstr "Aqui, mesmo que tenhamos especificado um parâmetro de tempo de vida `'a` para o tipo de retorno, esta implementação não vai compilar, porque o tempo de vida do valor de retorno não está relacionado ao tempo de vida dos parâmetros. Esta é a mensagem de erro que recebemos:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid ""
@@ -10108,11 +10108,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The problem is that `result` goes out of scope and gets cleaned up at the end of the `longest` function. We’re also trying to return a reference to `result` from the function. There is no way we can specify lifetime parameters that would change the dangling reference, and Rust won’t let us create a dangling reference. In this case, the best fix would be to return an owned data type rather than a reference so that the calling function is then responsible for cleaning up the value."
-msgstr ""
+msgstr "O problema é que `result` sai do escopo e é liberado no fim da função `longest`. Também estamos tentando retornar uma referência a `result` a partir da função. Não há como especificar parâmetros de tempo de vida que eliminem essa referência pendente, e o Rust não nos deixa criar uma referência pendente. Nesse caso, a melhor correção seria retornar um tipo de dado que seja dono dos próprios dados, em vez de uma referência, para que a função que chama fique responsável por liberar o valor."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Ultimately, lifetime syntax is about connecting the lifetimes of various parameters and return values of functions. Once they’re connected, Rust has enough information to allow memory-safe operations and disallow operations that would create dangling pointers or otherwise violate memory safety."
-msgstr ""
+msgstr "Em última análise, a sintaxe de tempo de vida trata de conectar os tempos de vida de vários parâmetros e valores de retorno das funções. Depois de conectados, o Rust tem informações suficientes para permitir operações seguras em relação à memória e para impedir operações que criariam ponteiros pendentes ou que, de outra forma, violariam a segurança de memória."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"lifetime-annotations-in-struct-definitions\"></a>"
@@ -10120,11 +10120,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "So far, the structs we’ve defined all hold owned types. We can define structs to hold references, but in that case, we would need to add a lifetime annotation on every reference in the struct’s definition. Listing 10-24 has a struct named `ImportantExcerpt` that holds a string slice."
-msgstr ""
+msgstr "Até agora, todos os structs que definimos guardam tipos que são donos dos próprios dados. Podemos definir structs que guardem referências, mas, nesse caso, precisaríamos adicionar uma anotação de tempo de vida a cada referência na definição do struct. A Listagem 10-24 apresenta um struct chamado `ImportantExcerpt`, que guarda uma slice de string."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-24\" file-name=\"src/main.rs\" caption=\"A struct that holds a reference, requiring a lifetime annotation\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-24\" file-name=\"src/main.rs\" caption=\"Um struct que guarda uma referência, exigindo uma anotação de tempo de vida\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"Call me Ishmael. Some years ago...\""
@@ -10136,23 +10136,23 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "This struct has the single field `part` that holds a string slice, which is a reference. As with generic data types, we declare the name of the generic lifetime parameter inside angle brackets after the name of the struct so that we can use the lifetime parameter in the body of the struct definition. This annotation means an instance of `ImportantExcerpt` can’t outlive the reference it holds in its `part` field."
-msgstr ""
+msgstr "Este struct tem um único campo, `part`, que guarda uma slice de string, ou seja, uma referência. Assim como acontece com os tipos de dados genéricos, declaramos o nome do parâmetro de tempo de vida genérico dentro de colchetes angulares, depois do nome do struct, para que possamos usar o parâmetro de tempo de vida no corpo da definição do struct. Essa anotação significa que uma instância de `ImportantExcerpt` não pode viver mais do que a referência que ela guarda no campo `part`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The `main` function here creates an instance of the `ImportantExcerpt` struct that holds a reference to the first sentence of the `String` owned by the variable `novel`. The data in `novel` exists before the `ImportantExcerpt` instance is created. In addition, `novel` doesn’t go out of scope until after the `ImportantExcerpt` goes out of scope, so the reference in the `ImportantExcerpt` instance is valid."
-msgstr ""
+msgstr "A função `main` aqui cria uma instância do struct `ImportantExcerpt` que guarda uma referência à primeira frase da `String` que pertence à variável `novel`. Os dados em `novel` existem antes de a instância de `ImportantExcerpt` ser criada. Além disso, `novel` só sai do escopo depois que a instância de `ImportantExcerpt` sai do escopo, então a referência na instância de `ImportantExcerpt` é válida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetime Elision"
-msgstr ""
+msgstr "Elisão de tempo de vida {#lifetime-elision}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "You’ve learned that every reference has a lifetime and that you need to specify lifetime parameters for functions or structs that use references. However, we had a function in Listing 4-9, shown again in Listing 10-25, that compiled without lifetime annotations."
-msgstr ""
+msgstr "Você aprendeu que toda referência tem um tempo de vida e que é preciso especificar parâmetros de tempo de vida para funções ou structs que usam referências. No entanto, tínhamos uma função na Listagem 4-9, mostrada novamente na Listagem 10-25, que compilou sem anotações de tempo de vida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-25\" file-name=\"src/lib.rs\" caption=\"A function we defined in Listing 4-9 that compiled without lifetime annotations, even though the parameter and return type are references\">\n"
-msgstr ""
+msgstr "<Listing number=\"10-25\" file-name=\"src/lib.rs\" caption=\"Uma função que definimos na Listagem 4-9 que compilou sem anotações de tempo de vida, mesmo que o parâmetro e o tipo de retorno sejam referências\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "// first_word works on slices of `String`s\n"
@@ -10164,75 +10164,75 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The reason this function compiles without lifetime annotations is historical: In early versions (pre-1.0) of Rust, this code wouldn’t have compiled, because every reference needed an explicit lifetime. At that time, the function signature would have been written like this:"
-msgstr ""
+msgstr "O motivo pelo qual esta função compila sem anotações de tempo de vida é histórico: nas primeiras versões (anteriores à 1.0) do Rust, este código não teria compilado, porque toda referência precisava de um tempo de vida explícito. Naquela época, a assinatura da função teria sido escrita assim:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "After writing a lot of Rust code, the Rust team found that Rust programmers were entering the same lifetime annotations over and over in particular situations. These situations were predictable and followed a few deterministic patterns. The developers programmed these patterns into the compiler’s code so that the borrow checker could infer the lifetimes in these situations and wouldn’t need explicit annotations."
-msgstr ""
+msgstr "Depois de escrever muito código Rust, a equipe do Rust percebeu que os programadores Rust escreviam as mesmas anotações de tempo de vida repetidas vezes em situações específicas. Essas situações eram previsíveis e seguiam alguns padrões determinísticos. Os desenvolvedores programaram esses padrões no código do compilador para que o verificador de empréstimos pudesse inferir os tempos de vida nessas situações e não precisasse de anotações explícitas."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "This piece of Rust history is relevant because it’s possible that more deterministic patterns will emerge and be added to the compiler. In the future, even fewer lifetime annotations might be required."
-msgstr ""
+msgstr "Essa parte da história do Rust é relevante porque é possível que surjam mais padrões determinísticos e que eles sejam adicionados ao compilador. No futuro, talvez sejam necessárias ainda menos anotações de tempo de vida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The patterns programmed into Rust’s analysis of references are called the _lifetime elision rules_. These aren’t rules for programmers to follow; they’re a set of particular cases that the compiler will consider, and if your code fits these cases, you don’t need to write the lifetimes explicitly."
-msgstr ""
+msgstr "Os padrões programados na análise de referências do Rust são chamados de _regras de elisão de tempo de vida_. Essas não são regras para os programadores seguirem; são um conjunto de casos específicos que o compilador vai considerar e, se o seu código se encaixar nesses casos, você não precisa escrever os tempos de vida explicitamente."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The elision rules don’t provide full inference. If there is still ambiguity about what lifetimes the references have after Rust applies the rules, the compiler won’t guess what the lifetime of the remaining references should be. Instead of guessing, the compiler will give you an error that you can resolve by adding the lifetime annotations."
-msgstr ""
+msgstr "As regras de elisão não fornecem inferência completa. Se ainda houver ambiguidade sobre quais tempos de vida as referências têm depois que o Rust aplicar as regras, o compilador não vai adivinhar qual deve ser o tempo de vida das referências restantes. Em vez de adivinhar, o compilador vai mostrar um erro, que você pode resolver adicionando as anotações de tempo de vida."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetimes on function or method parameters are called _input lifetimes_, and lifetimes on return values are called _output lifetimes_."
-msgstr ""
+msgstr "Os tempos de vida nos parâmetros de funções ou métodos são chamados de _tempos de vida de entrada_, e os tempos de vida nos valores de retorno são chamados de _tempos de vida de saída_."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The compiler uses three rules to figure out the lifetimes of the references when there aren’t explicit annotations. The first rule applies to input lifetimes, and the second and third rules apply to output lifetimes. If the compiler gets to the end of the three rules and there are still references for which it can’t figure out lifetimes, the compiler will stop with an error. These rules apply to `fn` definitions as well as `impl` blocks."
-msgstr ""
+msgstr "O compilador usa três regras para descobrir os tempos de vida das referências quando não há anotações explícitas. A primeira regra se aplica aos tempos de vida de entrada, e a segunda e a terceira se aplicam aos tempos de vida de saída. Se o compilador chegar ao fim das três regras e ainda houver referências cujos tempos de vida ele não consegue descobrir, o compilador vai parar com um erro. Essas regras se aplicam tanto às definições `fn` quanto aos blocos `impl`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The first rule is that the compiler assigns a lifetime parameter to each parameter that’s a reference. In other words, a function with one parameter gets one lifetime parameter: `fn foo<'a>(x: &'a i32)`; a function with two parameters gets two separate lifetime parameters: `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`; and so on."
-msgstr ""
+msgstr "A primeira regra é que o compilador atribui um parâmetro de tempo de vida a cada parâmetro que é uma referência. Em outras palavras, uma função com um parâmetro recebe um parâmetro de tempo de vida: `fn foo<'a>(x: &'a i32)`; uma função com dois parâmetros recebe dois parâmetros de tempo de vida separados: `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`; e assim por diante."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The second rule is that, if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters: `fn foo<'a>(x: &'a i32) -> &'a i32`."
-msgstr ""
+msgstr "A segunda regra é que, se houver exatamente um parâmetro de tempo de vida de entrada, esse tempo de vida é atribuído a todos os parâmetros de tempo de vida de saída: `fn foo<'a>(x: &'a i32) -> &'a i32`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The third rule is that, if there are multiple input lifetime parameters, but one of them is `&self` or `&mut self` because this is a method, the lifetime of `self` is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary."
-msgstr ""
+msgstr "A terceira regra é que, se houver vários parâmetros de tempo de vida de entrada, mas um deles for `&self` ou `&mut self` por se tratar de um método, o tempo de vida de `self` é atribuído a todos os parâmetros de tempo de vida de saída. Essa terceira regra torna os métodos muito mais agradáveis de ler e escrever, porque são necessários menos símbolos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s pretend we’re the compiler. We’ll apply these rules to figure out the lifetimes of the references in the signature of the `first_word` function in Listing 10-25. The signature starts without any lifetimes associated with the references:"
-msgstr ""
+msgstr "Vamos fingir que somos o compilador. Vamos aplicar essas regras para descobrir os tempos de vida das referências na assinatura da função `first_word` da Listagem 10-25. A assinatura começa sem nenhum tempo de vida associado às referências:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Then, the compiler applies the first rule, which specifies that each parameter gets its own lifetime. We’ll call it `'a` as usual, so now the signature is this:"
-msgstr ""
+msgstr "Em seguida, o compilador aplica a primeira regra, que especifica que cada parâmetro recebe o próprio tempo de vida. Vamos chamá-lo de `'a`, como de costume, então agora a assinatura fica assim:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The second rule applies because there is exactly one input lifetime. The second rule specifies that the lifetime of the one input parameter gets assigned to the output lifetime, so the signature is now this:"
-msgstr ""
+msgstr "A segunda regra se aplica porque há exatamente um tempo de vida de entrada. A segunda regra especifica que o tempo de vida do único parâmetro de entrada é atribuído ao tempo de vida de saída, então a assinatura agora fica assim:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Now all the references in this function signature have lifetimes, and the compiler can continue its analysis without needing the programmer to annotate the lifetimes in this function signature."
-msgstr ""
+msgstr "Agora todas as referências nesta assinatura de função têm tempos de vida, e o compilador pode continuar sua análise sem precisar que o programador anote os tempos de vida nesta assinatura de função."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s look at another example, this time using the `longest` function that had no lifetime parameters when we started working with it in Listing 10-20:"
-msgstr ""
+msgstr "Vamos ver outro exemplo, desta vez usando a função `longest`, que não tinha parâmetros de tempo de vida quando começamos a trabalhar com ela na Listagem 10-20:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s apply the first rule: Each parameter gets its own lifetime. This time we have two parameters instead of one, so we have two lifetimes:"
-msgstr ""
+msgstr "Vamos aplicar a primeira regra: cada parâmetro recebe o próprio tempo de vida. Desta vez temos dois parâmetros em vez de um, então temos dois tempos de vida:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "You can see that the second rule doesn’t apply, because there is more than one input lifetime. The third rule doesn’t apply either, because `longest` is a function rather than a method, so none of the parameters are `self`. After working through all three rules, we still haven’t figured out what the return type’s lifetime is. This is why we got an error trying to compile the code in Listing 10-20: The compiler worked through the lifetime elision rules but still couldn’t figure out all the lifetimes of the references in the signature."
-msgstr ""
+msgstr "Você pode ver que a segunda regra não se aplica, porque há mais de um tempo de vida de entrada. A terceira regra também não se aplica, porque `longest` é uma função e não um método, então nenhum dos parâmetros é `self`. Depois de passar pelas três regras, ainda não descobrimos qual é o tempo de vida do tipo de retorno. É por isso que recebemos um erro ao tentar compilar o código da Listagem 10-20: o compilador passou pelas regras de elisão de tempo de vida, mas ainda não conseguiu descobrir todos os tempos de vida das referências na assinatura."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Because the third rule really only applies in method signatures, we’ll look at lifetimes in that context next to see why the third rule means we don’t have to annotate lifetimes in method signatures very often."
-msgstr ""
+msgstr "Como a terceira regra realmente só se aplica a assinaturas de métodos, vamos ver os tempos de vida nesse contexto a seguir, para entender por que a terceira regra significa que não precisamos anotar tempos de vida em assinaturas de métodos com muita frequência."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"lifetime-annotations-in-method-definitions\"></a>"
@@ -10240,19 +10240,19 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we implement methods on a struct with lifetimes, we use the same syntax as that of generic type parameters, as shown in Listing 10-11. Where we declare and use the lifetime parameters depends on whether they’re related to the struct fields or the method parameters and return values."
-msgstr ""
+msgstr "Quando implementamos métodos em um struct com tempos de vida, usamos a mesma sintaxe dos parâmetros de tipo genéricos, como mostrado na Listagem 10-11. Onde declaramos e usamos os parâmetros de tempo de vida depende de eles estarem relacionados aos campos do struct ou aos parâmetros e valores de retorno dos métodos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Lifetime names for struct fields always need to be declared after the `impl` keyword and then used after the struct’s name because those lifetimes are part of the struct’s type."
-msgstr ""
+msgstr "Os nomes de tempos de vida dos campos de um struct sempre precisam ser declarados depois da palavra-chave `impl` e depois usados após o nome do struct, porque esses tempos de vida fazem parte do tipo do struct."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "In method signatures inside the `impl` block, references might be tied to the lifetime of references in the struct’s fields, or they might be independent. In addition, the lifetime elision rules often make it so that lifetime annotations aren’t necessary in method signatures. Let’s look at some examples using the struct named `ImportantExcerpt` that we defined in Listing 10-24."
-msgstr ""
+msgstr "Nas assinaturas de métodos dentro do bloco `impl`, as referências podem estar atreladas ao tempo de vida das referências nos campos do struct, ou podem ser independentes. Além disso, as regras de elisão de tempo de vida muitas vezes fazem com que anotações de tempo de vida não sejam necessárias nas assinaturas de métodos. Vamos ver alguns exemplos usando o struct chamado `ImportantExcerpt`, que definimos na Listagem 10-24."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "First, we’ll use a method named `level` whose only parameter is a reference to `self` and whose return value is an `i32`, which is not a reference to anything:"
-msgstr ""
+msgstr "Primeiro, vamos usar um método chamado `level`, cujo único parâmetro é uma referência a `self` e cujo valor de retorno é um `i32`, que não é uma referência a nada:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"Attention please: {announcement}\""
@@ -10260,23 +10260,23 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The lifetime parameter declaration after `impl` and its use after the type name are required, but because of the first elision rule, we’re not required to annotate the lifetime of the reference to `self`."
-msgstr ""
+msgstr "A declaração do parâmetro de tempo de vida depois de `impl` e o seu uso depois do nome do tipo são obrigatórios, mas, por causa da primeira regra de elisão, não somos obrigados a anotar o tempo de vida da referência a `self`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Here is an example where the third lifetime elision rule applies:"
-msgstr ""
+msgstr "Aqui está um exemplo em que se aplica a terceira regra de elisão de tempo de vida:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "There are two input lifetimes, so Rust applies the first lifetime elision rule and gives both `&self` and `announcement` their own lifetimes. Then, because one of the parameters is `&self`, the return type gets the lifetime of `&self`, and all lifetimes have been accounted for."
-msgstr ""
+msgstr "Há dois tempos de vida de entrada, então o Rust aplica a primeira regra de elisão de tempo de vida e dá a `&self` e a `announcement` tempos de vida próprios. Em seguida, como um dos parâmetros é `&self`, o tipo de retorno recebe o tempo de vida de `&self`, e todos os tempos de vida já estão resolvidos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The Static Lifetime"
-msgstr ""
+msgstr "O tempo de vida estático {#the-static-lifetime}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "One special lifetime we need to discuss is `'static`, which denotes that the affected reference _can_ live for the entire duration of the program. All string literals have the `'static` lifetime, which we can annotate as follows:"
-msgstr ""
+msgstr "Um tempo de vida especial que precisamos discutir é `'static`, que denota que a referência afetada _pode_ viver durante toda a duração do programa. Todos os literais de string têm o tempo de vida `'static`, que podemos anotar da seguinte forma:"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"I have a static lifetime.\""
@@ -10284,11 +10284,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The text of this string is stored directly in the program’s binary, which is always available. Therefore, the lifetime of all string literals is `'static`."
-msgstr ""
+msgstr "O texto dessa string é armazenado diretamente no binário do programa, que está sempre disponível. Portanto, o tempo de vida de todos os literais de string é `'static`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "You might see suggestions in error messages to use the `'static` lifetime. But before specifying `'static` as the lifetime for a reference, think about whether or not the reference you have actually lives the entire lifetime of your program, and whether you want it to. Most of the time, an error message suggesting the `'static` lifetime results from attempting to create a dangling reference or a mismatch of the available lifetimes. In such cases, the solution is to fix those problems, not to specify the `'static` lifetime."
-msgstr ""
+msgstr "Você pode ver sugestões em mensagens de erro para usar o tempo de vida `'static`. Mas, antes de especificar `'static` como o tempo de vida de uma referência, pense se a referência que você tem de fato vive durante todo o tempo de vida do seu programa, e se é isso que você quer. Na maioria das vezes, uma mensagem de erro que sugere o tempo de vida `'static` resulta de uma tentativa de criar uma referência pendente ou de uma incompatibilidade entre os tempos de vida disponíveis. Nesses casos, a solução é corrigir esses problemas, e não especificar o tempo de vida `'static`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"generic-type-parameters-trait-bounds-and-lifetimes-together\"></a>"
@@ -10296,11 +10296,11 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Generic Type Parameters, Trait Bounds, and Lifetimes"
-msgstr ""
+msgstr "Parâmetros de tipo genéricos, limites de trait e tempos de vida {#generic-type-parameters-trait-bounds-and-lifetimes}"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s briefly look at the syntax of specifying generic type parameters, trait bounds, and lifetimes all in one function!"
-msgstr ""
+msgstr "Vamos ver brevemente a sintaxe para especificar parâmetros de tipo genéricos, limites de trait e tempos de vida, tudo em uma só função!"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "\"Today is someone's birthday!\""
@@ -10312,15 +10312,15 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "This is the `longest` function from Listing 10-21 that returns the longer of two string slices. But now it has an extra parameter named `ann` of the generic type `T`, which can be filled in by any type that implements the `Display` trait as specified by the `where` clause. This extra parameter will be printed using `{}`, which is why the `Display` trait bound is necessary. Because lifetimes are a type of generic, the declarations of the lifetime parameter `'a` and the generic type parameter `T` go in the same list inside the angle brackets after the function name."
-msgstr ""
+msgstr "Esta é a função `longest` da Listagem 10-21, que retorna a mais longa de duas slices de string. Mas agora ela tem um parâmetro extra chamado `ann`, do tipo genérico `T`, que pode ser de qualquer tipo que implemente o trait `Display`, como especificado pela cláusula `where`. Esse parâmetro extra será impresso usando `{}`, e é por isso que o limite de trait `Display` é necessário. Como os tempos de vida são um tipo de genérico, as declarações do parâmetro de tempo de vida `'a` e do parâmetro de tipo genérico `T` ficam na mesma lista, dentro dos colchetes angulares, depois do nome da função."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "We covered a lot in this chapter! Now that you know about generic type parameters, traits and trait bounds, and generic lifetime parameters, you’re ready to write code without repetition that works in many different situations. Generic type parameters let you apply the code to different types. Traits and trait bounds ensure that even though the types are generic, they’ll have the behavior the code needs. You learned how to use lifetime annotations to ensure that this flexible code won’t have any dangling references. And all of this analysis happens at compile time, which doesn’t affect runtime performance!"
-msgstr ""
+msgstr "Vimos muita coisa neste capítulo! Agora que você conhece os parâmetros de tipo genéricos, os traits, os limites de trait e os parâmetros de tempo de vida genéricos, você está pronto para escrever código sem repetição que funciona em muitas situações diferentes. Os parâmetros de tipo genéricos permitem aplicar o código a tipos diferentes. Traits e limites de trait garantem que, mesmo que os tipos sejam genéricos, eles tenham o comportamento de que o código precisa. Você aprendeu a usar anotações de tempo de vida para garantir que esse código flexível não tenha nenhuma referência pendente. E toda essa análise acontece em tempo de compilação, o que não afeta o desempenho em tempo de execução!"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Believe it or not, there is much more to learn on the topics we discussed in this chapter: Chapter 18 discusses trait objects, which are another way to use traits. There are also more complex scenarios involving lifetime annotations that you will only need in very advanced scenarios; for those, you should read the [Rust Reference](../reference/trait-bounds.html). But next, you’ll learn how to write tests in Rust so that you can make sure your code is working the way it should."
-msgstr ""
+msgstr "Acredite ou não, há muito mais a aprender sobre os tópicos que discutimos neste capítulo: o Capítulo 18 discute objetos de trait, que são outra forma de usar traits. Também há cenários mais complexos envolvendo anotações de tempo de vida, dos quais você só vai precisar em situações muito avançadas; para esses casos, você deve ler a [Referência do Rust](../reference/trait-bounds.html). Mas a seguir você vai aprender a escrever testes no Rust para garantir que seu código funcione do jeito que deve."
 
 #: src/ch11-00-testing.md
 msgid "In his 1972 essay “The Humble Programmer,” Edsger W. Dijkstra said that “program testing can be a very effective way to show the presence of bugs, but it is hopelessly inadequate for showing their absence.” That doesn’t mean we shouldn’t try to test as much as we can!"
