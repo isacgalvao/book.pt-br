@@ -79,6 +79,9 @@
 #   - Guarda de reestruturação: capítulo com mais de 10% das mensagens fuzzy, novas ou
 #     removidas (e no mínimo 5) fica fora da IA e o PR vai como rascunho.
 #   - O PR também vai como rascunho se o check.py falhar ou se a tradução falhar.
+#   - Re-run: "Re-run failed jobs" repete só o que falhou (por exemplo, o capítulo cuja
+#     chamada à API caiu) e aproveita o resto; os artefatos são substituídos (overwrite).
+#     O montar só usa traduções feitas sobre o preparar desta tentativa.
 #   - Tabela por entrada: o corpo do PR tem até ~60 KB (cada célula recortada no trecho em
 #     que o texto antigo e o novo diferem); as linhas que não cabem vão em comentários do PR
 #     (marcados com <!-- ptbr-sync:entradas -->, trocados a cada execução) e a tabela
@@ -334,7 +337,7 @@ jobs:
           cp AGENTS.md "$F/"
           cp i18n/GUIA-DE-ESTILO.md i18n/glossario.yml "$F/i18n/"
           cp i18n/tools/traduz_delta.py "$F/i18n/tools/"
-          cd "$A"
+          cd "$A" || exit 1
           find ferramentas -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > ferramentas.sha256
           cat ferramentas.sha256
           echo "sha_ferramentas=$(sha256sum ferramentas.sha256 | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
@@ -500,7 +503,7 @@ jobs:
           cp po/pt-BR.po "$A/pt-BR.po"
           git bundle create "$A/sync.bundle" "refs/heads/$RAMO_SYNC" "^$MAIN_SHA"
           git bundle verify "$A/sync.bundle"
-          cd "$A"
+          cd "$A" || exit 1
           find . -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/SHA256SUMS.preparar"
           mv "$RUNNER_TEMP/SHA256SUMS.preparar" SHA256SUMS
           cat SHA256SUMS
@@ -514,6 +517,7 @@ jobs:
           path: ${{ runner.temp }}/artefato
           if-no-files-found: error
           retention-days: 7
+          overwrite: true   # um re-run reenvia o artefato no mesmo run (sem isto: 409 Conflict)
 
   traduzir:
     name: Traduz o delta (${{ matrix.capitulo }})
@@ -542,7 +546,7 @@ jobs:
           SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
           SHA_FERRAMENTAS: ${{ needs.preparar.outputs.sha_ferramentas }}
         run: |
-          cd "$RUNNER_TEMP/preparar"
+          cd "$RUNNER_TEMP/preparar" || exit 1
           echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
           if [[ ! "$SHA_FERRAMENTAS" =~ ^[0-9a-f]{64}$ ]]; then
@@ -580,14 +584,20 @@ jobs:
           python3 -I "$P/ferramentas/i18n/tools/traduz_delta.py" --delta "$P/delta.json" \
             --capitulo "$CAPITULO" --saida "$S/trad-$CAPITULO.json" 2>&1 | tee "$S/log-$CAPITULO.txt"
 
+      # O run guarda os artefatos de todas as tentativas: um "Re-run all jobs" refaz o
+      # preparar (outro merge, outro delta), e um trad-<cap> antigo, de um capítulo que
+      # agora ficou fora da matriz, continua lá. O arquivo preparar-<cap>.txt amarra estas
+      # traduções ao preparar de que vieram; o montar ignora as de outro preparar.
       - name: Calcula o sha256 das traduções
         if: always()
         env:
           CAPITULO: ${{ matrix.capitulo }}
+          SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
         run: |
           S="$RUNNER_TEMP/trad"
           mkdir -p "$S"
-          cd "$S"
+          cd "$S" || exit 1
+          printf '%s\n' "$SHA_LISTA" > "preparar-$CAPITULO.txt"
           find . -type f -name "*-$CAPITULO.*" ! -name '*.sha256' -print0 | sort -z \
             | xargs -0 -r sha256sum > "trad-$CAPITULO.sha256"
           cat "trad-$CAPITULO.sha256"
@@ -600,6 +610,7 @@ jobs:
           path: ${{ runner.temp }}/trad
           if-no-files-found: ignore
           retention-days: 7
+          overwrite: true   # "Re-run failed jobs" de um capítulo troca o trad-<cap> da tentativa que falhou
 
   montar:
     name: Monta o branch (apply.py e check.py, sem escrita)
@@ -634,21 +645,67 @@ jobs:
         with:
           pattern: trad-*
           merge-multiple: true
-          path: ${{ runner.temp }}/trad
+          path: ${{ runner.temp }}/trad-baixado
 
+      # Só vão para trad/ as traduções conferidas: de um capítulo da matriz, íntegras
+      # (sha256) e feitas sobre ESTE preparar (preparar-<cap>.txt). O resto é de outra
+      # tentativa do run ou de um traduzir que morreu antes de traduzir: o capítulo fica
+      # sem IA e o PR vai como rascunho.
       - name: Confere os artefatos (sha256)
+        id: trad
         env:
           SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
+          CAPITULOS: ${{ needs.preparar.outputs.chapters }}
         run: |
-          cd "$RUNNER_TEMP/preparar"
+          cd "$RUNNER_TEMP/preparar" || exit 1
           echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
-          mkdir -p "$RUNNER_TEMP/trad"
-          cd "$RUNNER_TEMP/trad"
+          T="$RUNNER_TEMP/trad"
+          mkdir -p "$RUNNER_TEMP/trad-baixado" "$T"
+          cd "$RUNNER_TEMP/trad-baixado" || exit 1
+          caps=$(jq -r '.[]' <<< "$CAPITULOS")
           shopt -s nullglob
-          for lista in *.sha256; do
-            sha256sum -c --quiet "$lista"
+          for lista in trad-*.sha256; do
+            cap="${lista#trad-}"
+            cap="${cap%.sha256}"
+            if ! grep -qxF -- "$cap" <<< "$caps"; then
+              echo "trad-$cap ignorado: o capítulo não está na matriz desta tentativa"
+            fi
           done
+          faltando=()
+          while read -r cap; do
+            [[ -n "$cap" ]] || continue
+            if [[ ! "$cap" =~ ^[a-z0-9-]+$ ]]; then
+              echo "::error title=Capítulo inválido::${cap:0:40}"
+              exit 1
+            fi
+            lista="trad-$cap.sha256"
+            if [[ ! -s "$lista" ]]; then
+              echo "::warning title=Sem tradução de $cap::o traduzir não deixou arquivos; o capítulo fica sem IA"
+              faltando+=("$cap")
+              continue
+            fi
+            sha256sum -c --quiet "$lista"
+            if [[ "$(cat "preparar-$cap.txt" 2> /dev/null)" != "$SHA_LISTA" ]]; then
+              echo "::warning title=Sem tradução de $cap::o trad-$cap é de outra tentativa do run (outro preparar); ignorado"
+              faltando+=("$cap")
+              continue
+            fi
+            while read -r _soma arq; do
+              arq="${arq#./}"
+              if [[ "$arq" == */* || "$arq" != *-"$cap".* ]]; then
+                echo "::error title=Artefato inesperado::$lista lista um arquivo fora do padrão: ${arq:0:80}"
+                exit 1
+              fi
+              cp -- "$arq" "$T/"
+            done < "$lista"
+            if [[ ! -f "$T/trad-$cap.json" ]]; then
+              echo "::warning title=Sem tradução de $cap::o traduzir não gerou trad-$cap.json (veja o log-$cap.txt no artifact trad-$cap)"
+              faltando+=("$cap")
+            fi
+          done <<< "$caps"
+          echo "traduções conferidas: $(find "$T" -name 'trad-*.json' | wc -l) arquivo(s); sem tradução: ${faltando[*]:-nenhum}"
+          echo "faltando=${faltando[*]}" >> "$GITHUB_OUTPUT"
 
       - name: Instala o Python
         uses: actions/setup-python@v5
@@ -801,6 +858,7 @@ jobs:
           SO_HISTORICO: ${{ needs.preparar.outputs.so_historico }}
           CHECK_OK: ${{ steps.check.outputs.check_ok }}
           TRADUZIR_RESULT: ${{ needs.traduzir.result }}
+          TRAD_FALTANDO: ${{ steps.trad.outputs.faltando }}
         run: |
           python3 - <<'PY'
           import html, json, os, re, subprocess, sys
@@ -876,6 +934,8 @@ jobs:
               motivos.append("o check.py encontrou erros")
           if os.environ.get("TRADUZIR_RESULT") not in ("success", "skipped"):
               motivos.append(f"a tradução por IA não terminou bem ({os.environ.get('TRADUZIR_RESULT')})")
+          if os.environ.get("TRAD_FALTANDO", "").split():
+              motivos.append("sem tradução por IA para " + ", ".join(cel(c, 20) for c in os.environ["TRAD_FALTANDO"].split()))
 
           delta = ler(P / "delta.json", {}).get("capitulos", {})
           guarda = ler(P / "guarda.json", {})
@@ -1048,7 +1108,7 @@ jobs:
           cp po/pt-BR.po "$M/pt-BR.po"
           git bundle create "$M/sync.bundle" "refs/heads/$RAMO_SYNC" "^$MAIN_SHA"
           git bundle verify "$M/sync.bundle"
-          cd "$M"
+          cd "$M" || exit 1
           find . -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/SHA256SUMS.montar"
           mv "$RUNNER_TEMP/SHA256SUMS.montar" SHA256SUMS
           cat SHA256SUMS
@@ -1061,6 +1121,7 @@ jobs:
           path: ${{ runner.temp }}/montar
           if-no-files-found: error
           retention-days: 30
+          overwrite: true   # um re-run reenvia o artefato no mesmo run (sem isto: 409 Conflict)
 
   publicar:
     name: Publica o PR (único job com escrita; não roda código do repositório)
@@ -1105,10 +1166,10 @@ jobs:
           SHA_PREPARAR: ${{ needs.preparar.outputs.sha_lista }}
           SHA_MONTAR: ${{ needs.montar.outputs.sha_lista }}
         run: |
-          cd "$RUNNER_TEMP/preparar"
+          cd "$RUNNER_TEMP/preparar" || exit 1
           echo "$SHA_PREPARAR  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
-          cd "$RUNNER_TEMP/montar"
+          cd "$RUNNER_TEMP/montar" || exit 1
           echo "$SHA_MONTAR  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
 
