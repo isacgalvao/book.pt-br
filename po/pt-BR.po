@@ -27,11 +27,11 @@ msgstr "Instalação {#installation}"
 
 #: src/SUMMARY.md src/ch01-02-hello-world.md
 msgid "Hello, World!"
-msgstr ""
+msgstr "Olá, mundo! {#hello-world}"
 
 #: src/SUMMARY.md src/ch01-03-hello-cargo.md
 msgid "Hello, Cargo!"
-msgstr ""
+msgstr "Olá, Cargo! {#hello-cargo}"
 
 #: src/SUMMARY.md src/ch02-00-guessing-game-tutorial.md
 msgid "Programming a Guessing Game"
@@ -717,7 +717,7 @@ msgstr "Escrevendo um programa que imprime `Hello, world!`"
 
 #: src/ch01-00-getting-started.md
 msgid "Using `cargo`, Rust’s package manager and build system"
-msgstr "Usando o `cargo`, o gerenciador de pacotes e sistema de build do Rust"
+msgstr "Usando o `cargo`, o gerenciador de pacotes e o sistema de compilação do Rust"
 
 #: src/ch01-01-installation.md
 msgid "The first step is to install Rust. We’ll download Rust through `rustup`, a command line tool for managing Rust versions and associated tools. You’ll need an internet connection for the download."
@@ -725,15 +725,15 @@ msgstr "O primeiro passo é instalar o Rust. Faremos o download do Rust através
 
 #: src/ch01-01-installation.md
 msgid "Note: If you prefer not to use `rustup` for some reason, please see the [Other Rust Installation Methods page](https://forge.rust-lang.org/infra/other-installation-methods.html) for more options."
-msgstr "Nota: Se você preferir não usar o `rustup` por algum motivo, consulte a [página Outros Métodos de Instalação do Rust](https://forge.rust-lang.org/infra/other-installation-methods.html) para mais opções."
+msgstr "Nota: se você preferir não usar o `rustup` por algum motivo, consulte a [página de outros métodos de instalação do Rust](https://forge.rust-lang.org/infra/other-installation-methods.html) para mais opções."
 
 #: src/ch01-01-installation.md
 msgid "The following steps install the latest stable version of the Rust compiler. Rust’s stability guarantees ensure that all the examples in the book that compile will continue to compile with newer Rust versions. The output might differ slightly between versions because Rust often improves error messages and warnings. In other words, any newer, stable version of Rust you install using these steps should work as expected with the content of this book."
-msgstr "Os passos a seguir instalam a versão estável mais recente do compilador Rust. As garantias de estabilidade do Rust asseguram que todos os exemplos no livro que compilam continuarão compilando com versões mais novas do Rust. A saída pode diferir ligeiramente entre versões porque o Rust frequentemente melhora as mensagens de erro e avisos. Em outras palavras, qualquer versão estável mais recente do Rust que você instalar usando esses passos deve funcionar conforme esperado com o conteúdo deste livro."
+msgstr "Os passos a seguir instalam a versão stable mais recente do compilador Rust. As garantias de estabilidade do Rust asseguram que todos os exemplos no livro que compilam continuarão compilando com versões mais novas do Rust. A saída pode diferir ligeiramente entre versões porque o Rust frequentemente melhora as mensagens de erro e avisos. Em outras palavras, qualquer versão stable mais recente do Rust que você instalar usando esses passos deve funcionar conforme esperado com o conteúdo deste livro."
 
 #: src/ch01-01-installation.md
 msgid "Command Line Notation"
-msgstr "Notação de Linha de Comando {#command-line-notation}"
+msgstr "Notação de linha de comando {#command-line-notation}"
 
 #: src/ch01-01-installation.md
 msgid "In this chapter and throughout the book, we’ll show some commands used in the terminal. Lines that you should enter in a terminal all start with `$`. You don’t need to type the `$` character; it’s the command line prompt shown to indicate the start of each command. Lines that don’t start with `$` typically show the output of the previous command. Additionally, PowerShell-specific examples will use `>` rather than `$`."
@@ -756,7 +756,7 @@ msgstr ""
 
 #: src/ch01-01-installation.md
 msgid "The command downloads a script and starts the installation of the `rustup` tool, which installs the latest stable version of Rust. You might be prompted for your password. If the install is successful, the following line will appear:"
-msgstr "O comando baixa um script e inicia a instalação da ferramenta `rustup`, que instala a versão estável mais recente do Rust. Pode ser solicitada sua senha. Se a instalação for bem-sucedida, a seguinte linha aparecerá:"
+msgstr "O comando baixa um script e inicia a instalação da ferramenta `rustup`, que instala a versão stable mais recente do Rust. Pode ser solicitada sua senha. Se a instalação for bem-sucedida, a seguinte linha aparecerá:"
 
 #: src/ch01-01-installation.md
 msgid "You will also need a _linker_, which is a program that Rust uses to join its compiled outputs into one file. It is likely you already have one. If you get linker errors, you should install a C compiler, which will typically include a linker. A C compiler is also useful because some common Rust packages depend on C code and will need a C compiler."
@@ -790,7 +790,7 @@ msgstr "O restante deste livro usa comandos que funcionam tanto no _cmd.exe_ qua
 
 #: src/ch01-01-installation.md
 msgid "Troubleshooting"
-msgstr "Solução de Problemas {#troubleshooting}"
+msgstr "Solução de problemas {#troubleshooting}"
 
 #: src/ch01-01-installation.md
 msgid "To check whether you have Rust installed correctly, open a shell and enter this line:"
@@ -798,11 +798,11 @@ msgstr "Para verificar se você instalou o Rust corretamente, abra um shell e in
 
 #: src/ch01-01-installation.md
 msgid "You should see the version number, commit hash, and commit date for the latest stable version that has been released, in the following format:"
-msgstr "Você deverá ver o número da versão, o hash do commit e a data do commit para a versão estável mais recente que foi lançada, no seguinte formato:"
+msgstr "Você deverá ver o número da versão, o hash do commit e a data do commit para a versão stable mais recente que foi lançada, no seguinte formato:"
 
 #: src/ch01-01-installation.md
 msgid "If you see this information, you have installed Rust successfully! If you don’t see this information, check that Rust is in your `%PATH%` system variable as follows."
-msgstr "Se você ver essas informações, instalou o Rust com sucesso! Se não ver essas informações, verifique se o Rust está na variável de sistema `%PATH%` da seguinte forma."
+msgstr "Se você vir essas informações, instalou o Rust com sucesso! Se não vir essas informações, verifique se o Rust está na variável de sistema `%PATH%` da seguinte forma."
 
 #: src/ch01-01-installation.md
 msgid "In Windows CMD, use:"
@@ -818,11 +818,11 @@ msgstr "No Linux e macOS, use:"
 
 #: src/ch01-01-installation.md
 msgid "If that’s all correct and Rust still isn’t working, there are a number of places you can get help. Find out how to get in touch with other Rustaceans (a silly nickname we call ourselves) on [the community page](https://www.rust-lang.org/community)."
-msgstr "Se tudo isso estiver correto e o Rust ainda não estiver funcionando, há vários lugares onde você pode obter ajuda. Descubra como entrar em contato com outros Rustaceans (um apelido engraçado que usamos para nos chamar) na [página da comunidade](https://www.rust-lang.org/community)."
+msgstr "Se tudo isso estiver correto e o Rust ainda não estiver funcionando, há vários lugares onde você pode obter ajuda. Descubra como entrar em contato com outros rustáceos (um apelido engraçado que usamos para nos chamar) na [página da comunidade](https://www.rust-lang.org/community)."
 
 #: src/ch01-01-installation.md
 msgid "Updating and Uninstalling"
-msgstr "Atualizando e Desinstalando {#updating-and-uninstalling}"
+msgstr "Atualizando e desinstalando {#updating-and-uninstalling}"
 
 #: src/ch01-01-installation.md
 msgid "Once Rust is installed via `rustup`, updating to a newly released version is easy. From your shell, run the following update script:"
@@ -877,7 +877,7 @@ msgstr ""
 
 #: src/ch01-01-installation.md
 msgid "Reading the Local Documentation"
-msgstr "Lendo a Documentação Local {#reading-the-local-documentation}"
+msgstr "Lendo a documentação local {#reading-the-local-documentation}"
 
 #: src/ch01-01-installation.md
 msgid "The installation of Rust also includes a local copy of the documentation so that you can read it offline. Run `rustup doc` to open the local documentation in your browser."
@@ -893,15 +893,15 @@ msgstr ""
 
 #: src/ch01-01-installation.md
 msgid "Using Text Editors and IDEs"
-msgstr "Usando Editores de Texto e IDEs {#using-text-editors-and-ides}"
+msgstr "Usando editores de texto e IDEs {#using-text-editors-and-ides}"
 
 #: src/ch01-01-installation.md
 msgid "This book makes no assumptions about what tools you use to author Rust code. Just about any text editor will get the job done! However, many text editors and integrated development environments (IDEs) have built-in support for Rust. You can always find a fairly current list of many editors and IDEs on [the tools page](https://www.rust-lang.org/tools) on the Rust website."
-msgstr "Este livro não faz suposições sobre quais ferramentas você usa para escrever código Rust. Qualquer editor de texto fará o trabalho! No entanto, muitos editores de texto e ambientes de desenvolvimento integrado (IDEs) têm suporte integrado para Rust. Você sempre pode encontrar uma lista bastante atualizada de muitos editores e IDEs na [página de ferramentas](https://www.rust-lang.org/tools) no site do Rust."
+msgstr "Este livro não faz suposições sobre quais ferramentas você usa para escrever código Rust. Praticamente qualquer editor de texto dá conta do recado! No entanto, muitos editores de texto e ambientes de desenvolvimento integrado (IDEs) têm suporte nativo para o Rust. Você sempre pode encontrar uma lista bastante atualizada de muitos editores e IDEs na [página de ferramentas](https://www.rust-lang.org/tools) no site do Rust."
 
 #: src/ch01-01-installation.md
 msgid "Working Offline with This Book"
-msgstr "Trabalhando Offline com Este Livro {#working-offline-with-this-book}"
+msgstr "Trabalhando offline com este livro {#working-offline-with-this-book}"
 
 #: src/ch01-01-installation.md
 msgid "In several examples, we will use Rust packages beyond the standard library. To work through those examples, you will either need to have an internet connection or to have downloaded those dependencies ahead of time. To download the dependencies ahead of time, you can run the following commands. (We’ll explain what `cargo` is and what each of these commands does in detail later.)"
@@ -928,7 +928,7 @@ msgstr "Agora que você instalou o Rust, é hora de escrever seu primeiro progra
 
 #: src/ch01-02-hello-world.md
 msgid "Note: This book assumes basic familiarity with the command line. Rust makes no specific demands about your editing or tooling or where your code lives, so if you prefer to use an IDE instead of the command line, feel free to use your favorite IDE. Many IDEs now have some degree of Rust support; check the IDE’s documentation for details. The Rust team has been focusing on enabling great IDE support via `rust-analyzer`. See [Appendix D](appendix-04-useful-development-tools.html)<!-- ignore --> for more details."
-msgstr "Nota: Este livro pressupõe familiaridade básica com a linha de comando. O Rust não faz exigências específicas sobre seu editor, ferramentas ou onde seu código fica, então se você preferir usar um IDE em vez da linha de comando, fique à vontade para usar seu IDE favorito. Muitos IDEs agora têm algum grau de suporte ao Rust; verifique a documentação do IDE para detalhes. A equipe Rust tem se concentrado em habilitar excelente suporte a IDE via `rust-analyzer`. Veja o [Apêndice D](appendix-04-useful-development-tools.html)<!-- ignore --> para mais detalhes."
+msgstr "Nota: este livro pressupõe familiaridade básica com a linha de comando. O Rust não faz exigências específicas sobre seu editor, suas ferramentas ou onde seu código fica, então, se você preferir usar um IDE em vez da linha de comando, fique à vontade para usar seu IDE favorito. Muitos IDEs agora têm algum grau de suporte ao Rust; verifique a documentação do IDE para detalhes. A equipe Rust tem se concentrado em viabilizar um ótimo suporte a IDEs via `rust-analyzer`. Veja o [Apêndice D](appendix-04-useful-development-tools.html)<!-- ignore --> para mais detalhes."
 
 #: src/ch01-02-hello-world.md
 msgid "<a id=\"creating-a-project-directory\"></a>"
@@ -936,7 +936,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Project Directory Setup"
-msgstr "Configuração do Diretório do Projeto {#project-directory-setup}"
+msgstr "Configuração do diretório do projeto {#project-directory-setup}"
 
 #: src/ch01-02-hello-world.md
 msgid "You’ll start by making a directory to store your Rust code. It doesn’t matter to Rust where your code lives, but for the exercises and projects in this book, we suggest making a _projects_ directory in your home directory and keeping all your projects there."
@@ -944,7 +944,7 @@ msgstr "Você começará criando um diretório para armazenar seu código Rust. 
 
 #: src/ch01-02-hello-world.md
 msgid "Open a terminal and enter the following commands to make a _projects_ directory and a directory for the “Hello, world!” project within the _projects_ directory."
-msgstr "Abra um terminal e insira os seguintes comandos para criar um diretório _projects_ e um diretório para o projeto \"Hello, world!\" dentro do diretório _projects_."
+msgstr "Abra um terminal e insira os seguintes comandos para criar um diretório _projects_ e um diretório para o projeto “Hello, world!” dentro do diretório _projects_."
 
 #: src/ch01-02-hello-world.md
 msgid "For Linux, macOS, and PowerShell on Windows, enter this:"
@@ -964,7 +964,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Rust Program Basics"
-msgstr "Fundamentos de um Programa Rust {#rust-program-basics}"
+msgstr "Fundamentos de um programa Rust {#rust-program-basics}"
 
 #: src/ch01-02-hello-world.md
 msgid "Next, make a new source file and call it _main.rs_. Rust files always end with the _.rs_ extension. If you’re using more than one word in your filename, the convention is to use an underscore to separate them. For example, use _hello_world.rs_ rather than _helloworld.rs_."
@@ -1038,7 +1038,7 @@ msgstr "No Windows, insira o comando `.\\main` em vez de `./main`:"
 
 #: src/ch01-02-hello-world.md
 msgid "Regardless of your operating system, the string `Hello, world!` should print to the terminal. If you don’t see this output, refer back to the [“Troubleshooting”](ch01-01-installation.html#troubleshooting)<!-- ignore --> part of the Installation section for ways to get help."
-msgstr "Independente do seu sistema operacional, a string `Hello, world!` deve ser impressa no terminal. Se você não ver essa saída, consulte a parte [\"Solução de Problemas\"](ch01-01-installation.html#troubleshooting)<!-- ignore --> da seção de Instalação para maneiras de obter ajuda."
+msgstr "Independentemente do seu sistema operacional, a string `Hello, world!` deve ser impressa no terminal. Se você não vir essa saída, consulte a parte [“Solução de problemas”](ch01-01-installation.html#troubleshooting)<!-- ignore --> da seção de Instalação para maneiras de obter ajuda."
 
 #: src/ch01-02-hello-world.md
 msgid "If `Hello, world!` did print, congratulations! You’ve officially written a Rust program. That makes you a Rust programmer—welcome!"
@@ -1050,11 +1050,11 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "The Anatomy of a Rust Program"
-msgstr "A Anatomia de um Programa Rust {#the-anatomy-of-a-rust-program}"
+msgstr "A anatomia de um programa Rust {#the-anatomy-of-a-rust-program}"
 
 #: src/ch01-02-hello-world.md
 msgid "Let’s review this “Hello, world!” program in detail. Here’s the first piece of the puzzle:"
-msgstr "Vamos revisar este programa \"Hello, world!\" em detalhes. Aqui está a primeira peça do quebra-cabeça:"
+msgstr "Vamos revisar este programa “Hello, world!” em detalhes. Aqui está a primeira peça do quebra-cabeça:"
 
 #: src/ch01-02-hello-world.md
 msgid "These lines define a function named `main`. The `main` function is special: It is always the first code that runs in every executable Rust program. Here, the first line declares a function named `main` that has no parameters and returns nothing. If there were parameters, they would go inside the parentheses (`()`)."
@@ -1066,7 +1066,7 @@ msgstr "O corpo da função é envolvido em `{}`. O Rust requer chaves ao redor 
 
 #: src/ch01-02-hello-world.md
 msgid "Note: If you want to stick to a standard style across Rust projects, you can use an automatic formatter tool called `rustfmt` to format your code in a particular style (more on `rustfmt` in [Appendix D](appendix-04-useful-development-tools.html)<!-- ignore -->). The Rust team has included this tool with the standard Rust distribution, as `rustc` is, so it should already be installed on your computer!"
-msgstr "Nota: Se você quiser seguir um estilo padrão em projetos Rust, pode usar uma ferramenta de formatação automática chamada `rustfmt` para formatar seu código em um estilo específico (mais sobre `rustfmt` no [Apêndice D](appendix-04-useful-development-tools.html)<!-- ignore -->). A equipe Rust incluiu essa ferramenta com a distribuição padrão do Rust, assim como `rustc`, então ela já deve estar instalada no seu computador!"
+msgstr "Nota: se você quiser seguir um estilo padrão em projetos Rust, pode usar uma ferramenta de formatação automática chamada `rustfmt` para formatar seu código em um estilo específico (mais sobre `rustfmt` no [Apêndice D](appendix-04-useful-development-tools.html)<!-- ignore -->). A equipe Rust incluiu essa ferramenta com a distribuição padrão do Rust, assim como `rustc`, então ela já deve estar instalada no seu computador!"
 
 #: src/ch01-02-hello-world.md
 msgid "The body of the `main` function holds the following code:"
@@ -1094,7 +1094,7 @@ msgstr ""
 
 #: src/ch01-02-hello-world.md
 msgid "Compilation and Execution"
-msgstr "Compilação e Execução {#compilation-and-execution}"
+msgstr "Compilação e execução {#compilation-and-execution}"
 
 #: src/ch01-02-hello-world.md
 msgid "You’ve just run a newly created program, so let’s examine each step in the process."
@@ -1122,11 +1122,11 @@ msgstr "Isso mostra o arquivo de código fonte com a extensão _.rs_, o arquivo 
 
 #: src/ch01-02-hello-world.md
 msgid "If your _main.rs_ is your “Hello, world!” program, this line prints `Hello, world!` to your terminal."
-msgstr "Se seu _main.rs_ é o seu programa \"Hello, world!\", esta linha imprime `Hello, world!` no seu terminal."
+msgstr "Se seu _main.rs_ é o seu programa “Hello, world!”, esta linha imprime `Hello, world!` no seu terminal."
 
 #: src/ch01-02-hello-world.md
 msgid "If you’re more familiar with a dynamic language, such as Ruby, Python, or JavaScript, you might not be used to compiling and running a program as separate steps. Rust is an _ahead-of-time compiled_ language, meaning you can compile a program and give the executable to someone else, and they can run it even without having Rust installed. If you give someone a _.rb_, _.py_, or _.js_ file, they need to have a Ruby, Python, or JavaScript implementation installed (respectively). But in those languages, you only need one command to compile and run your program. Everything is a trade-off in language design."
-msgstr "Se você está mais familiarizado com uma linguagem dinâmica, como Ruby, Python ou JavaScript, pode não estar acostumado a compilar e executar um programa como etapas separadas. O Rust é uma linguagem _compilada antecipadamente_ (ahead-of-time), o que significa que você pode compilar um programa e dar o executável para outra pessoa, e ela pode executá-lo mesmo sem ter o Rust instalado. Se você der a alguém um arquivo _.rb_, _.py_ ou _.js_, eles precisam ter uma implementação de Ruby, Python ou JavaScript instalada (respectivamente). Mas nessas linguagens, você só precisa de um comando para compilar e executar seu programa. Tudo é uma troca no design de linguagens."
+msgstr "Se você estiver mais familiarizado com uma linguagem dinâmica, como Ruby, Python ou JavaScript, pode não estar acostumado a compilar e executar um programa como etapas separadas. O Rust é uma linguagem _compilada antecipadamente_, o que significa que você pode compilar um programa e dar o executável para outra pessoa, e ela pode executá-lo mesmo sem ter o Rust instalado. Se você der a alguém um arquivo _.rb_, _.py_ ou _.js_, essa pessoa precisa ter uma implementação de Ruby, Python ou JavaScript instalada (respectivamente). Mas nessas linguagens, você só precisa de um comando para compilar e executar seu programa. Tudo é uma concessão no design de linguagens."
 
 #: src/ch01-02-hello-world.md
 msgid "Just compiling with `rustc` is fine for simple programs, but as your project grows, you’ll want to manage all the options and make it easy to share your code. Next, we’ll introduce you to the Cargo tool, which will help you write real-world Rust programs."
@@ -1134,27 +1134,27 @@ msgstr "Apenas compilar com `rustc` é adequado para programas simples, mas à m
 
 #: src/ch01-03-hello-cargo.md
 msgid "Cargo is Rust’s build system and package manager. Most Rustaceans use this tool to manage their Rust projects because Cargo handles a lot of tasks for you, such as building your code, downloading the libraries your code depends on, and building those libraries. (We call the libraries that your code needs _dependencies_.)"
-msgstr "O Cargo é o sistema de build e gerenciador de pacotes do Rust. A maioria dos Rustaceans usa essa ferramenta para gerenciar seus projetos Rust porque o Cargo lida com muitas tarefas para você, como fazer o build do seu código, baixar as bibliotecas das quais seu código depende e fazer o build dessas bibliotecas. (Chamamos as bibliotecas de que seu código precisa de _dependências_.)"
+msgstr "O Cargo é o sistema de compilação e gerenciador de pacotes do Rust. A maioria dos rustáceos usa essa ferramenta para gerenciar seus projetos Rust porque o Cargo lida com muitas tarefas para você, como compilar seu código, baixar as bibliotecas das quais seu código depende e compilar essas bibliotecas. (Chamamos as bibliotecas de que seu código precisa de _dependências_.)"
 
 #: src/ch01-03-hello-cargo.md
 msgid "The simplest Rust programs, like the one we’ve written so far, don’t have any dependencies. If we had built the “Hello, world!” project with Cargo, it would only use the part of Cargo that handles building your code. As you write more complex Rust programs, you’ll add dependencies, and if you start a project using Cargo, adding dependencies will be much easier to do."
-msgstr "Os programas Rust mais simples, como o que escrevemos até agora, não têm nenhuma dependência. Se tivéssemos feito o build do projeto \"Hello, world!\" com o Cargo, ele usaria apenas a parte do Cargo que lida com o build do seu código. À medida que você escrever programas Rust mais complexos, adicionará dependências, e se você iniciar um projeto usando Cargo, adicionar dependências será muito mais fácil."
+msgstr "Os programas Rust mais simples, como o que escrevemos até agora, não têm nenhuma dependência. Se tivéssemos compilado o projeto “Hello, world!” com o Cargo, ele usaria apenas a parte do Cargo que lida com a compilação do seu código. À medida que você escrever programas Rust mais complexos, adicionará dependências, e se você iniciar um projeto usando o Cargo, adicionar dependências será muito mais fácil."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Because the vast majority of Rust projects use Cargo, the rest of this book assumes that you’re using Cargo too. Cargo comes installed with Rust if you used the official installers discussed in the [“Installation”](ch01-01-installation.html#installation)<!-- ignore --> section. If you installed Rust through some other means, check whether Cargo is installed by entering the following in your terminal:"
-msgstr "Como a grande maioria dos projetos Rust usa Cargo, o restante deste livro pressupõe que você também está usando Cargo. O Cargo vem instalado com o Rust se você usou os instaladores oficiais discutidos na seção [\"Instalação\"](ch01-01-installation.html#installation)<!-- ignore -->. Se você instalou o Rust por outros meios, verifique se o Cargo está instalado inserindo o seguinte no seu terminal:"
+msgstr "Como a grande maioria dos projetos Rust usa o Cargo, o restante deste livro pressupõe que você também está usando o Cargo. O Cargo vem instalado com o Rust se você usou os instaladores oficiais discutidos na seção [“Instalação”](ch01-01-installation.html#installation)<!-- ignore -->. Se você instalou o Rust por outros meios, verifique se o Cargo está instalado inserindo o seguinte no seu terminal:"
 
 #: src/ch01-03-hello-cargo.md
 msgid "If you see a version number, you have it! If you see an error, such as `command not found`, look at the documentation for your method of installation to determine how to install Cargo separately."
-msgstr "Se você ver um número de versão, você o tem! Se você ver um erro, como `command not found`, consulte a documentação do seu método de instalação para determinar como instalar o Cargo separadamente."
+msgstr "Se você vir um número de versão, você o tem! Se você vir um erro, como `command not found`, consulte a documentação do seu método de instalação para determinar como instalar o Cargo separadamente."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Creating a Project with Cargo"
-msgstr "Criando um Projeto com Cargo {#creating-a-project-with-cargo}"
+msgstr "Criando um projeto com o Cargo {#creating-a-project-with-cargo}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Let’s create a new project using Cargo and look at how it differs from our original “Hello, world!” project. Navigate back to your _projects_ directory (or wherever you decided to store your code). Then, on any operating system, run the following:"
-msgstr "Vamos criar um novo projeto usando Cargo e ver como ele difere do nosso projeto original \"Hello, world!\". Navegue de volta ao seu diretório _projects_ (ou onde quer que você tenha decidido armazenar seu código). Então, em qualquer sistema operacional, execute o seguinte:"
+msgstr "Vamos criar um novo projeto usando o Cargo e ver como ele difere do nosso projeto original “Hello, world!”. Navegue de volta ao seu diretório _projects_ (ou onde quer que você tenha decidido armazenar seu código). Então, em qualquer sistema operacional, execute o seguinte:"
 
 #: src/ch01-03-hello-cargo.md
 msgid "The first command creates a new directory and project called _hello_cargo_. We’ve named our project _hello_cargo_, and Cargo creates its files in a directory of the same name."
@@ -1194,11 +1194,11 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "This file is in the [_TOML_](https://toml.io)<!-- ignore --> (_Tom’s Obvious, Minimal Language_) format, which is Cargo’s configuration format."
-msgstr "Este arquivo está no formato [_TOML_](https://toml.io)<!-- ignore --> (_Tom's Obvious, Minimal Language_), que é o formato de configuração do Cargo."
+msgstr "Este arquivo está no formato [_TOML_](https://toml.io)<!-- ignore --> (_Tom’s Obvious, Minimal Language_), que é o formato de configuração do Cargo."
 
 #: src/ch01-03-hello-cargo.md
 msgid "The first line, `[package]`, is a section heading that indicates that the following statements are configuring a package. As we add more information to this file, we’ll add other sections."
-msgstr "A primeira linha, `[package]`, é um cabeçalho de seção que indica que as declarações seguintes estão configurando um package. À medida que adicionarmos mais informações a este arquivo, adicionaremos outras seções."
+msgstr "A primeira linha, `[package]`, é um cabeçalho de seção que indica que as instruções seguintes estão configurando um pacote. À medida que adicionarmos mais informações a este arquivo, adicionaremos outras seções."
 
 #: src/ch01-03-hello-cargo.md
 msgid "The next three lines set the configuration information Cargo needs to compile your program: the name, the version, and the edition of Rust to use. We’ll talk about the `edition` key in [Appendix E](appendix-05-editions.html)<!-- ignore -->."
@@ -1206,7 +1206,7 @@ msgstr "As próximas três linhas definem as informações de configuração que
 
 #: src/ch01-03-hello-cargo.md
 msgid "The last line, `[dependencies]`, is the start of a section for you to list any of your project’s dependencies. In Rust, packages of code are referred to as _crates_. We won’t need any other crates for this project, but we will in the first project in Chapter 2, so we’ll use this dependencies section then."
-msgstr "A última linha, `[dependencies]`, é o início de uma seção para você listar quaisquer dependências do seu projeto. No Rust, os pacotes de código são chamados de _crates_. Não precisaremos de outros crates para este projeto, mas precisaremos no primeiro projeto do Capítulo 2, então usaremos esta seção de dependências então."
+msgstr "A última linha, `[dependencies]`, é o início de uma seção para você listar quaisquer dependências do seu projeto. No Rust, os pacotes de código são chamados de _crates_. Não precisaremos de outros crates para este projeto, mas precisaremos no primeiro projeto do Capítulo 2; é nesse momento que usaremos esta seção de dependências."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Now open _src/main.rs_ and take a look:"
@@ -1225,7 +1225,7 @@ msgstr "<span class=\"filename\">Nome do arquivo: src/main.rs</span>"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Cargo has generated a “Hello, world!” program for you, just like the one we wrote in Listing 1-1! So far, the differences between our project and the project Cargo generated are that Cargo placed the code in the _src_ directory, and we have a _Cargo.toml_ configuration file in the top directory."
-msgstr "O Cargo gerou um programa \"Hello, world!\" para você, assim como o que escrevemos na Listagem 1-1! Até agora, as diferenças entre nosso projeto e o projeto gerado pelo Cargo são que o Cargo colocou o código no diretório _src_, e temos um arquivo de configuração _Cargo.toml_ no diretório principal."
+msgstr "O Cargo gerou um programa “Hello, world!” para você, assim como o que escrevemos na Listagem 1-1! Até agora, as diferenças entre nosso projeto e o projeto gerado pelo Cargo são que o Cargo colocou o código no diretório _src_, e temos um arquivo de configuração _Cargo.toml_ no diretório principal."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Cargo expects your source files to live inside the _src_ directory. The top-level project directory is just for README files, license information, configuration files, and anything else not related to your code. Using Cargo helps you organize your projects. There’s a place for everything, and everything is in its place."
@@ -1233,15 +1233,15 @@ msgstr "O Cargo espera que seus arquivos fonte fiquem dentro do diretório _src_
 
 #: src/ch01-03-hello-cargo.md
 msgid "If you started a project that doesn’t use Cargo, as we did with the “Hello, world!” project, you can convert it to a project that does use Cargo. Move the project code into the _src_ directory and create an appropriate _Cargo.toml_ file. One easy way to get that _Cargo.toml_ file is to run `cargo init`, which will create it for you automatically."
-msgstr "Se você iniciou um projeto que não usa Cargo, como fizemos com o projeto \"Hello, world!\", pode convertê-lo em um projeto que usa Cargo. Mova o código do projeto para o diretório _src_ e crie um arquivo _Cargo.toml_ apropriado. Uma maneira fácil de obter esse arquivo _Cargo.toml_ é executar `cargo init`, que o criará para você automaticamente."
+msgstr "Se você iniciou um projeto que não usa o Cargo, como fizemos com o projeto “Hello, world!”, pode convertê-lo em um projeto que usa o Cargo. Mova o código do projeto para o diretório _src_ e crie um arquivo _Cargo.toml_ apropriado. Uma maneira fácil de obter esse arquivo _Cargo.toml_ é executar `cargo init`, que o criará para você automaticamente."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Building and Running a Cargo Project"
-msgstr "Fazendo o Build e Executando um Projeto Cargo {#building-and-running-a-cargo-project}"
+msgstr "Compilando e executando um projeto Cargo {#building-and-running-a-cargo-project}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Now let’s look at what’s different when we build and run the “Hello, world!” program with Cargo! From your _hello_cargo_ directory, build your project by entering the following command:"
-msgstr "Agora vamos ver o que é diferente quando fazemos o build e executamos o programa \"Hello, world!\" com Cargo! No seu diretório _hello_cargo_, faça o build do seu projeto inserindo o seguinte comando:"
+msgstr "Agora vamos ver o que é diferente quando compilamos e executamos o programa “Hello, world!” com o Cargo! No seu diretório _hello_cargo_, compile seu projeto inserindo o seguinte comando:"
 
 #: src/ch01-03-hello-cargo.md
 msgid ""
@@ -1254,7 +1254,7 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "This command creates an executable file in _target/debug/hello_cargo_ (or _target\\debug\\hello_cargo.exe_ on Windows) rather than in your current directory. Because the default build is a debug build, Cargo puts the binary in a directory named _debug_. You can run the executable with this command:"
-msgstr "Este comando cria um arquivo executável em _target/debug/hello_cargo_ (ou _target\\debug\\hello_cargo.exe_ no Windows) em vez de no seu diretório atual. Como o build padrão é um build de debug, o Cargo coloca o binário em um diretório chamado _debug_. Você pode executar o executável com este comando:"
+msgstr "Este comando cria um arquivo executável em _target/debug/hello_cargo_ (ou _target\\debug\\hello_cargo.exe_ no Windows) em vez de no seu diretório atual. Como a compilação padrão é uma compilação de depuração, o Cargo coloca o binário em um diretório chamado _debug_. Você pode executar o executável com este comando:"
 
 #: src/ch01-03-hello-cargo.md
 msgid "If all goes well, `Hello, world!` should print to the terminal. Running `cargo build` for the first time also causes Cargo to create a new file at the top level: _Cargo.lock_. This file keeps track of the exact versions of dependencies in your project. This project doesn’t have dependencies, so the file is a bit sparse. You won’t ever need to change this file manually; Cargo manages its contents for you."
@@ -1262,7 +1262,7 @@ msgstr "Se tudo correr bem, `Hello, world!` deve ser impresso no terminal. Execu
 
 #: src/ch01-03-hello-cargo.md
 msgid "We just built a project with `cargo build` and ran it with `./target/debug/hello_cargo`, but we can also use `cargo run` to compile the code and then run the resultant executable all in one command:"
-msgstr "Acabamos de fazer o build de um projeto com `cargo build` e o executamos com `./target/debug/hello_cargo`, mas também podemos usar `cargo run` para compilar o código e então executar o executável resultante tudo em um comando:"
+msgstr "Acabamos de compilar um projeto com `cargo build` e o executamos com `./target/debug/hello_cargo`, mas também podemos usar `cargo run` para compilar o código e então executar o executável resultante, tudo em um único comando:"
 
 #: src/ch01-03-hello-cargo.md
 msgid "Using `cargo run` is more convenient than having to remember to run `cargo build` and then use the whole path to the binary, so most developers use `cargo run`."
@@ -1270,7 +1270,7 @@ msgstr "Usar `cargo run` é mais conveniente do que ter que lembrar de executar 
 
 #: src/ch01-03-hello-cargo.md
 msgid "Notice that this time we didn’t see output indicating that Cargo was compiling `hello_cargo`. Cargo figured out that the files hadn’t changed, so it didn’t rebuild but just ran the binary. If you had modified your source code, Cargo would have rebuilt the project before running it, and you would have seen this output:"
-msgstr "Observe que desta vez não vimos saída indicando que o Cargo estava compilando `hello_cargo`. O Cargo percebeu que os arquivos não haviam mudado, então não reconstruiu, apenas executou o binário. Se você tivesse modificado seu código fonte, o Cargo teria reconstruído o projeto antes de executá-lo, e você teria visto esta saída:"
+msgstr "Observe que desta vez não vimos saída indicando que o Cargo estava compilando `hello_cargo`. O Cargo percebeu que os arquivos não haviam mudado, então não recompilou, apenas executou o binário. Se você tivesse modificado seu código-fonte, o Cargo teria recompilado o projeto antes de executá-lo, e você teria visto esta saída:"
 
 #: src/ch01-03-hello-cargo.md
 msgid ""
@@ -1298,7 +1298,7 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "Why would you not want an executable? Often, `cargo check` is much faster than `cargo build` because it skips the step of producing an executable. If you’re continually checking your work while writing the code, using `cargo check` will speed up the process of letting you know if your project is still compiling! As such, many Rustaceans run `cargo check` periodically as they write their program to make sure it compiles. Then, they run `cargo build` when they’re ready to use the executable."
-msgstr "Por que você não quereria um executável? Frequentemente, `cargo check` é muito mais rápido que `cargo build` porque pula a etapa de produzir um executável. Se você estiver verificando continuamente seu trabalho enquanto escreve o código, usar `cargo check` acelerará o processo de saber se seu projeto ainda está compilando! Como tal, muitos Rustaceans executam `cargo check` periodicamente enquanto escrevem seu programa para garantir que ele compila. Então, eles executam `cargo build` quando estão prontos para usar o executável."
+msgstr "Por que você não quereria um executável? Frequentemente, `cargo check` é muito mais rápido que `cargo build` porque pula a etapa de produzir um executável. Se você estiver verificando continuamente seu trabalho enquanto escreve o código, usar `cargo check` acelerará o processo de saber se seu projeto ainda está compilando! Por isso, muitos rustáceos executam `cargo check` periodicamente enquanto escrevem seu programa para garantir que ele compila. Então, eles executam `cargo build` quando estão prontos para usar o executável."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Let’s recap what we’ve learned so far about Cargo:"
@@ -1310,19 +1310,19 @@ msgstr "Podemos criar um projeto usando `cargo new`."
 
 #: src/ch01-03-hello-cargo.md
 msgid "We can build a project using `cargo build`."
-msgstr "Podemos fazer o build de um projeto usando `cargo build`."
+msgstr "Podemos compilar um projeto usando `cargo build`."
 
 #: src/ch01-03-hello-cargo.md
 msgid "We can build and run a project in one step using `cargo run`."
-msgstr "Podemos fazer o build e executar um projeto em um único passo usando `cargo run`."
+msgstr "Podemos compilar e executar um projeto em um único passo usando `cargo run`."
 
 #: src/ch01-03-hello-cargo.md
 msgid "We can build a project without producing a binary to check for errors using `cargo check`."
-msgstr "Podemos fazer o build de um projeto sem produzir um binário para verificar erros usando `cargo check`."
+msgstr "Podemos compilar um projeto sem produzir um binário para verificar erros usando `cargo check`."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Instead of saving the result of the build in the same directory as our code, Cargo stores it in the _target/debug_ directory."
-msgstr "Em vez de salvar o resultado do build no mesmo diretório que nosso código, o Cargo o armazena no diretório _target/debug_."
+msgstr "Em vez de salvar o resultado da compilação no mesmo diretório que nosso código, o Cargo o armazena no diretório _target/debug_."
 
 #: src/ch01-03-hello-cargo.md
 msgid "An additional advantage of using Cargo is that the commands are the same no matter which operating system you’re working on. So, at this point, we’ll no longer provide specific instructions for Linux and macOS versus Windows."
@@ -1330,11 +1330,11 @@ msgstr "Uma vantagem adicional de usar Cargo é que os comandos são os mesmos i
 
 #: src/ch01-03-hello-cargo.md
 msgid "Building for Release"
-msgstr "Fazendo o Build para Release {#building-for-release}"
+msgstr "Compilando para release {#building-for-release}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "When your project is finally ready for release, you can use `cargo build --release` to compile it with optimizations. This command will create an executable in _target/release_ instead of _target/debug_. The optimizations make your Rust code run faster, but turning them on lengthens the time it takes for your program to compile. This is why there are two different profiles: one for development, when you want to rebuild quickly and often, and another for building the final program you’ll give to a user that won’t be rebuilt repeatedly and that will run as fast as possible. If you’re benchmarking your code’s running time, be sure to run `cargo build --release` and benchmark with the executable in _target/release_."
-msgstr "Quando seu projeto estiver finalmente pronto para release, você pode usar `cargo build --release` para compilá-lo com otimizações. Este comando criará um executável em _target/release_ em vez de _target/debug_. As otimizações fazem seu código Rust ser executado mais rapidamente, mas ativá-las aumenta o tempo que leva para seu programa compilar. É por isso que existem dois perfis diferentes: um para desenvolvimento, quando você deseja reconstruir rapidamente e com frequência, e outro para construir o programa final que você dará a um usuário que não será reconstruído repetidamente e que será executado o mais rápido possível. Se você estiver medindo o tempo de execução do seu código, certifique-se de executar `cargo build --release` e medir com o executável em _target/release_."
+msgstr "Quando seu projeto estiver finalmente pronto para release, você pode usar `cargo build --release` para compilá-lo com otimizações. Este comando criará um executável em _target/release_ em vez de _target/debug_. As otimizações fazem seu código Rust ser executado mais rapidamente, mas ativá-las aumenta o tempo que leva para seu programa compilar. É por isso que existem dois perfis diferentes: um para desenvolvimento, quando você deseja recompilar rapidamente e com frequência, e outro para compilar o programa final que você dará a um usuário, um programa que não será recompilado repetidamente e que será executado o mais rápido possível. Se você estiver medindo o tempo de execução do seu código, certifique-se de executar `cargo build --release` e medir com o executável em _target/release_."
 
 #: src/ch01-03-hello-cargo.md
 msgid "<a id=\"cargo-as-convention\"></a>"
@@ -1342,15 +1342,15 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "Leveraging Cargo’s Conventions"
-msgstr "Aproveitando as Convenções do Cargo {#leveraging-cargos-conventions}"
+msgstr "Aproveitando as convenções do Cargo {#leveraging-cargos-conventions}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "With simple projects, Cargo doesn’t provide a lot of value over just using `rustc`, but it will prove its worth as your programs become more intricate. Once programs grow to multiple files or need a dependency, it’s much easier to let Cargo coordinate the build."
-msgstr "Com projetos simples, o Cargo não oferece muito valor em relação a apenas usar `rustc`, mas provará seu valor à medida que seus programas se tornarem mais complexos. Uma vez que os programas crescem para múltiplos arquivos ou precisam de uma dependência, é muito mais fácil deixar o Cargo coordenar o build."
+msgstr "Com projetos simples, o Cargo não oferece muito valor em relação a apenas usar `rustc`, mas provará seu valor à medida que seus programas se tornarem mais complexos. Quando os programas passam a ter vários arquivos ou precisam de uma dependência, é muito mais fácil deixar o Cargo coordenar a compilação."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Even though the `hello_cargo` project is simple, it now uses much of the real tooling you’ll use in the rest of your Rust career. In fact, to work on any existing projects, you can use the following commands to check out the code using Git, change to that project’s directory, and build:"
-msgstr "Mesmo que o projeto `hello_cargo` seja simples, ele agora usa muito das ferramentas reais que você usará no restante de sua carreira em Rust. De fato, para trabalhar em quaisquer projetos existentes, você pode usar os seguintes comandos para obter o código usando Git, mudar para o diretório desse projeto e fazer o build:"
+msgstr "Mesmo que o projeto `hello_cargo` seja simples, ele agora usa muitas das ferramentas reais que você usará no restante da sua carreira com o Rust. De fato, para trabalhar em quaisquer projetos existentes, você pode usar os seguintes comandos para obter o código usando o Git, mudar para o diretório desse projeto e compilar:"
 
 #: src/ch01-03-hello-cargo.md
 msgid "For more information about Cargo, check out [its documentation](https://doc.rust-lang.org/cargo/)."
@@ -1378,7 +1378,7 @@ msgstr "Você já teve um ótimo começo em sua jornada no Rust! Neste capítulo
 
 #: src/ch01-03-hello-cargo.md
 msgid "Install the latest stable version of Rust using `rustup`."
-msgstr "Instalar a versão estável mais recente do Rust usando `rustup`."
+msgstr "Instalar a versão stable mais recente do Rust usando `rustup`."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Update to a newer Rust version."
@@ -1390,7 +1390,7 @@ msgstr "Abrir documentação instalada localmente."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Write and run a “Hello, world!” program using `rustc` directly."
-msgstr "Escrever e executar um programa \"Hello, world!\" usando `rustc` diretamente."
+msgstr "Escrever e executar um programa “Hello, world!” usando `rustc` diretamente."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Create and run a new project using the conventions of Cargo."
