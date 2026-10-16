@@ -365,19 +365,19 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch19-00-patterns.md
 msgid "Patterns and Matching"
-msgstr ""
+msgstr "Padrões e correspondência {#patterns-and-matching}"
 
 #: src/SUMMARY.md src/ch19-01-all-the-places-for-patterns.md
 msgid "All the Places Patterns Can Be Used"
-msgstr ""
+msgstr "Todos os lugares onde padrões podem ser usados {#all-the-places-patterns-can-be-used}"
 
 #: src/SUMMARY.md src/ch19-02-refutability.md
 msgid "Refutability: Whether a Pattern Might Fail to Match"
-msgstr ""
+msgstr "Refutabilidade: se um padrão pode não corresponder {#refutability-whether-a-pattern-might-fail-to-match}"
 
 #: src/SUMMARY.md src/ch19-03-pattern-syntax.md
 msgid "Pattern Syntax"
-msgstr ""
+msgstr "Sintaxe de padrões {#pattern-syntax}"
 
 #: src/SUMMARY.md src/ch20-00-advanced-features.md
 msgid "Advanced Features"
@@ -19487,51 +19487,51 @@ msgstr ""
 
 #: src/ch19-00-patterns.md
 msgid "Patterns are a special syntax in Rust for matching against the structure of types, both complex and simple. Using patterns in conjunction with `match` expressions and other constructs gives you more control over a program’s control flow. A pattern consists of some combination of the following:"
-msgstr ""
+msgstr "Padrões são uma sintaxe especial do Rust para corresponder à estrutura de tipos, tanto complexos quanto simples. Usar padrões em conjunto com expressões `match` e outras construções dá a você mais controle sobre o fluxo de controle de um programa. Um padrão é composto por alguma combinação dos seguintes itens:"
 
 #: src/ch19-00-patterns.md
 msgid "Literals"
-msgstr ""
+msgstr "Literais"
 
 #: src/ch19-00-patterns.md
 msgid "Destructured arrays, enums, structs, or tuples"
-msgstr ""
+msgstr "Arrays, enums, structs ou tuplas desestruturados"
 
 #: src/ch19-00-patterns.md
 msgid "Variables"
-msgstr ""
+msgstr "Variáveis"
 
 #: src/ch19-00-patterns.md
 msgid "Wildcards"
-msgstr ""
+msgstr "Curingas"
 
 #: src/ch19-00-patterns.md
 msgid "Placeholders"
-msgstr ""
+msgstr "Espaços reservados"
 
 #: src/ch19-00-patterns.md
 msgid "Some example patterns include `x`, `(a, 3)`, and `Some(Color::Red)`. In the contexts in which patterns are valid, these components describe the shape of data. Our program then matches values against the patterns to determine whether it has the correct shape of data to continue running a particular piece of code."
-msgstr ""
+msgstr "Alguns exemplos de padrões incluem `x`, `(a, 3)` e `Some(Color::Red)`. Nos contextos em que padrões são válidos, esses componentes descrevem a forma dos dados. Em seguida, nosso programa compara valores com os padrões para determinar se tem a forma de dados correta para continuar executando um trecho de código específico."
 
 #: src/ch19-00-patterns.md
 msgid "To use a pattern, we compare it to some value. If the pattern matches the value, we use the value parts in our code. Recall the `match` expressions in Chapter 6 that used patterns, such as the coin-sorting machine example. If the value fits the shape of the pattern, we can use the named pieces. If it doesn’t, the code associated with the pattern won’t run."
-msgstr ""
+msgstr "Para usar um padrão, nós o comparamos com algum valor. Se o padrão corresponder ao valor, usamos as partes do valor no nosso código. Lembre-se das expressões `match` do Capítulo 6 que usavam padrões, como o exemplo da máquina classificadora de moedas. Se o valor se encaixar na forma do padrão, podemos usar as partes nomeadas. Se não se encaixar, o código associado ao padrão não será executado."
 
 #: src/ch19-00-patterns.md
 msgid "This chapter is a reference on all things related to patterns. We’ll cover the valid places to use patterns, the difference between refutable and irrefutable patterns, and the different kinds of pattern syntax that you might see. By the end of the chapter, you’ll know how to use patterns to express many concepts in a clear way."
-msgstr ""
+msgstr "Este capítulo é uma referência sobre tudo o que diz respeito a padrões. Vamos abordar os lugares válidos para usar padrões, a diferença entre padrões refutáveis e irrefutáveis e os diferentes tipos de sintaxe de padrões que você pode encontrar. Ao final do capítulo, você vai saber como usar padrões para expressar muitos conceitos de forma clara."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Patterns pop up in a number of places in Rust, and you’ve been using them a lot without realizing it! This section discusses all the places where patterns are valid."
-msgstr ""
+msgstr "Padrões aparecem em vários lugares no Rust, e você já os usa bastante sem perceber! Esta seção discute todos os lugares em que padrões são válidos."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "`match` Arms"
-msgstr ""
+msgstr "Braços do `match` {#match-arms}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "As discussed in Chapter 6, we use patterns in the arms of `match` expressions. Formally, `match` expressions are defined as the keyword `match`, a value to match on, and one or more match arms that consist of a pattern and an expression to run if the value matches that arm’s pattern, like this:"
-msgstr ""
+msgstr "Como discutido no Capítulo 6, usamos padrões nos braços de correspondência das expressões `match`. Formalmente, as expressões `match` são definidas pela palavra-chave `match`, por um valor a ser comparado e por um ou mais braços de correspondência, cada um formado por um padrão e uma expressão a ser executada caso o valor corresponda ao padrão daquele braço, assim:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid ""
@@ -19552,31 +19552,31 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "For example, here’s the `match` expression from Listing 6-5 that matches on an `Option<i32>` value in the variable `x`:"
-msgstr ""
+msgstr "Por exemplo, aqui está a expressão `match` da Listagem 6-5, que faz correspondência com um valor `Option<i32>` na variável `x`:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The patterns in this `match` expression are the `None` and `Some(i)` to the left of each arrow."
-msgstr ""
+msgstr "Os padrões dessa expressão `match` são `None` e `Some(i)`, à esquerda de cada seta."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "One requirement for `match` expressions is that they need to be exhaustive in the sense that all possibilities for the value in the `match` expression must be accounted for. One way to ensure that you’ve covered every possibility is to have a catch-all pattern for the last arm: For example, a variable name matching any value can never fail and thus covers every remaining case."
-msgstr ""
+msgstr "Uma exigência das expressões `match` é que elas sejam exaustivas, no sentido de que todas as possibilidades para o valor na expressão `match` precisam ser contempladas. Uma forma de garantir que você cobriu todas as possibilidades é ter um padrão curinga no último braço: por exemplo, um nome de variável que corresponde a qualquer valor nunca pode falhar e, portanto, cobre todos os casos restantes."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The particular pattern `_` will match anything, but it never binds to a variable, so it’s often used in the last match arm. The `_` pattern can be useful when you want to ignore any value not specified, for example. We’ll cover the `_` pattern in more detail in [“Ignoring Values in a Pattern”](ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern)<!-- ignore --> later in this chapter."
-msgstr ""
+msgstr "O padrão `_`, em particular, corresponde a qualquer valor, mas nunca se vincula a uma variável, por isso costuma ser usado no último braço de correspondência. O padrão `_` pode ser útil quando você quer ignorar qualquer valor não especificado, por exemplo. Veremos o padrão `_` com mais detalhes em [“Ignorando valores em um padrão”](ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern)<!-- ignore --> mais adiante neste capítulo."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "`let` Statements"
-msgstr ""
+msgstr "Instruções `let` {#let-statements}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Prior to this chapter, we had only explicitly discussed using patterns with `match` and `if let`, but in fact, we’ve used patterns in other places as well, including in `let` statements. For example, consider this straightforward variable assignment with `let`:"
-msgstr ""
+msgstr "Antes deste capítulo, só tínhamos discutido explicitamente o uso de padrões com `match` e `if let`, mas, na verdade, também usamos padrões em outros lugares, incluindo nas instruções `let`. Por exemplo, considere esta atribuição de variável simples com `let`:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Every time you’ve used a `let` statement like this you’ve been using patterns, although you might not have realized it! More formally, a `let` statement looks like this:"
-msgstr ""
+msgstr "Toda vez que você usou uma instrução `let` como esta, estava usando padrões, mesmo que talvez não tenha percebido! De forma mais formal, uma instrução `let` tem esta forma:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid ""
@@ -19587,31 +19587,31 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "In statements like `let x = 5;` with a variable name in the PATTERN slot, the variable name is just a particularly simple form of a pattern. Rust compares the expression against the pattern and assigns any names it finds. So, in the `let x = 5;` example, `x` is a pattern that means “bind what matches here to the variable `x`.” Because the name `x` is the whole pattern, this pattern effectively means “bind everything to the variable `x`, whatever the value is.”"
-msgstr ""
+msgstr "Em instruções como `let x = 5;`, com um nome de variável na posição de PATTERN, o nome da variável é apenas uma forma particularmente simples de padrão. O Rust compara a expressão com o padrão e vincula quaisquer nomes que encontrar. Assim, no exemplo `let x = 5;`, `x` é um padrão que significa “vincule o que corresponder aqui à variável `x`.” Como o nome `x` é o padrão inteiro, esse padrão significa, na prática, “vincule tudo à variável `x`, qualquer que seja o valor.”"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "To see the pattern-matching aspect of `let` more clearly, consider Listing 19-1, which uses a pattern with `let` to destructure a tuple."
-msgstr ""
+msgstr "Para ver com mais clareza o aspecto de correspondência de padrões do `let`, considere a Listagem 19-1, que usa um padrão com `let` para desestruturar uma tupla."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-1\" caption=\"Using a pattern to destructure a tuple and create three variables at once\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-1\" caption=\"Usando um padrão para desestruturar uma tupla e criar três variáveis de uma só vez\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Here, we match a tuple against a pattern. Rust compares the value `(1, 2, 3)` to the pattern `(x, y, z)` and sees that the value matches the pattern—that is, it sees that the number of elements is the same in both—so Rust binds `1` to `x`, `2` to `y`, and `3` to `z`. You can think of this tuple pattern as nesting three individual variable patterns inside it."
-msgstr ""
+msgstr "Aqui, fazemos a correspondência de uma tupla com um padrão. O Rust compara o valor `(1, 2, 3)` com o padrão `(x, y, z)` e vê que o valor corresponde ao padrão—ou seja, vê que o número de elementos é o mesmo nos dois—e, portanto, vincula `1` a `x`, `2` a `y` e `3` a `z`. Você pode pensar nesse padrão de tupla como um aninhamento de três padrões de variável individuais dentro dele."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "If the number of elements in the pattern doesn’t match the number of elements in the tuple, the overall type won’t match and we’ll get a compiler error. For example, Listing 19-2 shows an attempt to destructure a tuple with three elements into two variables, which won’t work."
-msgstr ""
+msgstr "Se o número de elementos no padrão não corresponder ao número de elementos na tupla, o tipo como um todo não vai corresponder e teremos um erro de compilação. Por exemplo, a Listagem 19-2 mostra uma tentativa de desestruturar uma tupla de três elementos em duas variáveis, o que não vai funcionar."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-2\" caption=\"Incorrectly constructing a pattern whose variables don’t match the number of elements in the tuple\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-2\" caption=\"Construindo incorretamente um padrão cujas variáveis não correspondem ao número de elementos da tupla\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Attempting to compile this code results in this type error:"
-msgstr ""
+msgstr "Tentar compilar este código resulta neste erro de tipo:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid ""
@@ -19636,27 +19636,27 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "To fix the error, we could ignore one or more of the values in the tuple using `_` or `..`, as you’ll see in the [“Ignoring Values in a Pattern”](ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern)<!-- ignore --> section. If the problem is that we have too many variables in the pattern, the solution is to make the types match by removing variables so that the number of variables equals the number of elements in the tuple."
-msgstr ""
+msgstr "Para corrigir o erro, poderíamos ignorar um ou mais valores da tupla usando `_` ou `..`, como você vai ver na seção [“Ignorando valores em um padrão”](ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern)<!-- ignore -->. Se o problema for termos variáveis demais no padrão, a solução é fazer os tipos corresponderem, removendo variáveis até que o número de variáveis seja igual ao número de elementos da tupla."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Conditional `if let` Expressions"
-msgstr ""
+msgstr "Expressões condicionais `if let` {#conditional-if-let-expressions}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "In Chapter 6, we discussed how to use `if let` expressions mainly as a shorter way to write the equivalent of a `match` that only matches one case. Optionally, `if let` can have a corresponding `else` containing code to run if the pattern in the `if let` doesn’t match."
-msgstr ""
+msgstr "No Capítulo 6, discutimos como usar as expressões `if let` principalmente como uma forma mais curta de escrever o equivalente a um `match` que corresponde a apenas um caso. Opcionalmente, `if let` pode ter um `else` correspondente, com código a ser executado caso o padrão do `if let` não corresponda."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Listing 19-3 shows that it’s also possible to mix and match `if let`, `else if`, and `else if let` expressions. Doing so gives us more flexibility than a `match` expression in which we can express only one value to compare with the patterns. Also, Rust doesn’t require that the conditions in a series of `if let`, `else if`, and `else if let` arms relate to each other."
-msgstr ""
+msgstr "A Listagem 19-3 mostra que também é possível misturar e combinar expressões `if let`, `else if` e `else if let`. Fazer isso nos dá mais flexibilidade do que uma expressão `match`, na qual podemos expressar apenas um valor para comparar com os padrões. Além disso, o Rust não exige que as condições de uma série de braços `if let`, `else if` e `else if let` se relacionem entre si."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The code in Listing 19-3 determines what color to make your background based on a series of checks for several conditions. For this example, we’ve created variables with hardcoded values that a real program might receive from user input."
-msgstr ""
+msgstr "O código da Listagem 19-3 determina qual cor de fundo usar com base em uma série de verificações de várias condições. Para este exemplo, criamos variáveis com valores fixos no código que um programa real poderia receber da entrada do usuário."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-3\" file-name=\"src/main.rs\" caption=\"Mixing `if let`, `else if`, `else if let`, and `else`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-3\" file-name=\"src/main.rs\" caption=\"Misturando `if let`, `else if`, `else if let` e `else`\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "\"34\""
@@ -19684,31 +19684,31 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "If the user specifies a favorite color, that color is used as the background. If no favorite color is specified and today is Tuesday, the background color is green. Otherwise, if the user specifies their age as a string and we can parse it as a number successfully, the color is either purple or orange depending on the value of the number. If none of these conditions apply, the background color is blue."
-msgstr ""
+msgstr "Se o usuário especificar uma cor favorita, essa cor é usada como cor de fundo. Se nenhuma cor favorita for especificada e hoje for terça-feira, a cor de fundo é verde. Caso contrário, se o usuário informar a idade como uma string e conseguirmos convertê-la com sucesso em um número, a cor será roxa ou laranja, dependendo do valor do número. Se nenhuma dessas condições se aplicar, a cor de fundo é azul."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "This conditional structure lets us support complex requirements. With the hardcoded values we have here, this example will print `Using purple as the background color`."
-msgstr ""
+msgstr "Essa estrutura condicional nos permite atender a requisitos complexos. Com os valores fixos no código que temos aqui, este exemplo vai imprimir `Using purple as the background color`."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "You can see that `if let` can also introduce new variables that shadow existing variables in the same way that `match` arms can: The line `if let Ok(age) = age` introduces a new `age` variable that contains the value inside the `Ok` variant, shadowing the existing `age` variable. This means we need to place the `if age > 30` condition within that block: We can’t combine these two conditions into `if let Ok(age) = age && age > 30`. The new `age` we want to compare to 30 isn’t valid until the new scope starts with the curly bracket."
-msgstr ""
+msgstr "Você pode ver que o `if let` também pode introduzir novas variáveis que sombreiam variáveis existentes, da mesma forma que os braços do `match` podem: a linha `if let Ok(age) = age` introduz uma nova variável `age` que contém o valor dentro da variante `Ok`, sombreando a variável `age` existente. Isso significa que precisamos colocar a condição `if age > 30` dentro desse bloco: não podemos combinar essas duas condições em `if let Ok(age) = age && age > 30`. O novo `age` que queremos comparar com 30 só é válido quando o novo escopo começa, com a chave."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The downside of using `if let` expressions is that the compiler doesn’t check for exhaustiveness, whereas with `match` expressions it does. If we omitted the last `else` block and therefore missed handling some cases, the compiler would not alert us to the possible logic bug."
-msgstr ""
+msgstr "A desvantagem de usar expressões `if let` é que o compilador não verifica a exaustividade, ao contrário das expressões `match`, que a verificam. Se omitíssemos o último bloco `else` e, com isso, deixássemos de tratar alguns casos, o compilador não nos alertaria sobre o possível bug de lógica."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "`while let` Conditional Loops"
-msgstr ""
+msgstr "Loops condicionais `while let` {#while-let-conditional-loops}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Similar in construction to `if let`, the `while let` conditional loop allows a `while` loop to run for as long as a pattern continues to match. In Listing 19-4, we show a `while let` loop that waits on messages sent between threads, but in this case checking a `Result` instead of an `Option`."
-msgstr ""
+msgstr "Semelhante na construção ao `if let`, o loop condicional `while let` permite que um loop `while` continue executando enquanto um padrão continuar correspondendo. Na Listagem 19-4, mostramos um loop `while let` que aguarda mensagens enviadas entre threads, mas, neste caso, verificando um `Result` em vez de um `Option`."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-4\" caption=\"Using a `while let` loop to print values for as long as `rx.recv()` returns `Ok`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-4\" caption=\"Usando um loop `while let` para imprimir valores enquanto `rx.recv()` retornar `Ok`\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "\"{value}\""
@@ -19716,19 +19716,19 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "This example prints `1`, `2`, and then `3`. The `recv` method takes the first message out of the receiver side of the channel and returns an `Ok(value)`. When we first saw `recv` back in Chapter 16, we unwrapped the error directly, or we interacted with it as an iterator using a `for` loop. As Listing 19-4 shows, though, we can also use `while let`, because the `recv` method returns an `Ok` each time a message arrives, as long as the sender exists, and then produces an `Err` once the sender side disconnects."
-msgstr ""
+msgstr "Este exemplo imprime `1`, `2` e depois `3`. O método `recv` retira a primeira mensagem do lado receptor do canal e retorna um `Ok(value)`. Quando vimos `recv` pela primeira vez no Capítulo 16, desempacotamos o erro diretamente ou interagimos com ele como um iterador usando um loop `for`. Como a Listagem 19-4 mostra, porém, também podemos usar `while let`, porque o método `recv` retorna um `Ok` sempre que uma mensagem chega, desde que o transmissor exista, e depois produz um `Err` quando o lado transmissor se desconecta."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "`for` Loops"
-msgstr ""
+msgstr "Loops `for` {#for-loops}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "In a `for` loop, the value that directly follows the keyword `for` is a pattern. For example, in `for x in y`, the `x` is the pattern. Listing 19-5 demonstrates how to use a pattern in a `for` loop to destructure, or break apart, a tuple as part of the `for` loop."
-msgstr ""
+msgstr "Em um loop `for`, o valor que vem logo depois da palavra-chave `for` é um padrão. Por exemplo, em `for x in y`, o `x` é o padrão. A Listagem 19-5 demonstra como usar um padrão em um loop `for` para desestruturar, ou separar, uma tupla como parte do loop `for`."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-5\" caption=\"Using a pattern in a `for` loop to destructure a tuple\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-5\" caption=\"Usando um padrão em um loop `for` para desestruturar uma tupla\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "'b'"
@@ -19740,7 +19740,7 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The code in Listing 19-5 will print the following:"
-msgstr ""
+msgstr "O código da Listagem 19-5 vai imprimir o seguinte:"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid ""
@@ -19757,19 +19757,19 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "We adapt an iterator using the `enumerate` method so that it produces a value and the index for that value, placed into a tuple. The first value produced is the tuple `(0, 'a')`. When this value is matched to the pattern `(index, value)`, index will be `0` and value will be `'a'`, printing the first line of the output."
-msgstr ""
+msgstr "Adaptamos um iterador usando o método `enumerate`, de modo que ele produza um valor e o índice desse valor, colocados em uma tupla. O primeiro valor produzido é a tupla `(0, 'a')`. Quando esse valor corresponde ao padrão `(index, value)`, index será `0` e value será `'a'`, imprimindo a primeira linha da saída."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Function Parameters"
-msgstr ""
+msgstr "Parâmetros de função {#function-parameters}"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "Function parameters can also be patterns. The code in Listing 19-6, which declares a function named `foo` that takes one parameter named `x` of type `i32`, should by now look familiar."
-msgstr ""
+msgstr "Os parâmetros de função também podem ser padrões. O código da Listagem 19-6, que declara uma função chamada `foo` que recebe um parâmetro chamado `x` do tipo `i32`, já deve parecer familiar."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-6\" caption=\"A function signature using patterns in the parameters\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-6\" caption=\"Uma assinatura de função que usa padrões nos parâmetros\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "// code goes here\n"
@@ -19777,11 +19777,11 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "The `x` part is a pattern! As we did with `let`, we could match a tuple in a function’s arguments to the pattern. Listing 19-7 splits the values in a tuple as we pass it to a function."
-msgstr ""
+msgstr "A parte `x` é um padrão! Assim como fizemos com `let`, poderíamos fazer uma tupla nos argumentos de uma função corresponder ao padrão. A Listagem 19-7 separa os valores de uma tupla enquanto a passamos para uma função."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "<Listing number=\"19-7\" file-name=\"src/main.rs\" caption=\"A function with parameters that destructure a tuple\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-7\" file-name=\"src/main.rs\" caption=\"Uma função com parâmetros que desestruturam uma tupla\">\n"
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "\"Current location: ({x}, {y})\""
@@ -19789,39 +19789,39 @@ msgstr ""
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "This code prints `Current location: (3, 5)`. The values `&(3, 5)` match the pattern `&(x, y)`, so `x` is the value `3` and `y` is the value `5`."
-msgstr ""
+msgstr "Este código imprime `Current location: (3, 5)`. Os valores `&(3, 5)` correspondem ao padrão `&(x, y)`, então `x` é o valor `3` e `y` é o valor `5`."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "We can also use patterns in closure parameter lists in the same way as in function parameter lists because closures are similar to functions, as discussed in Chapter 13."
-msgstr ""
+msgstr "Também podemos usar padrões nas listas de parâmetros de closures da mesma forma que nas listas de parâmetros de funções, porque closures são semelhantes a funções, como discutido no Capítulo 13."
 
 #: src/ch19-01-all-the-places-for-patterns.md
 msgid "At this point, you’ve seen several ways to use patterns, but patterns don’t work the same in every place we can use them. In some places, the patterns must be irrefutable; in other circumstances, they can be refutable. We’ll discuss these two concepts next."
-msgstr ""
+msgstr "Neste ponto, você já viu várias formas de usar padrões, mas padrões não funcionam da mesma forma em todos os lugares onde podemos usá-los. Em alguns lugares, os padrões precisam ser irrefutáveis; em outras circunstâncias, podem ser refutáveis. Vamos discutir esses dois conceitos a seguir."
 
 #: src/ch19-02-refutability.md
 msgid "Patterns come in two forms: refutable and irrefutable. Patterns that will match for any possible value passed are _irrefutable_. An example would be `x` in the statement `let x = 5;` because `x` matches anything and therefore cannot fail to match. Patterns that can fail to match for some possible value are _refutable_. An example would be `Some(x)` in the expression `if let Some(x) = a_value` because if the value in the `a_value` variable is `None` rather than `Some`, the `Some(x)` pattern will not match."
-msgstr ""
+msgstr "Padrões vêm em duas formas: refutáveis e irrefutáveis. Padrões que vão corresponder a qualquer valor possível passado são _irrefutáveis_. Um exemplo é `x` na instrução `let x = 5;`, porque `x` corresponde a qualquer coisa e, portanto, não pode deixar de corresponder. Padrões que podem deixar de corresponder para algum valor possível são _refutáveis_. Um exemplo é `Some(x)` na expressão `if let Some(x) = a_value`, pois, se o valor da variável `a_value` for `None` em vez de `Some`, o padrão `Some(x)` não vai corresponder."
 
 #: src/ch19-02-refutability.md
 msgid "Function parameters, `let` statements, and `for` loops can only accept irrefutable patterns because the program cannot do anything meaningful when values don’t match. The `if let` and `while let` expressions and the `let...else` statement accept refutable and irrefutable patterns, but the compiler warns against irrefutable patterns because, by definition, they’re intended to handle possible failure: The functionality of a conditional is in its ability to perform differently depending on success or failure."
-msgstr ""
+msgstr "Parâmetros de função, instruções `let` e loops `for` só podem aceitar padrões irrefutáveis, porque o programa não consegue fazer nada significativo quando os valores não correspondem. As expressões `if let` e `while let` e a instrução `let...else` aceitam padrões refutáveis e irrefutáveis, mas o compilador emite um aviso contra padrões irrefutáveis porque, por definição, eles se destinam a tratar uma possível falha: a funcionalidade de uma condicional está na sua capacidade de agir de forma diferente conforme o sucesso ou a falha."
 
 #: src/ch19-02-refutability.md
 msgid "In general, you shouldn’t have to worry about the distinction between refutable and irrefutable patterns; however, you do need to be familiar with the concept of refutability so that you can respond when you see it in an error message. In those cases, you’ll need to change either the pattern or the construct you’re using the pattern with, depending on the intended behavior of the code."
-msgstr ""
+msgstr "Em geral, você não precisa se preocupar com a distinção entre padrões refutáveis e irrefutáveis; no entanto, precisa se familiarizar com o conceito de refutabilidade para saber agir quando o vir em uma mensagem de erro. Nesses casos, você vai precisar alterar o padrão ou a construção com a qual você o está usando, dependendo do comportamento pretendido para o código."
 
 #: src/ch19-02-refutability.md
 msgid "Let’s look at an example of what happens when we try to use a refutable pattern where Rust requires an irrefutable pattern and vice versa. Listing 19-8 shows a `let` statement, but for the pattern, we’ve specified `Some(x)`, a refutable pattern. As you might expect, this code will not compile."
-msgstr ""
+msgstr "Vamos ver um exemplo do que acontece quando tentamos usar um padrão refutável onde o Rust exige um padrão irrefutável, e vice-versa. A Listagem 19-8 mostra uma instrução `let`, mas, para o padrão, especificamos `Some(x)`, um padrão refutável. Como esperado, este código não vai compilar."
 
 #: src/ch19-02-refutability.md
 msgid "<Listing number=\"19-8\" caption=\"Attempting to use a refutable pattern with `let`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-8\" caption=\"Tentando usar um padrão refutável com `let`\">\n"
 
 #: src/ch19-02-refutability.md
 msgid "If `some_option_value` were a `None` value, it would fail to match the pattern `Some(x)`, meaning the pattern is refutable. However, the `let` statement can only accept an irrefutable pattern because there is nothing valid the code can do with a `None` value. At compile time, Rust will complain that we’ve tried to use a refutable pattern where an irrefutable pattern is required:"
-msgstr ""
+msgstr "Se `some_option_value` fosse um valor `None`, ele não corresponderia ao padrão `Some(x)`, o que significa que o padrão é refutável. No entanto, a instrução `let` só pode aceitar um padrão irrefutável, porque não há nada válido que o código possa fazer com um valor `None`. Em tempo de compilação, o Rust vai apontar que tentamos usar um padrão refutável onde um padrão irrefutável é exigido:"
 
 #: src/ch19-02-refutability.md
 msgid ""
@@ -19849,27 +19849,27 @@ msgstr ""
 
 #: src/ch19-02-refutability.md
 msgid "Because we didn’t cover (and couldn’t cover!) every valid value with the pattern `Some(x)`, Rust rightfully produces a compiler error."
-msgstr ""
+msgstr "Como não cobrimos (e não poderíamos cobrir!) todos os valores válidos com o padrão `Some(x)`, o Rust, com razão, produz um erro de compilação."
 
 #: src/ch19-02-refutability.md
 msgid "If we have a refutable pattern where an irrefutable pattern is needed, we can fix it by changing the code that uses the pattern: Instead of using `let`, we can use `let...else`. Then, if the pattern doesn’t match, the code in the curly brackets will handle the value. Listing 19-9 shows how to fix the code in Listing 19-8."
-msgstr ""
+msgstr "Se temos um padrão refutável onde é necessário um padrão irrefutável, podemos corrigi-lo alterando o código que usa o padrão: em vez de usar `let`, podemos usar `let...else`. Assim, se o padrão não corresponder, o código entre as chaves vai tratar o valor. A Listagem 19-9 mostra como corrigir o código da Listagem 19-8."
 
 #: src/ch19-02-refutability.md
 msgid "<Listing number=\"19-9\" caption=\"Using `let...else` and a block with refutable patterns instead of `let`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-9\" caption=\"Usando `let...else` e um bloco com padrões refutáveis em vez de `let`\">\n"
 
 #: src/ch19-02-refutability.md
 msgid "We’ve given the code an out! This code is perfectly valid, although it means we cannot use an irrefutable pattern without receiving a warning. If we give `let...else` a pattern that will always match, such as `x`, as shown in Listing 19-10, the compiler will give a warning."
-msgstr ""
+msgstr "Demos ao código uma escapatória! Este código é perfeitamente válido, embora signifique que não podemos usar um padrão irrefutável sem receber um aviso. Se dermos ao `let...else` um padrão que sempre vai corresponder, como `x`, conforme mostrado na Listagem 19-10, o compilador vai emitir um aviso."
 
 #: src/ch19-02-refutability.md
 msgid "<Listing number=\"19-10\" caption=\"Attempting to use an irrefutable pattern with `let...else`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-10\" caption=\"Tentando usar um padrão irrefutável com `let...else`\">\n"
 
 #: src/ch19-02-refutability.md
 msgid "Rust complains that it doesn’t make sense to use `let...else` with an irrefutable pattern because the `else` will never be reached:"
-msgstr ""
+msgstr "O Rust aponta que não faz sentido usar `let...else` com um padrão irrefutável, porque o `else` nunca será alcançado:"
 
 #: src/ch19-02-refutability.md
 msgid ""
@@ -19895,23 +19895,23 @@ msgstr ""
 
 #: src/ch19-02-refutability.md
 msgid "For this reason, match arms must use refutable patterns, except for the last arm, which should match any remaining values with an irrefutable pattern. Rust allows us to use an irrefutable pattern in a `match` with only one arm, but this syntax isn’t particularly useful and could be replaced with a simpler `let` statement."
-msgstr ""
+msgstr "Por esse motivo, os braços de correspondência precisam usar padrões refutáveis, exceto o último braço, que deve corresponder a quaisquer valores restantes com um padrão irrefutável. O Rust permite usar um padrão irrefutável em um `match` com apenas um braço, mas essa sintaxe não é particularmente útil e poderia ser substituída por uma instrução `let` mais simples."
 
 #: src/ch19-02-refutability.md
 msgid "Now that you know where to use patterns and the difference between refutable and irrefutable patterns, let’s cover all the syntax we can use to create patterns."
-msgstr ""
+msgstr "Agora que você sabe onde usar padrões e a diferença entre padrões refutáveis e irrefutáveis, vamos ver toda a sintaxe que podemos usar para criar padrões."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In this section, we gather all the syntax that is valid in patterns and discuss why and when you might want to use each one."
-msgstr ""
+msgstr "Nesta seção, reunimos toda a sintaxe válida em padrões e discutimos por que e quando você pode querer usar cada uma delas."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Matching Literals"
-msgstr ""
+msgstr "Correspondendo a literais {#matching-literals}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "As you saw in Chapter 6, you can match patterns against literals directly. The following code gives some examples:"
-msgstr ""
+msgstr "Como você viu no Capítulo 6, você pode fazer os padrões corresponderem diretamente a literais. O código a seguir dá alguns exemplos:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"one\""
@@ -19931,19 +19931,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code prints `one` because the value in `x` is `1`. This syntax is useful when you want your code to take an action if it gets a particular concrete value."
-msgstr ""
+msgstr "Este código imprime `one` porque o valor em `x` é `1`. Essa sintaxe é útil quando você quer que seu código execute uma ação caso receba um determinado valor concreto."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Matching Named Variables"
-msgstr ""
+msgstr "Correspondendo a variáveis nomeadas {#matching-named-variables}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Named variables are irrefutable patterns that match any value, and we’ve used them many times in this book. However, there is a complication when you use named variables in `match`, `if let`, or `while let` expressions. Because each of these kinds of expressions starts a new scope, variables declared as part of a pattern inside these expressions will shadow those with the same name outside the constructs, as is the case with all variables. In Listing 19-11, we declare a variable named `x` with the value `Some(5)` and a variable `y` with the value `10`. We then create a `match` expression on the value `x`. Look at the patterns in the match arms and `println!` at the end, and try to figure out what the code will print before running this code or reading further."
-msgstr ""
+msgstr "Variáveis nomeadas são padrões irrefutáveis que correspondem a qualquer valor, e nós as usamos muitas vezes neste livro. No entanto, há uma complicação quando você usa variáveis nomeadas em expressões `match`, `if let` ou `while let`. Como cada um desses tipos de expressão inicia um novo escopo, as variáveis declaradas como parte de um padrão dentro dessas expressões vão sombrear as que têm o mesmo nome fora das construções, como acontece com todas as variáveis. Na Listagem 19-11, declaramos uma variável chamada `x` com o valor `Some(5)` e uma variável `y` com o valor `10`. Em seguida, criamos uma expressão `match` sobre o valor `x`. Observe os padrões nos braços de correspondência e o `println!` no final, e tente descobrir o que o código vai imprimir antes de executá-lo ou de continuar lendo."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-11\" file-name=\"src/main.rs\" caption=\"A `match` expression with an arm that introduces a new variable which shadows an existing variable `y`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-11\" file-name=\"src/main.rs\" caption=\"Uma expressão `match` com um braço que introduz uma nova variável que sombreia a variável `y` existente\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Got 50\""
@@ -19963,23 +19963,23 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Let’s walk through what happens when the `match` expression runs. The pattern in the first match arm doesn’t match the defined value of `x`, so the code continues."
-msgstr ""
+msgstr "Vamos percorrer o que acontece quando a expressão `match` é executada. O padrão do primeiro braço de correspondência não corresponde ao valor definido de `x`, então o código segue adiante."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The pattern in the second match arm introduces a new variable named `y` that will match any value inside a `Some` value. Because we’re in a new scope inside the `match` expression, this is a new `y` variable, not the `y` we declared at the beginning with the value `10`. This new `y` binding will match any value inside a `Some`, which is what we have in `x`. Therefore, this new `y` binds to the inner value of the `Some` in `x`. That value is `5`, so the expression for that arm executes and prints `Matched, y = 5`."
-msgstr ""
+msgstr "O padrão do segundo braço de correspondência introduz uma nova variável chamada `y` que vai corresponder a qualquer valor dentro de um valor `Some`. Como estamos em um novo escopo dentro da expressão `match`, esta é uma nova variável `y`, e não o `y` que declaramos no início com o valor `10`. Essa nova vinculação de `y` vai corresponder a qualquer valor dentro de um `Some`, que é o que temos em `x`. Portanto, esse novo `y` se vincula ao valor interno do `Some` em `x`. Esse valor é `5`, então a expressão desse braço é executada e imprime `Matched, y = 5`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "If `x` had been a `None` value instead of `Some(5)`, the patterns in the first two arms wouldn’t have matched, so the value would have matched to the underscore. We didn’t introduce the `x` variable in the pattern of the underscore arm, so the `x` in the expression is still the outer `x` that hasn’t been shadowed. In this hypothetical case, the `match` would print `Default case, x = None`."
-msgstr ""
+msgstr "Se `x` tivesse sido um valor `None` em vez de `Some(5)`, os padrões dos dois primeiros braços não teriam correspondido, então o valor teria correspondido ao sublinhado. Não introduzimos a variável `x` no padrão do braço do sublinhado, então o `x` na expressão continua sendo o `x` externo, que não foi sombreado. Nesse caso hipotético, o `match` imprimiria `Default case, x = None`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "When the `match` expression is done, its scope ends, and so does the scope of the inner `y`. The last `println!` produces `at the end: x = Some(5), y = 10`."
-msgstr ""
+msgstr "Quando a expressão `match` termina, seu escopo acaba, e o escopo do `y` interno também. O último `println!` produz `at the end: x = Some(5), y = 10`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "To create a `match` expression that compares the values of the outer `x` and `y`, rather than introducing a new variable that shadows the existing `y` variable, we would need to use a match guard conditional instead. We’ll talk about match guards later in the [“Adding Conditionals with Match Guards”](#adding-conditionals-with-match-guards)<!-- ignore --> section."
-msgstr ""
+msgstr "Para criar uma expressão `match` que compare os valores do `x` e do `y` externos, em vez de introduzir uma nova variável que sombreia a variável `y` existente, precisaríamos usar uma guarda de correspondência condicional. Veremos as guardas de correspondência mais adiante, na seção [“Adicionando condicionais com guardas de correspondência”](#adding-conditionals-with-match-guards)<!-- ignore -->."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"multiple-patterns\"></a>"
@@ -19987,11 +19987,11 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Matching Multiple Patterns"
-msgstr ""
+msgstr "Correspondendo a vários padrões {#matching-multiple-patterns}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In `match` expressions, you can match multiple patterns using the `|` syntax, which is the pattern _or_ operator. For example, in the following code, we match the value of `x` against the match arms, the first of which has an _or_ option, meaning if the value of `x` matches either of the values in that arm, that arm’s code will run:"
-msgstr ""
+msgstr "Em expressões `match`, você pode corresponder a vários padrões usando a sintaxe `|`, que é o operador _ou_ para padrões. Por exemplo, no código a seguir, comparamos o valor de `x` com os braços de correspondência, sendo que o primeiro deles tem uma opção _ou_, o que significa que, se o valor de `x` corresponder a qualquer um dos valores daquele braço, o código desse braço será executado:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"one or two\""
@@ -19999,15 +19999,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code prints `one or two`."
-msgstr ""
+msgstr "Este código imprime `one or two`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Matching Ranges of Values with `..=`"
-msgstr ""
+msgstr "Correspondendo a intervalos de valores com `..=` {#matching-ranges-of-values-with-}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The `..=` syntax allows us to match to an inclusive range of values. In the following code, when a pattern matches any of the values within the given range, that arm will execute:"
-msgstr ""
+msgstr "A sintaxe `..=` nos permite corresponder a um intervalo inclusivo de valores. No código a seguir, quando um padrão corresponde a qualquer um dos valores dentro do intervalo indicado, esse braço será executado:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"one through five\""
@@ -20019,15 +20019,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "If `x` is `1`, `2`, `3`, `4`, or `5`, the first arm will match. This syntax is more convenient for multiple match values than using the `|` operator to express the same idea; if we were to use `|`, we would have to specify `1 | 2 | 3 | 4 | 5`. Specifying a range is much shorter, especially if we want to match, say, any number between 1 and 1,000!"
-msgstr ""
+msgstr "Se `x` for `1`, `2`, `3`, `4` ou `5`, o primeiro braço vai corresponder. Essa sintaxe é mais conveniente para corresponder a vários valores do que usar o operador `|` para expressar a mesma ideia; se fôssemos usar `|`, teríamos que especificar `1 | 2 | 3 | 4 | 5`. Especificar um intervalo é bem mais curto, especialmente se quisermos corresponder, digamos, a qualquer número entre 1 e 1.000!"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The compiler checks that the range isn’t empty at compile time, and because the only types for which Rust can tell if a range is empty or not are `char` and numeric values, ranges are only allowed with numeric or `char` values."
-msgstr ""
+msgstr "O compilador verifica, em tempo de compilação, que o intervalo não está vazio e, como os únicos tipos para os quais o Rust consegue saber se um intervalo está vazio ou não são `char` e valores numéricos, intervalos só são permitidos com valores numéricos ou `char`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Here is an example using ranges of `char` values:"
-msgstr ""
+msgstr "Aqui está um exemplo usando intervalos de valores `char`:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "'j'"
@@ -20047,15 +20047,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Rust can tell that `'c'` is within the first pattern’s range and prints `early ASCII letter`."
-msgstr ""
+msgstr "O Rust consegue identificar que `'c'` está dentro do intervalo do primeiro padrão e imprime `early ASCII letter`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Destructuring to Break Apart Values"
-msgstr ""
+msgstr "Desestruturando para separar valores {#destructuring-to-break-apart-values}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We can also use patterns to destructure structs, enums, and tuples to use different parts of these values. Let’s walk through each value."
-msgstr ""
+msgstr "Também podemos usar padrões para desestruturar structs, enums e tuplas, de modo a usar diferentes partes desses valores. Vamos analisar cada um desses casos."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"destructuring-structs\"></a>"
@@ -20063,39 +20063,39 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Structs"
-msgstr ""
+msgstr "Structs {#structs}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Listing 19-12 shows a `Point` struct with two fields, `x` and `y`, that we can break apart using a pattern with a `let` statement."
-msgstr ""
+msgstr "A Listagem 19-12 mostra um struct `Point` com dois campos, `x` e `y`, que podemos separar usando um padrão com uma instrução `let`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-12\" file-name=\"src/main.rs\" caption=\"Destructuring a struct’s fields into separate variables\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-12\" file-name=\"src/main.rs\" caption=\"Desestruturando os campos de um struct em variáveis separadas\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code creates the variables `a` and `b` that match the values of the `x` and `y` fields of the `p` struct. This example shows that the names of the variables in the pattern don’t have to match the field names of the struct. However, it’s common to match the variable names to the field names to make it easier to remember which variables came from which fields. Because of this common usage, and because writing `let Point { x: x, y: y } = p;` contains a lot of duplication, Rust has a shorthand for patterns that match struct fields: You only need to list the name of the struct field, and the variables created from the pattern will have the same names. Listing 19-13 behaves in the same way as the code in Listing 19-12, but the variables created in the `let` pattern are `x` and `y` instead of `a` and `b`."
-msgstr ""
+msgstr "Este código cria as variáveis `a` e `b`, que correspondem aos valores dos campos `x` e `y` do struct `p`. Este exemplo mostra que os nomes das variáveis no padrão não precisam corresponder aos nomes dos campos do struct. No entanto, é comum fazer os nomes das variáveis corresponderem aos nomes dos campos, para facilitar lembrar qual variável veio de qual campo. Por causa desse uso comum, e porque escrever `let Point { x: x, y: y } = p;` contém muita repetição, o Rust tem uma forma abreviada para padrões que correspondem a campos de struct: você só precisa listar o nome do campo do struct, e as variáveis criadas a partir do padrão terão os mesmos nomes. A Listagem 19-13 se comporta da mesma forma que o código da Listagem 19-12, mas as variáveis criadas no padrão `let` são `x` e `y`, em vez de `a` e `b`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-13\" file-name=\"src/main.rs\" caption=\"Destructuring struct fields using struct field shorthand\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-13\" file-name=\"src/main.rs\" caption=\"Desestruturando campos de struct usando a forma abreviada para campos de struct\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code creates the variables `x` and `y` that match the `x` and `y` fields of the `p` variable. The outcome is that the variables `x` and `y` contain the values from the `p` struct."
-msgstr ""
+msgstr "Este código cria as variáveis `x` e `y`, que correspondem aos campos `x` e `y` da variável `p`. O resultado é que as variáveis `x` e `y` contêm os valores do struct `p`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We can also destructure with literal values as part of the struct pattern rather than creating variables for all the fields. Doing so allows us to test some of the fields for particular values while creating variables to destructure the other fields."
-msgstr ""
+msgstr "Também podemos desestruturar usando valores literais como parte do padrão de struct, em vez de criar variáveis para todos os campos. Fazer isso nos permite testar alguns dos campos em busca de valores específicos, enquanto criamos variáveis para desestruturar os outros campos."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In Listing 19-14, we have a `match` expression that separates `Point` values into three cases: points that lie directly on the `x` axis (which is true when `y = 0`), on the `y` axis (`x = 0`), or on neither axis."
-msgstr ""
+msgstr "Na Listagem 19-14, temos uma expressão `match` que separa valores `Point` em três casos: pontos que estão diretamente sobre o eixo `x` (o que é verdadeiro quando `y = 0`), sobre o eixo `y` (`x = 0`) ou em nenhum dos dois eixos."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-14\" file-name=\"src/main.rs\" caption=\"Destructuring and matching literal values in one pattern\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-14\" file-name=\"src/main.rs\" caption=\"Desestruturando e correspondendo a valores literais em um único padrão\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"On the x axis at {x}\""
@@ -20111,19 +20111,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The first arm will match any point that lies on the `x` axis by specifying that the `y` field matches if its value matches the literal `0`. The pattern still creates an `x` variable that we can use in the code for this arm."
-msgstr ""
+msgstr "O primeiro braço vai corresponder a qualquer ponto que esteja sobre o eixo `x`, especificando que o campo `y` corresponde se o valor dele for o literal `0`. O padrão ainda cria uma variável `x` que podemos usar no código desse braço."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Similarly, the second arm matches any point on the `y` axis by specifying that the `x` field matches if its value is `0` and creates a variable `y` for the value of the `y` field. The third arm doesn’t specify any literals, so it matches any other `Point` and creates variables for both the `x` and `y` fields."
-msgstr ""
+msgstr "Da mesma forma, o segundo braço corresponde a qualquer ponto sobre o eixo `y`, especificando que o campo `x` corresponde se o valor dele for `0`, e cria uma variável `y` para o valor do campo `y`. O terceiro braço não especifica nenhum literal, então corresponde a qualquer outro `Point` e cria variáveis para os campos `x` e `y`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In this example, the value `p` matches the second arm by virtue of `x` containing a `0`, so this code will print `On the y axis at 7`."
-msgstr ""
+msgstr "Neste exemplo, o valor `p` corresponde ao segundo braço em virtude de `x` conter um `0`, então este código vai imprimir `On the y axis at 7`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Remember that a `match` expression stops checking arms once it has found the first matching pattern, so even though `Point { x: 0, y: 0 }` is on the `x` axis and the `y` axis, this code would only print `On the x axis at 0`."
-msgstr ""
+msgstr "Lembre-se de que uma expressão `match` para de verificar os braços assim que encontra o primeiro padrão correspondente; então, mesmo que `Point { x: 0, y: 0 }` esteja no eixo `x` e no eixo `y`, este código imprimiria apenas `On the x axis at 0`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"destructuring-enums\"></a>"
@@ -20131,15 +20131,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Enums"
-msgstr ""
+msgstr "Enums {#enums}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We’ve destructured enums in this book (for example, Listing 6-5 in Chapter 6), but we haven’t yet explicitly discussed that the pattern to destructure an enum corresponds to the way the data stored within the enum is defined. As an example, in Listing 19-15, we use the `Message` enum from Listing 6-2 and write a `match` with patterns that will destructure each inner value."
-msgstr ""
+msgstr "Já desestruturamos enums neste livro (por exemplo, a Listagem 6-5 do Capítulo 6), mas ainda não discutimos explicitamente que o padrão para desestruturar um enum corresponde à forma como os dados armazenados dentro do enum são definidos. Como exemplo, na Listagem 19-15, usamos o enum `Message` da Listagem 6-2 e escrevemos um `match` com padrões que vão desestruturar cada valor interno."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-15\" file-name=\"src/main.rs\" caption=\"Destructuring enum variants that hold different kinds of values\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-15\" file-name=\"src/main.rs\" caption=\"Desestruturando variantes de enum que armazenam diferentes tipos de valores\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"The Quit variant has no data to destructure.\""
@@ -20159,19 +20159,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code will print `Change color to red 0, green 160, and blue 255`. Try changing the value of `msg` to see the code from the other arms run."
-msgstr ""
+msgstr "Este código vai imprimir `Change color to red 0, green 160, and blue 255`. Experimente mudar o valor de `msg` para ver o código dos outros braços sendo executado."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "For enum variants without any data, like `Message::Quit`, we can’t destructure the value any further. We can only match on the literal `Message::Quit` value, and no variables are in that pattern."
-msgstr ""
+msgstr "Para variantes de enum sem dados, como `Message::Quit`, não podemos desestruturar o valor ainda mais. Só podemos corresponder ao valor literal `Message::Quit`, e nenhuma variável está nesse padrão."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "For struct-like enum variants, such as `Message::Move`, we can use a pattern similar to the pattern we specify to match structs. After the variant name, we place curly brackets and then list the fields with variables so that we break apart the pieces to use in the code for this arm. Here we use the shorthand form as we did in Listing 19-13."
-msgstr ""
+msgstr "Para variantes de enum semelhantes a structs, como `Message::Move`, podemos usar um padrão parecido com o padrão que especificamos para corresponder a structs. Depois do nome da variante, colocamos chaves e então listamos os campos com variáveis, para separar as partes e usá-las no código deste braço. Aqui usamos a forma abreviada, como fizemos na Listagem 19-13."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "For tuple-like enum variants, like `Message::Write` that holds a tuple with one element and `Message::ChangeColor` that holds a tuple with three elements, the pattern is similar to the pattern we specify to match tuples. The number of variables in the pattern must match the number of elements in the variant we’re matching."
-msgstr ""
+msgstr "Para variantes de enum semelhantes a tuplas, como `Message::Write`, que armazena uma tupla com um elemento, e `Message::ChangeColor`, que armazena uma tupla com três elementos, o padrão é parecido com o padrão que especificamos para corresponder a tuplas. O número de variáveis no padrão precisa corresponder ao número de elementos da variante com que estamos correspondendo."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"destructuring-nested-structs-and-enums\"></a>"
@@ -20179,15 +20179,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Nested Structs and Enums"
-msgstr ""
+msgstr "Structs e enums aninhados {#nested-structs-and-enums}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "So far, our examples have all been matching structs or enums one level deep, but matching can work on nested items too! For example, we can refactor the code in Listing 19-15 to support RGB and HSV colors in the `ChangeColor` message, as shown in Listing 19-16."
-msgstr ""
+msgstr "Até agora, todos os nossos exemplos fizeram correspondência com structs ou enums em um único nível de profundidade, mas a correspondência também pode funcionar com itens aninhados! Por exemplo, podemos refatorar o código da Listagem 19-15 para oferecer suporte a cores RGB e HSV na mensagem `ChangeColor`, como mostrado na Listagem 19-16."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-16\" caption=\"Matching on nested enums\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-16\" caption=\"Correspondendo a enums aninhados\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Change color to hue {h}, saturation {s}, value {v}\""
@@ -20195,7 +20195,7 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The pattern of the first arm in the `match` expression matches a `Message::ChangeColor` enum variant that contains a `Color::Rgb` variant; then, the pattern binds to the three inner `i32` values. The pattern of the second arm also matches a `Message::ChangeColor` enum variant, but the inner enum matches `Color::Hsv` instead. We can specify these complex conditions in one `match` expression, even though two enums are involved."
-msgstr ""
+msgstr "O padrão do primeiro braço da expressão `match` corresponde a uma variante de enum `Message::ChangeColor` que contém uma variante `Color::Rgb`; então, o padrão se vincula aos três valores internos `i32`. O padrão do segundo braço também corresponde a uma variante de enum `Message::ChangeColor`, mas o enum interno corresponde a `Color::Hsv`. Podemos especificar essas condições complexas em uma única expressão `match`, mesmo que dois enums estejam envolvidos."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"destructuring-structs-and-tuples\"></a>"
@@ -20203,27 +20203,27 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Structs and Tuples"
-msgstr ""
+msgstr "Structs e tuplas {#structs-and-tuples}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We can mix, match, and nest destructuring patterns in even more complex ways. The following example shows a complicated destructure where we nest structs and tuples inside a tuple and destructure all the primitive values out:"
-msgstr ""
+msgstr "Podemos misturar, combinar e aninhar padrões de desestruturação de maneiras ainda mais complexas. O exemplo a seguir mostra uma desestruturação complicada, em que aninhamos structs e tuplas dentro de uma tupla e desestruturamos todos os valores primitivos:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code lets us break complex types into their component parts so that we can use the values we’re interested in separately."
-msgstr ""
+msgstr "Este código nos permite separar tipos complexos em suas partes componentes, para que possamos usar separadamente os valores que nos interessam."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Destructuring with patterns is a convenient way to use pieces of values, such as the value from each field in a struct, separately from each other."
-msgstr ""
+msgstr "A desestruturação com padrões é uma forma prática de usar partes de valores, como o valor de cada campo de um struct, separadamente das demais."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Ignoring Values in a Pattern"
-msgstr ""
+msgstr "Ignorando valores em um padrão {#ignoring-values-in-a-pattern}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "You’ve seen that it’s sometimes useful to ignore values in a pattern, such as in the last arm of a `match`, to get a catch-all that doesn’t actually do anything but does account for all remaining possible values. There are a few ways to ignore entire values or parts of values in a pattern: using the `_` pattern (which you’ve seen), using the `_` pattern within another pattern, using a name that starts with an underscore, or using `..` to ignore remaining parts of a value. Let’s explore how and why to use each of these patterns."
-msgstr ""
+msgstr "Você já viu que às vezes é útil ignorar valores em um padrão, como no último braço de um `match`, para obter um curinga que não faz nada de fato, mas que contempla todos os valores restantes possíveis. Há algumas formas de ignorar valores completos ou partes de valores em um padrão: usando o padrão `_` (que você já viu), usando o padrão `_` dentro de outro padrão, usando um nome que começa com um sublinhado ou usando `..` para ignorar as partes restantes de um valor. Vamos explorar como e por que usar cada um desses padrões."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"ignoring-an-entire-value-with-_\"></a>"
@@ -20231,15 +20231,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "An Entire Value with `_`"
-msgstr ""
+msgstr "Um valor completo com `_`"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We’ve used the underscore as a wildcard pattern that will match any value but not bind to the value. This is especially useful as the last arm in a `match` expression, but we can also use it in any pattern, including function parameters, as shown in Listing 19-17."
-msgstr ""
+msgstr "Já usamos o sublinhado como um padrão curinga que corresponde a qualquer valor, mas não se vincula ao valor. Isso é especialmente útil como o último braço de uma expressão `match`, mas também podemos usá-lo em qualquer padrão, incluindo parâmetros de função, como mostrado na Listagem 19-17."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-17\" file-name=\"src/main.rs\" caption=\"Using `_` in a function signature\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-17\" file-name=\"src/main.rs\" caption=\"Usando `_` na assinatura de uma função\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"This code only uses the y parameter: {y}\""
@@ -20247,11 +20247,11 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code will completely ignore the value `3` passed as the first argument, and will print `This code only uses the y parameter: 4`."
-msgstr ""
+msgstr "Este código vai ignorar completamente o valor `3` passado como primeiro argumento e vai imprimir `This code only uses the y parameter: 4`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In most cases when you no longer need a particular function parameter, you would change the signature so that it doesn’t include the unused parameter. Ignoring a function parameter can be especially useful in cases when, for example, you’re implementing a trait when you need a certain type signature but the function body in your implementation doesn’t need one of the parameters. You then avoid getting a compiler warning about unused function parameters, as you would if you used a name instead."
-msgstr ""
+msgstr "Na maioria dos casos, quando você não precisa mais de um parâmetro de função específico, você mudaria a assinatura para que ela não incluísse o parâmetro não usado. Ignorar um parâmetro de função pode ser especialmente útil em casos como, por exemplo, quando você está implementando um trait que exige uma determinada assinatura de tipo, mas o corpo da função na sua implementação não precisa de um dos parâmetros. Assim, você evita receber um aviso do compilador sobre parâmetros de função não usados, como receberia se usasse um nome."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"ignoring-parts-of-a-value-with-a-nested-_\"></a>"
@@ -20259,15 +20259,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Parts of a Value with a Nested `_`"
-msgstr ""
+msgstr "Partes de um valor com um `_` aninhado"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We can also use `_` inside another pattern to ignore just part of a value, for example, when we want to test for only part of a value but have no use for the other parts in the corresponding code we want to run. Listing 19-18 shows code responsible for managing a setting’s value. The business requirements are that the user should not be allowed to overwrite an existing customization of a setting but can unset the setting and give it a value if it is currently unset."
-msgstr ""
+msgstr "Também podemos usar `_` dentro de outro padrão para ignorar apenas parte de um valor, por exemplo, quando queremos testar apenas parte de um valor, mas não precisamos das outras partes no código correspondente que queremos executar. A Listagem 19-18 mostra um código responsável por gerenciar o valor de uma configuração. Os requisitos de negócio determinam que o usuário não deve poder sobrescrever uma personalização existente de uma configuração, mas pode desfazer a definição da configuração e dar a ela um valor se ela não estiver definida no momento."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-18\" caption=\"Using an underscore within patterns that match `Some` variants when we don’t need to use the value inside the `Some`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-18\" caption=\"Usando um sublinhado dentro de padrões que correspondem a variantes `Some` quando não precisamos usar o valor dentro do `Some`\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Can't overwrite an existing customized value\""
@@ -20279,19 +20279,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code will print `Can't overwrite an existing customized value` and then `setting is Some(5)`. In the first match arm, we don’t need to match on or use the values inside either `Some` variant, but we do need to test for the case when `setting_value` and `new_setting_value` are the `Some` variant. In that case, we print the reason for not changing `setting_value`, and it doesn’t get changed."
-msgstr ""
+msgstr "Este código vai imprimir `Can't overwrite an existing customized value` e, em seguida, `setting is Some(5)`. No primeiro braço de correspondência, não precisamos corresponder nem usar os valores dentro de nenhuma das duas variantes `Some`, mas precisamos testar o caso em que `setting_value` e `new_setting_value` são a variante `Some`. Nesse caso, imprimimos o motivo para não alterar `setting_value`, e ele não é alterado."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In all other cases (if either `setting_value` or `new_setting_value` is `None`) expressed by the `_` pattern in the second arm, we want to allow `new_setting_value` to become `setting_value`."
-msgstr ""
+msgstr "Em todos os outros casos (se `setting_value` ou `new_setting_value` for `None`), expressos pelo padrão `_` no segundo braço, queremos permitir que `new_setting_value` se torne `setting_value`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We can also use underscores in multiple places within one pattern to ignore particular values. Listing 19-19 shows an example of ignoring the second and fourth values in a tuple of five items."
-msgstr ""
+msgstr "Também podemos usar sublinhados em vários lugares dentro de um único padrão para ignorar valores específicos. A Listagem 19-19 mostra um exemplo de ignorar o segundo e o quarto valores em uma tupla de cinco itens."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-19\" caption=\"Ignoring multiple parts of a tuple\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-19\" caption=\"Ignorando várias partes de uma tupla\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Some numbers: {first}, {third}, {fifth}\""
@@ -20299,7 +20299,7 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code will print `Some numbers: 2, 8, 32`, and the values `4` and `16` will be ignored."
-msgstr ""
+msgstr "Este código vai imprimir `Some numbers: 2, 8, 32`, e os valores `4` e `16` serão ignorados."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"ignoring-an-unused-variable-by-starting-its-name-with-_\"></a>"
@@ -20307,27 +20307,27 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "An Unused Variable by Starting Its Name with `_`"
-msgstr ""
+msgstr "Uma variável não usada ao começar o nome com `_`"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "If you create a variable but don’t use it anywhere, Rust will usually issue a warning because an unused variable could be a bug. However, sometimes it’s useful to be able to create a variable you won’t use yet, such as when you’re prototyping or just starting a project. In this situation, you can tell Rust not to warn you about the unused variable by starting the name of the variable with an underscore. In Listing 19-20, we create two unused variables, but when we compile this code, we should only get a warning about one of them."
-msgstr ""
+msgstr "Se você criar uma variável, mas não a usar em lugar nenhum, o Rust normalmente emite um aviso, porque uma variável não usada pode ser um bug. No entanto, às vezes é útil poder criar uma variável que você ainda não vai usar, como quando está prototipando ou apenas começando um projeto. Nessa situação, você pode pedir ao Rust que não avise sobre a variável não usada, começando o nome da variável com um sublinhado. Na Listagem 19-20, criamos duas variáveis não usadas, mas, quando compilamos este código, deveríamos receber um aviso apenas sobre uma delas."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-20\" file-name=\"src/main.rs\" caption=\"Starting a variable name with an underscore to avoid getting unused variable warnings\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-20\" file-name=\"src/main.rs\" caption=\"Começando o nome de uma variável com um sublinhado para evitar avisos de variável não usada\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Here, we get a warning about not using the variable `y`, but we don’t get a warning about not using `_x`."
-msgstr ""
+msgstr "Aqui, recebemos um aviso sobre não usar a variável `y`, mas não recebemos um aviso sobre não usar `_x`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Note that there is a subtle difference between using only `_` and using a name that starts with an underscore. The syntax `_x` still binds the value to the variable, whereas `_` doesn’t bind at all. To show a case where this distinction matters, Listing 19-21 will provide us with an error."
-msgstr ""
+msgstr "Observe que há uma diferença sutil entre usar apenas `_` e usar um nome que começa com um sublinhado. A sintaxe `_x` ainda vincula o valor à variável, enquanto `_` não vincula nada. Para mostrar um caso em que essa distinção importa, a Listagem 19-21 vai gerar um erro."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-21\" caption=\"An unused variable starting with an underscore still binds the value, which might take ownership of the value.\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-21\" caption=\"Uma variável não usada que começa com sublinhado ainda vincula o valor, o que pode assumir o ownership do valor.\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"found a string\""
@@ -20339,15 +20339,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We’ll receive an error because the `s` value will still be moved into `_s`, which prevents us from using `s` again. However, using the underscore by itself doesn’t ever bind to the value. Listing 19-22 will compile without any errors because `s` doesn’t get moved into `_`."
-msgstr ""
+msgstr "Vamos receber um erro porque o valor de `s` ainda será movido para `_s`, o que nos impede de usar `s` novamente. No entanto, usar o sublinhado sozinho nunca vincula o valor. A Listagem 19-22 vai compilar sem nenhum erro, porque `s` não é movido para `_`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-22\" caption=\"Using an underscore does not bind the value.\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-22\" caption=\"Usar um sublinhado não vincula o valor.\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code works just fine because we never bind `s` to anything; it isn’t moved."
-msgstr ""
+msgstr "Este código funciona perfeitamente, porque nunca vinculamos `s` a nada; ele não é movido."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"ignoring-remaining-parts-of-a-value-with-\"></a>"
@@ -20355,15 +20355,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Remaining Parts of a Value with `..`"
-msgstr ""
+msgstr "Partes restantes de um valor com `..` {#remaining-parts-of-a-value-with-}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "With values that have many parts, we can use the `..` syntax to use specific parts and ignore the rest, avoiding the need to list underscores for each ignored value. The `..` pattern ignores any parts of a value that we haven’t explicitly matched in the rest of the pattern. In Listing 19-23, we have a `Point` struct that holds a coordinate in three-dimensional space. In the `match` expression, we want to operate only on the `x` coordinate and ignore the values in the `y` and `z` fields."
-msgstr ""
+msgstr "Com valores que têm muitas partes, podemos usar a sintaxe `..` para usar partes específicas e ignorar o restante, evitando a necessidade de listar sublinhados para cada valor ignorado. O padrão `..` ignora quaisquer partes de um valor que não tenhamos correspondido explicitamente no restante do padrão. Na Listagem 19-23, temos um struct `Point` que armazena uma coordenada no espaço tridimensional. Na expressão `match`, queremos trabalhar apenas com a coordenada `x` e ignorar os valores dos campos `y` e `z`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-23\" caption=\"Ignoring all fields of a `Point` except for `x` by using `..`\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-23\" caption=\"Ignorando todos os campos de um `Point`, exceto `x`, usando `..`\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"x is {x}\""
@@ -20371,15 +20371,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "We list the `x` value and then just include the `..` pattern. This is quicker than having to list `y: _` and `z: _`, particularly when we’re working with structs that have lots of fields in situations where only one or two fields are relevant."
-msgstr ""
+msgstr "Listamos o valor de `x` e depois apenas incluímos o padrão `..`. Isso é mais rápido do que listar `y: _` e `z: _`, principalmente quando trabalhamos com structs que têm muitos campos, em situações nas quais só um ou dois campos são relevantes."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The syntax `..` will expand to as many values as it needs to be. Listing 19-24 shows how to use `..` with a tuple."
-msgstr ""
+msgstr "A sintaxe `..` se expande para quantos valores forem necessários. A Listagem 19-24 mostra como usar `..` com uma tupla."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-24\" file-name=\"src/main.rs\" caption=\"Matching only the first and last values in a tuple and ignoring all other values\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-24\" file-name=\"src/main.rs\" caption=\"Correspondendo apenas ao primeiro e ao último valor de uma tupla e ignorando todos os outros valores\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Some numbers: {first}, {last}\""
@@ -20387,15 +20387,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In this code, the first and last values are matched with `first` and `last`. The `..` will match and ignore everything in the middle."
-msgstr ""
+msgstr "Neste código, o primeiro e o último valores são vinculados a `first` e `last`. O `..` corresponde e ignora tudo o que está no meio."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "However, using `..` must be unambiguous. If it is unclear which values are intended for matching and which should be ignored, Rust will give us an error. Listing 19-25 shows an example of using `..` ambiguously, so it will not compile."
-msgstr ""
+msgstr "No entanto, o uso de `..` precisa ser inequívoco. Se não estiver claro quais valores são destinados à correspondência e quais devem ser ignorados, o Rust vai gerar um erro. A Listagem 19-25 mostra um exemplo de uso ambíguo de `..`, então ele não vai compilar."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-25\" file-name=\"src/main.rs\" caption=\"An attempt to use `..` in an ambiguous way\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-25\" file-name=\"src/main.rs\" caption=\"Uma tentativa de usar `..` de forma ambígua\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Some numbers: {second}\""
@@ -20403,7 +20403,7 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "When we compile this example, we get this error:"
-msgstr ""
+msgstr "Quando compilamos este exemplo, recebemos este erro:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid ""
@@ -20424,7 +20424,7 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "It’s impossible for Rust to determine how many values in the tuple to ignore before matching a value with `second` and then how many further values to ignore thereafter. This code could mean that we want to ignore `2`, bind `second` to `4`, and then ignore `8`, `16`, and `32`; or that we want to ignore `2` and `4`, bind `second` to `8`, and then ignore `16` and `32`; and so forth. The variable name `second` doesn’t mean anything special to Rust, so we get a compiler error because using `..` in two places like this is ambiguous."
-msgstr ""
+msgstr "É impossível para o Rust determinar quantos valores da tupla ignorar antes de vincular um valor a `second` e, depois, quantos outros valores ignorar a partir daí. Este código poderia significar que queremos ignorar `2`, vincular `second` a `4` e, em seguida, ignorar `8`, `16` e `32`; ou que queremos ignorar `2` e `4`, vincular `second` a `8` e, depois, ignorar `16` e `32`; e assim por diante. O nome da variável `second` não significa nada de especial para o Rust, então recebemos um erro de compilação, porque usar `..` em dois lugares como este é ambíguo."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"extra-conditionals-with-match-guards\"></a>"
@@ -20432,19 +20432,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Adding Conditionals with Match Guards"
-msgstr ""
+msgstr "Adicionando condicionais com guardas de correspondência {#adding-conditionals-with-match-guards}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "A _match guard_ is an additional `if` condition, specified after the pattern in a `match` arm, that must also match for that arm to be chosen. Match guards are useful for expressing more complex ideas than a pattern alone allows. Note, however, that they are only available in `match` expressions, not `if let` or `while let` expressions."
-msgstr ""
+msgstr "Uma _guarda de correspondência_ é uma condição `if` adicional, especificada depois do padrão em um braço do `match`, que também precisa ser verdadeira para que esse braço seja escolhido. Guardas de correspondência são úteis para expressar ideias mais complexas do que um padrão sozinho permite. Observe, porém, que elas só estão disponíveis em expressões `match`, e não em expressões `if let` ou `while let`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The condition can use variables created in the pattern. Listing 19-26 shows a `match` where the first arm has the pattern `Some(x)` and also has a match guard of `if x % 2 == 0` (which will be `true` if the number is even)."
-msgstr ""
+msgstr "A condição pode usar variáveis criadas no padrão. A Listagem 19-26 mostra uma expressão `match` em que o primeiro braço tem o padrão `Some(x)` e também tem uma guarda de correspondência `if x % 2 == 0` (que será `true` se o número for par)."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-26\" caption=\"Adding a match guard to a pattern\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-26\" caption=\"Adicionando uma guarda de correspondência a um padrão\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"The number {x} is even\""
@@ -20456,23 +20456,23 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This example will print `The number 4 is even`. When `num` is compared to the pattern in the first arm, it matches because `Some(4)` matches `Some(x)`. Then, the match guard checks whether the remainder of dividing `x` by 2 is equal to 0, and because it is, the first arm is selected."
-msgstr ""
+msgstr "Este exemplo vai imprimir `The number 4 is even`. Quando `num` é comparado ao padrão do primeiro braço, ele corresponde, porque `Some(4)` corresponde a `Some(x)`. Em seguida, a guarda de correspondência verifica se o resto da divisão de `x` por 2 é igual a 0 e, como isso é verdadeiro, o primeiro braço é escolhido."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "If `num` had been `Some(5)` instead, the match guard in the first arm would have been `false` because the remainder of 5 divided by 2 is 1, which is not equal to 0. Rust would then go to the second arm, which would match because the second arm doesn’t have a match guard and therefore matches any `Some` variant."
-msgstr ""
+msgstr "Se `num` tivesse sido `Some(5)`, a guarda de correspondência do primeiro braço teria sido `false`, porque o resto da divisão de 5 por 2 é 1, que não é igual a 0. O Rust então passaria para o segundo braço, que corresponderia, porque esse braço não tem guarda de correspondência e, por isso, corresponde a qualquer variante `Some`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "There is no way to express the `if x % 2 == 0` condition within a pattern, so the match guard gives us the ability to express this logic. The downside of this additional expressiveness is that the compiler doesn’t try to check for exhaustiveness when match guard expressions are involved."
-msgstr ""
+msgstr "Não há como expressar a condição `if x % 2 == 0` dentro de um padrão, então a guarda de correspondência nos dá a capacidade de expressar essa lógica. A desvantagem dessa expressividade adicional é que o compilador não tenta verificar a exaustividade quando há guardas de correspondência envolvidas."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "When discussing Listing 19-11, we mentioned that we could use match guards to solve our pattern-shadowing problem. Recall that we created a new variable inside the pattern in the `match` expression instead of using the variable outside the `match`. That new variable meant we couldn’t test against the value of the outer variable. Listing 19-27 shows how we can use a match guard to fix this problem."
-msgstr ""
+msgstr "Ao discutir a Listagem 19-11, mencionamos que poderíamos usar guardas de correspondência para resolver nosso problema de sombreamento causado por padrões. Lembre-se de que criamos uma nova variável dentro do padrão na expressão `match`, em vez de usar a variável de fora do `match`. Essa nova variável significava que não podíamos testar contra o valor da variável externa. A Listagem 19-27 mostra como podemos usar uma guarda de correspondência para resolver esse problema."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-27\" file-name=\"src/main.rs\" caption=\"Using a match guard to test for equality with an outer variable\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-27\" file-name=\"src/main.rs\" caption=\"Usando uma guarda de correspondência para testar a igualdade com uma variável externa\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Matched, n = {n}\""
@@ -20480,19 +20480,19 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This code will now print `Default case, x = Some(5)`. The pattern in the second match arm doesn’t introduce a new variable `y` that would shadow the outer `y`, meaning we can use the outer `y` in the match guard. Instead of specifying the pattern as `Some(y)`, which would have shadowed the outer `y`, we specify `Some(n)`. This creates a new variable `n` that doesn’t shadow anything because there is no `n` variable outside the `match`."
-msgstr ""
+msgstr "Este código agora vai imprimir `Default case, x = Some(5)`. O padrão do segundo braço de correspondência não introduz uma nova variável `y` que sombrearia o `y` externo, o que significa que podemos usar o `y` externo na guarda de correspondência. Em vez de especificar o padrão como `Some(y)`, que teria sombreado o `y` externo, especificamos `Some(n)`. Isso cria uma nova variável `n` que não sombreia nada, porque não existe nenhuma variável `n` fora do `match`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The match guard `if n == y` is not a pattern and therefore doesn’t introduce new variables. This `y` _is_ the outer `y` rather than a new `y` shadowing it, and we can look for a value that has the same value as the outer `y` by comparing `n` to `y`."
-msgstr ""
+msgstr "A guarda de correspondência `if n == y` não é um padrão e, por isso, não introduz novas variáveis. Este `y` _é_ o `y` externo, e não um novo `y` sombreando-o, e podemos procurar um valor que tenha o mesmo valor do `y` externo comparando `n` com `y`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "You can also use the _or_ operator `|` in a match guard to specify multiple patterns; the match guard condition will apply to all the patterns. Listing 19-28 shows the precedence when combining a pattern that uses `|` with a match guard. The important part of this example is that the `if y` match guard applies to `4`, `5`, _and_ `6`, even though it might look like `if y` only applies to `6`."
-msgstr ""
+msgstr "Você também pode usar o operador _ou_ `|` em uma guarda de correspondência para especificar vários padrões; a condição da guarda de correspondência vai se aplicar a todos os padrões. A Listagem 19-28 mostra a precedência ao combinar um padrão que usa `|` com uma guarda de correspondência. A parte importante deste exemplo é que a guarda de correspondência `if y` se aplica a `4`, `5` _e_ `6`, mesmo que pareça que `if y` se aplica apenas a `6`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-28\" caption=\"Combining multiple patterns with a match guard\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-28\" caption=\"Combinando vários padrões com uma guarda de correspondência\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"yes\""
@@ -20504,15 +20504,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The match condition states that the arm only matches if the value of `x` is equal to `4`, `5`, or `6` _and_ if `y` is `true`. When this code runs, the pattern of the first arm matches because `x` is `4`, but the match guard `if y` is `false`, so the first arm is not chosen. The code moves on to the second arm, which does match, and this program prints `no`. The reason is that the `if` condition applies to the whole pattern `4 | 5 | 6`, not just to the last value `6`. In other words, the precedence of a match guard in relation to a pattern behaves like this:"
-msgstr ""
+msgstr "A condição de correspondência afirma que o braço só corresponde se o valor de `x` for igual a `4`, `5` ou `6` _e_ se `y` for `true`. Quando este código é executado, o padrão do primeiro braço corresponde, porque `x` é `4`, mas a guarda de correspondência `if y` é `false`, então o primeiro braço não é escolhido. O código passa para o segundo braço, que corresponde, e este programa imprime `no`. O motivo é que a condição `if` se aplica ao padrão inteiro `4 | 5 | 6`, e não apenas ao último valor, `6`. Em outras palavras, a precedência de uma guarda de correspondência em relação a um padrão se comporta assim:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "rather than this:"
-msgstr ""
+msgstr "em vez de assim:"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "After running the code, the precedence behavior is evident: If the match guard were applied only to the final value in the list of values specified using the `|` operator, the arm would have matched, and the program would have printed `yes`."
-msgstr ""
+msgstr "Depois de executar o código, o comportamento de precedência fica evidente: se a guarda de correspondência fosse aplicada apenas ao valor final da lista de valores especificada com o operador `|`, o braço teria correspondido, e o programa teria impresso `yes`."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<a id=\"-bindings\"></a>"
@@ -20520,15 +20520,15 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Using `@` Bindings"
-msgstr ""
+msgstr "Usando vinculações com `@` {#using--bindings}"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "The _at_ operator `@` lets us create a variable that holds a value at the same time we’re testing that value for a pattern match. In Listing 19-29, we want to test that a `Message::Hello` `id` field is within the range `3..=7`. We also want to bind the value to the variable `id` so that we can use it in the code associated with the arm."
-msgstr ""
+msgstr "O operador _at_ `@` permite criar uma variável que guarda um valor no mesmo momento em que testamos se esse valor corresponde a um padrão. Na Listagem 19-29, queremos testar se o campo `id` da variante `Message::Hello` está dentro do intervalo `3..=7`. Também queremos vincular o valor à variável `id`, para que possamos usá-lo no código associado ao braço."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "<Listing number=\"19-29\" caption=\"Using `@` to bind to a value in a pattern while also testing it\">\n"
-msgstr ""
+msgstr "<Listing number=\"19-29\" caption=\"Usando `@` para vincular a um valor em um padrão enquanto também o testa\">\n"
 
 #: src/ch19-03-pattern-syntax.md
 msgid "\"Found an id in range: {id}\""
@@ -20544,27 +20544,27 @@ msgstr ""
 
 #: src/ch19-03-pattern-syntax.md
 msgid "This example will print `Found an id in range: 5`. By specifying `id @` before the range `3..=7`, we’re capturing whatever value matched the range in a variable named `id` while also testing that the value matched the range pattern."
-msgstr ""
+msgstr "Este exemplo vai imprimir `Found an id in range: 5`. Ao especificar `id @` antes do intervalo `3..=7`, estamos capturando qualquer valor que correspondeu ao intervalo em uma variável chamada `id`, ao mesmo tempo em que testamos se o valor correspondeu ao padrão de intervalo."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In the second arm, where we only have a range specified in the pattern, the code associated with the arm doesn’t have a variable that contains the actual value of the `id` field. The `id` field’s value could have been 10, 11, or 12, but the code that goes with that pattern doesn’t know which it is. The pattern code isn’t able to use the value from the `id` field because we haven’t saved the `id` value in a variable."
-msgstr ""
+msgstr "No segundo braço, em que temos apenas um intervalo especificado no padrão, o código associado ao braço não tem uma variável que contenha o valor real do campo `id`. O valor do campo `id` poderia ser 10, 11 ou 12, mas o código que acompanha esse padrão não sabe qual deles é. O código do padrão não consegue usar o valor do campo `id`, porque não guardamos o valor de `id` em uma variável."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "In the last arm, where we’ve specified a variable without a range, we do have the value available to use in the arm’s code in a variable named `id`. The reason is that we’ve used the struct field shorthand syntax. But we haven’t applied any test to the value in the `id` field in this arm, as we did with the first two arms: Any value would match this pattern."
-msgstr ""
+msgstr "No último braço, em que especificamos uma variável sem intervalo, temos o valor disponível para ser usado no código do braço, em uma variável chamada `id`. O motivo é que usamos a forma abreviada para campos de struct. Mas não aplicamos nenhum teste ao valor do campo `id` neste braço, como fizemos nos dois primeiros braços: qualquer valor corresponderia a este padrão."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Using `@` lets us test a value and save it in a variable within one pattern."
-msgstr ""
+msgstr "Usar `@` nos permite testar um valor e guardá-lo em uma variável dentro de um único padrão."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Rust’s patterns are very useful in distinguishing between different kinds of data. When used in `match` expressions, Rust ensures that your patterns cover every possible value, or your program won’t compile. Patterns in `let` statements and function parameters make those constructs more useful, enabling the destructuring of values into smaller parts and assigning those parts to variables. We can create simple or complex patterns to suit our needs."
-msgstr ""
+msgstr "Os padrões do Rust são muito úteis para distinguir entre diferentes tipos de dados. Quando usados em expressões `match`, o Rust garante que seus padrões cubram todos os valores possíveis, ou seu programa não vai compilar. Padrões em instruções `let` e em parâmetros de função tornam essas construções mais úteis, permitindo a desestruturação de valores em partes menores e a atribuição dessas partes a variáveis. Podemos criar padrões simples ou complexos para atender às nossas necessidades."
 
 #: src/ch19-03-pattern-syntax.md
 msgid "Next, for the penultimate chapter of the book, we’ll look at some advanced aspects of a variety of Rust’s features."
-msgstr ""
+msgstr "A seguir, no penúltimo capítulo do livro, vamos analisar alguns aspectos avançados de vários recursos do Rust."
 
 #: src/ch20-00-advanced-features.md
 msgid "By now, you’ve learned the most commonly used parts of the Rust programming language. Before we do one more project, in Chapter 21, we’ll look at a few aspects of the language you might run into every once in a while but may not use every day. You can use this chapter as a reference for when you encounter any unknowns. The features covered here are useful in very specific situations. Although you might not reach for them often, we want to make sure you have a grasp of all the features Rust has to offer."
