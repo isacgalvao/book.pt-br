@@ -18,8 +18,10 @@
 #
 # O preparar e o montar executam código do upstream (o build compila os preprocessors de
 # packages/mdbook-trpl e o book.toml manda rodá-los). Por isso nenhum dos dois tem token de
-# escrita nem segredo, e o cache só é salvo antes do merge. A lista de commits, os msgid e
-# as respostas da IA são dados não confiáveis: vão escapados para o corpo do PR.
+# escrita nem segredo, e o cache só é salvo antes do merge. O script que o traduzir roda
+# (traduz_delta.py da main) é separado e tem o sha256 calculado ANTES do merge; o traduzir
+# confere esse sha256 e roda o Python isolado (-I). A lista de commits, os msgid e as
+# respostas da IA são dados não confiáveis: vão escapados para o corpo do PR.
 #
 # CONFIGURAÇÃO (feita pelo mantenedor; até lá o workflow termina sem fazer nada)
 #   - GitHub App instalado só neste repositório, com permissões de repositório
@@ -36,6 +38,8 @@
 #     sem ela). O ruleset da main não pode bloquear o push do App em sync/*. O Pages não
 #     é usado aqui (é do ptbr-deploy.yml). Como o PR é aberto pelo App, e não pelo
 #     GITHUB_TOKEN, os workflows de CI rodam nele.
+#   - O agendamento e o botão "Run workflow" só valem com este arquivo na main (branch
+#     padrão); no spike/migracao-po ele não roda sozinho.
 #
 # KEEP-ALIVE: o GitHub desativa workflows agendados depois de 60 dias sem atividade no
 # repositório. Cada PR de sync conta como atividade, mas um upstream parado por 2 meses
@@ -45,11 +49,13 @@
 # OPERAÇÃO
 #   - Execução manual: workflow_dispatch com upstream_ref (branch, tag ou sha completo do
 #     rust-lang/book; padrão main) e dry_run (prepara, traduz e monta, mas não faz push,
-#     PR nem issue).
+#     PR nem issue; o alarme de atraso ainda marca a execução como falha).
 #   - Sem mudança no upstream (ou com o PR de sync já atualizado) termina em poucos minutos.
 #   - O PR acumula: cada execução refaz o branch a partir da main com o upstream mais novo.
 #     Um commit manual no branch sync/upstream nunca é sobrescrito: o publicar recusa e
 #     abre a issue. Para refazer um PR, feche-o (ou apague o branch) e rode de novo.
+#     Limitação: ao refazer o branch, a IA porta de novo o delta inteiro (não reaproveita o
+#     porte da versão anterior do PR); custa centavos, mas as respostas podem variar.
 #   - Alarme de atraso: upstream mais de 21 dias à frente do merge-base sem PR sync/*
 #     aberto. O alarme não impede o PR (senão o sync nunca se recuperaria): o job
 #     sync-quebrado abre a issue e marca a execução como falha.
@@ -104,6 +110,8 @@ jobs:
     name: Prepara o merge e o delta (sem segredos)
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # O GitHub dá permissões por job, não por passo: o GITHUB_TOKEN (só leitura) existe no
+    # job inteiro, mas só o passo "Lista os PRs de sync abertos" o recebe, antes do merge.
     permissions:
       contents: read
       pull-requests: read   # só para listar os PRs sync/* abertos (alarme de atraso)
@@ -117,6 +125,7 @@ jobs:
       upstream_sha: ${{ steps.upstream.outputs.upstream_sha }}
       merge_sha: ${{ steps.merge.outputs.merge_sha }}
       sha_lista: ${{ steps.artefato.outputs.sha_lista }}
+      sha_ferramentas: ${{ steps.ferramentas.outputs.sha_ferramentas }}
     steps:
       - name: Checkout da main
         uses: actions/checkout@v4
@@ -278,15 +287,24 @@ jobs:
           echo "$HOME/.local/i18n-helpers/bin" >> "$GITHUB_PATH"
 
       # O job traduzir não faz checkout: recebe daqui, da main ainda sem o merge, o script
-      # e os arquivos de contexto do prompt.
+      # e os arquivos de contexto do prompt. O sha256 é calculado AGORA, antes de qualquer
+      # código do upstream rodar neste job, e sai como output do passo (o traduzir confere
+      # por ele): assim o código do upstream não consegue trocar o script que recebe a
+      # ANTHROPIC_API_KEY.
       - name: Separa as ferramentas do job traduzir
+        id: ferramentas
         if: steps.decisao.outputs.has_changes == 'true'
         run: |
-          F="$RUNNER_TEMP/artefato/ferramentas"
+          A="$RUNNER_TEMP/artefato"
+          F="$A/ferramentas"
           mkdir -p "$F/i18n/tools"
           cp AGENTS.md "$F/"
           cp i18n/GUIA-DE-ESTILO.md i18n/glossario.yml "$F/i18n/"
           cp i18n/tools/traduz_delta.py "$F/i18n/tools/"
+          cd "$A"
+          find ferramentas -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > ferramentas.sha256
+          cat ferramentas.sha256
+          echo "sha_ferramentas=$(sha256sum ferramentas.sha256 | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
       - name: Faz o merge do upstream num branch local
         id: merge
@@ -313,9 +331,15 @@ jobs:
       - name: Instala o Rust do rust-toolchain mesclado
         if: steps.decisao.outputs.has_changes == 'true'
         run: |
+          toolchain="$(tr -d '[:space:]' < rust-toolchain)"
+          if [[ ! "$toolchain" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "::error title=rust-toolchain inválido::esperava uma versão como 1.98, li '${toolchain:0:40}'"
+            exit 1
+          fi
           rustup self update
           rustup set profile minimal
-          rustup toolchain install
+          rustup toolchain install "$toolchain"
+          rustup default "$toolchain"
           rustc --version
 
       - name: Atualiza o PO com o POT novo (atualiza_po.sh)
@@ -475,13 +499,30 @@ jobs:
           name: preparar
           path: ${{ runner.temp }}/preparar
 
+      # Duas conferências: a lista geral (integridade no trânsito) e a das ferramentas,
+      # contra o sha256 calculado no preparar antes do merge (o script não foi trocado nem
+      # ganhou vizinhos, como um yaml.py que o Python importaria no lugar do PyYAML).
       - name: Confere os artefatos (sha256)
         env:
           SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
+          SHA_FERRAMENTAS: ${{ needs.preparar.outputs.sha_ferramentas }}
         run: |
           cd "$RUNNER_TEMP/preparar"
           echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
+          if [[ ! "$SHA_FERRAMENTAS" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error title=Ferramentas sem sha256::o preparar não publicou o sha256 das ferramentas"
+            exit 1
+          fi
+          echo "$SHA_FERRAMENTAS  ferramentas.sha256" | sha256sum -c --quiet
+          sha256sum -c --quiet ferramentas.sha256
+          esperados=$(sed 's/^[0-9a-f]*  //' ferramentas.sha256)
+          presentes=$(find ferramentas ! -type d | LC_ALL=C sort)
+          if [[ "$presentes" != "$esperados" ]]; then
+            echo "::error title=Ferramentas alteradas::há arquivos a mais ou a menos em ferramentas/"
+            diff <(echo "$esperados") <(echo "$presentes") || true
+            exit 1
+          fi
 
       - name: Instala o Python
         uses: actions/setup-python@v5
@@ -501,7 +542,7 @@ jobs:
           P="$RUNNER_TEMP/preparar"
           S="$RUNNER_TEMP/trad"
           mkdir -p "$S"
-          python3 "$P/ferramentas/i18n/tools/traduz_delta.py" --delta "$P/delta.json" \
+          python3 -I "$P/ferramentas/i18n/tools/traduz_delta.py" --delta "$P/delta.json" \
             --capitulo "$CAPITULO" --saida "$S/trad-$CAPITULO.json" 2>&1 | tee "$S/log-$CAPITULO.txt"
 
       - name: Calcula o sha256 das traduções
@@ -630,9 +671,15 @@ jobs:
 
       - name: Instala o Rust do rust-toolchain mesclado
         run: |
+          toolchain="$(tr -d '[:space:]' < rust-toolchain)"
+          if [[ ! "$toolchain" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "::error title=rust-toolchain inválido::esperava uma versão como 1.98, li '${toolchain:0:40}'"
+            exit 1
+          fi
           rustup self update
           rustup set profile minimal
-          rustup toolchain install
+          rustup toolchain install "$toolchain"
+          rustup default "$toolchain"
           rustc --version
 
       - name: Compila o livro em inglês
@@ -1065,16 +1112,19 @@ jobs:
           echo "PR: $url"
           echo "### ptbr-sync: PR $url" >> "$GITHUB_STEP_SUMMARY"
 
+  # Roda em falha de qualquer job ou no alarme de atraso. A issue só é aberta fora do
+  # dry_run e com o App configurado; o alarme falha a execução mesmo no dry_run.
   sync-quebrado:
     name: Abre ou atualiza a issue sync-quebrado
     needs: [preparar, traduzir, montar, publicar]
-    if: ${{ !cancelled() && inputs.dry_run != true && vars.PTBR_APP_ID != '' && (failure() || needs.preparar.outputs.alarme_atraso == 'true') }}
+    if: ${{ !cancelled() && (failure() || needs.preparar.outputs.alarme_atraso == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: {}
     steps:
       - name: Gera o token do GitHub App
         id: app
+        if: inputs.dry_run != true && vars.PTBR_APP_ID != ''
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ vars.PTBR_APP_ID }}
@@ -1082,6 +1132,7 @@ jobs:
           permission-issues: write
 
       - name: Abre ou comenta a issue
+        if: steps.app.outcome == 'success'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           R_PREPARAR: ${{ needs.preparar.result }}
@@ -1114,7 +1165,13 @@ jobs:
           elif ! gh issue create --repo "$GITHUB_REPOSITORY" --title sync-quebrado --label sync-quebrado --body-file "$corpo"; then
             gh issue create --repo "$GITHUB_REPOSITORY" --title sync-quebrado --body-file "$corpo"
           fi
-          if [[ "$ALARME" == true ]]; then
-            echo "::error title=Sync atrasado::alarme de atraso registrado na issue sync-quebrado"
-            exit 1
-          fi
+
+      # O alarme não impede o PR de sync (senão o atraso nunca se resolveria), mas a
+      # execução termina em falha para chamar a atenção.
+      - name: Falha a execução no alarme de atraso
+        if: needs.preparar.outputs.alarme_atraso == 'true'
+        env:
+          DIAS: ${{ needs.preparar.outputs.dias_atraso }}
+        run: |
+          echo "::error title=Sync atrasado::o upstream está $DIAS dias à frente do merge-base e não havia PR sync/* aberto"
+          exit 1
