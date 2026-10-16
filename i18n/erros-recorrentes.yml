@@ -393,15 +393,17 @@ erros:
       "Hello, world!" no capítulo 1. Aspas dentro de código não entram neste teste.
 
   - id: maiuscula-apos-dois-pontos
-    regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
+    regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Copy|Clone|Drop|Default|Debug|Send|Sync|The|An|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
     severidade: aviso
     correcao: "minúscula depois de dois-pontos, salvo nome próprio, sigla ou citação"
     explicacao: >-
       Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): em português, depois de
       dois-pontos vem minúscula (“livro: se você”, “exibe: elas”, “Nota: esta edição”), exceto
       nome próprio, sigla ou citação. Legendas como “Figura 4-1: A representação...” não entram
-      no teste (o dois-pontos vem depois de um número). O aviso pode pegar nomes próprios que a
-      lista de exceções da regex não conhece; confira.
+      no teste (o dois-pontos vem depois de um número), nem os nomes de trait da lista de
+      exceções (“Dados somente na pilha: Copy”) nem o título em inglês de uma obra citada (“The
+      Billion Dollar Mistake”). O aviso pode pegar nomes próprios que a lista não conhece;
+      confira.
 
   - id: titulo-com-todas-maiusculas
     regex: '(?-i:\A(?!A Linguagem de Programação Rust\s*\Z)[A-ZÀ-Ý][\wà-ÿ-]*(?:\s+(?:(?:de|da|do|das|dos|e|em|com|para|no|na|nos|nas|ao|à|a|o|os|as|um|uma|por|sobre)\s+)?[A-ZÀ-Ý][\wà-ÿ-]*){2,}(?:\s+(?:de|da|do|das|dos|e|em|com|para|no|na|a|o|os|as|um|uma|por|sobre))*\s*\Z)'
