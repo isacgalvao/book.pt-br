@@ -17,10 +17,17 @@
 #     então o tradutor e o revisor precisam conferir antes; o erro só aparece depois de gravado.
 #     aviso = suspeita (a forma também tem uso legítimo): um revisor decide.
 #   - O `evitar` do glossario.yml e as regras daqui podem coincidir de propósito nos termos
-#     decididos: o glossário dá o aviso do termo e este arquivo acrescenta o erro com contexto
-#     (`rust-noturno`, `genero-enum`, `genero-struct`, `package-em-ingles`, `fazer-o-build`).
-#     Só não se repete aqui a regex idêntica à do `evitar` (nightly “noturno” solto, stable
-#     “Rust estável”): essa mora só no glossário.
+#     decididos (`genero-enum`, `genero-struct`, `package-em-ingles`, `fazer-o-build`) e em
+#     `nightly`, que é provisório (`rust-noturno`): o glossário dá o aviso do termo e este
+#     arquivo acrescenta a regra com contexto. Só não se repete aqui a regex idêntica à do
+#     `evitar` (nightly “noturno” solto, stable “Rust estável”): essa mora só no glossário.
+#   - Regra cuja base é um padrão provisório do CONTRATO §7 (a confirmar com o mantenedor) é
+#     `aviso` e diz isso na `explicacao`. Fica `erro` só o que é defeito qualquer que seja a
+#     escolha: deixar “Chapter 4”, “Figure 4-1”, “Table 3-1” ou “Note:” em inglês, ou “idiomas”
+#     no sentido de expressões idiomáticas, é defeito mesmo que o rótulo português mude.
+#   - Regra que procura palavra inglesa que o original pode grifar (“_package_”) usa
+#     `(?<![^\W_])` e `(?![^\W_])`, nunca `\b`: o `\b` não separa `_` de letra e deixaria passar
+#     o termo em itálico, que é justamente onde ele mais aparece (a frase que o define).
 #   - Código, URLs e comandos ficam fora do texto avaliado.
 #
 # Para propor uma entrada: escreva a regex, rode-a sobre o msgstr de po/pt-BR.po e sobre prosa
@@ -67,6 +74,8 @@ erros:
     explicacao: >-
       “Idiom” é uma forma típica de escrever em uma linguagem, não um idioma natural. Apareceu
       como “os idiomas da Edição Rust 2024” (página de rosto) e “os idiomas do Rust” (capítulo 0).
+      O termo “expressão idiomática” é padrão provisório (CONTRATO §7, a confirmar com o
+      mantenedor); chamar “idiom” de “idioma” é defeito de qualquer modo, por isso é erro.
 
   - id: idiomas-ambiguo
     regex: '(?i:\bidiomas?\b(?!\s+(?:d[oae]s?\s+)?(?:Rust|edição)\b))'
@@ -79,12 +88,14 @@ erros:
 
   - id: rust-noturno
     regex: '(?i:\b(?:rust|canal|versão|compilador|toolchain|release|lançamento|recursos?|funcionalidades?)\s+noturn[oa]s?\b)'
-    severidade: erro
+    severidade: aviso
     correcao: "Rust nightly"
     explicacao: >-
-      “Nightly” é o nome do canal de lançamento (aparece assim no `rustup` e no Apêndice G), não
-      um adjetivo a traduzir. Apareceu como “o que é o Rust noturno” no capítulo 0. Os canais
-      nightly, beta e stable ficam em inglês.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): os nomes dos canais de
+      lançamento ficam em inglês. “Nightly” é o nome do canal (aparece assim no `rustup` e no
+      Apêndice G), não um adjetivo a traduzir. Apareceu como “o que é o Rust noturno” no
+      capítulo 0. É aviso (e não erro) porque a regra depende desse padrão ainda não
+      confirmado; se o mantenedor o confirmar, suba para erro.
 
   # ---------------------------------------------------- links e rótulos de link
   - id: atalho-traduzido-sem-definicao
@@ -101,7 +112,7 @@ erros:
       (mesmos destinos de link).
 
   - id: filename-em-ingles
-    regex: '(?-i:\bFilename:)'
+    regex: '(?-i:(?<![^\W_])Filename:)'
     severidade: erro
     correcao: "Nome do arquivo:"
     explicacao: >-
@@ -116,7 +127,7 @@ erros:
     explicacao: "O rótulo é sempre “Nome do arquivo:”, com “do” e “arquivo” em minúscula."
 
   - id: listing-em-ingles
-    regex: '(?-i:\bListings?\s+\d)'
+    regex: '(?-i:(?<![^\W_])Listings?\s+\d)'
     severidade: erro
     correcao: "Listagem N-M, Listagens N-M"
     explicacao: >-
@@ -132,21 +143,23 @@ erros:
       “Listagens”) leva maiúscula, igual ao rótulo gerado pelo build.
 
   - id: figure-em-ingles
-    regex: '(?-i:\bFigure\s+\d)'
+    regex: '(?-i:(?<![^\W_])Figure\s+\d)'
     severidade: erro
     correcao: "Figura N-M"
     explicacao: >-
-      Referências e legendas de figuras ficam em português, no mesmo molde de “Listagem 3-1”:
-      “Figure 4-1” vira “Figura 4-1”. O livro tem 52 ocorrências (capítulos 4, 14, 15, 17 e 21):
+      Referências e legendas de figuras ficam em português, no mesmo molde de “Listagem 3-1”
+      (o rótulo “Figura” é provisório, por analogia; deixar “Figure” em inglês é defeito de
+      qualquer modo): “Figure 4-1” vira “Figura 4-1”. O livro tem 52 ocorrências (capítulos 4, 14, 15, 17 e 21):
       27 referências na prosa e 25 legendas (`<span class="caption">` e `<figcaption>`).
 
   - id: table-em-ingles
-    regex: '(?-i:\bTables?\s+(?:[A-Z]-)?\d)'
+    regex: '(?-i:(?<![^\W_])Tables?\s+(?:[A-Z]-)?\d)'
     severidade: erro
     correcao: "Tabela N-M, Tabela B-N"
     explicacao: >-
       “Table 3-1” vira “Tabela 3-1” e “Table B-1” vira “Tabela B-1”, como “Listing 3-1” vira
-      “Listagem 3-1”. O livro tem 24 mensagens com “Table”: 4 com número de capítulo e 20 do
+      “Listagem 3-1” (o rótulo “Tabela” é provisório, por analogia; deixar “Table” em inglês é
+      defeito de qualquer modo). O livro tem 24 mensagens com “Table”: 4 com número de capítulo e 20 do
       Apêndice B (10 legendas e 10 referências na prosa), que levam letra.
 
   - id: figura-tabela-formato
@@ -158,28 +171,34 @@ erros:
       “Listagem 2-1”.
 
   - id: capitulo-em-ingles
-    regex: '(?-i:\b(?:Chapter\s+\d+|Appendix\s+[A-Z]\b))'
+    regex: '(?-i:(?<![^\W_])(?:Chapter\s+\d+|Appendix\s+[A-Z](?![^\W_])))'
     severidade: erro
     correcao: "Capítulo N, Apêndice X"
-    explicacao: "Referências a capítulos e apêndices ficam em português: “Capítulo 4”, “Apêndice D”."
+    explicacao: >-
+      Referências a capítulos e apêndices ficam em português: “Capítulo 4”, “Apêndice D”. O
+      rótulo é padrão provisório (CONTRATO §7, a confirmar com o mantenedor); deixar “Chapter 4”
+      em inglês é defeito de qualquer modo.
 
   - id: capitulo-minusculo
     regex: '(?-i:\bcap[ií]tulos?\s+\d|\bapêndice\s+[A-Z]\b)'
     severidade: aviso
     correcao: "Capítulo 4, Apêndice D"
-    explicacao: "Em referência numerada, “Capítulo” e “Apêndice” levam maiúscula, como em “Capítulo 18”."
+    explicacao: >-
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): em referência numerada,
+      “Capítulo” e “Apêndice” levam maiúscula, como em “Capítulo 18”.
 
   - id: note-em-ingles
-    regex: '(?-i:\bNote:)'
+    regex: '(?-i:(?<![^\W_])Note:)'
     severidade: erro
     correcao: "Nota:"
     explicacao: >-
-      Notas começam com “Nota:”. O pré-processador do livro roda antes do gettext, então a nota
-      mantém o estilo (o número de blocos class="note" é o mesmo em inglês e em português).
+      Notas começam com “Nota:” (rótulo provisório, CONTRATO §7; “Note:” em inglês é defeito de
+      qualquer modo). O pré-processador do livro roda antes do gettext, então a nota mantém o
+      estilo (o número de blocos class="note" é o mesmo em inglês e em português).
 
   # ----------------------------------------------------------- terminologia (§7)
   - id: genero-enum
-    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+\[?[_*]*enum(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+\[?[_*]*enums(?![A-Za-zÀ-ÿ0-9]))'
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Aa]lguma|[Tt]oda|[Ss]ua|[Nn]ossa|[Àà]|[Aa])\s+\[?[_*]*enum(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Àà]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Dd]estas|[Dd]essas|[Nn]estas|[Nn]essas|[Ee]stas|[Ee]ssas|[Aa]quelas|[Oo]utras|[Tt]odas|[Ss]uas|[Nn]ossas|[Aa]lgumas|[Mm]uitas|[Vv]árias|[Dd]uas|[Aa]mbas)\s+\[?[_*]*enums(?![A-Za-zÀ-ÿ0-9]))'
     severidade: erro
     correcao: "o enum, um enum, do enum, no enum, os enums"
     explicacao: >-
@@ -187,7 +206,7 @@ erros:
       vezes, uma delas “uma [_enum_]”), “da enum” e “outra enum”: 4 pontos do capítulo 2.
 
   - id: genero-struct
-    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+\[?[_*]*struct(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+\[?[_*]*structs(?![A-Za-zÀ-ÿ0-9]))'
+    regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Aa]lguma|[Tt]oda|[Ss]ua|[Nn]ossa|[Àà]|[Aa])\s+\[?[_*]*struct(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Àà]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Dd]estas|[Dd]essas|[Nn]estas|[Nn]essas|[Ee]stas|[Ee]ssas|[Aa]quelas|[Oo]utras|[Tt]odas|[Ss]uas|[Nn]ossas|[Aa]lgumas|[Mm]uitas|[Vv]árias|[Dd]uas|[Aa]mbas)\s+\[?[_*]*structs(?![A-Za-zÀ-ÿ0-9]))'
     severidade: erro
     correcao: "o struct, um struct, do struct, no struct, os structs"
     explicacao: >-
@@ -195,7 +214,7 @@ erros:
       struct”, que não vale mais.
 
   - id: package-em-ingles
-    regex: '(?i:(?<!software )\bpackages?\b)'
+    regex: '(?i:(?<!software )(?<![^\W_])packages?(?![^\W_]))'
     severidade: erro
     correcao: "pacote, pacotes"
     explicacao: >-
@@ -320,9 +339,10 @@ erros:
     severidade: aviso
     correcao: "apagar a glosa entre parênteses (a ênfase do original já define o termo)"
     explicacao: >-
-      “_ownership_ (propriedade)” acrescenta uma glosa que o original não tem. O mesmo vale para
-      “é uma _enum_ (enumeração), muitas vezes chamada de _enum_”, que virou tautologia no
-      capítulo 2. Traduza o termo ou mantenha-o em inglês, nunca os dois.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): ênfase como no original, sem
+      glosa. “_ownership_ (propriedade)” acrescenta uma glosa que o original não tem. O mesmo
+      vale para “é uma _enum_ (enumeração), muitas vezes chamada de _enum_”, que virou tautologia
+      no capítulo 2. Traduza o termo ou mantenha-o em inglês, nunca os dois.
 
   - id: artigo-antes-de-rust
     regex: '(?i:\b(?:dizer|diz|dizem|dizendo|disse|dissemos)\s+(?:a|à)\s+Rust\b)'
@@ -357,7 +377,9 @@ erros:
     regex: '(?i:\b(?:tu|vós|teu|tua|teus|tuas|contigo|convosco)\b)'
     severidade: aviso
     correcao: "você, seu, sua, seus, suas, com você"
-    explicacao: "O livro trata o leitor por “você”, nunca por “tu” ou “vós”."
+    explicacao: >-
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): o livro trata o leitor por
+      “você”, nunca por “tu” ou “vós”.
 
   # --------------------------------------------------------------- tipografia
   - id: aspas-retas
@@ -365,20 +387,21 @@ erros:
     severidade: aviso
     correcao: "“ ” (aspas curvas, como o upstream)"
     explicacao: >-
-      O upstream usa aspas curvas “ ” em prosa (nenhuma das 4.602 mensagens traduzíveis tem aspa
-      reta fora de código). Aspas retas na tradução vieram de digitação: “seção "Instalação"” na
-      página de rosto, programa "Hello, world!" no capítulo 1. Aspas dentro de código não entram
-      neste teste.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): aspas curvas “ ” como o
+      upstream (nenhuma das 4.602 mensagens traduzíveis tem aspa reta fora de código). Aspas
+      retas na tradução vieram de digitação: “seção "Instalação"” na página de rosto, programa
+      "Hello, world!" no capítulo 1. Aspas dentro de código não entram neste teste.
 
   - id: maiuscula-apos-dois-pontos
     regex: '(?-i:(?<=[a-zà-ÿ\)\]]): +(?!(?:Rust|Cargo|Ferris|Rustup|Windows|Linux|Unix|Git|GitHub|Option|Result|Some|None|Ok|Err|Box|Vec|String|Rc|Arc|Mutex|Hello|Olá|Apêndice|Capítulo|Listagem)\b)[A-ZÀ-Ý][a-zà-ÿ]+)'
     severidade: aviso
-    correcao: "minúscula depois de dois-pontos, salvo nome próprio"
+    correcao: "minúscula depois de dois-pontos, salvo nome próprio, sigla ou citação"
     explicacao: >-
-      Em português, depois de dois-pontos vem minúscula (“livro: se você”, “exibe: elas”, “Nota:
-      esta edição”), exceto nome próprio, sigla ou citação. Legendas como “Figura 4-1: A
-      representação...” não entram no teste (o dois-pontos vem depois de um número). O aviso
-      pode pegar nomes próprios que a lista de exceções da regex não conhece; confira.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): em português, depois de
+      dois-pontos vem minúscula (“livro: se você”, “exibe: elas”, “Nota: esta edição”), exceto
+      nome próprio, sigla ou citação. Legendas como “Figura 4-1: A representação...” não entram
+      no teste (o dois-pontos vem depois de um número). O aviso pode pegar nomes próprios que a
+      lista de exceções da regex não conhece; confira.
 
   - id: titulo-com-todas-maiusculas
     regex: '(?-i:\A(?!A Linguagem de Programação Rust\s*\Z)[A-ZÀ-Ý][\wà-ÿ-]*(?:\s+(?:(?:de|da|do|das|dos|e|em|com|para|no|na|nos|nas|ao|à|a|o|os|as|um|uma|por|sobre)\s+)?[A-ZÀ-Ý][\wà-ÿ-]*){2,}(?:\s+(?:de|da|do|das|dos|e|em|com|para|no|na|a|o|os|as|um|uma|por|sobre))*\s*\Z)'

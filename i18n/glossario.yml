@@ -25,7 +25,12 @@
 #     genero         m | f | null (gênero de `pt`; null em verbos, adjetivos e expressões)
 #     status         decidido = decisão explícita do mantenedor (CONTRATO §7, itens 1 e 3);
 #                    provisorio = proposta do assistente, vale até o mantenedor confirmar ou
-#                    trocar (troca = busca e substituição revisada no PO)
+#                    trocar (troca = busca e substituição revisada no PO). Há um `status` só
+#                    por entrada, e ele diz respeito à escolha de `pt`. Em trait, crate e
+#                    closure o `decidido` vale só para manter o termo em inglês (§7.1); o
+#                    gênero (m) é padrão provisório do assistente, justificado na nota. O
+#                    gênero decidido pelo mantenedor é apenas o de struct e enum (CONTRATO
+#                    §7.3); nos termos traduzidos, `genero` é o da própria palavra portuguesa
 #     exemplo_en     trecho real do livro (copiado de um msgid)
 #     exemplo_pt     tradução do trecho conforme este glossário e o guia de estilo
 #     evitar         lista de regex Python (pode ser vazia) com as formas que NÃO podem
@@ -800,7 +805,7 @@ termos:
     exemplo_pt: "Implementando um trait em um tipo"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*trait(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*traits(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o trait”, “os traits”) pela evidência do CR (masculino 73: o 32, um 15, do 10, os 7; nenhum feminino nas mensagens ativas, só 1 numa entrada obsoleta); o gênero não foi decisão explícita do mantenedor. Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
+    nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o trait”, “um trait”, “os traits”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 73: o 32, um 15, do 10, os 7; nenhum feminino nas mensagens ativas, só 1 numa entrada obsoleta). Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
   - en: "trait bound"
     pt: "limite de trait"
     manter_ingles: false
@@ -1248,7 +1253,7 @@ termos:
     exemplo_pt: "Ao contrário das funções, os closures podem capturar valores do escopo em que são definidos."
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*closure(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*closures(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino — “o closure”, “um closure”, “os closures definidos” — pela evidência do CR (masculino 4: um 3, os 1; nenhum feminino) e pela escolha da sessão anterior; o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
+    nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o closure”, “um closure”, “os closures definidos”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 4: um 3, os 1; nenhum feminino) e pela escolha da sessão anterior. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
   - en: "capture"
     pt: "capturar"
     manter_ingles: false
@@ -1476,7 +1481,7 @@ termos:
     exemplo_pt: "Adicionando metadados a um novo crate"
     evitar:
       - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*crate(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*crates(?![^\W_])'
-    nota: "Decisão do mantenedor (CONTRATO §7.1). Fica em inglês. Masculino (“o crate”, “os crates”) pela evidência do CR (masculino 95: o 30, um 17, do 12, no 8; feminino 4); o gênero não foi decisão explícita do mantenedor. Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
+    nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o crate”, “um crate”, “os crates”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 95: o 30, um 17, do 12, no 8; feminino 4). Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
   - en: "binary crate"
     pt: "crate binário"
     manter_ingles: false

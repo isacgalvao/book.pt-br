@@ -51,8 +51,9 @@ este guia (por exemplo, no link de atalho vale a forma inline); as regras que de
 
 - Code spans, blocos de código, literais de string, comentários `//`, nomes de arquivo, comandos,
   nomes de crates e URLs ficam idênticos ao original, sem exceção: `` `cargo run` `` → `` `cargo run` ``.
-- As mensagens dos tipos `codigo`, `ancora` e `comentario` ficam com msgstr VAZIO. Nunca copie o
-  msgid para elas, nem quando forem só uma tag, como `</Listing>`.
+- As mensagens dos tipos `codigo`, `ancora` e `comentario` (literais de string e comentários `//`
+  inclusive) ficam com msgstr VAZIO nesta fase (provisório). Nunca copie o msgid para elas, nem
+  quando forem só uma tag, como `</Listing>`.
 - Português nunca entra num code span: `` [`expect` method](…) `` → `` [método `expect`](…) ``.
 - Nomes próprios ficam como estão: `Ferris` → “Ferris”.
 
@@ -83,10 +84,11 @@ este guia (por exemplo, no link de atalho vale a forma inline); as regras que de
   e `src=` ficam idênticos.
 - Os `<span class="filename">Filename: X</span>` crus: traduza só o rótulo, mantendo tag e nome:
   → `<span class="filename">Nome do arquivo: X</span>`.
-- Rótulos em prosa: `Chapter 4`, `Appendix D`, `Listing 3-1`, `Figure 4-1`, `Table 3-1`, `Table B-1` →
-  “Capítulo 4”, “Apêndice D”, “Listagem 3-1”, “Figura 4-1”, “Tabela 3-1”, “Tabela B-1” (maiúscula
-  inicial, hífen comum). Plural: `Listings 10-17 and 10-18` → “Listagens 10-17 e 10-18”.
-- Notas começam com “Nota:” (o estilo da nota é mantido): `Note: Rust has` → “Nota: o Rust tem”.
+- Rótulos em prosa: `Listing 3-1` → “Listagem 3-1” e `Listings 10-17 and 10-18` → “Listagens 10-17 e
+  10-18” (decisão do mantenedor); `Chapter 4` → “Capítulo 4” e `Appendix D` → “Apêndice D”
+  (provisório); `Figure 4-1` → “Figura 4-1” e `Table B-1` → “Tabela B-1” (por analogia com a
+  listagem, provisório). Maiúscula inicial e hífen comum.
+- Notas começam com “Nota:” (provisório; o estilo da nota é mantido): `Note: Rust has` → “Nota: o Rust tem”.
 
 ## Ênfase e tipografia
 
@@ -94,13 +96,13 @@ este guia (por exemplo, no link de atalho vale a forma inline); as regras que de
   inglês. Se o original grifa `_ownership_` ao defini-lo, grife o termo na tradução; se não grifa, não grife.
 - Aspas curvas “ ” e apóstrofo ’, como o upstream (provisório), nunca aspas retas em prosa:
   `the “Installation” section` → `a seção “Instalação”`; `you’ll` → `você vai`.
-- Minúscula depois de dois-pontos, salvo nome próprio (provisório): `as follows: First,` → “da seguinte forma: primeiro,”.
+- Minúscula depois de dois-pontos, salvo nome próprio, sigla ou citação (provisório): `as follows: First,` → “da seguinte forma: primeiro,”.
 - Versões, datas e decimais com ponto ficam como no original: `Rust 1.98.0`, `2026-08-20`, `0.10`,
   `(0.0, 0.0)`; o check trata `N.N` como versão e exige o mesmo número no msgstr.
 - Na prosa, o separador de milhar segue o português: `10,800` → “10.800”; `2,000 milliseconds` → “2.000 milissegundos”.
 - Mantenha as tags HTML, as listas e a quantidade de `<!-- ignore -->` iguais às do original.
 
-## Os 3 resíduos da semeadura
+## Os 3 resíduos da semeadura (provisório)
 
 - `Hello, World!` (título do capítulo 1) → “Olá, mundo!”.
 - `Hello, Cargo!` (título do capítulo 1) → “Olá, Cargo!”.
