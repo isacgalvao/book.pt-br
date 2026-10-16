@@ -457,7 +457,7 @@ msgstr "_por Steve Klabnik, Carol Nichols e Chris Krycho, com contribuições da
 
 #: src/title-page.md
 msgid "This version of the text assumes you’re using Rust 1.98.0 (released 2026-08-20) or later with `edition = \"2024\"` in the _Cargo.toml_ file of all projects to configure them to use Rust 2024 Edition idioms. See the [“Installation” section of Chapter 1](ch01-01-installation.html)<!-- ignore --> for instructions on installing or updating Rust, and see [Appendix E](appendix-05-editions.html)<!-- ignore --> for information on editions."
-msgstr "Esta versão do texto pressupõe que você está usando Rust 1.98.0 (lançado em 2026-08-20) ou posterior com `edition = \"2024\"` no arquivo _Cargo.toml_ de todos os projetos para configurá-los para usar os idiomas da Edição Rust 2024. Consulte a [seção \"Instalação\" do Capítulo 1](ch01-01-installation.html)<!-- ignore --> para instruções sobre como instalar ou atualizar o Rust, e consulte o [Apêndice E](appendix-05-editions.html)<!-- ignore --> para informações sobre edições."
+msgstr "Esta versão do texto pressupõe que você está usando Rust 1.98.0 (lançado em 2026-08-20) ou posterior com `edition = \"2024\"` no arquivo _Cargo.toml_ de todos os projetos para configurá-los para usar as expressões idiomáticas da Edição Rust 2024. Consulte a [seção “Instalação” do Capítulo 1](ch01-01-installation.html)<!-- ignore --> para instruções sobre como instalar ou atualizar o Rust, e consulte o [Apêndice E](appendix-05-editions.html)<!-- ignore --> para informações sobre edições."
 
 #: src/title-page.md
 msgid "The HTML format is available online at [https://doc.rust-lang.org/stable/book/](https://doc.rust-lang.org/stable/book/) and offline with installations of Rust made with `rustup`; run `rustup doc --book` to open."
@@ -465,7 +465,7 @@ msgstr "O formato HTML está disponível online em [https://doc.rust-lang.org/st
 
 #: src/title-page.md
 msgid "Several community [translations](appendix-06-translation.html) are also available."
-msgstr "Várias \\[traduções\\] da comunidade também estão disponíveis."
+msgstr "Várias [traduções](appendix-06-translation.html) da comunidade também estão disponíveis."
 
 #: src/title-page.md
 msgid "This text is available in [paperback and ebook format from No Starch Press](https://nostarch.com/rust-programming-language-3rd-edition)."
@@ -473,7 +473,7 @@ msgstr "Este texto está disponível em [formato impresso e ebook pela No Starch
 
 #: src/title-page.md
 msgid "**🚨 Want a more interactive learning experience? Try out a different version of the Rust Book, featuring: quizzes, highlighting, visualizations, and more**: <https://rust-book.cs.brown.edu>"
-msgstr "**🚨 Quer uma experiência de aprendizado mais interativa? Experimente uma versão diferente do Rust Book, com: quizzes, destaques, visualizações e mais**: <https://rust-book.cs.brown.edu>"
+msgstr "**🚨 Quer uma experiência de aprendizado mais interativa? Experimente uma versão diferente do Rust Book, com quizzes, destaques, visualizações e muito mais**: <https://rust-book.cs.brown.edu>"
 
 #: src/foreword.md
 msgid "Foreword"
