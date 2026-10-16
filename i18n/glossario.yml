@@ -15,7 +15,9 @@
 #   versao: 2
 #   termos:                 lista; cada entrada tem todos os campos abaixo
 #     en             termo em inglês, em minúsculas; cada `en` aparece uma vez só
-#     pt             forma preferida em português (igual a `en` quando o termo fica em inglês)
+#     pt             forma preferida em português; quando o termo fica em inglês, é igual a
+#                    `en` ou, num verbo inglês que a prosa só usa como substantivo, a forma em
+#                    -ing (poll → polling, pin → pinning)
 #     manter_ingles  true quando o termo fica em inglês na prosa
 #     classe         substantivo | verbo | adjetivo | expressão
 #     genero         m | f | null (gênero de `pt`; null em verbos, adjetivos e expressões)
@@ -36,10 +38,10 @@
 # COMO O `evitar` É USADO: o módulo `glossario` do check.py aplica cada regex, sem diferenciar
 # maiúsculas, ao msgstr das mensagens traduzidas ou fuzzy dos tipos prosa, listing e html,
 # depois de remover os code spans, o conteúdo de <code>, <pre> e <kbd>, os destinos de link, a
-# parte ][rótulo], as tags HTML e o {#...}. Cada ocorrência vira um aviso que cita o termo e o
-# `pt` preferido (as regras de erros-recorrentes.yml rodam no mesmo texto, com a severidade
-# delas). Uma regex sem fronteira própria seria envolvida em \b(?:...)\b; todas as daqui já
-# trazem fronteiras explícitas:
+# parte ][rótulo], as tags HTML e o {#...}. Cada mensagem com casamento vira um aviso por
+# termo, que cita as formas achadas (até 3), a contagem e o `pt` preferido (as regras de
+# erros-recorrentes.yml rodam no mesmo texto, com a severidade delas). Uma regex sem fronteira
+# própria seria envolvida em \b(?:...)\b; todas as daqui já trazem fronteiras explícitas:
 #   (?<![^\W_]) ... (?![^\W_])         nenhuma letra ou dígito encostado; o “_” de ênfase pode,
 #                                      para pegar “_borrowing_”, que \b deixaria passar;
 #   (?<![\w/\\.-]) ... (?![\w/\\]|\.\w)  termos que também são nomes de arquivo ou diretório
@@ -1286,7 +1288,7 @@ termos:
     exemplo_pt: "Os adaptadores de iterador são preguiçosos, e precisamos consumir o iterador aqui."
     evitar:
       - '(?<![^\W_])adapt[eo]rs?(?![^\W_])'
-    nota: "“iterator adapter” → “adaptador de iterador”; “consuming adapter” → “adaptador consumidor”. O livro usa as grafias “adapter” e “adaptor”. Comprehensive Rust pt-BR (mensagens com o termo: 2): adaptador 0."
+    nota: "“iterator adapter” → “adaptador de iterador”; “consuming adapter” → “adaptador consumidor”. O livro usa a grafia “adapter”. No CR o termo só aparece no nome próprio “Debug Adapter Protocol” (mantido em inglês): não há precedente para o sentido de iterador. Comprehensive Rust pt-BR (mensagens com o termo: 2): adaptador 0."
   - en: "lazy"
     pt: "preguiçoso"
     manter_ingles: false
@@ -2548,25 +2550,27 @@ termos:
     evitar: []
     nota: "Comprehensive Rust pt-BR (mensagens com o termo: 30): tarefa 30, task 0."
   - en: "pin"
-    pt: "fixar"
-    manter_ingles: false
-    classe: verbo
-    genero: null
+    pt: "pinning"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
     status: provisorio
     exemplo_en: "When we _pin_ a value by wrapping a pointer to that value in `Pin`, it can no longer move."
-    exemplo_pt: "Quando _fixamos_ um valor envolvendo um ponteiro para ele em `Pin`, ele não pode mais se mover."
-    evitar: []
-    nota: "“pinning” → “fixação”; “pinned” → “fixado”. Os tipos `Pin` e `Unpin` são código. O CR mantém “pin”, mas no sentido de pino de hardware. Comprehensive Rust pt-BR (mensagens com o termo: 17): fix- 0, pin 11."
+    exemplo_pt: "Quando fazemos o _pinning_ de um valor, envolvendo um ponteiro para ele em `Pin`, ele não pode mais se mover."
+    evitar:
+      - '(?<![^\W_])(?:pins|pinar|pinad[oa]s?)(?![^\W_])'
+    nota: "Fica em inglês como substantivo, no masculino (“o pinning”). “to pin X” → “fazer o pinning de X”; “X pins Y” → “X faz o pinning de Y”; “pinned” fica “pinned” (“um ponteiro pinned”, “o valor continua pinned”). Nunca “pins” como verbo nem “pinar”. Os tipos `Pin` e `Unpin` e a macro `pin!` são código; no texto alternativo das figuras do Capítulo 17, os rótulos “Pin” e “pinned” ficam como estão nas imagens. Segue o CR: das 17 mensagens do CR com o termo, as 5 do async (async-pitfalls/pin.md, async-pitfalls.md e async-control-flow/select.md) mantêm “_Pin_”, “_pinned_” e “_pinning_” em inglês; 11 são o pino de hardware (GPIO), outro sentido (“pino” em 5, “_pin_” ou identificador em 6), e 1 é “pin-pointing”. A lista keep_english do glossário antigo também mantinha “pinning”. Alternativa em aberto para o mantenedor: “fixar” (“fixado”, “fixação”), mais legível, mas sem precedente no CR. Comprehensive Rust pt-BR (mensagens com o termo: 17): fix- 0, pin 11, pino 5."
   - en: "poll"
-    pt: "consultar"
-    manter_ingles: false
-    classe: verbo
-    genero: null
+    pt: "polling"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
     status: provisorio
     exemplo_en: "The `recv` call returns a future, and awaiting the future polls it."
-    exemplo_pt: "A chamada a `recv` retorna uma future e, quando aguardamos a future, ela é consultada."
-    evitar: []
-    nota: "“polling” → “consulta”. O método `poll` é código. O CR mantém “poll”, quase sempre como nome do método. Comprehensive Rust pt-BR (mensagens com o termo: 9): poll 8, sond- 0, consult- 1, verific- 0."
+    exemplo_pt: "A chamada a `recv` retorna uma future, e aguardar a future faz o polling dela."
+    evitar:
+      - '(?<![^\W_])(?:poll(?:s|ed)|pollar|pollad[oa]s?)(?![^\W_])'
+    nota: "Fica em inglês como substantivo, no masculino (“o polling”). “to poll X” → “fazer o polling de X”; “X polls Y” → “X faz o polling de Y”; “stop polling” → “parar de fazer o polling”; na passiva (“is polled”), prefira a voz ativa (“o runtime faz o polling da future”). Nunca as formas verbais inglesas (“polls”, “polled”) nem “pollar”. O método `poll` e o enum `Poll` são código. Segue o CR, que mantém o termo em inglês, em itálico, em 8 das 9 mensagens com ele, todas no sentido do async (“As _futures_ são _polled_ por um _runtime_ assíncrono”; só 1 usa “consultada”), e a lista keep_english do glossário antigo (“polling”); aqui sem itálico e sem a forma verbal inglesa. Alternativa em aberto para o mantenedor: “consultar” (“a future é consultada”), mais legível, mas pouco usada em documentação pt-BR. Comprehensive Rust pt-BR (mensagens com o termo: 9): poll 8, sond- 0, consult- 1, verific- 0."
   - en: "yield"
     pt: "ceder"
     manter_ingles: false
