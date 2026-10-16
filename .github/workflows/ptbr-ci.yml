@@ -44,6 +44,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
+  # Os scripts do check não deixam __pycache__ no repositório.
+  PYTHONDONTWRITEBYTECODE: "1"
   # Revisão do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai <Listing caption>).
   # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh.
   I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
@@ -192,13 +194,13 @@ jobs:
 
 
           def esc(valor, limite=MAX_CHARS):
-              """Texto seguro para a página: HTML escapado ('<', '>', '&', aspas), sem
+              """Texto seguro para a página: HTML escapado ('<', '>', '&'), sem
               quebras de linha, truncado, e sem caracteres especiais do Markdown."""
               texto = "" if valor is None else str(valor)
               texto = CONTROLE.sub("", " ".join(texto.split()))
               if len(texto) > limite:
                   texto = texto[: limite - 1] + "…"
-              return html.escape(texto).translate(ENTIDADES)
+              return html.escape(texto, quote=False).translate(ENTIDADES)
 
 
           def inteiro(valor):
