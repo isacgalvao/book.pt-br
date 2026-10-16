@@ -253,23 +253,23 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch14-01-release-profiles.md
 msgid "Customizing Builds with Release Profiles"
-msgstr ""
+msgstr "Personalizando compilações com perfis de release {#customizing-builds-with-release-profiles}"
 
 #: src/SUMMARY.md src/ch14-02-publishing-to-crates-io.md
 msgid "Publishing a Crate to Crates.io"
-msgstr ""
+msgstr "Publicando um crate no crates.io {#publishing-a-crate-to-cratesio}"
 
 #: src/SUMMARY.md src/ch14-03-cargo-workspaces.md
 msgid "Cargo Workspaces"
-msgstr ""
+msgstr "Workspaces do Cargo {#cargo-workspaces}"
 
 #: src/SUMMARY.md src/ch14-04-installing-binaries.md
 msgid "Installing Binaries with `cargo install`"
-msgstr ""
+msgstr "Instalando binários com `cargo install` {#installing-binaries-with-cargo-install}"
 
 #: src/SUMMARY.md src/ch14-05-extending-cargo.md
 msgid "Extending Cargo with Custom Commands"
-msgstr ""
+msgstr "Estendendo o Cargo com comandos personalizados {#extending-cargo-with-custom-commands}"
 
 #: src/SUMMARY.md src/ch15-00-smart-pointers.md
 msgid "Smart Pointers"
@@ -13920,47 +13920,47 @@ msgstr "Agora que melhoramos a expressividade do nosso projeto de E/S, vamos con
 
 #: src/ch14-00-more-about-cargo.md
 msgid "More About Cargo and Crates.io"
-msgstr ""
+msgstr "Mais sobre o Cargo e o crates.io {#more-about-cargo-and-cratesio}"
 
 #: src/ch14-00-more-about-cargo.md
 msgid "So far, we’ve used only the most basic features of Cargo to build, run, and test our code, but it can do a lot more. In this chapter, we’ll discuss some of its other, more advanced features to show you how to do the following:"
-msgstr ""
+msgstr "Até agora, usamos apenas os recursos mais básicos do Cargo para compilar, executar e testar nosso código, mas ele pode fazer muito mais. Neste capítulo, vamos discutir alguns dos seus outros recursos, mais avançados, para mostrar como fazer o seguinte:"
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Customize your build through release profiles."
-msgstr ""
+msgstr "Personalize a sua compilação por meio de perfis de release."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Publish libraries on [crates.io](https://crates.io/)<!-- ignore -->."
-msgstr ""
+msgstr "Publique bibliotecas no [crates.io](https://crates.io/)<!-- ignore -->."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Organize large projects with workspaces."
-msgstr ""
+msgstr "Organize projetos grandes com workspaces."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Install binaries from [crates.io](https://crates.io/)<!-- ignore -->."
-msgstr ""
+msgstr "Instale binários do [crates.io](https://crates.io/)<!-- ignore -->."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Extend Cargo using custom commands."
-msgstr ""
+msgstr "Estenda o Cargo usando comandos personalizados."
 
 #: src/ch14-00-more-about-cargo.md
 msgid "Cargo can do even more than the functionality we cover in this chapter, so for a full explanation of all its features, see [its documentation](https://doc.rust-lang.org/cargo/)."
-msgstr ""
+msgstr "O Cargo pode fazer ainda mais do que a funcionalidade que abordamos neste capítulo, então, para uma explicação completa de todos os seus recursos, consulte [a documentação dele](https://doc.rust-lang.org/cargo/)."
 
 #: src/ch14-01-release-profiles.md
 msgid "In Rust, _release profiles_ are predefined, customizable profiles with different configurations that allow a programmer to have more control over various options for compiling code. Each profile is configured independently of the others."
-msgstr ""
+msgstr "No Rust, _perfis de release_ são perfis predefinidos e personalizáveis, com configurações diferentes que permitem ao programador ter mais controle sobre várias opções para compilar código. Cada perfil é configurado de forma independente dos demais."
 
 #: src/ch14-01-release-profiles.md
 msgid "Cargo has two main profiles: the `dev` profile Cargo uses when you run `cargo build`, and the `release` profile Cargo uses when you run `cargo build --release`. The `dev` profile is defined with good defaults for development, and the `release` profile has good defaults for release builds."
-msgstr ""
+msgstr "O Cargo tem dois perfis principais: o perfil `dev`, que o Cargo usa quando você executa `cargo build`, e o perfil `release`, que o Cargo usa quando você executa `cargo build --release`. O perfil `dev` é definido com bons padrões para desenvolvimento, e o perfil `release` tem bons padrões para compilações de release."
 
 #: src/ch14-01-release-profiles.md
 msgid "These profile names might be familiar from the output of your builds:"
-msgstr ""
+msgstr "Você talvez já conheça esses nomes de perfil pela saída das suas compilações:"
 
 #: src/ch14-01-release-profiles.md
 msgid ""
@@ -13974,51 +13974,51 @@ msgstr ""
 
 #: src/ch14-01-release-profiles.md
 msgid "The `dev` and `release` are these different profiles used by the compiler."
-msgstr ""
+msgstr "Os perfis `dev` e `release` são estes perfis diferentes usados pelo compilador."
 
 #: src/ch14-01-release-profiles.md
 msgid "Cargo has default settings for each of the profiles that apply when you haven't explicitly added any `[profile.*]` sections in the project’s _Cargo.toml_ file. By adding `[profile.*]` sections for any profile you want to customize, you override any subset of the default settings. For example, here are the default values for the `opt-level` setting for the `dev` and `release` profiles:"
-msgstr ""
+msgstr "O Cargo tem configurações padrão para cada um dos perfis, que se aplicam quando você não tiver adicionado explicitamente nenhuma seção `[profile.*]` no arquivo _Cargo.toml_ do projeto. Ao adicionar seções `[profile.*]` para qualquer perfil que você queira personalizar, você substitui qualquer subconjunto das configurações padrão. Por exemplo, aqui estão os valores padrão da configuração `opt-level` para os perfis `dev` e `release`:"
 
 #: src/ch14-01-release-profiles.md
 msgid "The `opt-level` setting controls the number of optimizations Rust will apply to your code, with a range of 0 to 3. Applying more optimizations extends compiling time, so if you’re in development and compiling your code often, you’ll want fewer optimizations to compile faster even if the resultant code runs slower. The default `opt-level` for `dev` is therefore `0`. When you’re ready to release your code, it’s best to spend more time compiling. You’ll only compile in release mode once, but you’ll run the compiled program many times, so release mode trades longer compile time for code that runs faster. That is why the default `opt-level` for the `release` profile is `3`."
-msgstr ""
+msgstr "A configuração `opt-level` controla o número de otimizações que o Rust vai aplicar ao seu código, em um intervalo de 0 a 3. Aplicar mais otimizações aumenta o tempo de compilação, então, se você está em desenvolvimento e compila o seu código com frequência, vai querer menos otimizações para compilar mais rápido, mesmo que o código resultante execute mais devagar. Por isso, o valor padrão de `opt-level` para `dev` é `0`. Quando você estiver pronto para lançar o seu código, vale a pena gastar mais tempo compilando. Você só vai compilar no modo release uma vez, mas vai executar o programa compilado muitas vezes, então o modo release troca um tempo de compilação maior por código que executa mais rápido. É por isso que o valor padrão de `opt-level` para o perfil `release` é `3`."
 
 #: src/ch14-01-release-profiles.md
 msgid "You can override a default setting by adding a different value for it in _Cargo.toml_. For example, if we want to use optimization level 1 in the development profile, we can add these two lines to our project’s _Cargo.toml_ file:"
-msgstr ""
+msgstr "Você pode substituir uma configuração padrão adicionando um valor diferente para ela no _Cargo.toml_. Por exemplo, se quisermos usar o nível de otimização 1 no perfil de desenvolvimento, podemos adicionar estas duas linhas ao arquivo _Cargo.toml_ do projeto:"
 
 #: src/ch14-01-release-profiles.md
 msgid "This code overrides the default setting of `0`. Now when we run `cargo build`, Cargo will use the defaults for the `dev` profile plus our customization to `opt-level`. Because we set `opt-level` to `1`, Cargo will apply more optimizations than the default, but not as many as in a release build."
-msgstr ""
+msgstr "Este código substitui a configuração padrão de `0`. Agora, quando executarmos `cargo build`, o Cargo vai usar os padrões do perfil `dev` mais a nossa personalização de `opt-level`. Como definimos `opt-level` como `1`, o Cargo vai aplicar mais otimizações do que o padrão, mas não tantas quanto em uma compilação de release."
 
 #: src/ch14-01-release-profiles.md
 msgid "For the full list of configuration options and defaults for each profile, see [Cargo’s documentation](https://doc.rust-lang.org/cargo/reference/profiles.html)."
-msgstr ""
+msgstr "Para a lista completa de opções de configuração e padrões de cada perfil, consulte a [documentação do Cargo](https://doc.rust-lang.org/cargo/reference/profiles.html)."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "We’ve used packages from [crates.io](https://crates.io/)<!-- ignore --> as dependencies of our project, but you can also share your code with other people by publishing your own packages. The crate registry at [crates.io](https://crates.io/)<!-- ignore --> distributes the source code of your packages, so it primarily hosts code that is open source."
-msgstr ""
+msgstr "Já usamos pacotes do [crates.io](https://crates.io/)<!-- ignore --> como dependências do nosso projeto, mas você também pode compartilhar o seu código com outras pessoas publicando os seus próprios pacotes. O registro de crates em [crates.io](https://crates.io/)<!-- ignore --> distribui o código-fonte dos seus pacotes; por isso, ele hospeda principalmente código aberto."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Rust and Cargo have features that make your published package easier for people to find and use. We’ll talk about some of these features next and then explain how to publish a package."
-msgstr ""
+msgstr "O Rust e o Cargo têm recursos que tornam o seu pacote publicado mais fácil de encontrar e usar. Vamos falar sobre alguns desses recursos a seguir e depois explicar como publicar um pacote."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Making Useful Documentation Comments"
-msgstr ""
+msgstr "Criando comentários de documentação úteis {#making-useful-documentation-comments}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Accurately documenting your packages will help other users know how and when to use them, so it’s worth investing the time to write documentation. In Chapter 3, we discussed how to comment Rust code using two slashes, `//`. Rust also has a particular kind of comment for documentation, known conveniently as a _documentation comment_, that will generate HTML documentation. The HTML displays the contents of documentation comments for public API items intended for programmers interested in knowing how to _use_ your crate as opposed to how your crate is _implemented_."
-msgstr ""
+msgstr "Documentar com precisão os seus pacotes vai ajudar outros usuários a saber como e quando usá-los, então vale a pena investir o tempo para escrever a documentação. No Capítulo 3, discutimos como comentar código Rust usando duas barras, `//`. O Rust também tem um tipo específico de comentário para documentação, convenientemente chamado de _comentário de documentação_, que gera documentação HTML. O HTML exibe o conteúdo dos comentários de documentação dos itens da API pública, voltados a programadores interessados em saber como _usar_ o seu crate, em vez de como o seu crate é _implementado_."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Documentation comments use three slashes, `///`, instead of two and support Markdown notation for formatting the text. Place documentation comments just before the item they’re documenting. Listing 14-1 shows documentation comments for an `add_one` function in a crate named `my_crate`."
-msgstr ""
+msgstr "Os comentários de documentação usam três barras, `///`, em vez de duas, e suportam a notação Markdown para formatar o texto. Coloque os comentários de documentação logo antes do item que eles documentam. A Listagem 14-1 mostra comentários de documentação para uma função `add_one` em um crate chamado `my_crate`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-1\" file-name=\"src/lib.rs\" caption=\"A documentation comment for a function\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-1\" file-name=\"src/lib.rs\" caption=\"Um comentário de documentação para uma função\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14036,51 +14036,51 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Here, we give a description of what the `add_one` function does, start a section with the heading `Examples`, and then provide code that demonstrates how to use the `add_one` function. We can generate the HTML documentation from this documentation comment by running `cargo doc`. This command runs the `rustdoc` tool distributed with Rust and puts the generated HTML documentation in the _target/doc_ directory."
-msgstr ""
+msgstr "Aqui, damos uma descrição do que a função `add_one` faz, iniciamos uma seção com o cabeçalho `Examples` e, em seguida, fornecemos código que demonstra como usar a função `add_one`. Podemos gerar a documentação HTML a partir desse comentário de documentação executando `cargo doc`. Esse comando executa a ferramenta `rustdoc`, distribuída com o Rust, e coloca a documentação HTML gerada no diretório _target/doc_."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "For convenience, running `cargo doc --open` will build the HTML for your current crate’s documentation (as well as the documentation for all of your crate’s dependencies) and open the result in a web browser. Navigate to the `add_one` function and you’ll see how the text in the documentation comments is rendered, as shown in Figure 14-1."
-msgstr ""
+msgstr "Por conveniência, executar `cargo doc --open` vai criar o HTML da documentação do crate atual (assim como a documentação de todas as dependências do seu crate) e abrir o resultado em um navegador web. Navegue até a função `add_one` e você verá como o texto dos comentários de documentação é renderizado, como mostrado na Figura 14-1."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<img alt=\"Rendered HTML documentation for the `add_one` function of `my_crate`\" src=\"img/trpl14-01.png\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Documentação HTML renderizada para a função `add_one` de `my_crate`\" src=\"img/trpl14-01.png\" class=\"center\" />\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<span class=\"caption\">Figure 14-1: The HTML documentation for the `add_one` function</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 14-1: A documentação HTML da função `add_one`</span>"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Commonly Used Sections"
-msgstr ""
+msgstr "Seções comumente usadas {#commonly-used-sections}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "We used the `# Examples` Markdown heading in Listing 14-1 to create a section in the HTML with the title “Examples.” Here are some other sections that crate authors commonly use in their documentation:"
-msgstr ""
+msgstr "Usamos o cabeçalho Markdown `# Examples` na Listagem 14-1 para criar uma seção no HTML com o título “Examples”. Estas são algumas outras seções que os autores de crates costumam usar na documentação:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "**Panics**: These are the scenarios in which the function being documented could panic. Callers of the function who don’t want their programs to panic should make sure they don’t call the function in these situations."
-msgstr ""
+msgstr "**Panics**: estes são os cenários em que a função documentada pode entrar em pânico. Quem chama a função e não quer que os seus programas entrem em pânico deve garantir que não a chame nessas situações."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "**Errors**: If the function returns a `Result`, describing the kinds of errors that might occur and what conditions might cause those errors to be returned can be helpful to callers so that they can write code to handle the different kinds of errors in different ways."
-msgstr ""
+msgstr "**Errors**: se a função retornar um `Result`, descrever os tipos de erro que podem ocorrer e as condições que podem levar ao retorno desses erros pode ser útil para quem chama, para que possa escrever código que trate os diferentes tipos de erro de formas diferentes."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "**Safety**: If the function is `unsafe` to call (we discuss unsafety in Chapter 20), there should be a section explaining why the function is unsafe and covering the invariants that the function expects callers to uphold."
-msgstr ""
+msgstr "**Safety**: se chamar a função for `unsafe` (discutimos o Rust inseguro no Capítulo 20), deve haver uma seção explicando por que a função é insegura e abordando os invariantes que a função espera que quem a chama mantenha."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Most documentation comments don’t need all of these sections, but this is a good checklist to remind you of the aspects of your code users will be interested in knowing about."
-msgstr ""
+msgstr "A maioria dos comentários de documentação não precisa de todas essas seções, mas esta é uma boa lista de verificação para lembrar você dos aspectos do seu código sobre os quais os usuários vão querer saber."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Documentation Comments as Tests"
-msgstr ""
+msgstr "Comentários de documentação como testes {#documentation-comments-as-tests}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Adding example code blocks in your documentation comments can help demonstrate how to use your library and has an additional bonus: Running `cargo test` will run the code examples in your documentation as tests! Nothing is better than documentation with examples. But nothing is worse than examples that don’t work because the code has changed since the documentation was written. If we run `cargo test` with the documentation for the `add_one` function from Listing 14-1, we will see a section in the test results that looks like this:"
-msgstr ""
+msgstr "Adicionar blocos de código de exemplo nos seus comentários de documentação pode ajudar a demonstrar como usar a sua biblioteca e tem um benefício extra: executar `cargo test` vai executar os exemplos de código da sua documentação como testes! Nada é melhor do que uma documentação com exemplos. Mas nada é pior do que exemplos que não funcionam porque o código mudou depois que a documentação foi escrita. Se executarmos `cargo test` com a documentação da função `add_one` da Listagem 14-1, veremos uma seção nos resultados dos testes que se parece com isto:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14093,7 +14093,7 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Now, if we change either the function or the example so that the `assert_eq!` in the example panics, and run `cargo test` again, we’ll see that the doc tests catch that the example and the code are out of sync with each other!"
-msgstr ""
+msgstr "Agora, se mudarmos a função ou o exemplo de forma que o `assert_eq!` do exemplo entre em pânico e executarmos `cargo test` de novo, veremos que os testes de documentação detectam que o exemplo e o código estão fora de sincronia um com o outro!"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<a id=\"commenting-contained-items\"></a>"
@@ -14101,19 +14101,19 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Contained Item Comments"
-msgstr ""
+msgstr "Comentários de itens contidos {#contained-item-comments}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The style of doc comment `//!` adds documentation to the item that _contains_ the comments rather than to the items _following_ the comments. We typically use these doc comments inside the crate root file (_src/lib.rs_ by convention) or inside a module to document the crate or the module as a whole."
-msgstr ""
+msgstr "O estilo de comentário de documentação `//!` adiciona documentação ao item que _contém_ os comentários, em vez de aos itens _que seguem_ os comentários. Normalmente, usamos esses comentários de documentação dentro do arquivo raiz do crate (_src/lib.rs_, por convenção) ou dentro de um módulo para documentar o crate ou o módulo como um todo."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "For example, to add documentation that describes the purpose of the `my_crate` crate that contains the `add_one` function, we add documentation comments that start with `//!` to the beginning of the _src/lib.rs_ file, as shown in Listing 14-2."
-msgstr ""
+msgstr "Por exemplo, para adicionar documentação que descreve a finalidade do crate `my_crate`, que contém a função `add_one`, adicionamos comentários de documentação que começam com `//!` no início do arquivo _src/lib.rs_, como mostrado na Listagem 14-2."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-2\" file-name=\"src/lib.rs\" caption=\"The documentation for the `my_crate` crate as a whole\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-2\" file-name=\"src/lib.rs\" caption=\"A documentação do crate `my_crate` como um todo\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14156,23 +14156,23 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Notice there isn’t any code after the last line that begins with `//!`. Because we started the comments with `//!` instead of `///`, we’re documenting the item that contains this comment rather than an item that follows this comment. In this case, that item is the _src/lib.rs_ file, which is the crate root. These comments describe the entire crate."
-msgstr ""
+msgstr "Observe que não há nenhum código depois da última linha que começa com `//!`. Como iniciamos os comentários com `//!` em vez de `///`, estamos documentando o item que contém este comentário, e não um item que segue este comentário. Neste caso, esse item é o arquivo _src/lib.rs_, que é a raiz do crate. Estes comentários descrevem o crate inteiro."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "When we run `cargo doc --open`, these comments will display on the front page of the documentation for `my_crate` above the list of public items in the crate, as shown in Figure 14-2."
-msgstr ""
+msgstr "Quando executarmos `cargo doc --open`, estes comentários vão aparecer na página inicial da documentação de `my_crate`, acima da lista de itens públicos do crate, como mostrado na Figura 14-2."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Documentation comments within items are useful for describing crates and modules especially. Use them to explain the overall purpose of the container to help your users understand the crate’s organization."
-msgstr ""
+msgstr "Comentários de documentação dentro de itens são especialmente úteis para descrever crates e módulos. Use-os para explicar a finalidade geral do item que os contém e ajudar os seus usuários a entender a organização do crate."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<img alt=\"Rendered HTML documentation with a comment for the crate as a whole\" src=\"img/trpl14-02.png\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Documentação HTML renderizada com um comentário para o crate como um todo\" src=\"img/trpl14-02.png\" class=\"center\" />\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<span class=\"caption\">Figure 14-2: The rendered documentation for `my_crate`, including the comment describing the crate as a whole</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 14-2: A documentação renderizada de `my_crate`, incluindo o comentário que descreve o crate como um todo</span>"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<a id=\"exporting-a-convenient-public-api-with-pub-use\"></a>"
@@ -14180,27 +14180,27 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Exporting a Convenient Public API"
-msgstr ""
+msgstr "Exportando uma API pública conveniente {#exporting-a-convenient-public-api}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The structure of your public API is a major consideration when publishing a crate. People who use your crate are less familiar with the structure than you are and might have difficulty finding the pieces they want to use if your crate has a large module hierarchy."
-msgstr ""
+msgstr "A estrutura da sua API pública é uma consideração importante ao publicar um crate. As pessoas que usam o seu crate estão menos familiarizadas com a estrutura do que você e podem ter dificuldade para encontrar as partes que querem usar se o seu crate tiver uma grande hierarquia de módulos."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "In Chapter 7, we covered how to make items public using the `pub` keyword, and how to bring items into a scope with the `use` keyword. However, the structure that makes sense to you while you’re developing a crate might not be very convenient for your users. You might want to organize your structs in a hierarchy containing multiple levels, but then people who want to use a type you’ve defined deep in the hierarchy might have trouble finding out that type exists. They might also be annoyed at having to enter `use my_crate::some_module::another_module::UsefulType;` rather than `use my_crate::UsefulType;`."
-msgstr ""
+msgstr "No Capítulo 7, abordamos como tornar itens públicos usando a palavra-chave `pub` e como trazer itens para o escopo com a palavra-chave `use`. No entanto, a estrutura que faz sentido para você enquanto desenvolve um crate pode não ser muito conveniente para os seus usuários. Você pode querer organizar os seus structs em uma hierarquia com vários níveis, mas, nesse caso, as pessoas que quiserem usar um tipo que você definiu lá no fundo da hierarquia podem ter dificuldade para descobrir que esse tipo existe. Elas também podem ficar incomodadas por precisar digitar `use my_crate::some_module::another_module::UsefulType;` em vez de `use my_crate::UsefulType;`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The good news is that if the structure _isn’t_ convenient for others to use from another library, you don’t have to rearrange your internal organization: Instead, you can re-export items to make a public structure that’s different from your private structure by using `pub use`. _Re-exporting_ takes a public item in one location and makes it public in another location, as if it were defined in the other location instead."
-msgstr ""
+msgstr "A boa notícia é que, se a estrutura _não for_ conveniente para que outros a usem a partir de outra biblioteca, você não precisa reorganizar a sua organização interna. Em vez disso, pode reexportar itens para criar uma estrutura pública diferente da sua estrutura privada, usando `pub use`. A _reexportação_ pega um item público de um local e o torna público em outro, como se ele tivesse sido definido ali, e não no local original."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "For example, say we made a library named `art` for modeling artistic concepts. Within this library are two modules: a `kinds` module containing two enums named `PrimaryColor` and `SecondaryColor` and a `utils` module containing a function named `mix`, as shown in Listing 14-3."
-msgstr ""
+msgstr "Por exemplo, digamos que fizemos uma biblioteca chamada `art` para modelar conceitos artísticos. Dentro dessa biblioteca há dois módulos: um módulo `kinds`, que contém dois enums chamados `PrimaryColor` e `SecondaryColor`, e um módulo `utils`, que contém uma função chamada `mix`, como mostrado na Listagem 14-3."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-3\" file-name=\"src/lib.rs\" caption=\"An `art` library with items organized into `kinds` and `utils` modules\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-3\" file-name=\"src/lib.rs\" caption=\"Uma biblioteca `art` com itens organizados nos módulos `kinds` e `utils`\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14225,39 +14225,39 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Figure 14-3 shows what the front page of the documentation for this crate generated by `cargo doc` would look like."
-msgstr ""
+msgstr "A Figura 14-3 mostra como seria a página inicial da documentação deste crate gerada por `cargo doc`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<img alt=\"Rendered documentation for the `art` crate that lists the `kinds` and `utils` modules\" src=\"img/trpl14-03.png\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Documentação renderizada do crate `art` que lista os módulos `kinds` e `utils`\" src=\"img/trpl14-03.png\" class=\"center\" />\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<span class=\"caption\">Figure 14-3: The front page of the documentation for `art` that lists the `kinds` and `utils` modules</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 14-3: A página inicial da documentação de `art`, que lista os módulos `kinds` e `utils`</span>"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Note that the `PrimaryColor` and `SecondaryColor` types aren’t listed on the front page, nor is the `mix` function. We have to click `kinds` and `utils` to see them."
-msgstr ""
+msgstr "Observe que os tipos `PrimaryColor` e `SecondaryColor` não aparecem na página inicial, nem a função `mix`. Precisamos clicar em `kinds` e `utils` para vê-los."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Another crate that depends on this library would need `use` statements that bring the items from `art` into scope, specifying the module structure that’s currently defined. Listing 14-4 shows an example of a crate that uses the `PrimaryColor` and `mix` items from the `art` crate."
-msgstr ""
+msgstr "Outro crate que dependa desta biblioteca precisaria de instruções `use` que tragam os itens de `art` para o escopo, especificando a estrutura de módulos que está definida atualmente. A Listagem 14-4 mostra um exemplo de crate que usa os itens `PrimaryColor` e `mix` do crate `art`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-4\" file-name=\"src/main.rs\" caption=\"A crate using the `art` crate’s items with its internal structure exported\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-4\" file-name=\"src/main.rs\" caption=\"Um crate que usa os itens do crate `art` com a estrutura interna exportada\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The author of the code in Listing 14-4, which uses the `art` crate, had to figure out that `PrimaryColor` is in the `kinds` module and `mix` is in the `utils` module. The module structure of the `art` crate is more relevant to developers working on the `art` crate than to those using it. The internal structure doesn’t contain any useful information for someone trying to understand how to use the `art` crate, but rather causes confusion because developers who use it have to figure out where to look, and must specify the module names in the `use` statements."
-msgstr ""
+msgstr "O autor do código da Listagem 14-4, que usa o crate `art`, precisou descobrir que `PrimaryColor` está no módulo `kinds` e que `mix` está no módulo `utils`. A estrutura de módulos do crate `art` é mais relevante para os desenvolvedores que trabalham no crate `art` do que para quem o usa. A estrutura interna não traz nenhuma informação útil para quem tenta entender como usar o crate `art`, mas, em vez disso, causa confusão, porque os desenvolvedores que o usam precisam descobrir onde procurar e devem especificar os nomes dos módulos nas instruções `use`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "To remove the internal organization from the public API, we can modify the `art` crate code in Listing 14-3 to add `pub use` statements to re-export the items at the top level, as shown in Listing 14-5."
-msgstr ""
+msgstr "Para remover a organização interna da API pública, podemos modificar o código do crate `art` da Listagem 14-3 para adicionar instruções `pub use` que reexportem os itens no nível superior, como mostrado na Listagem 14-5."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-5\" file-name=\"src/lib.rs\" caption=\"Adding `pub use` statements to re-export items\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-5\" file-name=\"src/lib.rs\" caption=\"Adicionando instruções `pub use` para reexportar itens\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "/// Combines two primary colors in equal amounts to create\n"
@@ -14269,57 +14269,59 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The API documentation that `cargo doc` generates for this crate will now list and link re-exports on the front page, as shown in Figure 14-4, making the `PrimaryColor` and `SecondaryColor` types and the `mix` function easier to find."
-msgstr ""
+msgstr "A documentação da API que `cargo doc` gera para este crate agora vai listar as reexportações na página inicial, com links para elas, como mostrado na Figura 14-4, tornando os tipos `PrimaryColor` e `SecondaryColor` e a função `mix` mais fáceis de encontrar."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<img alt=\"Rendered documentation for the `art` crate with the re-exports on the front page\" src=\"img/trpl14-04.png\" class=\"center\" />\n"
-msgstr ""
+msgstr "<img alt=\"Documentação renderizada do crate `art` com as reexportações na página inicial\" src=\"img/trpl14-04.png\" class=\"center\" />\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<span class=\"caption\">Figure 14-4: The front page of the documentation for `art` that lists the re-exports</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 14-4: A página inicial da documentação de `art`, que lista as reexportações</span>"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The `art` crate users can still see and use the internal structure from Listing 14-3 as demonstrated in Listing 14-4, or they can use the more convenient structure in Listing 14-5, as shown in Listing 14-6."
-msgstr ""
+msgstr "Os usuários do crate `art` ainda podem ver e usar a estrutura interna da Listagem 14-3, como demonstrado na Listagem 14-4, ou podem usar a estrutura mais conveniente da Listagem 14-5, como mostrado na Listagem 14-6."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<Listing number=\"14-6\" file-name=\"src/main.rs\" caption=\"A program using the re-exported items from the `art` crate\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-6\" file-name=\"src/main.rs\" caption=\"Um programa que usa os itens reexportados do crate `art`\">\n"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "In cases where there are many nested modules, re-exporting the types at the top level with `pub use` can make a significant difference in the experience of people who use the crate. Another common use of `pub use` is to re-export definitions of a dependency in the current crate to make that crate's definitions part of your crate’s public API."
-msgstr ""
+msgstr "Em casos em que há muitos módulos aninhados, reexportar os tipos no nível superior com `pub use` pode fazer uma diferença significativa na experiência de quem usa o crate. Outro uso comum de `pub use` é reexportar definições de uma dependência no crate atual, para tornar as definições desse crate parte da API pública do seu crate."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Creating a useful public API structure is more an art than a science, and you can iterate to find the API that works best for your users. Choosing `pub use` gives you flexibility in how you structure your crate internally and decouples that internal structure from what you present to your users. Look at some of the code of crates you’ve installed to see if their internal structure differs from their public API."
-msgstr ""
+msgstr "Criar uma estrutura de API pública útil é mais uma arte do que uma ciência, e você pode iterar até encontrar a API que funcione melhor para os seus usuários. Escolher `pub use` oferece flexibilidade para estruturar o seu crate internamente e desacopla essa estrutura interna daquilo que você apresenta aos seus usuários. Dê uma olhada no código de alguns crates que você instalou para ver se a estrutura interna deles difere da API pública."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Setting Up a Crates.io Account"
-msgstr ""
+msgstr "Configurando uma conta no crates.io {#setting-up-a-cratesio-account}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Before you can publish any crates, you need to create an account on [crates.io](https://crates.io/)<!-- ignore --> and get an API token. To do so, visit the home page at [crates.io](https://crates.io/)<!-- ignore --> and log in via a GitHub account. (The GitHub account is currently a requirement, but the site might support other ways of creating an account in the future.) Once you’re logged in, visit your account settings at [https://crates.io/me/](https://crates.io/me/)<!-- ignore --> and retrieve your API key. Then, run the `cargo login` command and paste your API key when prompted, like this:"
-msgstr ""
+msgstr "Antes de publicar qualquer crate, você precisa criar uma conta no [crates.io](https://crates.io/)<!-- ignore --> e obter um token de API. Para isso, acesse a página inicial do [crates.io](https://crates.io/)<!-- ignore --> e faça login com uma conta do GitHub. (A conta do GitHub é atualmente um requisito, mas o site pode oferecer outras formas de criar uma conta no futuro.) Depois de fazer login, acesse as configurações da sua conta em [https://crates.io/me/](https://crates.io/me/)<!-- ignore --> e obtenha a sua chave de API. Em seguida, execute o comando `cargo login` e cole a sua chave de API quando for solicitado, assim:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
 "This command will inform Cargo of your API token and store it locally in _~/.cargo/credentials.toml_. Note that this token is a secret: Do not share it with anyone else. If you do share it with anyone for any reason, you should revoke it and generate a new token on [crates.io](https://crates.io/)<!-- ignore\n"
 "-->."
 msgstr ""
+"Esse comando informa ao Cargo o seu token de API e o armazena localmente em _~/.cargo/credentials.toml_. Observe que esse token é um segredo: não o compartilhe com ninguém. Se você o compartilhar com alguém por qualquer motivo, deve revogá-lo e gerar um novo token no [crates.io](https://crates.io/)<!-- ignore\n"
+"-->."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Adding Metadata to a New Crate"
-msgstr ""
+msgstr "Adicionando metadados a um novo crate {#adding-metadata-to-a-new-crate}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Let’s say you have a crate you want to publish. Before publishing, you’ll need to add some metadata in the `[package]` section of the crate’s _Cargo.toml_ file."
-msgstr ""
+msgstr "Digamos que você tenha um crate que quer publicar. Antes de publicar, você vai precisar adicionar alguns metadados na seção `[package]` do arquivo _Cargo.toml_ do crate."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Your crate will need a unique name. While you’re working on a crate locally, you can name a crate whatever you’d like. However, crate names on [crates.io](https://crates.io/)<!-- ignore --> are allocated on a first-come, first-served basis. Once a crate name is taken, no one else can publish a crate with that name. Before attempting to publish a crate, search for the name you want to use. If the name has been used, you will need to find another name and edit the `name` field in the _Cargo.toml_ file under the `[package]` section to use the new name for publishing, like so:"
-msgstr ""
+msgstr "O seu crate vai precisar de um nome único. Enquanto você trabalha em um crate localmente, pode dar a ele o nome que quiser. No entanto, os nomes de crates no [crates.io](https://crates.io/)<!-- ignore --> são atribuídos por ordem de chegada. Depois que um nome de crate é ocupado, ninguém mais pode publicar um crate com esse nome. Antes de tentar publicar um crate, pesquise o nome que você quer usar. Se o nome já tiver sido usado, você vai precisar encontrar outro nome e editar o campo `name` na seção `[package]` do arquivo _Cargo.toml_ para usar o novo nome na publicação, assim:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14331,7 +14333,7 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Even if you’ve chosen a unique name, when you run `cargo publish` to publish the crate at this point, you’ll get a warning and then an error:"
-msgstr ""
+msgstr "Mesmo que você tenha escolhido um nome único, quando executar `cargo publish` para publicar o crate neste ponto, você vai receber um aviso e depois um erro:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14360,7 +14362,7 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "This results in an error because you’re missing some crucial information: A description and license are required so that people will know what your crate does and under what terms they can use it. In _Cargo.toml_, add a description that's just a sentence or two, because it will appear with your crate in search results. For the `license` field, you need to give a _license identifier value_. The [Linux Foundation’s Software Package Data Exchange (SPDX)](https://spdx.org/licenses/) lists the identifiers you can use for this value. For example, to specify that you’ve licensed your crate using the MIT License, add the `MIT` identifier:"
-msgstr ""
+msgstr "Isso resulta em um erro porque está faltando uma informação crucial: uma descrição e uma licença são obrigatórias para que as pessoas saibam o que o seu crate faz e sob quais termos podem usá-lo. No _Cargo.toml_, adicione uma descrição de apenas uma ou duas frases, porque ela vai aparecer junto do seu crate nos resultados de pesquisa. No campo `license`, você precisa informar um _valor de identificador de licença_. O [Software Package Data Exchange (SPDX), da Linux Foundation](https://spdx.org/licenses/) lista os identificadores que você pode usar para esse valor. Por exemplo, para especificar que você licenciou o seu crate sob a Licença MIT, adicione o identificador `MIT`:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14373,15 +14375,15 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "If you want to use a license that doesn’t appear in the SPDX, you need to place the text of that license in a file, include the file in your project, and then use `license-file` to specify the name of that file instead of using the `license` key."
-msgstr ""
+msgstr "Se você quiser usar uma licença que não aparece no SPDX, precisa colocar o texto dessa licença em um arquivo, incluir esse arquivo no seu projeto e, depois, usar `license-file` para especificar o nome desse arquivo, em vez de usar a chave `license`."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Guidance on which license is appropriate for your project is beyond the scope of this book. Many people in the Rust community license their projects in the same way as Rust by using a dual license of `MIT OR Apache-2.0`. This practice demonstrates that you can also specify multiple license identifiers separated by `OR` to have multiple licenses for your project."
-msgstr ""
+msgstr "Orientações sobre qual licença é apropriada para o seu projeto estão fora do escopo deste livro. Muitas pessoas da comunidade Rust licenciam os seus projetos da mesma forma que o Rust, usando uma licença dupla `MIT OR Apache-2.0`. Essa prática demonstra que você também pode especificar vários identificadores de licença separados por `OR` para ter várias licenças para o seu projeto."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "With a unique name, the version, your description, and a license added, the _Cargo.toml_ file for a project that is ready to publish might look like this:"
-msgstr ""
+msgstr "Com um nome único, a versão, a descrição e uma licença adicionados, o arquivo _Cargo.toml_ de um projeto pronto para publicar pode ficar assim:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14399,23 +14401,23 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "[Cargo’s documentation](https://doc.rust-lang.org/cargo/) describes other metadata you can specify to ensure that others can discover and use your crate more easily."
-msgstr ""
+msgstr "A [documentação do Cargo](https://doc.rust-lang.org/cargo/) descreve outros metadados que você pode especificar para garantir que outras pessoas consigam encontrar e usar o seu crate com mais facilidade."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Publishing to Crates.io"
-msgstr ""
+msgstr "Publicando no crates.io {#publishing-to-cratesio}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Now that you’ve created an account, saved your API token, chosen a name for your crate, and specified the required metadata, you’re ready to publish! Publishing a crate uploads a specific version to [crates.io](https://crates.io/)<!-- ignore --> for others to use."
-msgstr ""
+msgstr "Agora que você criou uma conta, salvou o seu token de API, escolheu um nome para o seu crate e especificou os metadados necessários, você está pronto para publicar! Publicar um crate envia uma versão específica para o [crates.io](https://crates.io/)<!-- ignore --> para que outras pessoas a usem."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Be careful, because a publish is _permanent_. The version can never be overwritten, and the code cannot be deleted except in certain circumstances. One major goal of Crates.io is to act as a permanent archive of code so that builds of all projects that depend on crates from [crates.io](https://crates.io/)<!-- ignore --> will continue to work. Allowing version deletions would make fulfilling that goal impossible. However, there is no limit to the number of crate versions you can publish."
-msgstr ""
+msgstr "Tenha cuidado, porque uma publicação é _permanente_. A versão nunca pode ser sobrescrita, e o código não pode ser excluído, exceto em certas circunstâncias. Um dos principais objetivos do crates.io é funcionar como um arquivo permanente de código, para que as compilações de todos os projetos que dependem de crates do [crates.io](https://crates.io/)<!-- ignore --> continuem funcionando. Permitir a exclusão de versões tornaria impossível cumprir esse objetivo. No entanto, não há limite para o número de versões de crates que você pode publicar."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Run the `cargo publish` command again. It should succeed now:"
-msgstr ""
+msgstr "Execute o comando `cargo publish` novamente. Agora ele deve funcionar:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14448,15 +14450,15 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Congratulations! You’ve now shared your code with the Rust community, and anyone can easily add your crate as a dependency of their project."
-msgstr ""
+msgstr "Parabéns! Você agora compartilhou o seu código com a comunidade Rust, e qualquer pessoa pode facilmente adicionar o seu crate como dependência do próprio projeto."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Publishing a New Version of an Existing Crate"
-msgstr ""
+msgstr "Publicando uma nova versão de um crate existente {#publishing-a-new-version-of-an-existing-crate}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "When you’ve made changes to your crate and are ready to release a new version, you change the `version` value specified in your _Cargo.toml_ file and republish. Use the [Semantic Versioning rules](https://semver.org/) to decide what an appropriate next version number is, based on the kinds of changes you’ve made. Then, run `cargo publish` to upload the new version."
-msgstr ""
+msgstr "Quando você fizer alterações no seu crate e estiver pronto para lançar uma nova versão, altere o valor `version` especificado no arquivo _Cargo.toml_ e publique novamente. Use as [regras de Versionamento Semântico](https://semver.org/) para decidir qual é o próximo número de versão adequado, com base nos tipos de alterações que você fez. Em seguida, execute `cargo publish` para enviar a nova versão."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "<a id=\"removing-versions-from-cratesio-with-cargo-yank\"></a> <a id=\"deprecating-versions-from-cratesio-with-cargo-yank\"></a>"
@@ -14464,19 +14466,19 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Deprecating Versions from Crates.io"
-msgstr ""
+msgstr "Descontinuando versões do crates.io {#deprecating-versions-from-cratesio}"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Although you can’t remove previous versions of a crate, you can prevent any future projects from adding them as a new dependency. This is useful when a crate version is broken for one reason or another. In such situations, Cargo supports yanking a crate version."
-msgstr ""
+msgstr "Embora você não possa remover versões anteriores de um crate, pode impedir que projetos futuros as adicionem como uma nova dependência. Isso é útil quando uma versão do crate está com problemas por um motivo ou outro. Nessas situações, o Cargo permite retirar uma versão do crate."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "_Yanking_ a version prevents new projects from depending on that version while allowing all existing projects that depend on it to continue. Essentially, a yank means that all projects with a _Cargo.lock_ will not break, and any future _Cargo.lock_ files generated will not use the yanked version."
-msgstr ""
+msgstr "_Retirar_ uma versão impede que novos projetos dependam dela, mas permite que todos os projetos existentes que dependem dela continuem funcionando. Em essência, uma retirada significa que todos os projetos com um _Cargo.lock_ não vão quebrar, e que quaisquer arquivos _Cargo.lock_ gerados no futuro não vão usar a versão retirada."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "To yank a version of a crate, in the directory of the crate that you’ve previously published, run `cargo yank` and specify which version you want to yank. For example, if we’ve published a crate named `guessing_game` version 1.0.1 and we want to yank it, then we’d run the following in the project directory for `guessing_game`:"
-msgstr ""
+msgstr "Para retirar uma versão de um crate, no diretório do crate que você publicou anteriormente, execute `cargo yank` e especifique qual versão você quer retirar. Por exemplo, se tivermos publicado um crate chamado `guessing_game` na versão 1.0.1 e quisermos retirá-la, então executaremos o seguinte no diretório do projeto `guessing_game`:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid ""
@@ -14488,27 +14490,27 @@ msgstr ""
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "By adding `--undo` to the command, you can also undo a yank and allow projects to start depending on a version again:"
-msgstr ""
+msgstr "Adicionando `--undo` ao comando, você também pode desfazer uma retirada e permitir que os projetos voltem a depender de uma versão:"
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "A yank _does not_ delete any code. It cannot, for example, delete accidentally uploaded secrets. If that happens, you must reset those secrets immediately."
-msgstr ""
+msgstr "Uma retirada _não_ exclui nenhum código. Ela não consegue, por exemplo, excluir segredos enviados por acidente. Se isso acontecer, você precisa trocar esses segredos imediatamente."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "In Chapter 12, we built a package that included a binary crate and a library crate. As your project develops, you might find that the library crate continues to get bigger and you want to split your package further into multiple library crates. Cargo offers a feature called _workspaces_ that can help manage multiple related packages that are developed in tandem."
-msgstr ""
+msgstr "No Capítulo 12, criamos um pacote que incluía um crate binário e um crate de biblioteca. Conforme o seu projeto evolui, você pode perceber que o crate de biblioteca continua crescendo e que quer dividir o seu pacote em vários crates de biblioteca. O Cargo oferece um recurso chamado _workspaces_ que pode ajudar a gerenciar vários pacotes relacionados que são desenvolvidos em conjunto."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Creating a Workspace"
-msgstr ""
+msgstr "Criando um workspace {#creating-a-workspace}"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "A _workspace_ is a set of packages that share the same _Cargo.lock_ and output directory. Let’s make a project using a workspace—we’ll use trivial code so that we can concentrate on the structure of the workspace. There are multiple ways to structure a workspace, so we'll just show one common way. We’ll have a workspace containing a binary and two libraries. The binary, which will provide the main functionality, will depend on the two libraries. One library will provide an `add_one` function and the other library an `add_two` function. These three crates will be part of the same workspace. We’ll start by creating a new directory for the workspace:"
-msgstr ""
+msgstr "Um _workspace_ é um conjunto de pacotes que compartilham o mesmo _Cargo.lock_ e o mesmo diretório de saída. Vamos criar um projeto usando um workspace — usaremos um código trivial para que possamos nos concentrar na estrutura do workspace. Há várias maneiras de estruturar um workspace, então vamos mostrar apenas uma maneira comum. Teremos um workspace que contém um binário e duas bibliotecas. O binário, que vai fornecer a funcionalidade principal, vai depender das duas bibliotecas. Uma biblioteca vai fornecer uma função `add_one`, e a outra biblioteca, uma função `add_two`. Esses três crates vão fazer parte do mesmo workspace. Vamos começar criando um novo diretório para o workspace:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Next, in the _add_ directory, we create the _Cargo.toml_ file that will configure the entire workspace. This file won’t have a `[package]` section. Instead, it will start with a `[workspace]` section that will allow us to add members to the workspace. We also make a point to use the latest and greatest version of Cargo’s resolver algorithm in our workspace by setting the `resolver` value to `\"3\"`:"
-msgstr ""
+msgstr "Em seguida, no diretório _add_, criamos o arquivo _Cargo.toml_ que vai configurar o workspace inteiro. Esse arquivo não terá uma seção `[package]`. Em vez disso, ele vai começar com uma seção `[workspace]`, que nos permitirá adicionar membros ao workspace. Também fazemos questão de usar a versão mais recente e mais avançada do algoritmo de resolução do Cargo no nosso workspace, definindo o valor de `resolver` como `\"3\"`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14520,7 +14522,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Next, we’ll create the `adder` binary crate by running `cargo new` within the _add_ directory:"
-msgstr ""
+msgstr "Em seguida, vamos criar o crate binário `adder` executando `cargo new` dentro do diretório _add_:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14544,7 +14546,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Running `cargo new` inside a workspace also automatically adds the newly created package to the `members` key in the `[workspace]` definition in the workspace _Cargo.toml_, like this:"
-msgstr ""
+msgstr "Executar `cargo new` dentro de um workspace também adiciona automaticamente o pacote recém-criado à chave `members` na definição `[workspace]` do _Cargo.toml_ do workspace, assim:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14557,19 +14559,19 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "At this point, we can build the workspace by running `cargo build`. The files in your _add_ directory should look like this:"
-msgstr ""
+msgstr "Neste ponto, podemos compilar o workspace executando `cargo build`. Os arquivos no seu diretório _add_ devem ficar assim:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "The workspace has one _target_ directory at the top level that the compiled artifacts will be placed into; the `adder` package doesn’t have its own _target_ directory. Even if we were to run `cargo build` from inside the _adder_ directory, the compiled artifacts would still end up in _add/target_ rather than _add/adder/target_. Cargo structures the _target_ directory in a workspace like this because the crates in a workspace are meant to depend on each other. If each crate had its own _target_ directory, each crate would have to recompile each of the other crates in the workspace to place the artifacts in its own _target_ directory. By sharing one _target_ directory, the crates can avoid unnecessary rebuilding."
-msgstr ""
+msgstr "O workspace tem um único diretório _target_ no nível superior, onde os artefatos compilados serão colocados; o pacote `adder` não tem um diretório _target_ próprio. Mesmo que executássemos `cargo build` de dentro do diretório _adder_, os artefatos compilados ainda acabariam em _add/target_, e não em _add/adder/target_. O Cargo estrutura o diretório _target_ de um workspace dessa forma porque os crates de um workspace são feitos para depender uns dos outros. Se cada crate tivesse seu próprio diretório _target_, cada um precisaria recompilar todos os outros crates do workspace para colocar os artefatos no seu próprio diretório _target_. Ao compartilhar um único diretório _target_, os crates conseguem evitar recompilações desnecessárias."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Creating the Second Package in the Workspace"
-msgstr ""
+msgstr "Criando o segundo pacote no workspace {#creating-the-second-package-in-the-workspace}"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Next, let’s create another member package in the workspace and call it `add_one`. Generate a new library crate named `add_one`:"
-msgstr ""
+msgstr "Em seguida, vamos criar outro pacote membro no workspace e chamá-lo de `add_one`. Gere um novo crate de biblioteca chamado `add_one`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14593,7 +14595,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "The top-level _Cargo.toml_ will now include the _add_one_ path in the `members` list:"
-msgstr ""
+msgstr "O _Cargo.toml_ de nível superior agora vai incluir o caminho _add_one_ na lista `members`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14606,23 +14608,23 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Your _add_ directory should now have these directories and files:"
-msgstr ""
+msgstr "Seu diretório _add_ agora deve ter estes diretórios e arquivos:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "In the _add_one/src/lib.rs_ file, let’s add an `add_one` function:"
-msgstr ""
+msgstr "No arquivo _add_one/src/lib.rs_, vamos adicionar uma função `add_one`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "<span class=\"filename\">Filename: add_one/src/lib.rs</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: add_one/src/lib.rs</span>"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Now we can have the `adder` package with our binary depend on the `add_one` package that has our library. First, we’ll need to add a path dependency on `add_one` to _adder/Cargo.toml_."
-msgstr ""
+msgstr "Agora podemos fazer com que o pacote `adder`, com nosso binário, dependa do pacote `add_one`, que contém nossa biblioteca. Primeiro, precisamos adicionar uma dependência de caminho para `add_one` no _adder/Cargo.toml_."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "<span class=\"filename\">Filename: adder/Cargo.toml</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: adder/Cargo.toml</span>"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14634,15 +14636,15 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Cargo doesn’t assume that crates in a workspace will depend on each other, so we need to be explicit about the dependency relationships."
-msgstr ""
+msgstr "O Cargo não presume que os crates de um workspace vão depender uns dos outros, então precisamos ser explícitos quanto às relações de dependência."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Next, let’s use the `add_one` function (from the `add_one` crate) in the `adder` crate. Open the _adder/src/main.rs_ file and change the `main` function to call the `add_one` function, as in Listing 14-7."
-msgstr ""
+msgstr "Em seguida, vamos usar a função `add_one` (do crate `add_one`) no crate `adder`. Abra o arquivo _adder/src/main.rs_ e altere a função `main` para chamar a função `add_one`, como na Listagem 14-7."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "<Listing number=\"14-7\" file-name=\"adder/src/main.rs\" caption=\"Using the `add_one` library crate from the `adder` crate\">\n"
-msgstr ""
+msgstr "<Listing number=\"14-7\" file-name=\"adder/src/main.rs\" caption=\"Usando o crate de biblioteca `add_one` no crate `adder`\">\n"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "\"Hello, world! {num} plus one is {}!\""
@@ -14650,7 +14652,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Let’s build the workspace by running `cargo build` in the top-level _add_ directory!"
-msgstr ""
+msgstr "Vamos compilar o workspace executando `cargo build` no diretório _add_ de nível superior!"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14673,7 +14675,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "To run the binary crate from the _add_ directory, we can specify which package in the workspace we want to run by using the `-p` argument and the package name with `cargo run`:"
-msgstr ""
+msgstr "Para executar o crate binário a partir do diretório _add_, podemos especificar qual pacote do workspace queremos executar usando o argumento `-p` e o nome do pacote com `cargo run`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14686,7 +14688,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "This runs the code in _adder/src/main.rs_, which depends on the `add_one` crate."
-msgstr ""
+msgstr "Isso executa o código em _adder/src/main.rs_, que depende do crate `add_one`."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "<a id=\"depending-on-an-external-package-in-a-workspace\"></a>"
@@ -14694,11 +14696,11 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Depending on an External Package"
-msgstr ""
+msgstr "Dependendo de um pacote externo {#depending-on-an-external-package}"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Notice that the workspace has only one _Cargo.lock_ file at the top level, rather than having a _Cargo.lock_ in each crate’s directory. This ensures that all crates are using the same version of all dependencies. If we add the `rand` package to the _adder/Cargo.toml_ and _add_one/Cargo.toml_ files, Cargo will resolve both of those to one version of `rand` and record that in the one _Cargo.lock_. Making all crates in the workspace use the same dependencies means the crates will always be compatible with each other. Let’s add the `rand` crate to the `[dependencies]` section in the _add_one/Cargo.toml_ file so that we can use the `rand` crate in the `add_one` crate:"
-msgstr ""
+msgstr "Observe que o workspace tem apenas um arquivo _Cargo.lock_ no nível superior, em vez de ter um _Cargo.lock_ no diretório de cada crate. Isso garante que todos os crates usem a mesma versão de todas as dependências. Se adicionarmos o pacote `rand` aos arquivos _adder/Cargo.toml_ e _add_one/Cargo.toml_, o Cargo vai resolver ambos para uma única versão de `rand` e registrar essa versão no único _Cargo.lock_. Fazer com que todos os crates do workspace usem as mesmas dependências significa que os crates sempre serão compatíveis entre si. Vamos adicionar o crate `rand` à seção `[dependencies]` do arquivo _add_one/Cargo.toml_ para que possamos usar o crate `rand` no crate `add_one`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14713,11 +14715,11 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "<span class=\"filename\">Filename: add_one/Cargo.toml</span>"
-msgstr ""
+msgstr "<span class=\"filename\">Nome do arquivo: add_one/Cargo.toml</span>"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "We can now add `use rand;` to the _add_one/src/lib.rs_ file, and building the whole workspace by running `cargo build` in the _add_ directory will bring in and compile the `rand` crate. We will get one warning because we aren’t referring to the `rand` we brought into scope:"
-msgstr ""
+msgstr "Agora podemos adicionar `use rand;` ao arquivo _add_one/src/lib.rs_; compilar o workspace inteiro, executando `cargo build` no diretório _add_, vai trazer e compilar o crate `rand`. Vamos receber um aviso porque não estamos nos referindo ao `rand` que trouxemos para o escopo:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14753,7 +14755,7 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "The top-level _Cargo.lock_ now contains information about the dependency of `add_one` on `rand`. However, even though `rand` is used somewhere in the workspace, we can’t use it in other crates in the workspace unless we add `rand` to their _Cargo.toml_ files as well. For example, if we add `use rand;` to the _adder/src/main.rs_ file for the `adder` package, we’ll get an error:"
-msgstr ""
+msgstr "O _Cargo.lock_ de nível superior agora contém informações sobre a dependência de `add_one` em `rand`. No entanto, embora `rand` seja usado em algum lugar do workspace, não podemos usá-lo em outros crates do workspace, a menos que também adicionemos `rand` aos seus arquivos _Cargo.toml_. Por exemplo, se adicionarmos `use rand;` ao arquivo _adder/src/main.rs_ do pacote `adder`, vamos receber um erro:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14780,23 +14782,23 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "To fix this, edit the _Cargo.toml_ file for the `adder` package and indicate that `rand` is a dependency for it as well. Building the `adder` package will add `rand` to the list of dependencies for `adder` in _Cargo.lock_, but no additional copies of `rand` will be downloaded. Cargo will ensure that every crate in every package in the workspace using the `rand` package will use the same version as long as they specify compatible versions of `rand`, saving us space and ensuring that the crates in the workspace will be compatible with each other."
-msgstr ""
+msgstr "Para corrigir isso, edite o arquivo _Cargo.toml_ do pacote `adder` e indique que `rand` também é uma dependência dele. Compilar o pacote `adder` vai adicionar `rand` à lista de dependências de `adder` no _Cargo.lock_, mas nenhuma cópia adicional de `rand` será baixada. O Cargo vai garantir que todo crate de todo pacote do workspace que use o pacote `rand` use a mesma versão, desde que especifiquem versões compatíveis de `rand`, economizando espaço e garantindo que os crates do workspace sejam compatíveis entre si."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "If crates in the workspace specify incompatible versions of the same dependency, Cargo will resolve each of them but will still try to resolve as few versions as possible."
-msgstr ""
+msgstr "Se crates do workspace especificarem versões incompatíveis da mesma dependência, o Cargo vai resolver cada uma delas, mas ainda vai tentar resolver o menor número possível de versões."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Adding a Test to a Workspace"
-msgstr ""
+msgstr "Adicionando um teste a um workspace {#adding-a-test-to-a-workspace}"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "For another enhancement, let’s add a test of the `add_one::add_one` function within the `add_one` crate:"
-msgstr ""
+msgstr "Para outra melhoria, vamos adicionar um teste da função `add_one::add_one` dentro do crate `add_one`:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Now run `cargo test` in the top-level _add_ directory. Running `cargo test` in a workspace structured like this one will run the tests for all the crates in the workspace:"
-msgstr ""
+msgstr "Agora execute `cargo test` no diretório _add_ de nível superior. Executar `cargo test` em um workspace estruturado como este vai executar os testes de todos os crates do workspace:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14838,11 +14840,11 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "The first section of the output shows that the `it_works` test in the `add_one` crate passed. The next section shows that zero tests were found in the `adder` crate, and then the last section shows that zero documentation tests were found in the `add_one` crate."
-msgstr ""
+msgstr "A primeira seção da saída mostra que o teste `it_works` no crate `add_one` passou. A seção seguinte mostra que nenhum teste foi encontrado no crate `adder`, e a última seção mostra que nenhum teste de documentação foi encontrado no crate `add_one`."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "We can also run tests for one particular crate in a workspace from the top-level directory by using the `-p` flag and specifying the name of the crate we want to test:"
-msgstr ""
+msgstr "Também podemos executar os testes de um crate específico de um workspace a partir do diretório de nível superior, usando a flag `-p` e especificando o nome do crate que queremos testar:"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid ""
@@ -14855,19 +14857,19 @@ msgstr ""
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "This output shows `cargo test` only ran the tests for the `add_one` crate and didn’t run the `adder` crate tests."
-msgstr ""
+msgstr "Esta saída mostra que `cargo test` executou apenas os testes do crate `add_one` e não executou os testes do crate `adder`."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "If you publish the crates in the workspace to [crates.io](https://crates.io/)<!-- ignore -->, each crate in the workspace will need to be published separately. Like `cargo test`, we can publish a particular crate in our workspace by using the `-p` flag and specifying the name of the crate we want to publish."
-msgstr ""
+msgstr "Se você publicar os crates do workspace no [crates.io](https://crates.io/)<!-- ignore -->, cada crate do workspace vai precisar ser publicado separadamente. Assim como com `cargo test`, podemos publicar um crate específico do nosso workspace usando a flag `-p` e especificando o nome do crate que queremos publicar."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "For additional practice, add an `add_two` crate to this workspace in a similar way as the `add_one` crate!"
-msgstr ""
+msgstr "Para praticar um pouco mais, adicione um crate `add_two` a este workspace de maneira semelhante ao crate `add_one`!"
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "As your project grows, consider using a workspace: It enables you to work with smaller, easier-to-understand components than one big blob of code. Furthermore, keeping the crates in a workspace can make coordination between crates easier if they are often changed at the same time."
-msgstr ""
+msgstr "À medida que seu projeto cresce, considere usar um workspace: ele permite que você trabalhe com componentes menores e mais fáceis de entender, em vez de um grande bloco de código. Além disso, manter os crates em um workspace pode facilitar a coordenação entre eles quando eles são frequentemente alterados ao mesmo tempo."
 
 #: src/ch14-04-installing-binaries.md
 msgid "<a id=\"installing-binaries-from-cratesio-with-cargo-install\"></a>"
@@ -14875,15 +14877,15 @@ msgstr ""
 
 #: src/ch14-04-installing-binaries.md
 msgid "The `cargo install` command allows you to install and use binary crates locally. This isn’t intended to replace system packages; it’s meant to be a convenient way for Rust developers to install tools that others have shared on [crates.io](https://crates.io/)<!-- ignore -->. Note that you can only install packages that have binary targets. A _binary target_ is the runnable program that is created if the crate has a _src/main.rs_ file or another file specified as a binary, as opposed to a library target that isn’t runnable on its own but is suitable for including within other programs. Usually, crates have information in the README file about whether a crate is a library, has a binary target, or both."
-msgstr ""
+msgstr "O comando `cargo install` permite que você instale e use crates binários localmente. Ele não pretende substituir os pacotes do sistema; é uma maneira conveniente para os desenvolvedores Rust instalarem ferramentas que outras pessoas compartilharam no [crates.io](https://crates.io/)<!-- ignore -->. Observe que você só pode instalar pacotes que têm alvos binários. Um _alvo binário_ é o programa executável criado se o crate tiver um arquivo _src/main.rs_ ou outro arquivo especificado como binário, em oposição a um alvo de biblioteca, que não é executável por si só, mas é adequado para ser incluído em outros programas. Normalmente, os crates trazem no arquivo README informações sobre se um crate é uma biblioteca, se tem um alvo binário, ou ambos."
 
 #: src/ch14-04-installing-binaries.md
 msgid "All binaries installed with `cargo install` are stored in the installation root’s _bin_ folder. If you installed Rust using _rustup.rs_ and don’t have any custom configurations, this directory will be _$HOME/.cargo/bin_. Ensure that this directory is in your `$PATH` to be able to run programs you’ve installed with `cargo install`."
-msgstr ""
+msgstr "Todos os binários instalados com `cargo install` são armazenados na pasta _bin_ da raiz de instalação. Se você instalou o Rust usando _rustup.rs_ e não tem nenhuma configuração personalizada, esse diretório será _$HOME/.cargo/bin_. Certifique-se de que esse diretório esteja no seu `$PATH`, para poder executar os programas que você instalou com `cargo install`."
 
 #: src/ch14-04-installing-binaries.md
 msgid "For example, in Chapter 12 we mentioned that there’s a Rust implementation of the `grep` tool called `ripgrep` for searching files. To install `ripgrep`, we can run the following:"
-msgstr ""
+msgstr "Por exemplo, no Capítulo 12 mencionamos que existe uma implementação Rust da ferramenta `grep`, chamada `ripgrep`, para pesquisar arquivos. Para instalar o `ripgrep`, podemos executar o seguinte:"
 
 #: src/ch14-04-installing-binaries.md
 msgid ""
@@ -14894,17 +14896,19 @@ msgstr ""
 
 #: src/ch14-04-installing-binaries.md
 msgid "The second-to-last line of the output shows the location and the name of the installed binary, which in the case of `ripgrep` is `rg`. As long as the installation directory is in your `$PATH`, as mentioned previously, you can then run `rg --help` and start using a faster, Rustier tool for searching files!"
-msgstr ""
+msgstr "A penúltima linha da saída mostra o local e o nome do binário instalado, que, no caso do `ripgrep`, é `rg`. Desde que o diretório de instalação esteja no seu `$PATH`, como mencionado antes, você pode então executar `rg --help` e começar a usar uma ferramenta mais rápida e mais ao estilo Rust para pesquisar arquivos!"
 
 #: src/ch14-05-extending-cargo.md
 msgid "Cargo is designed so that you can extend it with new subcommands without having to modify it. If a binary in your `$PATH` is named `cargo-something`, you can run it as if it were a Cargo subcommand by running `cargo something`. Custom commands like this are also listed when you run `cargo --list`. Being able to use `cargo install` to install extensions and then run them just like the built-in Cargo tools is a super-convenient benefit of Cargo’s design!"
-msgstr ""
+msgstr "O Cargo foi projetado para que você possa estendê-lo com novos subcomandos sem precisar modificá-lo. Se um binário no seu `$PATH` se chamar `cargo-something`, você pode executá-lo como se fosse um subcomando do Cargo, executando `cargo something`. Comandos personalizados como esse também aparecem na lista quando você executa `cargo --list`. Poder usar `cargo install` para instalar extensões e, depois, executá-las exatamente como as ferramentas integradas do Cargo é um benefício super prático do design do Cargo!"
 
 #: src/ch14-05-extending-cargo.md
 msgid ""
 "Sharing code with Cargo and [crates.io](https://crates.io/)<!-- ignore --> is part of what makes the Rust ecosystem useful for many different tasks. Rust’s standard library is small and stable, but crates are easy to share, use, and improve on a timeline different from that of the language. Don’t be shy about sharing code that’s useful to you on [crates.io](https://crates.io/)<!-- ignore\n"
 "-->; it’s likely that it will be useful to someone else as well!"
 msgstr ""
+"Compartilhar código com o Cargo e o [crates.io](https://crates.io/)<!-- ignore --> é parte do que torna o ecossistema Rust útil para muitas tarefas diferentes. A biblioteca padrão do Rust é pequena e estável, mas os crates são fáceis de compartilhar, usar e melhorar em um ritmo diferente do da linguagem. Não hesite em compartilhar código que seja útil para você no [crates.io](https://crates.io/)<!-- ignore\n"
+"-->; é provável que ele também seja útil para outra pessoa!"
 
 #: src/ch15-00-smart-pointers.md
 msgid "A pointer is a general concept for a variable that contains an address in memory. This address refers to, or “points at,” some other data. The most common kind of pointer in Rust is a reference, which you learned about in Chapter 4. References are indicated by the `&` symbol and borrow the value they point to. They don’t have any special capabilities other than referring to data, and they have no overhead."
