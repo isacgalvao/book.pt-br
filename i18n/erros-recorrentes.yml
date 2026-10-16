@@ -1,7 +1,8 @@
 # Erros recorrentes de tradução (pt-BR) — lidos por i18n/tools/checks/glossario.py.
 #
 # Cada entrada: id (único), regex (Python), severidade (erro | aviso), correcao, explicacao.
-# Quem mantém: o mantenedor e os revisores. Agentes PROPÕEM entradas novas (não editam).
+# Quem mantém: só o mantenedor (o orquestrador acrescenta as propostas a pedido dele). Agentes,
+# tradutores e revisores, só PROPÕEM entradas novas (em `notas`); nunca editam este arquivo.
 #
 # Como o verificador usa este arquivo:
 #   - A regex é aplicada ao msgstr LIMPO (sem code spans, sem o conteúdo de <code>/<pre>/<kbd>,
@@ -11,8 +12,12 @@
 #   - Defeitos que moram no que a limpeza remove (português dentro de um code span, link sem
 #     destino) não têm regex aqui: as regras 2 e 3 de validar_par (mesmo multiconjunto de code
 #     spans, mesmos destinos de link) já os recusam como erro.
-#   - erro = defeito certo: a mensagem não deve ser aplicada nem passar no CI.
+#   - erro = defeito certo: o check.py (módulo glossario) o marca como erro, o que bloqueia o
+#     capítulo (E4) e o CI. O apply.py NÃO lê este arquivo (só aplica validar_par: estrutura),
+#     então o tradutor e o revisor precisam conferir antes; o erro só aparece depois de gravado.
 #     aviso = suspeita (a forma também tem uso legítimo): um revisor decide.
+#   - Formas que o `evitar` do glossario.yml já cobre com a mesma regex (nightly “noturno”,
+#     stable “Rust estável”) não se repetem aqui: cada regra mora num lugar só.
 #   - Código, URLs e comandos ficam fora do texto avaliado.
 #
 # Para propor uma entrada: escreva a regex, rode-a sobre o msgstr de po/pt-BR.po e sobre prosa
@@ -77,22 +82,6 @@ erros:
       “Nightly” é o nome do canal de lançamento (aparece assim no `rustup` e no Apêndice G), não
       um adjetivo a traduzir. Apareceu como “o que é o Rust noturno” no capítulo 0. Os canais
       nightly, beta e stable ficam em inglês.
-
-  - id: noturno-ambiguo
-    regex: '(?i:\bnoturn[oa]s?\b)'
-    severidade: aviso
-    correcao: "nightly, se o original fala do canal de lançamento"
-    explicacao: >-
-      “Noturno” quase sempre é a tradução errada de “nightly”. Só é aceitável fora do contexto
-      dos canais do Rust.
-
-  - id: canal-stable-traduzido
-    regex: '(?i:\b(?:rust|canal|toolchain|compilador)\s+estáve(?:l|is)\b)'
-    severidade: aviso
-    correcao: "Rust stable, canal stable"
-    explicacao: >-
-      Os nomes dos canais (nightly, beta, stable) ficam em inglês. “Estável” só se aplica a
-      funcionalidades (“API estável”), não ao nome do canal.
 
   # ---------------------------------------------------- links e rótulos de link
   - id: atalho-traduzido-sem-definicao
@@ -186,8 +175,8 @@ erros:
     severidade: erro
     correcao: "o enum, um enum, do enum, no enum, os enums"
     explicacao: >-
-      Decisão do mantenedor: enum é masculino (o enum). A tradução antiga dizia “uma enum”, “da
-      enum” e “outra enum” em 3 pontos do capítulo 2.
+      Decisão do mantenedor: enum é masculino (o enum). A tradução antiga dizia “uma enum” (2
+      vezes, uma delas “uma [_enum_]”), “da enum” e “outra enum”: 4 pontos do capítulo 2.
 
   - id: genero-struct
     regex: '(?-i:\b(?:[Uu]ma|[Dd]a|[Nn]a|[Pp]ela|[Nn]uma|[Dd]esta|[Dd]essa|[Nn]esta|[Nn]essa|[Ee]sta|[Ee]ssa|[Aa]quela|[Oo]utra|[Nn]enhuma|[Tt]oda|[Àà]|[Aa])\s+\[?[_*]*struct(?![A-Za-zÀ-ÿ0-9])|\b(?:[Aa]s|[Dd]as|[Nn]as|[Pp]elas|[Uu]mas|[Ee]stas|[Ee]ssas|[Oo]utras|[Tt]odas|[Aa]lgumas)\s+\[?[_*]*structs(?![A-Za-zÀ-ÿ0-9]))'
@@ -211,7 +200,7 @@ erros:
     severidade: erro
     correcao: "compilar (o projeto), fazer a compilação"
     explicacao: >-
-      Decisão do mantenedor: build (verbo) vira compilar. “Fazer o build” apareceu 10 vezes no
+      Decisão do mantenedor: build (verbo) vira compilar. “Fazer o build” apareceu 12 vezes no
       capítulo 1, até no título “Fazendo o Build e Executando um Projeto Cargo” (correto:
       “Compilando e executando um projeto Cargo”).
 
@@ -299,9 +288,9 @@ erros:
     severidade: aviso
     correcao: "apagar o parêntese; manter só a ênfase do original"
     explicacao: >-
-      Decisão do mantenedor: nada de “(tradução)” depois de termo em inglês e nenhum itálico além
-      dos do original. A auditoria descartou a regra antiga do “termo em itálico (tradução) na
-      primeira menção”.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): nada de “(tradução)” depois
+      de termo em inglês e nenhum itálico além dos do original. A auditoria descartou a regra
+      antiga do “termo em itálico (tradução) na primeira menção”.
 
   - id: glosa-apos-termo-em-italico
     regex: '(?-i:[_*][A-Za-z][A-Za-z -]{1,30}[_*]\]?\s*\([a-zà-ÿ]{3,25}\))'
@@ -314,20 +303,23 @@ erros:
 
   - id: artigo-antes-de-rust
     regex: '(?i:\b(?:dizer|diz|dizem|dizendo|disse|dissemos)\s+(?:a|à)\s+Rust\b)'
-    severidade: erro
+    severidade: aviso
     correcao: "dizer ao Rust, dizem ao Rust"
     explicacao: >-
-      Decisão do mantenedor: “o Rust” leva artigo. A tradução antiga dizia “dizer a Rust” e, na
-      linha seguinte, “dizem ao Rust”.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): “o Rust” leva artigo. A
+      tradução antiga dizia “dizer a Rust” e, na linha seguinte, “dizem ao Rust”: a mistura é o
+      defeito. É aviso (e não erro) porque a regra depende desse padrão ainda não confirmado; se
+      o mantenedor o confirmar, suba para erro.
 
   - id: rust-sem-artigo
     regex: '(?-i:\b(?:[Dd]e|[Ee]m|[Pp]ara|[Cc]om|[Pp]or|[Ss]em|[Ss]obre|[Aa]té)\s+Rust\b(?!\s*(?:\d|Foundation|Playground|Book)))'
     severidade: aviso
     correcao: "do Rust, no Rust, para o Rust, com o Rust"
     explicacao: >-
-      Decisão do mantenedor: “o Rust” leva artigo. Sem artigo continua certo quando “Rust” é
-      adjetivo (“código Rust”, “Edição Rust 2024”, “Comunidade Rust”), que esta regra não pega. O
-      aviso lista os casos “em Rust”, “de Rust”, “sobre Rust” para conferir.
+      Padrão provisório (CONTRATO §7, a confirmar com o mantenedor): “o Rust” leva artigo. Sem
+      artigo continua certo quando “Rust” é adjetivo (“código Rust”, “Edição Rust 2024”,
+      “Comunidade Rust”), que esta regra não pega. O aviso lista os casos “em Rust”, “de Rust”,
+      “sobre Rust” para conferir.
 
   - id: palavra-repetida
     regex: '(?i:\b([A-Za-zÀ-ÿ]{2,}) \1\b)'
