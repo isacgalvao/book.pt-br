@@ -353,15 +353,15 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch18-01-what-is-oo.md
 msgid "Characteristics of Object-Oriented Languages"
-msgstr ""
+msgstr "Características das linguagens orientadas a objetos {#characteristics-of-object-oriented-languages}"
 
 #: src/SUMMARY.md src/ch18-02-trait-objects.md
 msgid "Using Trait Objects to Abstract over Shared Behavior"
-msgstr ""
+msgstr "Usando objetos de trait para abstrair comportamento compartilhado {#using-trait-objects-to-abstract-over-shared-behavior}"
 
 #: src/SUMMARY.md src/ch18-03-oo-design-patterns.md
 msgid "Implementing an Object-Oriented Design Pattern"
-msgstr ""
+msgstr "Implementando um padrão de projeto orientado a objetos {#implementing-an-object-oriented-design-pattern}"
 
 #: src/SUMMARY.md src/ch19-00-patterns.md
 msgid "Patterns and Matching"
@@ -18788,7 +18788,7 @@ msgstr "A seguir, vamos falar sobre formas idiomáticas de modelar problemas e e
 
 #: src/ch18-00-oop.md
 msgid "Object-Oriented Programming Features"
-msgstr ""
+msgstr "Recursos de programação orientada a objetos {#object-oriented-programming-features}"
 
 #: src/ch18-00-oop.md
 msgid "<a id=\"object-oriented-programming-features-of-rust\"></a>"
@@ -18796,111 +18796,111 @@ msgstr ""
 
 #: src/ch18-00-oop.md
 msgid "Object-oriented programming (OOP) is a way of modeling programs. Objects as a programmatic concept were introduced in the programming language Simula in the 1960s. Those objects influenced Alan Kay’s programming architecture in which objects pass messages to each other. To describe this architecture, he coined the term _object-oriented programming_ in 1967. Many competing definitions describe what OOP is, and by some of these definitions Rust is object oriented but by others it is not. In this chapter, we’ll explore certain characteristics that are commonly considered object oriented and how those characteristics translate to idiomatic Rust. We’ll then show you how to implement an object-oriented design pattern in Rust and discuss the trade-offs of doing so versus implementing a solution using some of Rust’s strengths instead."
-msgstr ""
+msgstr "A programação orientada a objetos (POO) é uma forma de modelar programas. Objetos, como conceito de programação, foram introduzidos na linguagem de programação Simula, na década de 1960. Esses objetos influenciaram a arquitetura de programação de Alan Kay, na qual os objetos trocam mensagens entre si. Para descrever essa arquitetura, ele cunhou o termo _programação orientada a objetos_ em 1967. Há muitas definições concorrentes que descrevem o que é a POO e, segundo algumas dessas definições, o Rust é orientado a objetos, mas, segundo outras, não é. Neste capítulo, vamos explorar certas características que são comumente consideradas orientadas a objetos e como essas características se traduzem no Rust idiomático. Depois, vamos mostrar como implementar um padrão de projeto orientado a objetos no Rust e discutir as concessões de fazer isso, em vez de implementar uma solução que use alguns dos pontos fortes do Rust."
 
 #: src/ch18-01-what-is-oo.md
 msgid "There is no consensus in the programming community about what features a language must have to be considered object oriented. Rust is influenced by many programming paradigms, including OOP; for example, we explored the features that came from functional programming in Chapter 13. Arguably, OOP languages share certain common characteristics—namely, objects, encapsulation, and inheritance. Let’s look at what each of those characteristics means and whether Rust supports it."
-msgstr ""
+msgstr "Não há consenso na comunidade de programação sobre quais recursos uma linguagem deve ter para ser considerada orientada a objetos. O Rust é influenciado por muitos paradigmas de programação, incluindo a POO; por exemplo, exploramos no Capítulo 13 os recursos que vieram da programação funcional. Pode-se argumentar que linguagens de POO compartilham certas características em comum, a saber: objetos, encapsulamento e herança. Vamos ver o que cada uma dessas características significa e se o Rust oferece suporte a cada uma delas."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Objects Contain Data and Behavior"
-msgstr ""
+msgstr "Objetos contêm dados e comportamento {#objects-contain-data-and-behavior}"
 
 #: src/ch18-01-what-is-oo.md
 msgid "The book _Design Patterns: Elements of Reusable Object-Oriented Software_ by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides (Addison-Wesley, 1994), colloquially referred to as _The Gang of Four_ book, is a catalog of object-oriented design patterns. It defines OOP in this way:"
-msgstr ""
+msgstr "O livro _Design Patterns: Elements of Reusable Object-Oriented Software_, de Erich Gamma, Richard Helm, Ralph Johnson e John Vlissides (Addison-Wesley, 1994), conhecido coloquialmente como o livro _The Gang of Four_, é um catálogo de padrões de projeto orientados a objetos. Ele define a POO desta forma:"
 
 #: src/ch18-01-what-is-oo.md
 msgid "Object-oriented programs are made up of objects. An **object** packages both data and the procedures that operate on that data. The procedures are typically called **methods** or **operations**."
-msgstr ""
+msgstr "Programas orientados a objetos são compostos de objetos. Um **objeto** reúne tanto os dados quanto os procedimentos que operam sobre esses dados. Os procedimentos normalmente são chamados de **métodos** ou **operações**."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Using this definition, Rust is object oriented: Structs and enums have data, and `impl` blocks provide methods on structs and enums. Even though structs and enums with methods aren’t _called_ objects, they provide the same functionality, according to the Gang of Four’s definition of objects."
-msgstr ""
+msgstr "Usando essa definição, o Rust é orientado a objetos: os structs e os enums têm dados, e blocos `impl` fornecem métodos para os structs e os enums. Mesmo que os structs e os enums com métodos não sejam _chamados_ de objetos, eles oferecem a mesma funcionalidade, segundo a definição de objetos do Gang of Four."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Encapsulation That Hides Implementation Details"
-msgstr ""
+msgstr "Encapsulamento que oculta detalhes de implementação {#encapsulation-that-hides-implementation-details}"
 
 #: src/ch18-01-what-is-oo.md
 msgid "Another aspect commonly associated with OOP is the idea of _encapsulation_, which means that the implementation details of an object aren’t accessible to code using that object. Therefore, the only way to interact with an object is through its public API; code using the object shouldn’t be able to reach into the object’s internals and change data or behavior directly. This enables the programmer to change and refactor an object’s internals without needing to change the code that uses the object."
-msgstr ""
+msgstr "Outro aspecto comumente associado à POO é a ideia de _encapsulamento_, que significa que os detalhes de implementação de um objeto não são acessíveis ao código que usa esse objeto. Portanto, a única forma de interagir com um objeto é por meio da sua API pública; o código que usa o objeto não deve conseguir acessar os detalhes internos dele e alterar dados ou comportamento diretamente. Isso permite ao programador alterar e refatorar os detalhes internos de um objeto sem precisar mudar o código que usa o objeto."
 
 #: src/ch18-01-what-is-oo.md
 msgid "We discussed how to control encapsulation in Chapter 7: We can use the `pub` keyword to decide which modules, types, functions, and methods in our code should be public, and by default everything else is private. For example, we can define a struct `AveragedCollection` that has a field containing a vector of `i32` values. The struct can also have a field that contains the average of the values in the vector, meaning the average doesn’t have to be computed on demand whenever anyone needs it. In other words, `AveragedCollection` will cache the calculated average for us. Listing 18-1 has the definition of the `AveragedCollection` struct."
-msgstr ""
+msgstr "Discutimos como controlar o encapsulamento no Capítulo 7: podemos usar a palavra-chave `pub` para decidir quais módulos, tipos, funções e métodos do nosso código devem ser públicos e, por padrão, todo o restante é privado. Por exemplo, podemos definir um struct `AveragedCollection` que tem um campo contendo um vetor de valores `i32`. O struct também pode ter um campo que contém a média dos valores do vetor, o que significa que a média não precisa ser calculada sob demanda sempre que alguém precisar dela. Em outras palavras, `AveragedCollection` vai armazenar em cache a média calculada para nós. A Listagem 18-1 apresenta a definição do struct `AveragedCollection`."
 
 #: src/ch18-01-what-is-oo.md
 msgid "<Listing number=\"18-1\" file-name=\"src/lib.rs\" caption=\"An `AveragedCollection` struct that maintains a list of integers and the average of the items in the collection\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-1\" file-name=\"src/lib.rs\" caption=\"Um struct `AveragedCollection` que mantém uma lista de inteiros e a média dos itens da coleção\">\n"
 
 #: src/ch18-01-what-is-oo.md
 msgid "The struct is marked `pub` so that other code can use it, but the fields within the struct remain private. This is important in this case because we want to ensure that whenever a value is added or removed from the list, the average is also updated. We do this by implementing `add`, `remove`, and `average` methods on the struct, as shown in Listing 18-2."
-msgstr ""
+msgstr "O struct está marcado com `pub` para que outro código possa usá-lo, mas os campos dentro do struct continuam privados. Isso é importante neste caso, porque queremos garantir que, sempre que um valor for adicionado ou removido da lista, a média também seja atualizada. Fazemos isso implementando os métodos `add`, `remove` e `average` no struct, como mostrado na Listagem 18-2."
 
 #: src/ch18-01-what-is-oo.md
 msgid "<Listing number=\"18-2\" file-name=\"src/lib.rs\" caption=\"Implementations of the public methods `add`, `remove`, and `average` on `AveragedCollection`\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-2\" file-name=\"src/lib.rs\" caption=\"Implementações dos métodos públicos `add`, `remove` e `average` em `AveragedCollection`\">\n"
 
 #: src/ch18-01-what-is-oo.md
 msgid "The public methods `add`, `remove`, and `average` are the only ways to access or modify data in an instance of `AveragedCollection`. When an item is added to `list` using the `add` method or removed using the `remove` method, the implementations of each call the private `update_average` method that handles updating the `average` field as well."
-msgstr ""
+msgstr "Os métodos públicos `add`, `remove` e `average` são as únicas formas de acessar ou modificar os dados de uma instância de `AveragedCollection`. Quando um item é adicionado a `list` usando o método `add` ou removido usando o método `remove`, a implementação de cada um chama o método privado `update_average`, que também trata da atualização do campo `average`."
 
 #: src/ch18-01-what-is-oo.md
 msgid "We leave the `list` and `average` fields private so that there is no way for external code to add or remove items to or from the `list` field directly; otherwise, the `average` field might become out of sync when the `list` changes. The `average` method returns the value in the `average` field, allowing external code to read the `average` but not modify it."
-msgstr ""
+msgstr "Deixamos os campos `list` e `average` privados para que não haja como código externo adicionar ou remover itens diretamente do campo `list`; caso contrário, o campo `average` poderia ficar fora de sincronia quando `list` mudasse. O método `average` retorna o valor do campo `average`, permitindo que o código externo leia `average`, mas não o modifique."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Because we’ve encapsulated the implementation details of the struct `AveragedCollection`, we can easily change aspects, such as the data structure, in the future. For instance, we could use a `HashSet<i32>` instead of a `Vec<i32>` for the `list` field. As long as the signatures of the `add`, `remove`, and `average` public methods stayed the same, code using `AveragedCollection` wouldn’t need to change. If we made `list` public instead, this wouldn’t necessarily be the case: `HashSet<i32>` and `Vec<i32>` have different methods for adding and removing items, so the external code would likely have to change if it were modifying `list` directly."
-msgstr ""
+msgstr "Como encapsulamos os detalhes de implementação do struct `AveragedCollection`, podemos alterar facilmente alguns aspectos no futuro, como a estrutura de dados. Por exemplo, poderíamos usar um `HashSet<i32>` em vez de um `Vec<i32>` para o campo `list`. Desde que as assinaturas dos métodos públicos `add`, `remove` e `average` permaneçam as mesmas, o código que usa `AveragedCollection` não precisaria mudar. Se tornássemos `list` público, isso não aconteceria necessariamente: `HashSet<i32>` e `Vec<i32>` têm métodos diferentes para adicionar e remover itens, então o código externo provavelmente precisaria mudar se estivesse modificando `list` diretamente."
 
 #: src/ch18-01-what-is-oo.md
 msgid "If encapsulation is a required aspect for a language to be considered object oriented, then Rust meets that requirement. The option to use `pub` or not for different parts of code enables encapsulation of implementation details."
-msgstr ""
+msgstr "Se o encapsulamento for um aspecto obrigatório para que uma linguagem seja considerada orientada a objetos, então o Rust atende a esse requisito. A opção de usar `pub` ou não para diferentes partes do código possibilita o encapsulamento dos detalhes de implementação."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Inheritance as a Type System and as Code Sharing"
-msgstr ""
+msgstr "Herança como sistema de tipos e como compartilhamento de código {#inheritance-as-a-type-system-and-as-code-sharing}"
 
 #: src/ch18-01-what-is-oo.md
 msgid "_Inheritance_ is a mechanism whereby an object can inherit elements from another object’s definition, thus gaining the parent object’s data and behavior without you having to define them again."
-msgstr ""
+msgstr "_Herança_ é um mecanismo pelo qual um objeto pode herdar elementos da definição de outro objeto, obtendo assim os dados e o comportamento do objeto pai sem que você precise defini-los novamente."
 
 #: src/ch18-01-what-is-oo.md
 msgid "If a language must have inheritance to be object oriented, then Rust is not such a language. There is no way to define a struct that inherits the parent struct’s fields and method implementations without using a macro."
-msgstr ""
+msgstr "Se uma linguagem precisa ter herança para ser orientada a objetos, então o Rust não é uma linguagem assim. Não há como definir um struct que herde os campos e as implementações de método do struct pai sem usar uma macro."
 
 #: src/ch18-01-what-is-oo.md
 msgid "However, if you’re used to having inheritance in your programming toolbox, you can use other solutions in Rust, depending on your reason for reaching for inheritance in the first place."
-msgstr ""
+msgstr "No entanto, se você está acostumado a ter herança na sua caixa de ferramentas de programação, pode usar outras soluções no Rust, dependendo do motivo que levou você a recorrer à herança em primeiro lugar."
 
 #: src/ch18-01-what-is-oo.md
 msgid "You would choose inheritance for two main reasons. One is for reuse of code: You can implement particular behavior for one type, and inheritance enables you to reuse that implementation for a different type. You can do this in a limited way in Rust code using default trait method implementations, which you saw in Listing 10-14 when we added a default implementation of the `summarize` method on the `Summary` trait. Any type implementing the `Summary` trait would have the `summarize` method available on it without any further code. This is similar to a parent class having an implementation of a method and an inheriting child class also having the implementation of the method. We can also override the default implementation of the `summarize` method when we implement the `Summary` trait, which is similar to a child class overriding the implementation of a method inherited from a parent class."
-msgstr ""
+msgstr "Você escolheria a herança por dois motivos principais. Um deles é a reutilização de código: você pode implementar um comportamento específico para um tipo, e a herança permite reutilizar essa implementação para um tipo diferente. Você pode fazer isso de forma limitada no código Rust, usando implementações padrão de métodos de trait, que você viu na Listagem 10-14, quando adicionamos uma implementação padrão do método `summarize` no trait `Summary`. Qualquer tipo que implemente o trait `Summary` teria o método `summarize` disponível nele sem nenhum código adicional. Isso é semelhante a uma classe pai ter a implementação de um método e uma classe filha que herda dela também ter a implementação do método. Também podemos sobrescrever a implementação padrão do método `summarize` ao implementar o trait `Summary`, o que é semelhante a uma classe filha sobrescrevendo a implementação de um método herdado de uma classe pai."
 
 #: src/ch18-01-what-is-oo.md
 msgid "The other reason to use inheritance relates to the type system: to enable a child type to be used in the same places as the parent type. This is also called _polymorphism_, which means that you can substitute multiple objects for each other at runtime if they share certain characteristics."
-msgstr ""
+msgstr "O outro motivo para usar herança diz respeito ao sistema de tipos: permitir que um tipo filho seja usado nos mesmos lugares que o tipo pai. Isso também é chamado de _polimorfismo_, que significa que você pode substituir vários objetos uns pelos outros em tempo de execução, se eles compartilharem certas características."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Polymorphism"
-msgstr ""
+msgstr "Polimorfismo {#polymorphism}"
 
 #: src/ch18-01-what-is-oo.md
 msgid "To many people, polymorphism is synonymous with inheritance. But it’s actually a more general concept that refers to code that can work with data of multiple types. For inheritance, those types are generally subclasses."
-msgstr ""
+msgstr "Para muitas pessoas, polimorfismo é sinônimo de herança. Mas, na verdade, ele é um conceito mais geral, que se refere a código que pode funcionar com dados de vários tipos. No caso da herança, esses tipos geralmente são subclasses."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Rust instead uses generics to abstract over different possible types and trait bounds to impose constraints on what those types must provide. This is sometimes called _bounded parametric polymorphism_."
-msgstr ""
+msgstr "Já o Rust usa genéricos para abstrair sobre diferentes tipos possíveis e limites de trait para impor restrições ao que esses tipos devem fornecer. Isso às vezes é chamado de _polimorfismo paramétrico limitado_."
 
 #: src/ch18-01-what-is-oo.md
 msgid "Rust has chosen a different set of trade-offs by not offering inheritance. Inheritance is often at risk of sharing more code than necessary. Subclasses shouldn’t always share all characteristics of their parent class but will do so with inheritance. This can make a program’s design less flexible. It also introduces the possibility of calling methods on subclasses that don’t make sense or that cause errors because the methods don’t apply to the subclass. In addition, some languages will only allow _single inheritance_ (meaning a subclass can only inherit from one class), further restricting the flexibility of a program’s design."
-msgstr ""
+msgstr "O Rust fez um conjunto diferente de concessões ao não oferecer herança. A herança frequentemente corre o risco de compartilhar mais código do que o necessário. Subclasses nem sempre deveriam compartilhar todas as características da classe pai, mas a herança faz com que compartilhem. Isso pode tornar o design de um programa menos flexível. Ela também introduz a possibilidade de chamar, em subclasses, métodos que não fazem sentido ou que causam erros porque os métodos não se aplicam à subclasse. Além disso, algumas linguagens só permitem _herança simples_ (ou seja, uma subclasse só pode herdar de uma classe), restringindo ainda mais a flexibilidade do design de um programa."
 
 #: src/ch18-01-what-is-oo.md
 msgid "For these reasons, Rust takes the different approach of using trait objects instead of inheritance to achieve polymorphism at runtime. Let’s look at how trait objects work."
-msgstr ""
+msgstr "Por essas razões, o Rust adota uma abordagem diferente: usa objetos de trait em vez de herança para alcançar polimorfismo em tempo de execução. Vamos ver como os objetos de trait funcionam."
 
 #: src/ch18-02-trait-objects.md
 msgid "<a id=\"using-trait-objects-that-allow-for-values-of-different-types\"></a>"
@@ -18908,83 +18908,83 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "In Chapter 8, we mentioned that one limitation of vectors is that they can store elements of only one type. We created a workaround in Listing 8-9 where we defined a `SpreadsheetCell` enum that had variants to hold integers, floats, and text. This meant we could store different types of data in each cell and still have a vector that represented a row of cells. This is a perfectly good solution when our interchangeable items are a fixed set of types that we know when our code is compiled."
-msgstr ""
+msgstr "No Capítulo 8, mencionamos que uma limitação dos vetores é que eles só podem armazenar elementos de um único tipo. Criamos uma solução alternativa na Listagem 8-9, em que definimos um enum `SpreadsheetCell` com variantes para armazenar inteiros, números de ponto flutuante e texto. Isso significava que podíamos armazenar diferentes tipos de dados em cada célula e ainda ter um vetor que representava uma linha de células. Essa é uma solução perfeitamente boa quando os nossos itens intercambiáveis são um conjunto fixo de tipos que conhecemos quando o código é compilado."
 
 #: src/ch18-02-trait-objects.md
 msgid "However, sometimes we want our library user to be able to extend the set of types that are valid in a particular situation. To show how we might achieve this, we’ll create an example graphical user interface (GUI) tool that iterates through a list of items, calling a `draw` method on each one to draw it to the screen—a common technique for GUI tools. We’ll create a library crate called `gui` that contains the structure of a GUI library. This crate might include some types for people to use, such as `Button` or `TextField`. In addition, `gui` users will want to create their own types that can be drawn: For instance, one programmer might add an `Image`, and another might add a `SelectBox`."
-msgstr ""
+msgstr "No entanto, às vezes queremos que o usuário da nossa biblioteca consiga estender o conjunto de tipos válidos em uma situação específica. Para mostrar como poderíamos alcançar isso, vamos criar uma ferramenta de exemplo para interfaces gráficas do usuário (GUI) que itera por uma lista de itens, chamando um método `draw` em cada um para desenhá-lo na tela — uma técnica comum em ferramentas de GUI. Vamos criar um crate de biblioteca chamado `gui`, que contém a estrutura de uma biblioteca de GUI. Esse crate pode incluir alguns tipos para as pessoas usarem, como `Button` ou `TextField`. Além disso, os usuários de `gui` vão querer criar os próprios tipos que podem ser desenhados: por exemplo, um programador pode adicionar um `Image`, e outro pode adicionar um `SelectBox`."
 
 #: src/ch18-02-trait-objects.md
 msgid "At the time of writing the library, we can’t know and define all the types other programmers might want to create. But we do know that `gui` needs to keep track of many values of different types, and it needs to call a `draw` method on each of these differently typed values. It doesn’t need to know exactly what will happen when we call the `draw` method, just that the value will have that method available for us to call."
-msgstr ""
+msgstr "No momento em que escrevemos a biblioteca, não podemos conhecer nem definir todos os tipos que outros programadores possam querer criar. Mas sabemos que `gui` precisa manter o controle de muitos valores de tipos diferentes e precisa chamar um método `draw` em cada um desses valores. Ele não precisa saber exatamente o que vai acontecer quando chamarmos o método `draw`, basta que o valor tenha esse método disponível para chamarmos."
 
 #: src/ch18-02-trait-objects.md
 msgid "To do this in a language with inheritance, we might define a class named `Component` that has a method named `draw` on it. The other classes, such as `Button`, `Image`, and `SelectBox`, would inherit from `Component` and thus inherit the `draw` method. They could each override the `draw` method to define their custom behavior, but the framework could treat all of the types as if they were `Component` instances and call `draw` on them. But because Rust doesn’t have inheritance, we need another way to structure the `gui` library to allow users to create new types compatible with the library."
-msgstr ""
+msgstr "Para fazer isso em uma linguagem com herança, poderíamos definir uma classe chamada `Component` que tem um método chamado `draw`. As outras classes, como `Button`, `Image` e `SelectBox`, herdariam de `Component` e, portanto, herdariam o método `draw`. Cada uma poderia sobrescrever o método `draw` para definir seu comportamento personalizado, mas o framework poderia tratar todos os tipos como se fossem instâncias de `Component` e chamar `draw` neles. Mas, como o Rust não tem herança, precisamos de outra forma de estruturar a biblioteca `gui` para permitir que os usuários criem novos tipos compatíveis com a biblioteca."
 
 #: src/ch18-02-trait-objects.md
 msgid "Defining a Trait for Common Behavior"
-msgstr ""
+msgstr "Definindo um trait para comportamento comum {#defining-a-trait-for-common-behavior}"
 
 #: src/ch18-02-trait-objects.md
 msgid "To implement the behavior that we want `gui` to have, we’ll define a trait named `Draw` that will have one method named `draw`. Then, we can define a vector that takes a trait object. A _trait object_ points to both an instance of a type implementing our specified trait and a table used to look up trait methods on that type at runtime. We create a trait object by specifying some sort of pointer, such as a reference or a `Box<T>` smart pointer, then the `dyn` keyword, and then specifying the relevant trait. (We’ll talk about the reason trait objects must use a pointer in [“Dynamically Sized Types and the `Sized` Trait”](ch20-03-advanced-types.html#dynamically-sized-types-and-the-sized-trait)<!-- ignore --> in Chapter 20.) We can use trait objects in place of a generic or concrete type. Wherever we use a trait object, Rust’s type system will ensure at compile time that any value used in that context will implement the trait object’s trait. Consequently, we don’t need to know all the possible types at compile time."
-msgstr ""
+msgstr "Para implementar o comportamento que queremos que o `gui` tenha, vamos definir um trait chamado `Draw` que terá um método chamado `draw`. Em seguida, podemos definir um vetor que recebe um objeto de trait. Um _objeto de trait_ aponta tanto para uma instância de um tipo que implementa o trait especificado quanto para uma tabela usada para buscar os métodos do trait naquele tipo em tempo de execução. Criamos um objeto de trait especificando algum tipo de ponteiro, como uma referência ou um ponteiro inteligente `Box<T>`, depois a palavra-chave `dyn` e, em seguida, o trait relevante. (Vamos falar sobre o motivo de objetos de trait precisarem usar um ponteiro em [“Tipos de tamanho dinâmico e o trait `Sized`”](ch20-03-advanced-types.html#dynamically-sized-types-and-the-sized-trait)<!-- ignore --> no Capítulo 20.) Podemos usar objetos de trait no lugar de um tipo genérico ou concreto. Sempre que usamos um objeto de trait, o sistema de tipos do Rust garante, em tempo de compilação, que qualquer valor usado naquele contexto vai implementar o trait do objeto de trait. Consequentemente, não precisamos conhecer todos os tipos possíveis em tempo de compilação."
 
 #: src/ch18-02-trait-objects.md
 msgid "We’ve mentioned that, in Rust, we refrain from calling structs and enums “objects” to distinguish them from other languages’ objects. In a struct or enum, the data in the struct fields and the behavior in `impl` blocks are separated, whereas in other languages, the data and behavior combined into one concept is often labeled an object. Trait objects differ from objects in other languages in that we can’t add data to a trait object. Trait objects aren’t as generally useful as objects in other languages: Their specific purpose is to allow abstraction across common behavior."
-msgstr ""
+msgstr "Mencionamos que, no Rust, evitamos chamar structs e enums de “objetos” para distingui-los dos objetos de outras linguagens. Em um struct ou enum, os dados nos campos do struct e o comportamento nos blocos `impl` ficam separados, enquanto, em outras linguagens, os dados e o comportamento combinados em um único conceito costumam ser chamados de objeto. Objetos de trait diferem dos objetos de outras linguagens porque não podemos adicionar dados a um objeto de trait. Objetos de trait não são tão úteis de maneira geral quanto os objetos de outras linguagens: a finalidade específica deles é permitir a abstração de comportamento comum."
 
 #: src/ch18-02-trait-objects.md
 msgid "Listing 18-3 shows how to define a trait named `Draw` with one method named `draw`."
-msgstr ""
+msgstr "A Listagem 18-3 mostra como definir um trait chamado `Draw` com um método chamado `draw`."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-3\" file-name=\"src/lib.rs\" caption=\"Definition of the `Draw` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-3\" file-name=\"src/lib.rs\" caption=\"Definição do trait `Draw`\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "This syntax should look familiar from our discussions on how to define traits in Chapter 10. Next comes some new syntax: Listing 18-4 defines a struct named `Screen` that holds a vector named `components`. This vector is of type `Box<dyn Draw>`, which is a trait object; it’s a stand-in for any type inside a `Box` that implements the `Draw` trait."
-msgstr ""
+msgstr "Essa sintaxe deve ser familiar, pelo que discutimos sobre como definir traits no Capítulo 10. Agora vem uma sintaxe nova: a Listagem 18-4 define um struct chamado `Screen` que contém um vetor chamado `components`. Esse vetor é do tipo `Box<dyn Draw>`, que é um objeto de trait: ele funciona como um substituto para qualquer tipo dentro de um `Box` que implemente o trait `Draw`."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-4\" file-name=\"src/lib.rs\" caption=\"Definition of the `Screen` struct with a `components` field holding a vector of trait objects that implement the `Draw` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-4\" file-name=\"src/lib.rs\" caption=\"Definição do struct `Screen` com um campo `components` que armazena um vetor de objetos de trait que implementam o trait `Draw`\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "On the `Screen` struct, we’ll define a method named `run` that will call the `draw` method on each of its `components`, as shown in Listing 18-5."
-msgstr ""
+msgstr "No struct `Screen`, vamos definir um método chamado `run` que vai chamar o método `draw` em cada um dos seus `components`, como mostrado na Listagem 18-5."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-5\" file-name=\"src/lib.rs\" caption=\"A `run` method on `Screen` that calls the `draw` method on each component\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-5\" file-name=\"src/lib.rs\" caption=\"Um método `run` em `Screen` que chama o método `draw` em cada componente\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "This works differently from defining a struct that uses a generic type parameter with trait bounds. A generic type parameter can be substituted with only one concrete type at a time, whereas trait objects allow for multiple concrete types to fill in for the trait object at runtime. For example, we could have defined the `Screen` struct using a generic type and a trait bound, as in Listing 18-6."
-msgstr ""
+msgstr "Isso funciona de forma diferente de definir um struct que usa um parâmetro de tipo genérico com limites de trait. Um parâmetro de tipo genérico só pode ser substituído por um tipo concreto por vez, enquanto objetos de trait permitem que vários tipos concretos ocupem o lugar do objeto de trait em tempo de execução. Por exemplo, poderíamos ter definido o struct `Screen` usando um tipo genérico e um limite de trait, como na Listagem 18-6."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-6\" file-name=\"src/lib.rs\" caption=\"An alternate implementation of the `Screen` struct and its `run` method using generics and trait bounds\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-6\" file-name=\"src/lib.rs\" caption=\"Uma implementação alternativa do struct `Screen` e do seu método `run`, usando genéricos e limites de trait\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "This restricts us to a `Screen` instance that has a list of components all of type `Button` or all of type `TextField`. If you’ll only ever have homogeneous collections, using generics and trait bounds is preferable because the definitions will be monomorphized at compile time to use the concrete types."
-msgstr ""
+msgstr "Isso nos restringe a uma instância de `Screen` que tem uma lista de componentes, todos do tipo `Button` ou todos do tipo `TextField`. Se você só for ter coleções homogêneas, usar genéricos e limites de trait é preferível, porque as definições serão monomorfizadas em tempo de compilação para usar os tipos concretos."
 
 #: src/ch18-02-trait-objects.md
 msgid "On the other hand, with the method using trait objects, one `Screen` instance can hold a `Vec<T>` that contains a `Box<Button>` as well as a `Box<TextField>`. Let’s look at how this works, and then we’ll talk about the runtime performance implications."
-msgstr ""
+msgstr "Por outro lado, com o método que usa objetos de trait, uma instância de `Screen` pode armazenar um `Vec<T>` que contém um `Box<Button>` e também um `Box<TextField>`. Vamos ver como isso funciona e, depois, falar sobre as implicações de desempenho em tempo de execução."
 
 #: src/ch18-02-trait-objects.md
 msgid "Implementing the Trait"
-msgstr ""
+msgstr "Implementando o trait {#implementing-the-trait}"
 
 #: src/ch18-02-trait-objects.md
 msgid "Now we’ll add some types that implement the `Draw` trait. We’ll provide the `Button` type. Again, actually implementing a GUI library is beyond the scope of this book, so the `draw` method won’t have any useful implementation in its body. To imagine what the implementation might look like, a `Button` struct might have fields for `width`, `height`, and `label`, as shown in Listing 18-7."
-msgstr ""
+msgstr "Agora vamos adicionar alguns tipos que implementam o trait `Draw`. Vamos fornecer o tipo `Button`. De novo, implementar de fato uma biblioteca de GUI está fora do escopo deste livro, então o método `draw` não terá nenhuma implementação útil em seu corpo. Para imaginar como a implementação poderia ser, um struct `Button` poderia ter campos para `width`, `height` e `label`, como mostrado na Listagem 18-7."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-7\" file-name=\"src/lib.rs\" caption=\"A `Button` struct that implements the `Draw` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-7\" file-name=\"src/lib.rs\" caption=\"Um struct `Button` que implementa o trait `Draw`\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "// code to actually draw a button\n"
@@ -18992,15 +18992,15 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "The `width`, `height`, and `label` fields on `Button` will differ from the fields on other components; for example, a `TextField` type might have those same fields plus a `placeholder` field. Each of the types we want to draw on the screen will implement the `Draw` trait but will use different code in the `draw` method to define how to draw that particular type, as `Button` has here (without the actual GUI code, as mentioned). The `Button` type, for instance, might have an additional `impl` block containing methods related to what happens when a user clicks the button. These kinds of methods won’t apply to types like `TextField`."
-msgstr ""
+msgstr "Os campos `width`, `height` e `label` de `Button` serão diferentes dos campos de outros componentes; por exemplo, um tipo `TextField` pode ter esses mesmos campos, mais um campo `placeholder`. Cada um dos tipos que queremos desenhar na tela vai implementar o trait `Draw`, mas vai usar um código diferente no método `draw` para definir como desenhar aquele tipo específico, como `Button` faz aqui (sem o código real da GUI, como mencionado). O tipo `Button`, por exemplo, pode ter um bloco `impl` adicional, contendo métodos relacionados ao que acontece quando um usuário clica no botão. Esses tipos de método não se aplicariam a tipos como `TextField`."
 
 #: src/ch18-02-trait-objects.md
 msgid "If someone using our library decides to implement a `SelectBox` struct that has `width`, `height`, and `options` fields, they would implement the `Draw` trait on the `SelectBox` type as well, as shown in Listing 18-8."
-msgstr ""
+msgstr "Se alguém que usa a nossa biblioteca decidir implementar um struct `SelectBox` que tem os campos `width`, `height` e `options`, essa pessoa também implementaria o trait `Draw` no tipo `SelectBox`, como mostrado na Listagem 18-8."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-8\" file-name=\"src/main.rs\" caption=\"Another crate using `gui` and implementing the `Draw` trait on a `SelectBox` struct\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-8\" file-name=\"src/main.rs\" caption=\"Outro crate que usa `gui` e implementa o trait `Draw` em um struct `SelectBox`\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "// code to actually draw a select box\n"
@@ -19008,11 +19008,11 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "Our library’s user can now write their `main` function to create a `Screen` instance. To the `Screen` instance, they can add a `SelectBox` and a `Button` by putting each in a `Box<T>` to become a trait object. They can then call the `run` method on the `Screen` instance, which will call `draw` on each of the components. Listing 18-9 shows this implementation."
-msgstr ""
+msgstr "O usuário da nossa biblioteca agora pode escrever a própria função `main` para criar uma instância de `Screen`. Na instância de `Screen`, essa pessoa pode adicionar um `SelectBox` e um `Button`, colocando cada um em um `Box<T>` para se tornar um objeto de trait. Em seguida, ela pode chamar o método `run` na instância de `Screen`, que vai chamar `draw` em cada um dos componentes. A Listagem 18-9 mostra essa implementação."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-9\" file-name=\"src/main.rs\" caption=\"Using trait objects to store values of different types that implement the same trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-9\" file-name=\"src/main.rs\" caption=\"Usando objetos de trait para armazenar valores de tipos diferentes que implementam o mesmo trait\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "\"Yes\""
@@ -19032,23 +19032,23 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "When we wrote the library, we didn’t know that someone might add the `SelectBox` type, but our `Screen` implementation was able to operate on the new type and draw it because `SelectBox` implements the `Draw` trait, which means it implements the `draw` method."
-msgstr ""
+msgstr "Quando escrevemos a biblioteca, não sabíamos que alguém poderia adicionar o tipo `SelectBox`, mas a nossa implementação de `Screen` conseguiu operar sobre o novo tipo e desenhá-lo, porque `SelectBox` implementa o trait `Draw`, o que significa que ele implementa o método `draw`."
 
 #: src/ch18-02-trait-objects.md
 msgid "This concept—of being concerned only with the messages a value responds to rather than the value’s concrete type—is similar to the concept of _duck typing_ in dynamically typed languages: If it walks like a duck and quacks like a duck, then it must be a duck! In the implementation of `run` on `Screen` in Listing 18-5, `run` doesn’t need to know what the concrete type of each component is. It doesn’t check whether a component is an instance of a `Button` or a `SelectBox`, it just calls the `draw` method on the component. By specifying `Box<dyn Draw>` as the type of the values in the `components` vector, we’ve defined `Screen` to need values that we can call the `draw` method on."
-msgstr ""
+msgstr "Esse conceito — de se preocupar apenas com as mensagens às quais um valor responde, e não com o tipo concreto do valor — é semelhante ao conceito de _duck typing_ em linguagens de tipagem dinâmica: se ele anda como um pato e grasna como um pato, então deve ser um pato! Na implementação de `run` em `Screen`, na Listagem 18-5, `run` não precisa saber qual é o tipo concreto de cada componente. Ele não verifica se um componente é uma instância de `Button` ou de `SelectBox`; ele apenas chama o método `draw` no componente. Ao especificar `Box<dyn Draw>` como o tipo dos valores do vetor `components`, definimos que `Screen` precisa de valores nos quais possamos chamar o método `draw`."
 
 #: src/ch18-02-trait-objects.md
 msgid "The advantage of using trait objects and Rust’s type system to write code similar to code using duck typing is that we never have to check whether a value implements a particular method at runtime or worry about getting errors if a value doesn’t implement a method but we call it anyway. Rust won’t compile our code if the values don’t implement the traits that the trait objects need."
-msgstr ""
+msgstr "A vantagem de usar objetos de trait e o sistema de tipos do Rust para escrever código semelhante ao que usa duck typing é que nunca precisamos verificar, em tempo de execução, se um valor implementa um método específico, nem nos preocuparmos com erros caso um valor não implemente um método, mas o chamemos mesmo assim. O Rust não vai compilar o nosso código se os valores não implementarem os traits de que os objetos de trait precisam."
 
 #: src/ch18-02-trait-objects.md
 msgid "For example, Listing 18-10 shows what happens if we try to create a `Screen` with a `String` as a component."
-msgstr ""
+msgstr "Por exemplo, a Listagem 18-10 mostra o que acontece se tentarmos criar um `Screen` com uma `String` como componente."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-10\" file-name=\"src/main.rs\" caption=\"Attempting to use a type that doesn’t implement the trait object’s trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-10\" file-name=\"src/main.rs\" caption=\"Tentativa de usar um tipo que não implementa o trait do objeto de trait\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "\"Hi\""
@@ -19056,7 +19056,7 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "We’ll get this error because `String` doesn’t implement the `Draw` trait:"
-msgstr ""
+msgstr "Vamos receber este erro porque `String` não implementa o trait `Draw`:"
 
 #: src/ch18-02-trait-objects.md
 msgid ""
@@ -19083,7 +19083,7 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "This error lets us know that either we’re passing something to `Screen` that we didn’t mean to pass and so should pass a different type, or we should implement `Draw` on `String` so that `Screen` is able to call `draw` on it."
-msgstr ""
+msgstr "Esse erro nos informa que, ou estamos passando para `Screen` algo que não tínhamos a intenção de passar e, portanto, deveríamos passar outro tipo, ou devemos implementar `Draw` em `String` para que `Screen` consiga chamar `draw` nele."
 
 #: src/ch18-02-trait-objects.md
 msgid "<a id=\"trait-objects-perform-dynamic-dispatch\"></a>"
@@ -19091,55 +19091,55 @@ msgstr ""
 
 #: src/ch18-02-trait-objects.md
 msgid "Performing Dynamic Dispatch"
-msgstr ""
+msgstr "Realizando despacho dinâmico {#performing-dynamic-dispatch}"
 
 #: src/ch18-02-trait-objects.md
 msgid "Recall in [“Performance of Code Using Generics”](ch10-01-syntax.html#performance-of-code-using-generics)<!-- ignore --> in Chapter 10 our discussion on the monomorphization process performed on generics by the compiler: The compiler generates nongeneric implementations of functions and methods for each concrete type that we use in place of a generic type parameter. The code that results from monomorphization is doing _static dispatch_, which is when the compiler knows what method you’re calling at compile time. This is opposed to _dynamic dispatch_, which is when the compiler can’t tell at compile time which method you’re calling. In dynamic dispatch cases, the compiler emits code that at runtime will know which method to call."
-msgstr ""
+msgstr "Lembre que, em [“Desempenho do código que usa genéricos”](ch10-01-syntax.html#performance-of-code-using-generics)<!-- ignore --> no Capítulo 10, discutimos o processo de monomorfização realizado pelo compilador sobre os genéricos: o compilador gera implementações não genéricas de funções e métodos para cada tipo concreto que usamos no lugar de um parâmetro de tipo genérico. O código resultante da monomorfização faz _despacho estático_, que é quando o compilador sabe qual método você está chamando em tempo de compilação. Isso se opõe ao _despacho dinâmico_, que é quando o compilador não consegue saber, em tempo de compilação, qual método você está chamando. Nos casos de despacho dinâmico, o compilador emite código que, em tempo de execução, vai saber qual método chamar."
 
 #: src/ch18-02-trait-objects.md
 msgid "When we use trait objects, Rust must use dynamic dispatch. The compiler doesn’t know all the types that might be used with the code that’s using trait objects, so it doesn’t know which method implemented on which type to call. Instead, at runtime, Rust uses the pointers inside the trait object to know which method to call. This lookup incurs a runtime cost that doesn’t occur with static dispatch. Dynamic dispatch also prevents the compiler from choosing to inline a method’s code, which in turn prevents some optimizations, and Rust has some rules about where you can and cannot use dynamic dispatch, called _dyn compatibility_. Those rules are beyond the scope of this discussion, but you can read more about them [in the reference](https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility)<!-- ignore -->. However, we did get extra flexibility in the code that we wrote in Listing 18-5 and were able to support in Listing 18-9, so it’s a trade-off to consider."
-msgstr ""
+msgstr "Quando usamos objetos de trait, o Rust precisa usar despacho dinâmico. O compilador não conhece todos os tipos que podem ser usados com o código que usa objetos de trait, então não sabe qual método implementado em qual tipo chamar. Em vez disso, em tempo de execução, o Rust usa os ponteiros dentro do objeto de trait para saber qual método chamar. Essa busca tem um custo em tempo de execução que não ocorre com o despacho estático. O despacho dinâmico também impede o compilador de optar por fazer inline do código de um método, o que, por sua vez, impede algumas otimizações, e o Rust tem algumas regras sobre onde você pode e onde não pode usar despacho dinâmico, chamadas de _compatibilidade com dyn_. Essas regras estão além do escopo desta discussão, mas você pode ler mais sobre elas [na referência](https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility)<!-- ignore -->. No entanto, de fato ganhamos mais flexibilidade no código que escrevemos na Listagem 18-5 e conseguimos oferecer suporte na Listagem 18-9, então é uma concessão a considerar."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The _state pattern_ is an object-oriented design pattern. The crux of the pattern is that we define a set of states a value can have internally. The states are represented by a set of _state objects_, and the value’s behavior changes based on its state. We’re going to work through an example of a blog post struct that has a field to hold its state, which will be a state object from the set “draft,” “review,” or “published.”"
-msgstr ""
+msgstr "O _padrão de estado_ é um padrão de projeto orientado a objetos. O cerne do padrão é que definimos um conjunto de estados que um valor pode ter internamente. Os estados são representados por um conjunto de _objetos de estado_, e o comportamento do valor muda com base no seu estado. Vamos trabalhar com um exemplo de um struct de postagem de blog que tem um campo para guardar o seu estado, que será um objeto de estado do conjunto formado por “rascunho”, “revisão” ou “publicado”."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The state objects share functionality: In Rust, of course, we use structs and traits rather than objects and inheritance. Each state object is responsible for its own behavior and for governing when it should change into another state. The value that holds a state object knows nothing about the different behavior of the states or when to transition between states."
-msgstr ""
+msgstr "Os objetos de estado compartilham funcionalidades: no Rust, é claro, usamos structs e traits em vez de objetos e herança. Cada objeto de estado é responsável pelo próprio comportamento e por determinar quando ele deve mudar para outro estado. O valor que guarda um objeto de estado não sabe nada sobre os diferentes comportamentos dos estados nem sobre quando fazer a transição entre eles."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The advantage of using the state pattern is that, when the business requirements of the program change, we won’t need to change the code of the value holding the state or the code that uses the value. We’ll only need to update the code inside one of the state objects to change its rules or perhaps add more state objects."
-msgstr ""
+msgstr "A vantagem de usar o padrão de estado é que, quando os requisitos de negócio do programa mudarem, não precisaremos alterar o código do valor que guarda o estado nem o código que usa esse valor. Precisaremos apenas atualizar o código dentro de um dos objetos de estado para mudar as regras dele ou, talvez, acrescentar mais objetos de estado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "First, we’re going to implement the state pattern in a more traditional object-oriented way. Then, we’ll use an approach that’s a bit more natural in Rust. Let’s dig in to incrementally implement a blog post workflow using the state pattern."
-msgstr ""
+msgstr "Primeiro, vamos implementar o padrão de estado de um jeito mais tradicional, orientado a objetos. Depois, vamos usar uma abordagem um pouco mais natural no Rust. Vamos colocar a mão na massa e implementar, de forma incremental, um fluxo de trabalho de postagem de blog usando o padrão de estado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The final functionality will look like this:"
-msgstr ""
+msgstr "A funcionalidade final vai ficar assim:"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "A blog post starts as an empty draft."
-msgstr ""
+msgstr "Uma postagem de blog começa como um rascunho vazio."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "When the draft is done, a review of the post is requested."
-msgstr ""
+msgstr "Quando o rascunho estiver pronto, é solicitada uma revisão da postagem."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "When the post is approved, it gets published."
-msgstr ""
+msgstr "Quando a postagem é aprovada, ela é publicada."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Only published blog posts return content to print so that unapproved posts can’t accidentally be published."
-msgstr ""
+msgstr "Somente as postagens publicadas retornam conteúdo para impressão, de modo que postagens não aprovadas não possam ser publicadas por acidente."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Any other changes attempted on a post should have no effect. For example, if we try to approve a draft blog post before we’ve requested a review, the post should remain an unpublished draft."
-msgstr ""
+msgstr "Quaisquer outras alterações tentadas em uma postagem não devem ter efeito algum. Por exemplo, se tentarmos aprovar uma postagem de blog em rascunho antes de termos solicitado uma revisão, a postagem deve continuar sendo um rascunho não publicado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"a-traditional-object-oriented-attempt\"></a>"
@@ -19147,19 +19147,19 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Attempting Traditional Object-Oriented Style"
-msgstr ""
+msgstr "Tentando um estilo tradicional orientado a objetos {#attempting-traditional-object-oriented-style}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "There are infinite ways to structure code to solve the same problem, each with different trade-offs. This section’s implementation is more of a traditional object-oriented style, which is possible to write in Rust, but doesn’t take advantage of some of Rust’s strengths. Later, we’ll demonstrate a different solution that still uses the object-oriented design pattern but is structured in a way that might look less familiar to programmers with object-oriented experience. We’ll compare the two solutions to experience the trade-offs of designing Rust code differently than code in other languages."
-msgstr ""
+msgstr "Existem infinitas formas de estruturar o código para resolver o mesmo problema, cada uma com concessões diferentes. A implementação desta seção se aproxima mais de um estilo tradicional orientado a objetos, que é possível escrever no Rust, mas que não aproveita alguns dos pontos fortes do Rust. Mais adiante, vamos mostrar uma solução diferente, que ainda usa o padrão de projeto orientado a objetos, mas é estruturada de um jeito que pode parecer menos familiar para programadores com experiência em orientação a objetos. Vamos comparar as duas soluções para conhecer na prática as concessões de projetar código Rust de forma diferente do código em outras linguagens."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Listing 18-11 shows this workflow in code form: This is an example usage of the API we’ll implement in a library crate named `blog`. This won’t compile yet because we haven’t implemented the `blog` crate."
-msgstr ""
+msgstr "A Listagem 18-11 mostra esse fluxo de trabalho na forma de código: este é um exemplo de uso da API que vamos implementar em um crate de biblioteca chamado `blog`. Isso ainda não vai compilar, porque ainda não implementamos o crate `blog`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-11\" file-name=\"src/main.rs\" caption=\"Code that demonstrates the desired behavior we want our `blog` crate to have\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-11\" file-name=\"src/main.rs\" caption=\"Código que demonstra o comportamento desejado que queremos que o crate `blog` tenha\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "\"I ate a salad for lunch today\""
@@ -19167,15 +19167,15 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We want to allow the user to create a new draft blog post with `Post::new`. We want to allow text to be added to the blog post. If we try to get the post’s content immediately, before approval, we shouldn’t get any text because the post is still a draft. We’ve added `assert_eq!` in the code for demonstration purposes. An excellent unit test for this would be to assert that a draft blog post returns an empty string from the `content` method, but we’re not going to write tests for this example."
-msgstr ""
+msgstr "Queremos permitir que o usuário crie uma nova postagem de blog em rascunho com `Post::new`. Queremos permitir que se adicione texto à postagem de blog. Se tentarmos obter o conteúdo da postagem imediatamente, antes da aprovação, não devemos obter nenhum texto, porque a postagem ainda é um rascunho. Adicionamos `assert_eq!` ao código somente para fins de demonstração. Um excelente teste unitário para isso seria verificar que uma postagem de blog em rascunho retorna uma string vazia do método `content`, mas não vamos escrever testes para este exemplo."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Next, we want to enable a request for a review of the post, and we want `content` to return an empty string while waiting for the review. When the post receives approval, it should get published, meaning the text of the post will be returned when `content` is called."
-msgstr ""
+msgstr "Em seguida, queremos permitir a solicitação de uma revisão da postagem e queremos que `content` retorne uma string vazia enquanto aguarda a revisão. Quando a postagem receber aprovação, ela deve ser publicada, o que significa que o texto da postagem será retornado quando `content` for chamado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Notice that the only type we’re interacting with from the crate is the `Post` type. This type will use the state pattern and will hold a value that will be one of three state objects representing the various states a post can be in—draft, review, or published. Changing from one state to another will be managed internally within the `Post` type. The states change in response to the methods called by our library’s users on the `Post` instance, but they don’t have to manage the state changes directly. Also, users can’t make a mistake with the states, such as publishing a post before it’s reviewed."
-msgstr ""
+msgstr "Observe que o único tipo com o qual interagimos a partir do crate é o tipo `Post`. Esse tipo vai usar o padrão de estado e vai guardar um valor que será um dos três objetos de estado que representam os diversos estados em que uma postagem pode estar: rascunho, revisão ou publicado. A transição de um estado para outro será gerenciada internamente, dentro do tipo `Post`. Os estados mudam em resposta aos métodos chamados pelos usuários da nossa biblioteca na instância de `Post`, mas eles não precisam gerenciar as mudanças de estado diretamente. Além disso, os usuários não conseguem cometer erros com os estados, como publicar uma postagem antes de ela ser revisada."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"defining-post-and-creating-a-new-instance-in-the-draft-state\"></a>"
@@ -19183,43 +19183,43 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Defining `Post` and Creating a New Instance"
-msgstr ""
+msgstr "Definindo `Post` e criando uma nova instância {#defining-post-and-creating-a-new-instance}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Let’s get started on the implementation of the library! We know we need a public `Post` struct that holds some content, so we’ll start with the definition of the struct and an associated public `new` function to create an instance of `Post`, as shown in Listing 18-12. We’ll also make a private `State` trait that will define the behavior that all state objects for a `Post` must have."
-msgstr ""
+msgstr "Vamos começar a implementar a biblioteca! Sabemos que precisamos de um struct `Post` público que guarde algum conteúdo, então vamos começar pela definição do struct e por uma função `new` pública associada para criar uma instância de `Post`, como mostrado na Listagem 18-12. Também vamos criar um trait `State` privado, que vai definir o comportamento que todos os objetos de estado de um `Post` devem ter."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Then, `Post` will hold a trait object of `Box<dyn State>` inside an `Option<T>` in a private field named `state` to hold the state object. You’ll see why the `Option<T>` is necessary in a bit."
-msgstr ""
+msgstr "Depois, `Post` vai guardar um objeto de trait do tipo `Box<dyn State>` dentro de um `Option<T>`, em um campo privado chamado `state`, para armazenar o objeto de estado. Você vai ver daqui a pouco por que o `Option<T>` é necessário."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-12\" file-name=\"src/lib.rs\" caption=\"Definition of a `Post` struct and a `new` function that creates a new `Post` instance, a `State` trait, and a `Draft` struct\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-12\" file-name=\"src/lib.rs\" caption=\"Definição de um struct `Post` e de uma função `new` que cria uma nova instância de `Post`, de um trait `State` e de um struct `Draft`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `State` trait defines the behavior shared by different post states. The state objects are `Draft`, `PendingReview`, and `Published`, and they will all implement the `State` trait. For now, the trait doesn’t have any methods, and we’ll start by defining just the `Draft` state because that is the state we want a post to start in."
-msgstr ""
+msgstr "O trait `State` define o comportamento compartilhado pelos diferentes estados da postagem. Os objetos de estado são `Draft`, `PendingReview` e `Published`, e todos eles vão implementar o trait `State`. Por enquanto, o trait não tem nenhum método, e vamos começar definindo apenas o estado `Draft`, porque é o estado em que queremos que uma postagem comece."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "When we create a new `Post`, we set its `state` field to a `Some` value that holds a `Box`. This `Box` points to a new instance of the `Draft` struct. This ensures that whenever we create a new instance of `Post`, it will start out as a draft. Because the `state` field of `Post` is private, there is no way to create a `Post` in any other state! In the `Post::new` function, we set the `content` field to a new, empty `String`."
-msgstr ""
+msgstr "Quando criamos um novo `Post`, definimos o campo `state` dele como um valor `Some` que contém um `Box`. Esse `Box` aponta para uma nova instância do struct `Draft`. Isso garante que, sempre que criarmos uma nova instância de `Post`, ela comece como rascunho. Como o campo `state` de `Post` é privado, não há como criar um `Post` em nenhum outro estado! Na função `Post::new`, definimos o campo `content` como uma nova `String` vazia."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Storing the Text of the Post Content"
-msgstr ""
+msgstr "Armazenando o texto do conteúdo da postagem {#storing-the-text-of-the-post-content}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We saw in Listing 18-11 that we want to be able to call a method named `add_text` and pass it a `&str` that is then added as the text content of the blog post. We implement this as a method, rather than exposing the `content` field as `pub`, so that later we can implement a method that will control how the `content` field’s data is read. The `add_text` method is pretty straightforward, so let’s add the implementation in Listing 18-13 to the `impl Post` block."
-msgstr ""
+msgstr "Vimos na Listagem 18-11 que queremos poder chamar um método chamado `add_text` e passar a ele um `&str`, que então é adicionado como o texto do conteúdo da postagem de blog. Implementamos isso como um método, em vez de expor o campo `content` como `pub`, para que, mais tarde, possamos implementar um método que vai controlar a forma como os dados do campo `content` são lidos. O método `add_text` é bem direto, então vamos adicionar a implementação na Listagem 18-13 ao bloco `impl Post`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-13\" file-name=\"src/lib.rs\" caption=\"Implementing the `add_text` method to add text to a post’s `content`\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-13\" file-name=\"src/lib.rs\" caption=\"Implementando o método `add_text` para adicionar texto ao `content` de uma postagem\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `add_text` method takes a mutable reference to `self` because we’re changing the `Post` instance that we’re calling `add_text` on. We then call `push_str` on the `String` in `content` and pass the `text` argument to add to the saved `content`. This behavior doesn’t depend on the state the post is in, so it’s not part of the state pattern. The `add_text` method doesn’t interact with the `state` field at all, but it is part of the behavior we want to support."
-msgstr ""
+msgstr "O método `add_text` recebe uma referência mutável a `self`, porque estamos alterando a instância de `Post` na qual chamamos `add_text`. Em seguida, chamamos `push_str` na `String` em `content` e passamos o argumento `text` para ser adicionado ao conteúdo já salvo em `content`. Esse comportamento não depende do estado em que a postagem está, então não faz parte do padrão de estado. O método `add_text` não interage de forma alguma com o campo `state`, mas faz parte do comportamento que queremos oferecer."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"ensuring-the-content-of-a-draft-post-is-empty\"></a>"
@@ -19227,19 +19227,19 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Ensuring That the Content of a Draft Post Is Empty"
-msgstr ""
+msgstr "Garantindo que o conteúdo de uma postagem em rascunho esteja vazio {#ensuring-that-the-content-of-a-draft-post-is-empty}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Even after we’ve called `add_text` and added some content to our post, we still want the `content` method to return an empty string slice because the post is still in the draft state, as shown by the first `assert_eq!` in Listing 18-11. For now, let’s implement the `content` method with the simplest thing that will fulfill this requirement: always returning an empty string slice. We’ll change this later once we implement the ability to change a post’s state so that it can be published. So far, posts can only be in the draft state, so the post content should always be empty. Listing 18-14 shows this placeholder implementation."
-msgstr ""
+msgstr "Mesmo depois de chamarmos `add_text` e adicionarmos algum conteúdo à nossa postagem, ainda queremos que o método `content` retorne uma slice de string vazia, porque a postagem ainda está no estado de rascunho, como mostra o primeiro `assert_eq!` da Listagem 18-11. Por enquanto, vamos implementar o método `content` da maneira mais simples que atenda a esse requisito: sempre retornando uma slice de string vazia. Vamos alterar isso mais tarde, quando implementarmos a possibilidade de mudar o estado de uma postagem para que ela possa ser publicada. Até agora, as postagens só podem estar no estado de rascunho, então o conteúdo da postagem deve estar sempre vazio. A Listagem 18-14 mostra essa implementação provisória."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-14\" file-name=\"src/lib.rs\" caption=\"Adding a placeholder implementation for the `content` method on `Post` that always returns an empty string slice\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-14\" file-name=\"src/lib.rs\" caption=\"Adicionando uma implementação provisória para o método `content` de `Post` que sempre retorna uma slice de string vazia\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "With this added `content` method, everything in Listing 18-11 through the first `assert_eq!` works as intended."
-msgstr ""
+msgstr "Com esse método `content` adicionado, tudo o que está na Listagem 18-11, até o primeiro `assert_eq!`, funciona como pretendido."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"requesting-a-review-of-the-post-changes-its-state\"></a> <a id=\"requesting-a-review-changes-the-posts-state\"></a>"
@@ -19247,43 +19247,43 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Requesting a Review, Which Changes the Post’s State"
-msgstr ""
+msgstr "Solicitando uma revisão, o que altera o estado da postagem {#requesting-a-review-which-changes-the-posts-state}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Next, we need to add functionality to request a review of a post, which should change its state from `Draft` to `PendingReview`. Listing 18-15 shows this code."
-msgstr ""
+msgstr "Em seguida, precisamos adicionar uma funcionalidade para solicitar a revisão de uma postagem, o que deve mudar o estado dela de `Draft` para `PendingReview`. A Listagem 18-15 mostra este código."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-15\" file-name=\"src/lib.rs\" caption=\"Implementing `request_review` methods on `Post` and the `State` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-15\" file-name=\"src/lib.rs\" caption=\"Implementando os métodos `request_review` em `Post` e no trait `State`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We give `Post` a public method named `request_review` that will take a mutable reference to `self`. Then, we call an internal `request_review` method on the current state of `Post`, and this second `request_review` method consumes the current state and returns a new state."
-msgstr ""
+msgstr "Damos a `Post` um método público chamado `request_review`, que recebe uma referência mutável a `self`. Depois, chamamos um método `request_review` interno no estado atual de `Post`, e esse segundo método `request_review` consome o estado atual e retorna um novo estado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We add the `request_review` method to the `State` trait; all types that implement the trait will now need to implement the `request_review` method. Note that rather than having `self`, `&self`, or `&mut self` as the first parameter of the method, we have `self: Box<Self>`. This syntax means the method is only valid when called on a `Box` holding the type. This syntax takes ownership of `Box<Self>`, invalidating the old state so that the state value of the `Post` can transform into a new state."
-msgstr ""
+msgstr "Adicionamos o método `request_review` ao trait `State`; todos os tipos que implementam o trait agora vão precisar implementar o método `request_review`. Observe que, em vez de ter `self`, `&self` ou `&mut self` como primeiro parâmetro do método, temos `self: Box<Self>`. Essa sintaxe significa que o método só é válido quando chamado em um `Box` que contém o tipo. Essa sintaxe assume o ownership de `Box<Self>`, invalidando o estado antigo para que o valor de estado de `Post` possa se transformar em um novo estado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "To consume the old state, the `request_review` method needs to take ownership of the state value. This is where the `Option` in the `state` field of `Post` comes in: We call the `take` method to take the `Some` value out of the `state` field and leave a `None` in its place because Rust doesn’t let us have unpopulated fields in structs. This lets us move the `state` value out of `Post` rather than borrowing it. Then, we’ll set the post’s `state` value to the result of this operation."
-msgstr ""
+msgstr "Para consumir o estado antigo, o método `request_review` precisa assumir o ownership do valor de estado. É aqui que entra o `Option` no campo `state` de `Post`: chamamos o método `take` para tirar o valor `Some` do campo `state` e deixar um `None` no lugar, porque o Rust não permite campos sem valor em structs. Isso nos permite mover o valor de `state` para fora de `Post`, em vez de pegá-lo emprestado. Em seguida, vamos definir o valor de `state` da postagem como o resultado dessa operação."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We need to set `state` to `None` temporarily rather than setting it directly with code like `self.state = self.state.request_review();` to get ownership of the `state` value. This ensures that `Post` can’t use the old `state` value after we’ve transformed it into a new state."
-msgstr ""
+msgstr "Precisamos definir `state` como `None` temporariamente, em vez de defini-lo diretamente com código como `self.state = self.state.request_review();`, para obter o ownership do valor de `state`. Isso garante que `Post` não possa usar o valor antigo de `state` depois que o transformarmos em um novo estado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `request_review` method on `Draft` returns a new, boxed instance of a new `PendingReview` struct, which represents the state when a post is waiting for a review. The `PendingReview` struct also implements the `request_review` method but doesn’t do any transformations. Rather, it returns itself because when we request a review on a post already in the `PendingReview` state, it should stay in the `PendingReview` state."
-msgstr ""
+msgstr "O método `request_review` em `Draft` retorna uma nova instância, colocada em um box, de um novo struct `PendingReview`, que representa o estado em que uma postagem está aguardando revisão. O struct `PendingReview` também implementa o método `request_review`, mas não faz nenhuma transformação. Em vez disso, ele retorna a si mesmo, porque, quando solicitamos uma revisão de uma postagem que já está no estado `PendingReview`, ela deve continuar no estado `PendingReview`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Now we can start seeing the advantages of the state pattern: The `request_review` method on `Post` is the same no matter its `state` value. Each state is responsible for its own rules."
-msgstr ""
+msgstr "Agora começamos a ver as vantagens do padrão de estado: o método `request_review` em `Post` é o mesmo, não importa qual seja o valor de `state`. Cada estado é responsável pelas próprias regras."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We’ll leave the `content` method on `Post` as is, returning an empty string slice. We can now have a `Post` in the `PendingReview` state as well as in the `Draft` state, but we want the same behavior in the `PendingReview` state. Listing 18-11 now works up to the second `assert_eq!` call!"
-msgstr ""
+msgstr "Vamos deixar o método `content` em `Post` como está, retornando uma slice de string vazia. Agora podemos ter um `Post` no estado `PendingReview`, assim como no estado `Draft`, mas queremos o mesmo comportamento no estado `PendingReview`. A Listagem 18-11 já funciona até a segunda chamada de `assert_eq!`!"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"adding-the-approve-method-that-changes-the-behavior-of-content\"></a> <a id=\"adding-approve-to-change-the-behavior-of-content\"></a>"
@@ -19291,71 +19291,71 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Adding `approve` to Change `content`'s Behavior"
-msgstr ""
+msgstr "Adicionando `approve` para alterar o comportamento de `content` {#adding-approve-to-change-contents-behavior}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `approve` method will be similar to the `request_review` method: It will set `state` to the value that the current state says it should have when that state is approved, as shown in Listing 18-16."
-msgstr ""
+msgstr "O método `approve` será semelhante ao método `request_review`: ele vai definir `state` como o valor que o estado atual indica que deve ter quando esse estado for aprovado, como mostrado na Listagem 18-16."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-16\" file-name=\"src/lib.rs\" caption=\"Implementing the `approve` method on `Post` and the `State` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-16\" file-name=\"src/lib.rs\" caption=\"Implementando o método `approve` em `Post` e no trait `State`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We add the `approve` method to the `State` trait and add a new struct that implements `State`, the `Published` state."
-msgstr ""
+msgstr "Adicionamos o método `approve` ao trait `State` e acrescentamos um novo struct que implementa `State`, o estado `Published`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Similar to the way `request_review` on `PendingReview` works, if we call the `approve` method on a `Draft`, it will have no effect because `approve` will return `self`. When we call `approve` on `PendingReview`, it returns a new, boxed instance of the `Published` struct. The `Published` struct implements the `State` trait, and for both the `request_review` method and the `approve` method, it returns itself because the post should stay in the `Published` state in those cases."
-msgstr ""
+msgstr "Assim como acontece com `request_review` em `PendingReview`, se chamarmos o método `approve` em um `Draft`, ele não terá efeito, porque `approve` vai retornar `self`. Quando chamamos `approve` em `PendingReview`, ele retorna uma nova instância, colocada em um box, do struct `Published`. O struct `Published` implementa o trait `State` e, tanto para o método `request_review` quanto para o método `approve`, retorna a si mesmo, porque a postagem deve continuar no estado `Published` nesses casos."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Now we need to update the `content` method on `Post`. We want the value returned from `content` to depend on the current state of the `Post`, so we’re going to have the `Post` delegate to a `content` method defined on its `state`, as shown in Listing 18-17."
-msgstr ""
+msgstr "Agora precisamos atualizar o método `content` em `Post`. Queremos que o valor retornado por `content` dependa do estado atual de `Post`, então vamos fazer com que `Post` delegue a um método `content` definido no `state` dele, como mostrado na Listagem 18-17."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-17\" file-name=\"src/lib.rs\" caption=\"Updating the `content` method on `Post` to delegate to a `content` method on `State`\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-17\" file-name=\"src/lib.rs\" caption=\"Atualizando o método `content` em `Post` para delegar a um método `content` em `State`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Because the goal is to keep all of these rules inside the structs that implement `State`, we call a `content` method on the value in `state` and pass the post instance (that is, `self`) as an argument. Then, we return the value that’s returned from using the `content` method on the `state` value."
-msgstr ""
+msgstr "Como o objetivo é manter todas essas regras dentro dos structs que implementam `State`, chamamos um método `content` no valor em `state` e passamos a instância da postagem (ou seja, `self`) como argumento. Em seguida, retornamos o valor que o método `content` retorna quando chamado no valor de `state`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We call the `as_ref` method on the `Option` because we want a reference to the value inside the `Option` rather than ownership of the value. Because `state` is an `Option<Box<dyn State>>`, when we call `as_ref`, an `Option<&Box<dyn State>>` is returned. If we didn’t call `as_ref`, we would get an error because we can’t move `state` out of the borrowed `&self` of the function parameter."
-msgstr ""
+msgstr "Chamamos o método `as_ref` no `Option` porque queremos uma referência ao valor dentro do `Option`, e não o ownership do valor. Como `state` é um `Option<Box<dyn State>>`, quando chamamos `as_ref`, é retornado um `Option<&Box<dyn State>>`. Se não chamássemos `as_ref`, teríamos um erro, porque não podemos mover `state` para fora do `&self` emprestado do parâmetro da função."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We then call the `unwrap` method, which we know will never panic because we know the methods on `Post` ensure that `state` will always contain a `Some` value when those methods are done. This is one of the cases we talked about in the [“When You Have More Information Than the Compiler”](ch09-03-to-panic-or-not-to-panic.html#cases-in-which-you-have-more-information-than-the-compiler)<!-- ignore --> section of Chapter 9 when we know that a `None` value is never possible, even though the compiler isn’t able to understand that."
-msgstr ""
+msgstr "Depois, chamamos o método `unwrap`, que sabemos que nunca vai entrar em pânico, porque sabemos que os métodos de `Post` garantem que `state` sempre contenha um valor `Some` quando esses métodos terminam. Este é um dos casos de que falamos na seção [“Quando você tem mais informações do que o compilador”](ch09-03-to-panic-or-not-to-panic.html#cases-in-which-you-have-more-information-than-the-compiler)<!-- ignore --> do Capítulo 9, quando sabemos que um valor `None` nunca é possível, mesmo que o compilador não consiga entender isso."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "At this point, when we call `content` on the `&Box<dyn State>`, deref coercion will take effect on the `&` and the `Box` so that the `content` method will ultimately be called on the type that implements the `State` trait. That means we need to add `content` to the `State` trait definition, and that is where we’ll put the logic for what content to return depending on which state we have, as shown in Listing 18-18."
-msgstr ""
+msgstr "Neste ponto, quando chamamos `content` no `&Box<dyn State>`, a coerção de desreferência vai atuar sobre o `&` e o `Box`, de modo que o método `content` acabe sendo chamado no tipo que implementa o trait `State`. Isso significa que precisamos adicionar `content` à definição do trait `State`, e é ali que vamos colocar a lógica que determina qual conteúdo retornar, dependendo do estado em que estamos, como mostrado na Listagem 18-18."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-18\" file-name=\"src/lib.rs\" caption=\"Adding the `content` method to the `State` trait\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-18\" file-name=\"src/lib.rs\" caption=\"Adicionando o método `content` ao trait `State`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We add a default implementation for the `content` method that returns an empty string slice. That means we don’t need to implement `content` on the `Draft` and `PendingReview` structs. The `Published` struct will override the `content` method and return the value in `post.content`. While convenient, having the `content` method on `State` determine the content of the `Post` is blurring the lines between the responsibility of `State` and the responsibility of `Post`."
-msgstr ""
+msgstr "Adicionamos uma implementação padrão para o método `content` que retorna uma slice de string vazia. Isso significa que não precisamos implementar `content` nos structs `Draft` e `PendingReview`. O struct `Published` vai sobrescrever o método `content` e retornar o valor de `post.content`. Embora seja conveniente, ter o método `content` em `State` determinando o conteúdo de `Post` está apagando a linha que separa a responsabilidade de `State` da responsabilidade de `Post`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Note that we need lifetime annotations on this method, as we discussed in Chapter 10. We’re taking a reference to a `post` as an argument and returning a reference to part of that `post`, so the lifetime of the returned reference is related to the lifetime of the `post` argument."
-msgstr ""
+msgstr "Observe que precisamos de anotações de tempo de vida neste método, como discutimos no Capítulo 10. Estamos recebendo uma referência a um `post` como argumento e retornando uma referência a uma parte desse `post`, então o tempo de vida da referência retornada está relacionado ao tempo de vida do argumento `post`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "And we’re done—all of Listing 18-11 now works! We’ve implemented the state pattern with the rules of the blog post workflow. The logic related to the rules lives in the state objects rather than being scattered throughout `Post`."
-msgstr ""
+msgstr "E pronto—toda a Listagem 18-11 agora funciona! Implementamos o padrão de estado com as regras do fluxo de trabalho da postagem de blog. A lógica relacionada às regras fica nos objetos de estado, em vez de espalhada por todo o `Post`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Why Not An Enum?"
-msgstr ""
+msgstr "Por que não usar um enum? {#why-not-an-enum}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "You may have been wondering why we didn’t use an enum with the different possible post states as variants. That’s certainly a possible solution; try it and compare the end results to see which you prefer! One disadvantage of using an enum is that every place that checks the value of the enum will need a `match` expression or similar to handle every possible variant. This could get more repetitive than this trait object solution."
-msgstr ""
+msgstr "Você pode ter se perguntado por que não usamos um enum com os diferentes estados possíveis da postagem como variantes. Essa é certamente uma solução possível; experimente e compare os resultados finais para ver qual você prefere! Uma desvantagem de usar um enum é que todo lugar que verifica o valor do enum vai precisar de uma expressão `match` ou algo semelhante para tratar cada variante possível. Isso pode ficar mais repetitivo do que esta solução com objeto de trait."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"trade-offs-of-the-state-pattern\"></a>"
@@ -19363,83 +19363,83 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Evaluating the State Pattern"
-msgstr ""
+msgstr "Avaliando o padrão de estado {#evaluating-the-state-pattern}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We’ve shown that Rust is capable of implementing the object-oriented state pattern to encapsulate the different kinds of behavior a post should have in each state. The methods on `Post` know nothing about the various behaviors. Because of the way we organized the code, we have to look in only one place to know the different ways a published post can behave: the implementation of the `State` trait on the `Published` struct."
-msgstr ""
+msgstr "Mostramos que o Rust é capaz de implementar o padrão de estado orientado a objetos para encapsular os diferentes tipos de comportamento que uma postagem deve ter em cada estado. Os métodos de `Post` não sabem nada sobre os vários comportamentos. Por causa da forma como organizamos o código, precisamos olhar em apenas um lugar para saber as diferentes formas como uma postagem publicada pode se comportar: na implementação do trait `State` no struct `Published`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "If we were to create an alternative implementation that didn’t use the state pattern, we might instead use `match` expressions in the methods on `Post` or even in the `main` code that checks the state of the post and changes behavior in those places. That would mean we would have to look in several places to understand all the implications of a post being in the published state."
-msgstr ""
+msgstr "Se fôssemos criar uma implementação alternativa que não usasse o padrão de estado, poderíamos, em vez disso, usar expressões `match` nos métodos de `Post` ou até mesmo no código de `main` que verifica o estado da postagem e altera o comportamento nesses lugares. Isso significaria que precisaríamos olhar em vários lugares para entender todas as implicações de uma postagem estar no estado publicado."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "With the state pattern, the `Post` methods and the places we use `Post` don’t need `match` expressions, and to add a new state, we would only need to add a new struct and implement the trait methods on that one struct in one location."
-msgstr ""
+msgstr "Com o padrão de estado, os métodos de `Post` e os lugares onde usamos `Post` não precisam de expressões `match`, e, para adicionar um novo estado, precisaríamos apenas adicionar um novo struct e implementar os métodos do trait nesse único struct, em um só lugar."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The implementation using the state pattern is easy to extend to add more functionality. To see the simplicity of maintaining code that uses the state pattern, try a few of these suggestions:"
-msgstr ""
+msgstr "A implementação que usa o padrão de estado é fácil de estender para adicionar mais funcionalidades. Para ver a simplicidade de manter código que usa o padrão de estado, experimente algumas destas sugestões:"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Add a `reject` method that changes the post’s state from `PendingReview` back to `Draft`."
-msgstr ""
+msgstr "Adicione um método `reject` que muda o estado da postagem de `PendingReview` de volta para `Draft`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Require two calls to `approve` before the state can be changed to `Published`."
-msgstr ""
+msgstr "Exija duas chamadas a `approve` antes que o estado possa ser alterado para `Published`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Allow users to add text content only when a post is in the `Draft` state. Hint: have the state object responsible for what might change about the content but not responsible for modifying the `Post`."
-msgstr ""
+msgstr "Permita que os usuários adicionem conteúdo de texto somente quando uma postagem estiver no estado `Draft`. Dica: faça com que o objeto de estado seja responsável pelo que pode mudar no conteúdo, mas não pela modificação de `Post`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "One downside of the state pattern is that, because the states implement the transitions between states, some of the states are coupled to each other. If we add another state between `PendingReview` and `Published`, such as `Scheduled`, we would have to change the code in `PendingReview` to transition to `Scheduled` instead. It would be less work if `PendingReview` didn’t need to change with the addition of a new state, but that would mean switching to another design pattern."
-msgstr ""
+msgstr "Uma desvantagem do padrão de estado é que, como os estados implementam as transições entre estados, alguns deles ficam acoplados entre si. Se adicionarmos outro estado entre `PendingReview` e `Published`, como `Scheduled`, precisaríamos mudar o código de `PendingReview` para que ele, em vez disso, faça a transição para `Scheduled`. Seria menos trabalhoso se `PendingReview` não precisasse mudar com a adição de um novo estado, mas isso significaria mudar para outro padrão de projeto."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Another downside is that we’ve duplicated some logic. To eliminate some of the duplication, we might try to make default implementations for the `request_review` and `approve` methods on the `State` trait that return `self`. However, this wouldn’t work: When using `State` as a trait object, the trait doesn’t know what the concrete `self` will be exactly, so the return type isn’t known at compile time. (This is one of the dyn compatibility rules mentioned earlier.)"
-msgstr ""
+msgstr "Outra desvantagem é que duplicamos parte da lógica. Para eliminar parte da duplicação, poderíamos tentar criar implementações padrão para os métodos `request_review` e `approve` no trait `State`, que retornem `self`. No entanto, isso não funcionaria: ao usar `State` como objeto de trait, o trait não sabe exatamente qual será o `self` concreto, então o tipo de retorno não é conhecido em tempo de compilação. (Esta é uma das regras de compatibilidade com dyn mencionadas antes.)"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Other duplication includes the similar implementations of the `request_review` and `approve` methods on `Post`. Both methods use `Option::take` with the `state` field of `Post`, and if `state` is `Some`, they delegate to the wrapped value’s implementation of the same method and set the new value of the `state` field to the result. If we had a lot of methods on `Post` that followed this pattern, we might consider defining a macro to eliminate the repetition (see the [“Macros”](ch20-05-macros.html#macros)<!-- ignore --> section in Chapter 20)."
-msgstr ""
+msgstr "Há outra duplicação nas implementações semelhantes dos métodos `request_review` e `approve` em `Post`. Os dois métodos usam `Option::take` com o campo `state` de `Post` e, se `state` for `Some`, delegam para a implementação do mesmo método no valor encapsulado e definem o novo valor do campo `state` como o resultado. Se tivéssemos muitos métodos em `Post` que seguissem esse padrão, poderíamos considerar definir uma macro para eliminar a repetição (veja a seção [“Macros”](ch20-05-macros.html#macros)<!-- ignore --> do Capítulo 20)."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "By implementing the state pattern exactly as it’s defined for object-oriented languages, we’re not taking as full advantage of Rust’s strengths as we could. Let’s look at some changes we can make to the `blog` crate that can make invalid states and transitions into compile-time errors."
-msgstr ""
+msgstr "Ao implementar o padrão de estado exatamente como ele é definido para linguagens orientadas a objetos, não estamos aproveitando os pontos fortes do Rust tanto quanto poderíamos. Vamos ver algumas mudanças que podemos fazer no crate `blog` que podem transformar estados e transições inválidos em erros em tempo de compilação."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Encoding States and Behavior as Types"
-msgstr ""
+msgstr "Codificando estados e comportamento como tipos {#encoding-states-and-behavior-as-types}"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We’ll show you how to rethink the state pattern to get a different set of trade-offs. Rather than encapsulating the states and transitions completely so that outside code has no knowledge of them, we’ll encode the states into different types. Consequently, Rust’s type-checking system will prevent attempts to use draft posts where only published posts are allowed by issuing a compiler error."
-msgstr ""
+msgstr "Vamos mostrar como repensar o padrão de estado para obter um conjunto diferente de concessões. Em vez de encapsular totalmente os estados e as transições, de modo que o código externo não tenha nenhum conhecimento deles, vamos codificar os estados em tipos diferentes. Por isso, o sistema de verificação de tipos do Rust vai impedir tentativas de usar postagens de rascunho onde só são permitidas postagens publicadas, emitindo um erro de compilação."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Let’s consider the first part of `main` in Listing 18-11:"
-msgstr ""
+msgstr "Vamos considerar a primeira parte de `main` na Listagem 18-11:"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We still enable the creation of new posts in the draft state using `Post::new` and the ability to add text to the post’s content. But instead of having a `content` method on a draft post that returns an empty string, we’ll make it so that draft posts don’t have the `content` method at all. That way, if we try to get a draft post’s content, we’ll get a compiler error telling us the method doesn’t exist. As a result, it will be impossible for us to accidentally display draft post content in production because that code won’t even compile. Listing 18-19 shows the definition of a `Post` struct and a `DraftPost` struct, as well as methods on each."
-msgstr ""
+msgstr "Ainda permitimos a criação de novas postagens no estado de rascunho usando `Post::new`, assim como a possibilidade de adicionar texto ao conteúdo da postagem. Mas, em vez de ter um método `content` em uma postagem de rascunho que retorna uma string vazia, vamos fazer com que as postagens de rascunho não tenham o método `content` de jeito nenhum. Assim, se tentarmos obter o conteúdo de uma postagem de rascunho, vamos receber um erro de compilação informando que o método não existe. Como resultado, será impossível exibir por acidente o conteúdo de uma postagem de rascunho em produção, porque esse código nem vai compilar. A Listagem 18-19 mostra a definição de um struct `Post` e de um struct `DraftPost`, além dos métodos de cada um."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-19\" file-name=\"src/lib.rs\" caption=\"A `Post` with a `content` method and a `DraftPost` without a `content` method\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-19\" file-name=\"src/lib.rs\" caption=\"Um `Post` com um método `content` e um `DraftPost` sem um método `content`\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Both the `Post` and `DraftPost` structs have a private `content` field that stores the blog post text. The structs no longer have the `state` field because we’re moving the encoding of the state to the types of the structs. The `Post` struct will represent a published post, and it has a `content` method that returns the `content`."
-msgstr ""
+msgstr "Os structs `Post` e `DraftPost` têm um campo privado `content` que armazena o texto da postagem de blog. Os structs não têm mais o campo `state`, porque estamos movendo a codificação do estado para os tipos dos structs. O struct `Post` vai representar uma postagem publicada, e ele tem um método `content` que retorna o `content`."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We still have a `Post::new` function, but instead of returning an instance of `Post`, it returns an instance of `DraftPost`. Because `content` is private and there aren’t any functions that return `Post`, it’s not possible to create an instance of `Post` right now."
-msgstr ""
+msgstr "Ainda temos uma função `Post::new`, mas, em vez de retornar uma instância de `Post`, ela retorna uma instância de `DraftPost`. Como `content` é privado e não há nenhuma função que retorne `Post`, não é possível criar uma instância de `Post` neste momento."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `DraftPost` struct has an `add_text` method, so we can add text to `content` as before, but note that `DraftPost` does not have a `content` method defined! So now the program ensures that all posts start as draft posts, and draft posts don’t have their content available for display. Any attempt to get around these constraints will result in a compiler error."
-msgstr ""
+msgstr "O struct `DraftPost` tem um método `add_text`, então podemos adicionar texto a `content` como antes, mas observe que `DraftPost` não tem um método `content` definido! Assim, agora o programa garante que todas as postagens comecem como postagens de rascunho e que postagens de rascunho não tenham o conteúdo disponível para exibição. Qualquer tentativa de contornar essas restrições vai resultar em um erro de compilação."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<a id=\"implementing-transitions-as-transformations-into-different-types\"></a>"
@@ -19447,43 +19447,43 @@ msgstr ""
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "So, how do we get a published post? We want to enforce the rule that a draft post has to be reviewed and approved before it can be published. A post in the pending review state should still not display any content. Let’s implement these constraints by adding another struct, `PendingReviewPost`, defining the `request_review` method on `DraftPost` to return a `PendingReviewPost` and defining an `approve` method on `PendingReviewPost` to return a `Post`, as shown in Listing 18-20."
-msgstr ""
+msgstr "Então, como obtemos uma postagem publicada? Queremos impor a regra de que uma postagem de rascunho precisa ser revisada e aprovada antes de poder ser publicada. Uma postagem no estado de revisão pendente ainda não deve exibir nenhum conteúdo. Vamos implementar essas restrições adicionando outro struct, `PendingReviewPost`, definindo o método `request_review` em `DraftPost` para retornar um `PendingReviewPost` e definindo um método `approve` em `PendingReviewPost` para retornar um `Post`, como mostrado na Listagem 18-20."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-20\" file-name=\"src/lib.rs\" caption=\"A `PendingReviewPost` that gets created by calling `request_review` on `DraftPost` and an `approve` method that turns a `PendingReviewPost` into a published `Post`\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-20\" file-name=\"src/lib.rs\" caption=\"Um `PendingReviewPost` criado ao chamar `request_review` em `DraftPost` e um método `approve` que transforma um `PendingReviewPost` em um `Post` publicado\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The `request_review` and `approve` methods take ownership of `self`, thus consuming the `DraftPost` and `PendingReviewPost` instances and transforming them into a `PendingReviewPost` and a published `Post`, respectively. This way, we won’t have any lingering `DraftPost` instances after we’ve called `request_review` on them, and so forth. The `PendingReviewPost` struct doesn’t have a `content` method defined on it, so attempting to read its content results in a compiler error, as with `DraftPost`. Because the only way to get a published `Post` instance that does have a `content` method defined is to call the `approve` method on a `PendingReviewPost`, and the only way to get a `PendingReviewPost` is to call the `request_review` method on a `DraftPost`, we’ve now encoded the blog post workflow into the type system."
-msgstr ""
+msgstr "Os métodos `request_review` e `approve` assumem o ownership de `self`, consumindo, assim, as instâncias de `DraftPost` e de `PendingReviewPost` e transformando-as em um `PendingReviewPost` e em um `Post` publicado, respectivamente. Dessa forma, não teremos nenhuma instância remanescente de `DraftPost` depois de chamarmos `request_review` nelas, e assim por diante. O struct `PendingReviewPost` não tem um método `content` definido, então tentar ler o conteúdo dele resulta em um erro de compilação, como acontece com `DraftPost`. Como a única forma de obter uma instância publicada de `Post` que tenha um método `content` definido é chamar o método `approve` em um `PendingReviewPost`, e a única forma de obter um `PendingReviewPost` é chamar o método `request_review` em um `DraftPost`, agora codificamos o fluxo de trabalho da postagem de blog no sistema de tipos."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "But we also have to make some small changes to `main`. The `request_review` and `approve` methods return new instances rather than modifying the struct they’re called on, so we need to add more `let post =` shadowing assignments to save the returned instances. We also can’t have the assertions about the draft and pending review posts’ contents be empty strings, nor do we need them: We can’t compile code that tries to use the content of posts in those states any longer. The updated code in `main` is shown in Listing 18-21."
-msgstr ""
+msgstr "Mas também precisamos fazer algumas pequenas mudanças em `main`. Os métodos `request_review` e `approve` retornam novas instâncias em vez de modificar o struct sobre o qual são chamados, então precisamos adicionar mais atribuições de sombreamento com `let post =` para guardar as instâncias retornadas. Também não podemos mais ter asserções sobre o conteúdo das postagens de rascunho e de revisão pendente sendo strings vazias, nem precisamos delas: não conseguimos mais compilar código que tente usar o conteúdo de postagens nesses estados. O código atualizado em `main` é mostrado na Listagem 18-21."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "<Listing number=\"18-21\" file-name=\"src/main.rs\" caption=\"Modifications to `main` to use the new implementation of the blog post workflow\">\n"
-msgstr ""
+msgstr "<Listing number=\"18-21\" file-name=\"src/main.rs\" caption=\"Modificações em `main` para usar a nova implementação do fluxo de trabalho da postagem de blog\">\n"
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "The changes we needed to make to `main` to reassign `post` mean that this implementation doesn’t quite follow the object-oriented state pattern anymore: The transformations between the states are no longer encapsulated entirely within the `Post` implementation. However, our gain is that invalid states are now impossible because of the type system and the type checking that happens at compile time! This ensures that certain bugs, such as display of the content of an unpublished post, will be discovered before they make it to production."
-msgstr ""
+msgstr "As mudanças que precisamos fazer em `main` para reatribuir `post` significam que esta implementação não segue mais exatamente o padrão de estado orientado a objetos: as transformações entre os estados não estão mais totalmente encapsuladas na implementação de `Post`. No entanto, nosso ganho é que estados inválidos agora são impossíveis, graças ao sistema de tipos e à verificação de tipos que acontece em tempo de compilação! Isso garante que certos bugs, como a exibição do conteúdo de uma postagem não publicada, sejam descobertos antes que cheguem à produção."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Try the tasks suggested at the start of this section on the `blog` crate as it is after Listing 18-21 to see what you think about the design of this version of the code. Note that some of the tasks might be completed already in this design."
-msgstr ""
+msgstr "Experimente as tarefas sugeridas no início desta seção no crate `blog`, como ele está depois da Listagem 18-21, para ver o que você acha do design desta versão do código. Observe que algumas das tarefas podem já estar concluídas neste design."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "We’ve seen that even though Rust is capable of implementing object-oriented design patterns, other patterns, such as encoding state into the type system, are also available in Rust. These patterns have different trade-offs. Although you might be very familiar with object-oriented patterns, rethinking the problem to take advantage of Rust’s features can provide benefits, such as preventing some bugs at compile time. Object-oriented patterns won’t always be the best solution in Rust due to certain features, like ownership, that object-oriented languages don’t have."
-msgstr ""
+msgstr "Vimos que, embora o Rust seja capaz de implementar padrões de projeto orientados a objetos, outros padrões, como codificar o estado no sistema de tipos, também estão disponíveis no Rust. Esses padrões têm concessões diferentes. Embora você possa estar muito familiarizado com padrões orientados a objetos, repensar o problema para aproveitar os recursos do Rust pode trazer benefícios, como evitar alguns bugs em tempo de compilação. Padrões orientados a objetos nem sempre serão a melhor solução no Rust, por causa de certos recursos, como o ownership, que as linguagens orientadas a objetos não têm."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Regardless of whether you think Rust is an object-oriented language after reading this chapter, you now know that you can use trait objects to get some object-oriented features in Rust. Dynamic dispatch can give your code some flexibility in exchange for a bit of runtime performance. You can use this flexibility to implement object-oriented patterns that can help your code’s maintainability. Rust also has other features, like ownership, that object-oriented languages don’t have. An object-oriented pattern won’t always be the best way to take advantage of Rust’s strengths, but it is an available option."
-msgstr ""
+msgstr "Independentemente de você achar que o Rust é ou não uma linguagem orientada a objetos depois de ler este capítulo, agora você sabe que pode usar objetos de trait para obter alguns recursos orientados a objetos no Rust. O despacho dinâmico pode dar ao seu código alguma flexibilidade em troca de um pouco de desempenho em tempo de execução. Você pode usar essa flexibilidade para implementar padrões orientados a objetos que podem ajudar na manutenibilidade do seu código. O Rust também tem outros recursos, como o ownership, que as linguagens orientadas a objetos não têm. Um padrão orientado a objetos nem sempre será a melhor forma de aproveitar os pontos fortes do Rust, mas é uma opção disponível."
 
 #: src/ch18-03-oo-design-patterns.md
 msgid "Next, we’ll look at patterns, which are another of Rust’s features that enable lots of flexibility. We’ve looked at them briefly throughout the book but haven’t seen their full capability yet. Let’s go!"
-msgstr ""
+msgstr "Em seguida, vamos ver os padrões, que são outro dos recursos do Rust que possibilitam muita flexibilidade. Já os vimos brevemente ao longo do livro, mas ainda não vimos toda a sua capacidade. Vamos lá!"
 
 #: src/ch19-00-patterns.md
 msgid "Patterns are a special syntax in Rust for matching against the structure of types, both complex and simple. Using patterns in conjunction with `match` expressions and other constructs gives you more control over a program’s control flow. A pattern consists of some combination of the following:"
