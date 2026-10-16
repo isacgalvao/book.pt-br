@@ -405,11 +405,11 @@ msgstr ""
 
 #: src/SUMMARY.md src/ch21-00-final-project-a-web-server.md
 msgid "Final Project: Building a Multithreaded Web Server"
-msgstr ""
+msgstr "Projeto final: construindo um servidor web multithread {#final-project-building-a-multithreaded-web-server}"
 
 #: src/SUMMARY.md src/ch21-01-single-threaded.md
 msgid "Building a Single-Threaded Web Server"
-msgstr ""
+msgstr "Construindo um servidor web de thread única {#building-a-single-threaded-web-server}"
 
 #: src/SUMMARY.md
 msgid "From Single-Threaded to Multithreaded Server"
@@ -417,7 +417,7 @@ msgstr "De servidor de thread única a servidor multithread"
 
 #: src/SUMMARY.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Graceful Shutdown and Cleanup"
-msgstr ""
+msgstr "Encerramento gracioso e limpeza {#graceful-shutdown-and-cleanup}"
 
 #: src/SUMMARY.md src/appendix-00.md
 msgid "Appendix"
@@ -22364,83 +22364,83 @@ msgstr ""
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "It’s been a long journey, but we’ve reached the end of the book. In this chapter, we’ll build one more project together to demonstrate some of the concepts we covered in the final chapters, as well as recap some earlier lessons."
-msgstr ""
+msgstr "Foi uma longa jornada, mas chegamos ao fim do livro. Neste capítulo, vamos criar mais um projeto juntos para demonstrar alguns dos conceitos que vimos nos capítulos finais, além de revisar algumas lições anteriores."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "For our final project, we’ll make a web server that says “Hello!” and looks like Figure 21-1 in a web browser."
-msgstr ""
+msgstr "Para o nosso projeto final, vamos fazer um servidor web que exibe “Hello!” e se parece com a Figura 21-1 em um navegador web."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Here is our plan for building the web server:"
-msgstr ""
+msgstr "Este é o nosso plano para criar o servidor web:"
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Learn a bit about TCP and HTTP."
-msgstr ""
+msgstr "Aprender um pouco sobre TCP e HTTP."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Listen for TCP connections on a socket."
-msgstr ""
+msgstr "Escutar conexões TCP em um socket."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Parse a small number of HTTP requests."
-msgstr ""
+msgstr "Analisar um pequeno número de requisições HTTP."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Create a proper HTTP response."
-msgstr ""
+msgstr "Criar uma resposta HTTP adequada."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Improve the throughput of our server with a thread pool."
-msgstr ""
+msgstr "Melhorar a vazão do nosso servidor com um pool de threads."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "<img alt=\"Screenshot of a web browser visiting the address 127.0.0.1:8080 displaying a webpage with the text content “Hello! Hi from Rust”\" src=\"img/trpl21-01.png\" class=\"center\" style=\"width: 50%;\" />\n"
-msgstr ""
+msgstr "<img alt=\"Captura de tela de um navegador web acessando o endereço 127.0.0.1:8080 exibindo uma página web com o conteúdo de texto “Hello! Hi from Rust”\" src=\"img/trpl21-01.png\" class=\"center\" style=\"width: 50%;\" />\n"
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "<span class=\"caption\">Figure 21-1: Our final shared project</span>"
-msgstr ""
+msgstr "<span class=\"caption\">Figura 21-1: Nosso projeto final compartilhado</span>"
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Before we get started, we should mention two details. First, the method we’ll use won’t be the best way to build a web server with Rust. Community members have published a number of production-ready crates available at [crates.io](https://crates.io/) that provide more complete web server and thread pool implementations than we’ll build. However, our intention in this chapter is to help you learn, not to take the easy route. Because Rust is a systems programming language, we can choose the level of abstraction we want to work with and can go to a lower level than is possible or practical in other languages."
-msgstr ""
+msgstr "Antes de começarmos, devemos mencionar dois detalhes. Primeiro, o método que vamos usar não será a melhor forma de criar um servidor web com o Rust. Membros da comunidade publicaram vários crates prontos para produção, disponíveis em [crates.io](https://crates.io/), que oferecem implementações de servidor web e de pool de threads mais completas do que as que vamos criar. No entanto, a intenção deste capítulo é ajudar você a aprender, e não a seguir pelo caminho fácil. Como o Rust é uma linguagem de programação de sistemas, podemos escolher o nível de abstração com que queremos trabalhar e podemos descer a um nível mais baixo do que é possível ou prático em outras linguagens."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "Second, we will not be using async and await here. Building a thread pool is a big enough challenge on its own, without adding in building an async runtime! However, we will note how async and await might be applicable to some of the same problems we will see in this chapter. Ultimately, as we noted back in Chapter 17, many async runtimes use thread pools for managing their work."
-msgstr ""
+msgstr "Segundo, não vamos usar async e await aqui. Criar um pool de threads já é um desafio grande o suficiente por si só, sem acrescentar a criação de um runtime assíncrono! No entanto, vamos observar como async e await podem ser aplicáveis a alguns dos mesmos problemas que veremos neste capítulo. Afinal, como observamos no Capítulo 17, muitos runtimes assíncronos usam pools de threads para gerenciar o trabalho deles."
 
 #: src/ch21-00-final-project-a-web-server.md
 msgid "We’ll therefore write the basic HTTP server and thread pool manually so that you can learn the general ideas and techniques behind the crates you might use in the future."
-msgstr ""
+msgstr "Por isso, vamos escrever manualmente o servidor HTTP básico e o pool de threads, para que você possa aprender as ideias e as técnicas gerais por trás dos crates que talvez venha a usar no futuro."
 
 #: src/ch21-01-single-threaded.md
 msgid "We’ll start by getting a single-threaded web server working. Before we begin, let’s look at a quick overview of the protocols involved in building web servers. The details of these protocols are beyond the scope of this book, but a brief overview will give you the information you need."
-msgstr ""
+msgstr "Vamos começar fazendo um servidor web de thread única funcionar. Antes de começarmos, vamos dar uma olhada em uma visão geral rápida dos protocolos envolvidos na criação de servidores web. Os detalhes desses protocolos estão fora do escopo deste livro, mas uma breve visão geral vai fornecer as informações de que você precisa."
 
 #: src/ch21-01-single-threaded.md
 msgid "The two main protocols involved in web servers are _Hypertext Transfer Protocol_ _(HTTP)_ and _Transmission Control Protocol_ _(TCP)_. Both protocols are _request-response_ protocols, meaning a _client_ initiates requests and a _server_ listens to the requests and provides a response to the client. The contents of those requests and responses are defined by the protocols."
-msgstr ""
+msgstr "Os dois principais protocolos envolvidos em servidores web são o _Protocolo de Transferência de Hipertexto_ _(HTTP)_ e o _Protocolo de Controle de Transmissão_ _(TCP)_. Ambos são protocolos de _requisição-resposta_, o que significa que um _cliente_ inicia requisições e um _servidor_ escuta as requisições e fornece uma resposta ao cliente. O conteúdo dessas requisições e respostas é definido pelos protocolos."
 
 #: src/ch21-01-single-threaded.md
 msgid "TCP is the lower-level protocol that describes the details of how information gets from one server to another but doesn’t specify what that information is. HTTP builds on top of TCP by defining the contents of the requests and responses. It’s technically possible to use HTTP with other protocols, but in the vast majority of cases, HTTP sends its data over TCP. We’ll work with the raw bytes of TCP and HTTP requests and responses."
-msgstr ""
+msgstr "O TCP é o protocolo de nível mais baixo, que descreve os detalhes de como as informações chegam de um servidor a outro, mas não especifica o que são essas informações. O HTTP se apoia no TCP ao definir o conteúdo das requisições e das respostas. Tecnicamente, é possível usar o HTTP com outros protocolos, mas, na grande maioria dos casos, o HTTP envia os seus dados pelo TCP. Vamos trabalhar com os bytes brutos das requisições e respostas TCP e HTTP."
 
 #: src/ch21-01-single-threaded.md
 msgid "Listening to the TCP Connection"
-msgstr ""
+msgstr "Escutando a conexão TCP {#listening-to-the-tcp-connection}"
 
 #: src/ch21-01-single-threaded.md
 msgid "Our web server needs to listen to a TCP connection, so that’s the first part we’ll work on. The standard library offers a `std::net` module that lets us do this. Let’s make a new project in the usual fashion:"
-msgstr ""
+msgstr "Nosso servidor web precisa escutar uma conexão TCP, então essa é a primeira parte em que vamos trabalhar. A biblioteca padrão oferece um módulo `std::net` que nos permite fazer isso. Vamos criar um novo projeto da maneira usual:"
 
 #: src/ch21-01-single-threaded.md
 msgid "Now enter the code in Listing 21-1 in _src/main.rs_ to start. This code will listen at the local address `127.0.0.1:7878` for incoming TCP streams. When it gets an incoming stream, it will print `Connection established!`."
-msgstr ""
+msgstr "Agora, para começar, digite o código da Listagem 21-1 em _src/main.rs_. Esse código vai escutar no endereço local `127.0.0.1:7878` à espera de streams TCP de entrada. Quando ele receber um stream de entrada, vai imprimir `Connection established!`."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-1\" file-name=\"src/main.rs\" caption=\"Listening for incoming streams and printing a message when we receive a stream\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-1\" file-name=\"src/main.rs\" caption=\"Escutando streams de entrada e imprimindo uma mensagem quando recebemos um stream\">\n"
 
 #: src/ch21-01-single-threaded.md src/ch21-02-multithreaded.md
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
@@ -22453,59 +22453,59 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Using `TcpListener`, we can listen for TCP connections at the address `127.0.0.1:7878`. In the address, the section before the colon is an IP address representing your computer (this is the same on every computer and doesn’t represent the authors’ computer specifically), and `7878` is the port. We’ve chosen this port for two reasons: HTTP isn’t normally accepted on this port, so our server is unlikely to conflict with any other web server you might have running on your machine, and 7878 is _rust_ typed on a telephone."
-msgstr ""
+msgstr "Usando `TcpListener`, podemos escutar conexões TCP no endereço `127.0.0.1:7878`. No endereço, a parte antes dos dois-pontos é um endereço IP que representa o seu computador (esse é o mesmo em qualquer computador e não representa especificamente o computador dos autores), e `7878` é a porta. Escolhemos essa porta por dois motivos: o HTTP normalmente não é aceito nessa porta, então é improvável que o nosso servidor entre em conflito com algum outro servidor web que você possa ter em execução na sua máquina; e 7878 é _rust_ digitado num telefone."
 
 #: src/ch21-01-single-threaded.md
 msgid "The `bind` function in this scenario works like the `new` function in that it will return a new `TcpListener` instance. The function is called `bind` because, in networking, connecting to a port to listen to is known as “binding to a port.”"
-msgstr ""
+msgstr "A função `bind`, nesse caso, funciona como a função `new`, no sentido de que vai retornar uma nova instância de `TcpListener`. A função se chama `bind` porque, em redes, conectar-se a uma porta para escutar é conhecido como “vinculação a uma porta”."
 
 #: src/ch21-01-single-threaded.md
 msgid "The `bind` function returns a `Result<T, E>`, which indicates that it’s possible for binding to fail, for example, if we ran two instances of our program and so had two programs listening to the same port. Because we’re writing a basic server just for learning purposes, we won’t worry about handling these kinds of errors; instead, we use `unwrap` to stop the program if errors happen."
-msgstr ""
+msgstr "A função `bind` retorna um `Result<T, E>`, o que indica que é possível que a vinculação falhe; por exemplo, se executássemos duas instâncias do nosso programa e, assim, tivéssemos dois programas escutando na mesma porta. Como estamos escrevendo um servidor básico apenas para fins de aprendizado, não vamos nos preocupar em tratar esses tipos de erro; em vez disso, usamos `unwrap` para interromper o programa se ocorrerem erros."
 
 #: src/ch21-01-single-threaded.md
 msgid "The `incoming` method on `TcpListener` returns an iterator that gives us a sequence of streams (more specifically, streams of type `TcpStream`). A single _stream_ represents an open connection between the client and the server. _Connection_ is the name for the full request and response process in which a client connects to the server, the server generates a response, and the server closes the connection. As such, we will read from the `TcpStream` to see what the client sent and then write our response to the stream to send data back to the client. Overall, this `for` loop will process each connection in turn and produce a series of streams for us to handle."
-msgstr ""
+msgstr "O método `incoming` de `TcpListener` retorna um iterador que nos entrega uma sequência de streams (mais especificamente, streams do tipo `TcpStream`). Um único _stream_ representa uma conexão aberta entre o cliente e o servidor. _Conexão_ é o nome do processo completo de requisição e resposta, no qual um cliente se conecta ao servidor, o servidor gera uma resposta e o servidor fecha a conexão. Por isso, vamos ler do `TcpStream` para ver o que o cliente enviou e, em seguida, escrever a nossa resposta no stream para enviar dados de volta ao cliente. No geral, este loop `for` vai processar cada conexão por vez e produzir uma série de streams para lidarmos com eles."
 
 #: src/ch21-01-single-threaded.md
 msgid "For now, our handling of the stream consists of calling `unwrap` to terminate our program if the stream has any errors; if there aren’t any errors, the program prints a message. We’ll add more functionality for the success case in the next listing. The reason we might receive errors from the `incoming` method when a client connects to the server is that we’re not actually iterating over connections. Instead, we’re iterating over _connection attempts_. The connection might not be successful for a number of reasons, many of them operating system specific. For example, many operating systems have a limit to the number of simultaneous open connections they can support; new connection attempts beyond that number will produce an error until some of the open connections are closed."
-msgstr ""
+msgstr "Por enquanto, o nosso tratamento do stream consiste em chamar `unwrap` para encerrar o programa se o stream tiver algum erro; se não houver erros, o programa imprime uma mensagem. Vamos acrescentar mais funcionalidades para o caso de sucesso na próxima listagem. O motivo pelo qual podemos receber erros do método `incoming` quando um cliente se conecta ao servidor é que, na verdade, não estamos iterando sobre conexões. Em vez disso, estamos iterando sobre _tentativas de conexão_. A conexão pode não ser bem-sucedida por vários motivos, muitos deles específicos do sistema operacional. Por exemplo, muitos sistemas operacionais têm um limite para o número de conexões abertas simultâneas que podem suportar; novas tentativas de conexão além desse número vão produzir um erro até que algumas das conexões abertas sejam fechadas."
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s try running this code! Invoke `cargo run` in the terminal and then load _127.0.0.1:7878_ in a web browser. The browser should show an error message like “Connection reset” because the server isn’t currently sending back any data. But when you look at your terminal, you should see several messages that were printed when the browser connected to the server!"
-msgstr ""
+msgstr "Vamos experimentar executar este código! Execute `cargo run` no terminal e depois carregue _127.0.0.1:7878_ em um navegador web. O navegador deve mostrar uma mensagem de erro como “Connection reset”, porque o servidor não está enviando nenhum dado no momento. Mas, ao olhar para o seu terminal, você deve ver várias mensagens que foram impressas quando o navegador se conectou ao servidor!"
 
 #: src/ch21-01-single-threaded.md
 msgid "Sometimes you’ll see multiple messages printed for one browser request; the reason might be that the browser is making a request for the page as well as a request for other resources, like the _favicon.ico_ icon that appears in the browser tab."
-msgstr ""
+msgstr "Às vezes você verá várias mensagens impressas para uma única requisição do navegador; o motivo pode ser que o navegador esteja fazendo uma requisição para a página, assim como uma requisição para outros recursos, como o ícone _favicon.ico_ que aparece na aba do navegador."
 
 #: src/ch21-01-single-threaded.md
 msgid "It could also be that the browser is trying to connect to the server multiple times because the server isn’t responding with any data. When `stream` goes out of scope and is dropped at the end of the loop, the connection is closed as part of the `drop` implementation. Browsers sometimes deal with closed connections by retrying, because the problem might be temporary."
-msgstr ""
+msgstr "Também pode ser que o navegador esteja tentando se conectar ao servidor várias vezes porque o servidor não está respondendo com nenhum dado. Quando `stream` sai do escopo e é descartado no fim do loop, a conexão é fechada como parte da implementação de `drop`. Os navegadores às vezes lidam com conexões fechadas tentando novamente, porque o problema pode ser temporário."
 
 #: src/ch21-01-single-threaded.md
 msgid "Browsers also sometimes open multiple connections to the server without sending any requests so that if they _do_ later send requests, those requests can happen more quickly. When this occurs, our server will see each connection, regardless of whether there are any requests over that connection. Many versions of Chrome-based browsers do this, for example; you can disable that optimization by using private browsing mode or using a different browser."
-msgstr ""
+msgstr "Os navegadores também às vezes abrem várias conexões com o servidor sem enviar nenhuma requisição, para que, se _de fato_ enviarem requisições mais tarde, essas requisições possam ser atendidas mais rapidamente. Quando isso ocorre, nosso servidor vai ver cada conexão, independentemente de haver ou não requisições por essa conexão. Muitas versões de navegadores baseados no Chrome fazem isso, por exemplo; você pode desativar essa otimização usando o modo de navegação privada ou usando outro navegador."
 
 #: src/ch21-01-single-threaded.md
 msgid "The important factor is that we’ve successfully gotten a handle to a TCP connection!"
-msgstr ""
+msgstr "O fator importante é que conseguimos obter um handle para uma conexão TCP!"
 
 #: src/ch21-01-single-threaded.md
 msgid "Remember to stop the program by pressing <kbd>ctrl</kbd>\\-<kbd>C</kbd> when you’re done running a particular version of the code. Then, restart the program by invoking the `cargo run` command after you’ve made each set of code changes to make sure you’re running the newest code."
-msgstr ""
+msgstr "Lembre-se de parar o programa pressionando <kbd>ctrl</kbd>\\-<kbd>C</kbd> quando terminar de executar uma determinada versão do código. Em seguida, reinicie o programa com o comando `cargo run` depois de fazer cada conjunto de alterações no código, para garantir que você esteja executando o código mais recente."
 
 #: src/ch21-01-single-threaded.md
 msgid "Reading the Request"
-msgstr ""
+msgstr "Lendo a requisição {#reading-the-request}"
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s implement the functionality to read the request from the browser! To separate the concerns of first getting a connection and then taking some action with the connection, we’ll start a new function for processing connections. In this new `handle_connection` function, we’ll read data from the TCP stream and print it so that we can see the data being sent from the browser. Change the code to look like Listing 21-2."
-msgstr ""
+msgstr "Vamos implementar a funcionalidade para ler a requisição do navegador! Para separar as responsabilidades de primeiro obter uma conexão e depois tomar alguma ação com ela, vamos criar uma nova função para processar as conexões. Nessa nova função `handle_connection`, vamos ler os dados do stream TCP e imprimi-los para que possamos ver os dados enviados pelo navegador. Altere o código para que fique como na Listagem 21-2."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-2\" file-name=\"src/main.rs\" caption=\"Reading from the `TcpStream` and printing the data\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-2\" file-name=\"src/main.rs\" caption=\"Lendo do `TcpStream` e imprimindo os dados\">\n"
 
 #: src/ch21-01-single-threaded.md
 msgid "\"Request: {http_request:#?}\""
@@ -22513,27 +22513,27 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "We bring `std::io::BufReader` and `std::io::prelude` into scope to get access to traits and types that let us read from and write to the stream. In the `for` loop in the `main` function, instead of printing a message that says we made a connection, we now call the new `handle_connection` function and pass the `stream` to it."
-msgstr ""
+msgstr "Trazemos `std::io::BufReader` e `std::io::prelude` para o escopo, a fim de ter acesso aos traits e tipos que nos permitem ler do stream e escrever nele. No loop `for` da função `main`, em vez de imprimir uma mensagem dizendo que fizemos uma conexão, agora chamamos a nova função `handle_connection` e passamos o `stream` para ela."
 
 #: src/ch21-01-single-threaded.md
 msgid "In the `handle_connection` function, we create a new `BufReader` instance that wraps a reference to the `stream`. The `BufReader` adds buffering by managing calls to the `std::io::Read` trait methods for us."
-msgstr ""
+msgstr "Na função `handle_connection`, criamos uma nova instância de `BufReader` que envolve uma referência ao `stream`. O `BufReader` adiciona armazenamento em buffer ao gerenciar as chamadas aos métodos do trait `std::io::Read` para nós."
 
 #: src/ch21-01-single-threaded.md
 msgid "We create a variable named `http_request` to collect the lines of the request the browser sends to our server. We indicate that we want to collect these lines in a vector by adding the `Vec<_>` type annotation."
-msgstr ""
+msgstr "Criamos uma variável chamada `http_request` para coletar as linhas da requisição que o navegador envia ao nosso servidor. Indicamos que queremos coletar essas linhas em um vetor adicionando a anotação de tipo `Vec<_>`."
 
 #: src/ch21-01-single-threaded.md
 msgid "`BufReader` implements the `std::io::BufRead` trait, which provides the `lines` method. The `lines` method returns an iterator of `Result<String, std::io::Error>` by splitting the stream of data whenever it sees a newline byte. To get each `String`, we `map` and `unwrap` each `Result`. The `Result` might be an error if the data isn’t valid UTF-8 or if there was a problem reading from the stream. Again, a production program should handle these errors more gracefully, but we’re choosing to stop the program in the error case for simplicity."
-msgstr ""
+msgstr "`BufReader` implementa o trait `std::io::BufRead`, que fornece o método `lines`. O método `lines` retorna um iterador de `Result<String, std::io::Error>` ao dividir o stream de dados sempre que encontra um byte de nova linha. Para obter cada `String`, usamos `map` e `unwrap` em cada `Result`. O `Result` pode ser um erro se os dados não forem UTF-8 válido ou se houver um problema ao ler do stream. Novamente, um programa de produção deveria tratar esses erros de forma mais elegante, mas estamos optando por interromper o programa no caso de erro, por simplicidade."
 
 #: src/ch21-01-single-threaded.md
 msgid "The browser signals the end of an HTTP request by sending two newline characters in a row, so to get one request from the stream, we take lines until we get a line that is the empty string. Once we’ve collected the lines into the vector, we’re printing them out using pretty debug formatting so that we can take a look at the instructions the web browser is sending to our server."
-msgstr ""
+msgstr "O navegador sinaliza o fim de uma requisição HTTP enviando dois caracteres de nova linha seguidos; por isso, para obter uma requisição do stream, pegamos linhas até obter uma linha que seja a string vazia. Depois de coletarmos as linhas no vetor, nós as imprimimos usando a formatação de depuração “pretty”, para que possamos dar uma olhada nas instruções que o navegador web está enviando ao nosso servidor."
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s try this code! Start the program and make a request in a web browser again. Note that we’ll still get an error page in the browser, but our program’s output in the terminal will now look similar to this:"
-msgstr ""
+msgstr "Vamos experimentar este código! Inicie o programa e faça de novo uma requisição em um navegador web. Observe que ainda veremos uma página de erro no navegador, mas a saída do nosso programa no terminal agora vai ficar parecida com esta:"
 
 #: src/ch21-01-single-threaded.md
 msgid ""
@@ -22573,11 +22573,11 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Depending on your browser, you might get slightly different output. Now that we’re printing the request data, we can see why we get multiple connections from one browser request by looking at the path after `GET` in the first line of the request. If the repeated connections are all requesting _/_, we know the browser is trying to fetch _/_ repeatedly because it’s not getting a response from our program."
-msgstr ""
+msgstr "Dependendo do navegador, você pode obter uma saída um pouco diferente. Agora que estamos imprimindo os dados da requisição, podemos entender por que recebemos várias conexões de uma única requisição do navegador, observando o caminho que vem depois de `GET` na primeira linha da requisição. Se as conexões repetidas estiverem todas solicitando _/_, sabemos que o navegador está tentando buscar _/_ repetidamente porque não está recebendo uma resposta do nosso programa."
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s break down this request data to understand what the browser is asking of our program."
-msgstr ""
+msgstr "Vamos decompor esses dados da requisição para entender o que o navegador está pedindo ao nosso programa."
 
 #: src/ch21-01-single-threaded.md
 msgid "<a id=\"a-closer-look-at-an-http-request\"></a> <a id=\"looking-closer-at-an-http-request\"></a>"
@@ -22585,63 +22585,63 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Looking More Closely at an HTTP Request"
-msgstr ""
+msgstr "Olhando mais de perto uma requisição HTTP {#looking-more-closely-at-an-http-request}"
 
 #: src/ch21-01-single-threaded.md
 msgid "HTTP is a text-based protocol, and a request takes this format:"
-msgstr ""
+msgstr "HTTP é um protocolo baseado em texto, e uma requisição segue este formato:"
 
 #: src/ch21-01-single-threaded.md
 msgid "The first line is the _request line_ that holds information about what the client is requesting. The first part of the request line indicates the method being used, such as `GET` or `POST`, which describes how the client is making this request. Our client used a `GET` request, which means it is asking for information."
-msgstr ""
+msgstr "A primeira linha é a _linha de requisição_, que contém informações sobre o que o cliente está solicitando. A primeira parte da linha de requisição indica o método utilizado, como `GET` ou `POST`, que descreve como o cliente está fazendo esta requisição. Nosso cliente usou uma requisição `GET`, o que significa que ele está pedindo informações."
 
 #: src/ch21-01-single-threaded.md
 msgid "The next part of the request line is _/_, which indicates the _uniform resource identifier_ _(URI)_ the client is requesting: A URI is almost, but not quite, the same as a _uniform resource locator_ _(URL)_. The difference between URIs and URLs isn’t important for our purposes in this chapter, but the HTTP spec uses the term _URI_, so we can just mentally substitute _URL_ for _URI_ here."
-msgstr ""
+msgstr "A próxima parte da linha de requisição é _/_, que indica o _identificador uniforme de recursos_ _(URI)_ que o cliente está solicitando: a URI é quase, mas não exatamente, a mesma coisa que um _localizador uniforme de recursos_ _(URL)_. A diferença entre URIs e URLs não é importante para os nossos propósitos neste capítulo, mas a especificação do HTTP usa o termo _URI_, então podemos simplesmente substituir mentalmente _URL_ por _URI_ aqui."
 
 #: src/ch21-01-single-threaded.md
 msgid "The last part is the HTTP version the client uses, and then the request line ends in a CRLF sequence. (_CRLF_ stands for _carriage return_ and _line feed_, which are terms from the typewriter days!) The CRLF sequence can also be written as `\\r\\n`, where `\\r` is a carriage return and `\\n` is a line feed. The _CRLF sequence_ separates the request line from the rest of the request data. Note that when the CRLF is printed, we see a new line start rather than `\\r\\n`."
-msgstr ""
+msgstr "A última parte é a versão do HTTP que o cliente usa, e então a linha de requisição termina em uma sequência CRLF. (_CRLF_ significa _retorno de carro_ e _alimentação de linha_, que são termos da época das máquinas de escrever!) A sequência CRLF também pode ser escrita como `\\r\\n`, em que `\\r` é um retorno de carro e `\\n` é uma alimentação de linha. A _sequência CRLF_ separa a linha de requisição do restante dos dados da requisição. Observe que, quando o CRLF é impresso, vemos o início de uma nova linha, em vez de `\\r\\n`."
 
 #: src/ch21-01-single-threaded.md
 msgid "Looking at the request line data we received from running our program so far, we see that `GET` is the method, _/_ is the request URI, and `HTTP/1.1` is the version."
-msgstr ""
+msgstr "Ao observar os dados da linha de requisição que recebemos ao executar o nosso programa até aqui, vemos que `GET` é o método, _/_ é a URI da requisição e `HTTP/1.1` é a versão."
 
 #: src/ch21-01-single-threaded.md
 msgid "After the request line, the remaining lines starting from `Host:` onward are headers. `GET` requests have no body."
-msgstr ""
+msgstr "Depois da linha de requisição, as linhas restantes, a partir de `Host:`, são cabeçalhos. Requisições `GET` não têm corpo."
 
 #: src/ch21-01-single-threaded.md
 msgid "Try making a request from a different browser or asking for a different address, such as _127.0.0.1:7878/test_, to see how the request data changes."
-msgstr ""
+msgstr "Experimente fazer uma requisição a partir de outro navegador ou solicitar outro endereço, como _127.0.0.1:7878/test_, para ver como os dados da requisição mudam."
 
 #: src/ch21-01-single-threaded.md
 msgid "Now that we know what the browser is asking for, let’s send back some data!"
-msgstr ""
+msgstr "Agora que sabemos o que o navegador está pedindo, vamos enviar alguns dados de volta!"
 
 #: src/ch21-01-single-threaded.md
 msgid "Writing a Response"
-msgstr ""
+msgstr "Escrevendo uma resposta {#writing-a-response}"
 
 #: src/ch21-01-single-threaded.md
 msgid "We’re going to implement sending data in response to a client request. Responses have the following format:"
-msgstr ""
+msgstr "Vamos implementar o envio de dados em resposta a uma requisição do cliente. As respostas têm o seguinte formato:"
 
 #: src/ch21-01-single-threaded.md
 msgid "The first line is a _status line_ that contains the HTTP version used in the response, a numeric status code that summarizes the result of the request, and a reason phrase that provides a text description of the status code. After the CRLF sequence are any headers, another CRLF sequence, and the body of the response."
-msgstr ""
+msgstr "A primeira linha é uma _linha de status_ que contém a versão do HTTP usada na resposta, um código de status numérico que resume o resultado da requisição e uma frase de motivo que fornece uma descrição textual do código de status. Depois da sequência CRLF, vêm os cabeçalhos, outra sequência CRLF e o corpo da resposta."
 
 #: src/ch21-01-single-threaded.md
 msgid "Here is an example response that uses HTTP version 1.1 and has a status code of 200, an OK reason phrase, no headers, and no body:"
-msgstr ""
+msgstr "Aqui está um exemplo de resposta que usa a versão 1.1 do HTTP, tem um código de status 200, uma frase de motivo OK, nenhum cabeçalho e nenhum corpo:"
 
 #: src/ch21-01-single-threaded.md
 msgid "The status code 200 is the standard success response. The text is a tiny successful HTTP response. Let’s write this to the stream as our response to a successful request! From the `handle_connection` function, remove the `println!` that was printing the request data and replace it with the code in Listing 21-3."
-msgstr ""
+msgstr "O código de status 200 é a resposta padrão de sucesso. O texto é uma resposta HTTP de sucesso bem pequena. Vamos escrever isso no stream como nossa resposta a uma requisição bem-sucedida! Na função `handle_connection`, remova o `println!` que estava imprimindo os dados da requisição e substitua-o pelo código da Listagem 21-3."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-3\" file-name=\"src/main.rs\" caption=\"Writing a tiny successful HTTP response to the stream\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-3\" file-name=\"src/main.rs\" caption=\"Escrevendo uma pequena resposta HTTP de sucesso no stream\">\n"
 
 #: src/ch21-01-single-threaded.md
 msgid "\"HTTP/1.1 200 OK\\r\\n\\r\\n\""
@@ -22649,23 +22649,23 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "The first new line defines the `response` variable that holds the success message’s data. Then, we call `as_bytes` on our `response` to convert the string data to bytes. The `write_all` method on `stream` takes a `&[u8]` and sends those bytes directly down the connection. Because the `write_all` operation could fail, we use `unwrap` on any error result as before. Again, in a real application, you would add error handling here."
-msgstr ""
+msgstr "A primeira linha nova define a variável `response`, que guarda os dados da mensagem de sucesso. Em seguida, chamamos `as_bytes` em nosso `response` para converter os dados da string em bytes. O método `write_all` de `stream` recebe um `&[u8]` e envia esses bytes diretamente pela conexão. Como a operação `write_all` pode falhar, usamos `unwrap` em qualquer resultado de erro, como antes. Novamente, em uma aplicação real, você adicionaria tratamento de erros aqui."
 
 #: src/ch21-01-single-threaded.md
 msgid "With these changes, let’s run our code and make a request. We’re no longer printing any data to the terminal, so we won’t see any output other than the output from Cargo. When you load _127.0.0.1:7878_ in a web browser, you should get a blank page instead of an error. You’ve just handcoded receiving an HTTP request and sending a response!"
-msgstr ""
+msgstr "Com essas mudanças, vamos executar nosso código e fazer uma requisição. Não estamos mais imprimindo nenhum dado no terminal, então não veremos nenhuma saída além da saída do Cargo. Quando você carregar _127.0.0.1:7878_ em um navegador web, deve obter uma página em branco em vez de um erro. Você acabou de implementar manualmente o recebimento de uma requisição HTTP e o envio de uma resposta!"
 
 #: src/ch21-01-single-threaded.md
 msgid "Returning Real HTML"
-msgstr ""
+msgstr "Retornando HTML real {#returning-real-html}"
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s implement the functionality for returning more than a blank page. Create the new file _hello.html_ in the root of your project directory, not in the _src_ directory. You can input any HTML you want; Listing 21-4 shows one possibility."
-msgstr ""
+msgstr "Vamos implementar a funcionalidade para retornar mais do que uma página em branco. Crie o novo arquivo _hello.html_ na raiz do diretório do projeto, e não no diretório _src_. Você pode digitar qualquer HTML que quiser; a Listagem 21-4 mostra uma possibilidade."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-4\" file-name=\"hello.html\" caption=\"A sample HTML file to return in a response\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-4\" file-name=\"hello.html\" caption=\"Um arquivo HTML de exemplo para retornar em uma resposta\">\n"
 
 #: src/ch21-01-single-threaded.md
 msgid "\"en\""
@@ -22677,11 +22677,11 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "This is a minimal HTML5 document with a heading and some text. To return this from the server when a request is received, we’ll modify `handle_connection` as shown in Listing 21-5 to read the HTML file, add it to the response as a body, and send it."
-msgstr ""
+msgstr "Este é um documento HTML5 mínimo, com um título e algum texto. Para retornar isso do servidor quando uma requisição for recebida, vamos modificar `handle_connection`, como mostrado na Listagem 21-5, para ler o arquivo HTML, adicioná-lo à resposta como corpo e enviá-lo."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-5\" file-name=\"src/main.rs\" caption=\"Sending the contents of *hello.html* as the body of the response\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-5\" file-name=\"src/main.rs\" caption=\"Enviando o conteúdo de *hello.html* como corpo da resposta\">\n"
 
 #: src/ch21-01-single-threaded.md src/ch21-02-multithreaded.md
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
@@ -22700,31 +22700,31 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "We’ve added `fs` to the `use` statement to bring the standard library’s filesystem module into scope. The code for reading the contents of a file to a string should look familiar; we used it when we read the contents of a file for our I/O project in Listing 12-4."
-msgstr ""
+msgstr "Adicionamos `fs` à instrução `use` para trazer o módulo de sistema de arquivos da biblioteca padrão para o escopo. O código para ler o conteúdo de um arquivo em uma string deve parecer familiar; nós o usamos quando lemos o conteúdo de um arquivo no nosso projeto de E/S, na Listagem 12-4."
 
 #: src/ch21-01-single-threaded.md
 msgid "Next, we use `format!` to add the file’s contents as the body of the success response. To ensure a valid HTTP response, we add the `Content-Length` header, which is set to the size of our response body—in this case, the size of `hello.html`."
-msgstr ""
+msgstr "Em seguida, usamos `format!` para adicionar o conteúdo do arquivo como corpo da resposta de sucesso. Para garantir uma resposta HTTP válida, adicionamos o cabeçalho `Content-Length`, que é definido como o tamanho do corpo da nossa resposta — neste caso, o tamanho de `hello.html`."
 
 #: src/ch21-01-single-threaded.md
 msgid "Run this code with `cargo run` and load _127.0.0.1:7878_ in your browser; you should see your HTML rendered!"
-msgstr ""
+msgstr "Execute este código com `cargo run` e carregue _127.0.0.1:7878_ no seu navegador; você deve ver o seu HTML renderizado!"
 
 #: src/ch21-01-single-threaded.md
 msgid "Currently, we’re ignoring the request data in `http_request` and just sending back the contents of the HTML file unconditionally. That means if you try requesting _127.0.0.1:7878/something-else_ in your browser, you’ll still get back this same HTML response. At the moment, our server is very limited and does not do what most web servers do. We want to customize our responses depending on the request and only send back the HTML file for a well-formed request to _/_."
-msgstr ""
+msgstr "Atualmente, estamos ignorando os dados da requisição em `http_request` e apenas enviando de volta o conteúdo do arquivo HTML, incondicionalmente. Isso significa que, se você tentar solicitar _127.0.0.1:7878/something-else_ no navegador, ainda receberá essa mesma resposta HTML. No momento, nosso servidor é muito limitado e não faz o que a maioria dos servidores web faz. Queremos personalizar nossas respostas de acordo com a requisição e enviar de volta o arquivo HTML somente para uma requisição bem formada para _/_."
 
 #: src/ch21-01-single-threaded.md
 msgid "Validating the Request and Selectively Responding"
-msgstr ""
+msgstr "Validando a requisição e respondendo seletivamente {#validating-the-request-and-selectively-responding}"
 
 #: src/ch21-01-single-threaded.md
 msgid "Right now, our web server will return the HTML in the file no matter what the client requested. Let’s add functionality to check that the browser is requesting _/_ before returning the HTML file and to return an error if the browser requests anything else. For this we need to modify `handle_connection`, as shown in Listing 21-6. This new code checks the content of the request received against what we know a request for _/_ looks like and adds `if` and `else` blocks to treat requests differently."
-msgstr ""
+msgstr "No momento, nosso servidor web vai retornar o HTML do arquivo independentemente do que o cliente tenha requisitado. Vamos adicionar uma funcionalidade para verificar se o navegador está requisitando _/_ antes de retornar o arquivo HTML e para retornar um erro se o navegador requisitar qualquer outra coisa. Para isso, precisamos modificar `handle_connection`, como mostrado na Listagem 21-6. Este novo código compara o conteúdo da requisição recebida com o formato que sabemos que uma requisição para _/_ tem e adiciona blocos `if` e `else` para tratar as requisições de forma diferente."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-6\" file-name=\"src/main.rs\" caption=\"Handling requests to */* differently from other requests\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-6\" file-name=\"src/main.rs\" caption=\"Tratando requisições para */* de forma diferente de outras requisições\">\n"
 
 #: src/ch21-01-single-threaded.md src/ch21-02-multithreaded.md
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
@@ -22737,27 +22737,27 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "We’re only going to be looking at the first line of the HTTP request, so rather than reading the entire request into a vector, we’re calling `next` to get the first item from the iterator. The first `unwrap` takes care of the `Option` and stops the program if the iterator has no items. The second `unwrap` handles the `Result` and has the same effect as the `unwrap` that was in the `map` added in Listing 21-2."
-msgstr ""
+msgstr "Vamos olhar apenas para a primeira linha da requisição HTTP, então, em vez de ler a requisição inteira para um vetor, chamamos `next` para obter o primeiro item do iterador. O primeiro `unwrap` cuida do `Option` e interrompe o programa se o iterador não tiver itens. O segundo `unwrap` trata o `Result` e tem o mesmo efeito do `unwrap` que estava no `map` adicionado na Listagem 21-2."
 
 #: src/ch21-01-single-threaded.md
 msgid "Next, we check the `request_line` to see if it equals the request line of a GET request to the _/_ path. If it does, the `if` block returns the contents of our HTML file."
-msgstr ""
+msgstr "Em seguida, verificamos o `request_line` para ver se ele é igual à linha de requisição de uma requisição GET para o caminho _/_. Se for, o bloco `if` retorna o conteúdo do nosso arquivo HTML."
 
 #: src/ch21-01-single-threaded.md
 msgid "If the `request_line` does _not_ equal the GET request to the _/_ path, it means we’ve received some other request. We’ll add code to the `else` block in a moment to respond to all other requests."
-msgstr ""
+msgstr "Se o `request_line` _não_ for igual à requisição GET para o caminho _/_, significa que recebemos alguma outra requisição. Em instantes, vamos adicionar código ao bloco `else` para responder a todas as outras requisições."
 
 #: src/ch21-01-single-threaded.md
 msgid "Run this code now and request _127.0.0.1:7878_; you should get the HTML in _hello.html_. If you make any other request, such as _127.0.0.1:7878/something-else_, you’ll get a connection error like those you saw when running the code in Listing 21-1 and Listing 21-2."
-msgstr ""
+msgstr "Execute este código agora e requisite _127.0.0.1:7878_; você deve receber o HTML contido em _hello.html_. Se você fizer qualquer outra requisição, como _127.0.0.1:7878/something-else_, você vai receber um erro de conexão como aqueles que você viu ao executar o código das Listagens 21-1 e 21-2."
 
 #: src/ch21-01-single-threaded.md
 msgid "Now let’s add the code in Listing 21-7 to the `else` block to return a response with the status code 404, which signals that the content for the request was not found. We’ll also return some HTML for a page to render in the browser indicating the response to the end user."
-msgstr ""
+msgstr "Agora, vamos adicionar o código da Listagem 21-7 ao bloco `else` para retornar uma resposta com o código de status 404, que sinaliza que o conteúdo da requisição não foi encontrado. Também vamos retornar algum HTML para uma página que será renderizada no navegador, indicando a resposta ao usuário final."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-7\" file-name=\"src/main.rs\" caption=\"Responding with status code 404 and an error page if anything other than */* was requested\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-7\" file-name=\"src/main.rs\" caption=\"Respondendo com o código de status 404 e uma página de erro se for requisitado algo diferente de */*\">\n"
 
 #: src/ch21-01-single-threaded.md src/ch21-02-multithreaded.md
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
@@ -22771,15 +22771,15 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Here, our response has a status line with status code 404 and the reason phrase `NOT FOUND`. The body of the response will be the HTML in the file _404.html_. You’ll need to create a _404.html_ file next to _hello.html_ for the error page; again, feel free to use any HTML you want, or use the example HTML in Listing 21-8."
-msgstr ""
+msgstr "Aqui, nossa resposta tem uma linha de status com o código de status 404 e a frase de motivo `NOT FOUND`. O corpo da resposta será o HTML do arquivo _404.html_. Você precisará criar um arquivo _404.html_ ao lado de _hello.html_ para a página de erro; mais uma vez, fique à vontade para usar qualquer HTML que quiser, ou use o HTML de exemplo da Listagem 21-8."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-8\" file-name=\"404.html\" caption=\"Sample content for the page to send back with any 404 response\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-8\" file-name=\"404.html\" caption=\"Conteúdo de exemplo para a página enviada de volta em qualquer resposta 404\">\n"
 
 #: src/ch21-01-single-threaded.md
 msgid "With these changes, run your server again. Requesting _127.0.0.1:7878_ should return the contents of _hello.html_, and any other request, like _127.0.0.1:7878/foo_, should return the error HTML from _404.html_."
-msgstr ""
+msgstr "Com essas mudanças, execute seu servidor novamente. Uma requisição para _127.0.0.1:7878_ deve retornar o conteúdo de _hello.html_, e qualquer outra requisição, como _127.0.0.1:7878/foo_, deve retornar o HTML de erro de _404.html_."
 
 #: src/ch21-01-single-threaded.md
 msgid "<a id=\"a-touch-of-refactoring\"></a>"
@@ -22787,31 +22787,31 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Refactoring"
-msgstr ""
+msgstr "Refatoração {#refactoring}"
 
 #: src/ch21-01-single-threaded.md
 msgid "At the moment, the `if` and `else` blocks have a lot of repetition: They’re both reading files and writing the contents of the files to the stream. The only differences are the status line and the filename. Let’s make the code more concise by pulling out those differences into separate `if` and `else` lines that will assign the values of the status line and the filename to variables; we can then use those variables unconditionally in the code to read the file and write the response. Listing 21-9 shows the resultant code after replacing the large `if` and `else` blocks."
-msgstr ""
+msgstr "No momento, os blocos `if` e `else` têm muita repetição: os dois leem arquivos e escrevem o conteúdo dos arquivos no stream. As únicas diferenças são a linha de status e o nome do arquivo. Vamos deixar o código mais conciso, extraindo essas diferenças para linhas `if` e `else` separadas, que vão atribuir os valores da linha de status e do nome do arquivo a variáveis; depois, podemos usar essas variáveis sem nenhuma condição no código para ler o arquivo e escrever a resposta. A Listagem 21-9 mostra o código resultante depois de substituir os grandes blocos `if` e `else`."
 
 #: src/ch21-01-single-threaded.md
 msgid "<Listing number=\"21-9\" file-name=\"src/main.rs\" caption=\"Refactoring the `if` and `else` blocks to contain only the code that differs between the two cases\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-9\" file-name=\"src/main.rs\" caption=\"Refatorando os blocos `if` e `else` para conter apenas o código que difere entre os dois casos\">\n"
 
 #: src/ch21-01-single-threaded.md
 msgid "Now the `if` and `else` blocks only return the appropriate values for the status line and filename in a tuple; we then use destructuring to assign these two values to `status_line` and `filename` using a pattern in the `let` statement, as discussed in Chapter 19."
-msgstr ""
+msgstr "Agora, os blocos `if` e `else` retornam apenas os valores apropriados para a linha de status e o nome do arquivo em uma tupla; depois, usamos desestruturação para atribuir esses dois valores a `status_line` e `filename` usando um padrão na instrução `let`, como discutido no Capítulo 19."
 
 #: src/ch21-01-single-threaded.md
 msgid "The previously duplicated code is now outside the `if` and `else` blocks and uses the `status_line` and `filename` variables. This makes it easier to see the difference between the two cases, and it means we have only one place to update the code if we want to change how the file reading and response writing work. The behavior of the code in Listing 21-9 will be the same as that in Listing 21-7."
-msgstr ""
+msgstr "O código que antes estava duplicado agora está fora dos blocos `if` e `else` e usa as variáveis `status_line` e `filename`. Isso facilita ver a diferença entre os dois casos e significa que temos apenas um lugar para atualizar o código se quisermos mudar a forma como a leitura do arquivo e a escrita da resposta funcionam. O comportamento do código da Listagem 21-9 será igual ao da Listagem 21-7."
 
 #: src/ch21-01-single-threaded.md
 msgid "Awesome! We now have a simple web server in approximately 40 lines of Rust code that responds to one request with a page of content and responds to all other requests with a 404 response."
-msgstr ""
+msgstr "Incrível! Agora temos um servidor web simples em cerca de 40 linhas de código Rust que responde a uma requisição com uma página de conteúdo e responde a todas as outras requisições com uma resposta 404."
 
 #: src/ch21-01-single-threaded.md
 msgid "Currently, our server runs in a single thread, meaning it can only serve one request at a time. Let’s examine how that can be a problem by simulating some slow requests. Then, we’ll fix it so that our server can handle multiple requests at once."
-msgstr ""
+msgstr "No momento, nosso servidor executa em uma única thread, o que significa que ele só pode atender uma requisição por vez. Vamos examinar como isso pode ser um problema simulando algumas requisições lentas. Depois, vamos corrigi-lo para que nosso servidor possa tratar várias requisições ao mesmo tempo."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"turning-our-single-threaded-server-into-a-multithreaded-server\"></a> <a id=\"from-single-threaded-to-multithreaded-server\"></a>"
@@ -22819,11 +22819,11 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "From a Single-Threaded to a Multithreaded Server"
-msgstr ""
+msgstr "De um servidor de thread única para um servidor multithread {#from-a-single-threaded-to-a-multithreaded-server}"
 
 #: src/ch21-02-multithreaded.md
 msgid "Right now, the server will process each request in turn, meaning it won’t process a second connection until the first connection is finished processing. If the server received more and more requests, this serial execution would be less and less optimal. If the server receives a request that takes a long time to process, subsequent requests will have to wait until the long request is finished, even if the new requests can be processed quickly. We’ll need to fix this, but first we’ll look at the problem in action."
-msgstr ""
+msgstr "No momento, o servidor processa cada requisição em sequência, o que significa que ele não processa uma segunda conexão até que a primeira termine de ser processada. Se o servidor recebesse cada vez mais requisições, essa execução serial seria cada vez menos adequada. Se o servidor receber uma requisição que demora muito para ser processada, as requisições seguintes vão ter que esperar até que a requisição longa termine, mesmo que as novas possam ser processadas rapidamente. Precisamos corrigir isso, mas antes vamos ver o problema em ação."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"simulating-a-slow-request-in-the-current-server-implementation\"></a>"
@@ -22831,15 +22831,15 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Simulating a Slow Request"
-msgstr ""
+msgstr "Simulando uma requisição lenta {#simulating-a-slow-request}"
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ll look at how a slowly processing request can affect other requests made to our current server implementation. Listing 21-10 implements handling a request to _/sleep_ with a simulated slow response that will cause the server to sleep for five seconds before responding."
-msgstr ""
+msgstr "Vamos ver como uma requisição que é processada lentamente pode afetar outras requisições feitas à nossa implementação atual do servidor. A Listagem 21-10 implementa o tratamento de uma requisição para _/sleep_ com uma resposta lenta simulada, que fará o servidor esperar cinco segundos antes de responder."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-10\" file-name=\"src/main.rs\" caption=\"Simulating a slow request by sleeping for five seconds\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-10\" file-name=\"src/main.rs\" caption=\"Simulando uma requisição lenta com uma pausa de cinco segundos\">\n"
 
 #: src/ch21-02-multithreaded.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"GET /sleep HTTP/1.1\""
@@ -22847,51 +22847,51 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "We switched from `if` to `match` now that we have three cases. We need to explicitly match on a slice of `request_line` to pattern-match against the string literal values; `match` doesn’t do automatic referencing and dereferencing, like the equality method does."
-msgstr ""
+msgstr "Trocamos o `if` pelo `match` agora que temos três casos. Precisamos fazer a correspondência explicitamente sobre uma slice de `request_line` para comparar com os valores literais de string por meio de padrões; o `match` não faz referenciação e desreferenciação automáticas, como faz o método de igualdade."
 
 #: src/ch21-02-multithreaded.md
 msgid "The first arm is the same as the `if` block from Listing 21-9. The second arm matches a request to _/sleep_. When that request is received, the server will sleep for five seconds before rendering the successful HTML page. The third arm is the same as the `else` block from Listing 21-9."
-msgstr ""
+msgstr "O primeiro braço é igual ao bloco `if` da Listagem 21-9. O segundo braço corresponde a uma requisição para _/sleep_. Quando essa requisição é recebida, o servidor vai esperar cinco segundos antes de renderizar a página HTML de sucesso. O terceiro braço é igual ao bloco `else` da Listagem 21-9."
 
 #: src/ch21-02-multithreaded.md
 msgid "You can see how primitive our server is: Real libraries would handle the recognition of multiple requests in a much less verbose way!"
-msgstr ""
+msgstr "Você pode ver como nosso servidor é rudimentar: bibliotecas de verdade tratariam o reconhecimento de várias requisições de forma bem menos verbosa!"
 
 #: src/ch21-02-multithreaded.md
 msgid "Start the server using `cargo run`. Then, open two browser windows: one for _http://127.0.0.1:7878_ and the other for _http://127.0.0.1:7878/sleep_. If you enter the _/_ URI a few times, as before, you’ll see it respond quickly. But if you enter _/sleep_ and then load _/_, you’ll see that _/_ waits until `sleep` has slept for its full five seconds before loading."
-msgstr ""
+msgstr "Inicie o servidor usando `cargo run`. Depois, abra duas janelas do navegador: uma para _http://127.0.0.1:7878_ e outra para _http://127.0.0.1:7878/sleep_. Se você digitar a URI _/_ algumas vezes, como antes, vai vê-la responder rapidamente. Mas, se você digitar _/sleep_ e depois carregar _/_, verá que _/_ espera até que `sleep` complete seus cinco segundos inteiros antes de carregar."
 
 #: src/ch21-02-multithreaded.md
 msgid "There are multiple techniques we could use to avoid requests backing up behind a slow request, including using async as we did Chapter 17; the one we’ll implement is a thread pool."
-msgstr ""
+msgstr "Há várias técnicas que poderíamos usar para evitar que requisições fiquem acumuladas atrás de uma requisição lenta, incluindo usar programação assíncrona, como fizemos no Capítulo 17; a que vamos implementar é um pool de threads."
 
 #: src/ch21-02-multithreaded.md
 msgid "Improving Throughput with a Thread Pool"
-msgstr ""
+msgstr "Melhorando a vazão com um pool de threads {#improving-throughput-with-a-thread-pool}"
 
 #: src/ch21-02-multithreaded.md
 msgid "A _thread pool_ is a group of spawned threads that are ready and waiting to handle a task. When the program receives a new task, it assigns one of the threads in the pool to the task, and that thread will process the task. The remaining threads in the pool are available to handle any other tasks that come in while the first thread is processing. When the first thread is done processing its task, it’s returned to the pool of idle threads, ready to handle a new task. A thread pool allows you to process connections concurrently, increasing the throughput of your server."
-msgstr ""
+msgstr "Um _pool de threads_ é um grupo de threads criadas que estão prontas e esperando para tratar uma tarefa. Quando o programa recebe uma nova tarefa, ele atribui uma das threads do pool a ela, e essa thread vai processar a tarefa. As demais threads do pool ficam disponíveis para tratar quaisquer outras tarefas que chegarem enquanto a primeira thread estiver processando. Quando a primeira thread termina de processar sua tarefa, ela volta para o pool de threads ociosas, pronta para tratar uma nova tarefa. Um pool de threads permite processar conexões de forma concorrente, aumentando a vazão do seu servidor."
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ll limit the number of threads in the pool to a small number to protect us from DoS attacks; if we had our program create a new thread for each request as it came in, someone making 10 million requests to our server could wreak havoc by using up all our server’s resources and grinding the processing of requests to a halt."
-msgstr ""
+msgstr "Vamos limitar o número de threads do pool a um valor pequeno para nos proteger de ataques DoS; se fizéssemos o programa criar uma nova thread para cada requisição conforme ela chegasse, alguém fazendo 10 milhões de requisições ao nosso servidor poderia causar estragos, consumindo todos os recursos do servidor e paralisando por completo o processamento das requisições."
 
 #: src/ch21-02-multithreaded.md
 msgid "Rather than spawning unlimited threads, then, we’ll have a fixed number of threads waiting in the pool. Requests that come in are sent to the pool for processing. The pool will maintain a queue of incoming requests. Each of the threads in the pool will pop off a request from this queue, handle the request, and then ask the queue for another request. With this design, we can process up to _`N`_ requests concurrently, where _`N`_ is the number of threads. If each thread is responding to a long-running request, subsequent requests can still back up in the queue, but we’ve increased the number of long-running requests we can handle before reaching that point."
-msgstr ""
+msgstr "Em vez de criar threads ilimitadas, então, vamos ter um número fixo de threads esperando no pool. As requisições que chegam são enviadas ao pool para processamento. O pool vai manter uma fila de requisições recebidas. Cada uma das threads do pool vai retirar uma requisição dessa fila, tratá-la e, depois, pedir outra requisição à fila. Com esse design, podemos processar até _`N`_ requisições de forma concorrente, sendo _`N`_ o número de threads. Se cada thread estiver respondendo a uma requisição de longa duração, as requisições seguintes ainda podem se acumular na fila, mas aumentamos o número de requisições de longa duração que conseguimos tratar antes de chegar a esse ponto."
 
 #: src/ch21-02-multithreaded.md
 msgid "This technique is just one of many ways to improve the throughput of a web server. Other options you might explore are the fork/join model, the single-threaded async I/O model, and the multithreaded async I/O model. If you’re interested in this topic, you can read more about other solutions and try to implement them; with a low-level language like Rust, all of these options are possible."
-msgstr ""
+msgstr "Essa técnica é apenas uma das muitas maneiras de melhorar a vazão de um servidor web. Outras opções que você pode explorar são o modelo fork/join, o modelo de E/S assíncrono de thread única e o modelo de E/S assíncrono multithread. Se você se interessar por este assunto, pode ler mais sobre outras soluções e tentar implementá-las; com uma linguagem de baixo nível como o Rust, todas essas opções são possíveis."
 
 #: src/ch21-02-multithreaded.md
 msgid "Before we begin implementing a thread pool, let’s talk about what using the pool should look like. When you’re trying to design code, writing the client interface first can help guide your design. Write the API of the code so that it’s structured in the way you want to call it; then, implement the functionality within that structure rather than implementing the functionality and then designing the public API."
-msgstr ""
+msgstr "Antes de começarmos a implementar um pool de threads, vamos conversar sobre como deveria ser o uso do pool. Quando você está tentando projetar código, escrever primeiro a interface do cliente pode ajudar a guiar o seu design. Escreva a API do código de forma que ela seja estruturada da maneira como você quer chamá-la; depois, implemente a funcionalidade dentro dessa estrutura, em vez de implementar a funcionalidade e só depois projetar a API pública."
 
 #: src/ch21-02-multithreaded.md
 msgid "Similar to how we used test-driven development in the project in Chapter 12, we’ll use compiler-driven development here. We’ll write the code that calls the functions we want, and then we’ll look at errors from the compiler to determine what we should change next to get the code to work. Before we do that, however, we’ll explore the technique we’re not going to use as a starting point."
-msgstr ""
+msgstr "Assim como usamos desenvolvimento orientado a testes no projeto do Capítulo 12, aqui vamos usar desenvolvimento orientado pelo compilador. Vamos escrever o código que chama as funções que queremos e, depois, olhar os erros do compilador para determinar o que devemos mudar em seguida para que o código funcione. Antes disso, porém, vamos explorar a técnica que não vamos usar como ponto de partida."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"code-structure-if-we-could-spawn-a-thread-for-each-request\"></a>"
@@ -22899,27 +22899,27 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Spawning a Thread for Each Request"
-msgstr ""
+msgstr "Criando uma thread para cada requisição {#spawning-a-thread-for-each-request}"
 
 #: src/ch21-02-multithreaded.md
 msgid "First, let’s explore how our code might look if it did create a new thread for every connection. As mentioned earlier, this isn’t our final plan due to the problems with potentially spawning an unlimited number of threads, but it is a starting point to get a working multithreaded server first. Then, we’ll add the thread pool as an improvement, and contrasting the two solutions will be easier."
-msgstr ""
+msgstr "Primeiro, vamos explorar como nosso código poderia ficar se criasse uma nova thread para cada conexão. Como mencionado antes, este não é nosso plano final, por causa dos problemas de criar potencialmente um número ilimitado de threads, mas é um ponto de partida para obter primeiro um servidor multithread funcionando. Depois, vamos adicionar o pool de threads como uma melhoria, e comparar as duas soluções será mais fácil."
 
 #: src/ch21-02-multithreaded.md
 msgid "Listing 21-11 shows the changes to make to `main` to spawn a new thread to handle each stream within the `for` loop."
-msgstr ""
+msgstr "A Listagem 21-11 mostra as mudanças a fazer em `main` para criar uma nova thread que trate cada stream dentro do loop `for`."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-11\" file-name=\"src/main.rs\" caption=\"Spawning a new thread for each stream\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-11\" file-name=\"src/main.rs\" caption=\"Criando uma nova thread para cada stream\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "As you learned in Chapter 16, `thread::spawn` will create a new thread and then run the code in the closure in the new thread. If you run this code and load _/sleep_ in your browser, then _/_ in two more browser tabs, you’ll indeed see that the requests to _/_ don’t have to wait for _/sleep_ to finish. However, as we mentioned, this will eventually overwhelm the system because you’d be making new threads without any limit."
-msgstr ""
+msgstr "Como você aprendeu no Capítulo 16, `thread::spawn` vai criar uma nova thread e depois executar o código do closure nessa nova thread. Se você executar este código e carregar _/sleep_ no navegador, depois _/_ em mais duas abas do navegador, você vai de fato ver que as requisições para _/_ não precisam esperar _/sleep_ terminar. No entanto, como mencionamos, isso vai acabar sobrecarregando o sistema, porque você estaria criando novas threads sem nenhum limite."
 
 #: src/ch21-02-multithreaded.md
 msgid "You may also recall from Chapter 17 that this is exactly the kind of situation where async and await really shine! Keep that in mind as we build the thread pool and think about how things would look different or the same with async."
-msgstr ""
+msgstr "Você também pode se lembrar, pelo Capítulo 17, de que esse é exatamente o tipo de situação em que async e await realmente se destacam! Tenha isso em mente enquanto construímos o pool de threads e pensamos em como as coisas ficariam diferentes ou iguais com async."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"creating-a-similar-interface-for-a-finite-number-of-threads\"></a>"
@@ -22927,19 +22927,19 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Creating a Finite Number of Threads"
-msgstr ""
+msgstr "Criando um número finito de threads {#creating-a-finite-number-of-threads}"
 
 #: src/ch21-02-multithreaded.md
 msgid "We want our thread pool to work in a similar, familiar way so that switching from threads to a thread pool doesn’t require large changes to the code that uses our API. Listing 21-12 shows the hypothetical interface for a `ThreadPool` struct we want to use instead of `thread::spawn`."
-msgstr ""
+msgstr "Queremos que nosso pool de threads funcione de uma forma semelhante e familiar, para que trocar de threads para um pool de threads não exija grandes mudanças no código que usa nossa API. A Listagem 21-12 mostra a interface hipotética de um struct `ThreadPool` que queremos usar no lugar de `thread::spawn`."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-12\" file-name=\"src/main.rs\" caption=\"Our ideal `ThreadPool` interface\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-12\" file-name=\"src/main.rs\" caption=\"A interface ideal de `ThreadPool`\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "We use `ThreadPool::new` to create a new thread pool with a configurable number of threads, in this case four. Then, in the `for` loop, `pool.execute` has a similar interface as `thread::spawn` in that it takes a closure that the pool should run for each stream. We need to implement `pool.execute` so that it takes the closure and gives it to a thread in the pool to run. This code won’t yet compile, but we’ll try so that the compiler can guide us in how to fix it."
-msgstr ""
+msgstr "Usamos `ThreadPool::new` para criar um novo pool de threads com um número configurável de threads, neste caso quatro. Depois, no loop `for`, `pool.execute` tem uma interface semelhante à de `thread::spawn`, no sentido de que recebe um closure que o pool deve executar para cada stream. Precisamos implementar `pool.execute` de modo que ele receba o closure e o entregue a uma thread do pool para executar. Este código ainda não vai compilar, mas vamos tentar mesmo assim, para que o compilador possa nos orientar sobre como corrigi-lo."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"building-the-threadpool-struct-using-compiler-driven-development\"></a>"
@@ -22947,11 +22947,11 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Building `ThreadPool` Using Compiler-Driven Development"
-msgstr ""
+msgstr "Construindo o `ThreadPool` com desenvolvimento orientado pelo compilador {#building-threadpool-using-compiler-driven-development}"
 
 #: src/ch21-02-multithreaded.md
 msgid "Make the changes in Listing 21-12 to _src/main.rs_, and then let’s use the compiler errors from `cargo check` to drive our development. Here is the first error we get:"
-msgstr ""
+msgstr "Faça as mudanças da Listagem 21-12 em _src/main.rs_ e, depois, vamos usar os erros do compilador retornados por `cargo check` para guiar nosso desenvolvimento. Este é o primeiro erro que recebemos:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -22971,19 +22971,19 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Great! This error tells us we need a `ThreadPool` type or module, so we’ll build one now. Our `ThreadPool` implementation will be independent of the kind of work our web server is doing. So, let’s switch the `hello` crate from a binary crate to a library crate to hold our `ThreadPool` implementation. After we change to a library crate, we could also use the separate thread pool library for any work we want to do using a thread pool, not just for serving web requests."
-msgstr ""
+msgstr "Ótimo! Esse erro nos diz que precisamos de um tipo ou módulo `ThreadPool`, então vamos criar um agora. Nossa implementação de `ThreadPool` será independente do tipo de trabalho que nosso servidor web faz. Então, vamos trocar o crate `hello` de crate binário para crate de biblioteca, para abrigar nossa implementação de `ThreadPool`. Depois de mudar para um crate de biblioteca, também poderíamos usar a biblioteca separada de pool de threads para qualquer trabalho que quisermos fazer usando um pool de threads, e não apenas para atender requisições web."
 
 #: src/ch21-02-multithreaded.md
 msgid "Create a _src/lib.rs_ file that contains the following, which is the simplest definition of a `ThreadPool` struct that we can have for now:"
-msgstr ""
+msgstr "Crie um arquivo _src/lib.rs_ que contenha o seguinte, que é a definição mais simples de um struct `ThreadPool` que podemos ter por enquanto:"
 
 #: src/ch21-02-multithreaded.md
 msgid "Then, edit the _main.rs_ file to bring `ThreadPool` into scope from the library crate by adding the following code to the top of _src/main.rs_:"
-msgstr ""
+msgstr "Depois, edite o arquivo _main.rs_ para trazer `ThreadPool` para o escopo a partir do crate de biblioteca, adicionando o código a seguir no topo de _src/main.rs_:"
 
 #: src/ch21-02-multithreaded.md
 msgid "This code still won’t work, but let’s check it again to get the next error that we need to address:"
-msgstr ""
+msgstr "Este código ainda não vai funcionar, mas vamos verificá-lo novamente para obter o próximo erro que precisamos resolver:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -23003,17 +23003,19 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "This error indicates that next we need to create an associated function named `new` for `ThreadPool`. We also know that `new` needs to have one parameter that can accept `4` as an argument and should return a `ThreadPool` instance. Let’s implement the simplest `new` function that will have those characteristics:"
-msgstr ""
+msgstr "Esse erro indica que, em seguida, precisamos criar uma função associada chamada `new` para `ThreadPool`. Também sabemos que `new` precisa ter um parâmetro que possa aceitar `4` como argumento e deve retornar uma instância de `ThreadPool`. Vamos implementar a função `new` mais simples que tenha essas características:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
 "We chose `usize` as the type of the `size` parameter because we know that a negative number of threads doesn’t make any sense. We also know we’ll use this `4` as the number of elements in a collection of threads, which is what the `usize` type is for, as discussed in the [“Integer Types”](ch03-02-data-types.html#integer-types)<!--\n"
 "ignore --> section in Chapter 3."
 msgstr ""
+"Escolhemos `usize` como o tipo do parâmetro `size` porque sabemos que um número negativo de threads não faz nenhum sentido. Também sabemos que vamos usar este `4` como o número de elementos de uma coleção de threads, que é para isso que serve o tipo `usize`, como discutido na seção [“Tipos inteiros”](ch03-02-data-types.html#integer-types)<!--\n"
+"ignore --> do Capítulo 3."
 
 #: src/ch21-02-multithreaded.md
 msgid "Let’s check the code again:"
-msgstr ""
+msgstr "Vamos verificar o código novamente:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -23033,27 +23035,27 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Now the error occurs because we don’t have an `execute` method on `ThreadPool`. Recall from the [“Creating a Finite Number of Threads”](#creating-a-finite-number-of-threads)<!-- ignore --> section that we decided our thread pool should have an interface similar to `thread::spawn`. In addition, we’ll implement the `execute` function so that it takes the closure it’s given and gives it to an idle thread in the pool to run."
-msgstr ""
+msgstr "Agora, o erro acontece porque não temos um método `execute` em `ThreadPool`. Lembre-se da seção [“Criando um número finito de threads”](#creating-a-finite-number-of-threads)<!-- ignore --> em que decidimos que nosso pool de threads deveria ter uma interface semelhante à de `thread::spawn`. Além disso, vamos implementar a função `execute` de modo que ela receba o closure que lhe é dado e o entregue a uma thread ociosa do pool para executar."
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ll define the `execute` method on `ThreadPool` to take a closure as a parameter. Recall from the [“Moving Captured Values Out of Closures”](ch13-01-closures.html#moving-captured-values-out-of-closures)<!-- ignore --> in Chapter 13 that we can take closures as parameters with three different traits: `Fn`, `FnMut`, and `FnOnce`. We need to decide which kind of closure to use here. We know we’ll end up doing something similar to the standard library `thread::spawn` implementation, so we can look at what bounds the signature of `thread::spawn` has on its parameter. The documentation shows us the following:"
-msgstr ""
+msgstr "Vamos definir o método `execute` em `ThreadPool` para receber um closure como parâmetro. Lembre-se da seção [“Movendo valores capturados para fora de closures”](ch13-01-closures.html#moving-captured-values-out-of-closures)<!-- ignore --> do Capítulo 13, em que vimos que podemos receber closures como parâmetros com três traits diferentes: `Fn`, `FnMut` e `FnOnce`. Precisamos decidir qual tipo de closure usar aqui. Sabemos que vamos acabar fazendo algo parecido com a implementação de `thread::spawn` da biblioteca padrão, então podemos ver quais limites a assinatura de `thread::spawn` impõe ao seu parâmetro. A documentação nos mostra o seguinte:"
 
 #: src/ch21-02-multithreaded.md
 msgid "The `F` type parameter is the one we’re concerned with here; the `T` type parameter is related to the return value, and we’re not concerned with that. We can see that `spawn` uses `FnOnce` as the trait bound on `F`. This is probably what we want as well, because we’ll eventually pass the argument we get in `execute` to `spawn`. We can be further confident that `FnOnce` is the trait we want to use because the thread for running a request will only execute that request’s closure one time, which matches the `Once` in `FnOnce`."
-msgstr ""
+msgstr "O parâmetro de tipo `F` é o que nos interessa aqui; o parâmetro de tipo `T` se relaciona ao valor de retorno, e não nos preocupamos com ele. Podemos ver que `spawn` usa `FnOnce` como limite de trait em `F`. Provavelmente é isso que queremos também, porque, no fim das contas, vamos passar para `spawn` o argumento que recebemos em `execute`. Podemos ter ainda mais confiança de que `FnOnce` é o trait que queremos usar porque a thread que executa uma requisição vai executar o closure dessa requisição apenas uma vez, o que corresponde ao `Once` em `FnOnce`."
 
 #: src/ch21-02-multithreaded.md
 msgid "The `F` type parameter also has the trait bound `Send` and the lifetime bound `'static`, which are useful in our situation: We need `Send` to transfer the closure from one thread to another and `'static` because we don’t know how long the thread will take to execute. Let’s create an `execute` method on `ThreadPool` that will take a generic parameter of type `F` with these bounds:"
-msgstr ""
+msgstr "O parâmetro de tipo `F` também tem o limite de trait `Send` e o limite de tempo de vida `'static`, que são úteis na nossa situação: precisamos de `Send` para transferir o closure de uma thread para outra, e de `'static` porque não sabemos quanto tempo a thread vai levar para executar. Vamos criar um método `execute` em `ThreadPool` que receberá um parâmetro de tipo genérico `F` com esses limites:"
 
 #: src/ch21-02-multithreaded.md
 msgid "We still use the `()` after `FnOnce` because this `FnOnce` represents a closure that takes no parameters and returns the unit type `()`. Just like function definitions, the return type can be omitted from the signature, but even if we have no parameters, we still need the parentheses."
-msgstr ""
+msgstr "Ainda usamos o `()` depois de `FnOnce` porque esse `FnOnce` representa um closure que não recebe parâmetros e retorna o tipo unitário `()`. Assim como nas definições de função, o tipo de retorno pode ser omitido da assinatura, mas, mesmo sem parâmetros, ainda precisamos dos parênteses."
 
 #: src/ch21-02-multithreaded.md
 msgid "Again, this is the simplest implementation of the `execute` method: It does nothing, but we’re only trying to make our code compile. Let’s check it again:"
-msgstr ""
+msgstr "De novo, esta é a implementação mais simples do método `execute`: ela não faz nada, mas estamos apenas tentando fazer nosso código compilar. Vamos verificar de novo:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -23066,27 +23068,27 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "It compiles! But note that if you try `cargo run` and make a request in the browser, you’ll see the errors in the browser that we saw at the beginning of the chapter. Our library isn’t actually calling the closure passed to `execute` yet!"
-msgstr ""
+msgstr "Ele compila! Mas observe que, se você tentar `cargo run` e fizer uma requisição no navegador, verá os erros no navegador que vimos no início do capítulo. Nossa biblioteca ainda não está de fato chamando o closure passado para `execute`!"
 
 #: src/ch21-02-multithreaded.md
 msgid "Note: A saying you might hear about languages with strict compilers, such as Haskell and Rust, is “If the code compiles, it works.” But this saying is not universally true. Our project compiles, but it does absolutely nothing! If we were building a real, complete project, this would be a good time to start writing unit tests to check that the code compiles _and_ has the behavior we want."
-msgstr ""
+msgstr "Nota: um ditado que você pode ouvir sobre linguagens com compiladores rigorosos, como Haskell e Rust, é “Se o código compila, ele funciona.” Mas esse ditado não é universalmente verdadeiro. Nosso projeto compila, mas não faz absolutamente nada! Se estivéssemos criando um projeto real e completo, este seria um bom momento para começar a escrever testes unitários para verificar se o código compila _e_ tem o comportamento que queremos."
 
 #: src/ch21-02-multithreaded.md
 msgid "Consider: What would be different here if we were going to execute a future instead of a closure?"
-msgstr ""
+msgstr "Considere: o que seria diferente aqui se fôssemos executar uma future em vez de um closure?"
 
 #: src/ch21-02-multithreaded.md
 msgid "Validating the Number of Threads in `new`"
-msgstr ""
+msgstr "Validando o número de threads em `new` {#validating-the-number-of-threads-in-new}"
 
 #: src/ch21-02-multithreaded.md
 msgid "We aren’t doing anything with the parameters to `new` and `execute`. Let’s implement the bodies of these functions with the behavior we want. To start, let’s think about `new`. Earlier we chose an unsigned type for the `size` parameter because a pool with a negative number of threads makes no sense. However, a pool with zero threads also makes no sense, yet zero is a perfectly valid `usize`. We’ll add code to check that `size` is greater than zero before we return a `ThreadPool` instance, and we’ll have the program panic if it receives a zero by using the `assert!` macro, as shown in Listing 21-13."
-msgstr ""
+msgstr "Ainda não estamos fazendo nada com os parâmetros de `new` e `execute`. Vamos implementar o corpo dessas funções com o comportamento que queremos. Para começar, vamos pensar em `new`. Anteriormente, escolhemos um tipo sem sinal para o parâmetro `size`, porque um pool com um número negativo de threads não faz sentido. No entanto, um pool com zero threads também não faz sentido, embora zero seja um `usize` perfeitamente válido. Vamos adicionar código para verificar se `size` é maior que zero antes de retornarmos uma instância de `ThreadPool`, e faremos o programa entrar em pânico se ele receber um zero, usando a macro `assert!`, como mostrado na Listagem 21-13."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-13\" file-name=\"src/lib.rs\" caption=\"Implementing `ThreadPool::new` to panic if `size` is zero\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-13\" file-name=\"src/lib.rs\" caption=\"Implementando `ThreadPool::new` para entrar em pânico se `size` for zero\">\n"
 
 #: src/ch21-02-multithreaded.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid ""
@@ -23101,31 +23103,31 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ve also added some documentation for our `ThreadPool` with doc comments. Note that we followed good documentation practices by adding a section that calls out the situations in which our function can panic, as discussed in Chapter 14. Try running `cargo doc --open` and clicking the `ThreadPool` struct to see what the generated docs for `new` look like!"
-msgstr ""
+msgstr "Também adicionamos alguma documentação para o nosso `ThreadPool`, com comentários de documentação. Observe que seguimos boas práticas de documentação ao incluir uma seção que destaca as situações em que nossa função pode entrar em pânico, como discutido no Capítulo 14. Experimente executar `cargo doc --open` e clicar no struct `ThreadPool` para ver como fica a documentação gerada para `new`!"
 
 #: src/ch21-02-multithreaded.md
 msgid "Instead of adding the `assert!` macro as we’ve done here, we could change `new` into `build` and return a `Result` like we did with `Config::build` in the I/O project in Listing 12-9. But we’ve decided in this case that trying to create a thread pool without any threads should be an unrecoverable error. If you’re feeling ambitious, try to write a function named `build` with the following signature to compare with the `new` function:"
-msgstr ""
+msgstr "Em vez de adicionar a macro `assert!` como fizemos aqui, poderíamos mudar `new` para `build` e retornar um `Result`, como fizemos com `Config::build` no projeto de E/S, na Listagem 12-9. Mas, neste caso, decidimos que tentar criar um pool de threads sem nenhuma thread deve ser um erro irrecuperável. Se você estiver com disposição para um desafio, tente escrever uma função chamada `build` com a seguinte assinatura, para comparar com a função `new`:"
 
 #: src/ch21-02-multithreaded.md
 msgid "Creating Space to Store the Threads"
-msgstr ""
+msgstr "Criando espaço para armazenar as threads {#creating-space-to-store-the-threads}"
 
 #: src/ch21-02-multithreaded.md
 msgid "Now that we have a way to know we have a valid number of threads to store in the pool, we can create those threads and store them in the `ThreadPool` struct before returning the struct. But how do we “store” a thread? Let’s take another look at the `thread::spawn` signature:"
-msgstr ""
+msgstr "Agora que temos uma forma de saber se temos um número válido de threads para armazenar no pool, podemos criar essas threads e armazená-las no struct `ThreadPool` antes de retornar o struct. Mas como fazemos para “armazenar” uma thread? Vamos dar mais uma olhada na assinatura de `thread::spawn`:"
 
 #: src/ch21-02-multithreaded.md
 msgid "The `spawn` function returns a `JoinHandle<T>`, where `T` is the type that the closure returns. Let’s try using `JoinHandle` too and see what happens. In our case, the closures we’re passing to the thread pool will handle the connection and not return anything, so `T` will be the unit type `()`."
-msgstr ""
+msgstr "A função `spawn` retorna um `JoinHandle<T>`, em que `T` é o tipo que o closure retorna. Vamos experimentar usar também o `JoinHandle` e ver o que acontece. No nosso caso, os closures que passarmos para o pool de threads vão tratar a conexão e não vão retornar nada; por isso, `T` será o tipo unitário `()`."
 
 #: src/ch21-02-multithreaded.md
 msgid "The code in Listing 21-14 will compile, but it doesn’t create any threads yet. We’ve changed the definition of `ThreadPool` to hold a vector of `thread::JoinHandle<()>` instances, initialized the vector with a capacity of `size`, set up a `for` loop that will run some code to create the threads, and returned a `ThreadPool` instance containing them."
-msgstr ""
+msgstr "O código da Listagem 21-14 vai compilar, mas ainda não cria nenhuma thread. Mudamos a definição de `ThreadPool` para armazenar um vetor de instâncias de `thread::JoinHandle<()>`, inicializamos o vetor com uma capacidade de `size`, configuramos um loop `for` que vai executar algum código para criar as threads e retornamos uma instância de `ThreadPool` contendo essas threads."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-14\" file-name=\"src/lib.rs\" caption=\"Creating a vector for `ThreadPool` to hold the threads\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-14\" file-name=\"src/lib.rs\" caption=\"Criando um vetor para o `ThreadPool` armazenar as threads\">\n"
 
 #: src/ch21-02-multithreaded.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "/// Create a new ThreadPool.\n"
@@ -23149,15 +23151,15 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ve brought `std::thread` into scope in the library crate because we’re using `thread::JoinHandle` as the type of the items in the vector in `ThreadPool`."
-msgstr ""
+msgstr "Trouxemos `std::thread` para o escopo do crate de biblioteca, porque estamos usando `thread::JoinHandle` como o tipo dos itens do vetor em `ThreadPool`."
 
 #: src/ch21-02-multithreaded.md
 msgid "Once a valid size is received, our `ThreadPool` creates a new vector that can hold `size` items. The `with_capacity` function performs the same task as `Vec::new` but with an important difference: It pre-allocates space in the vector. Because we know we need to store `size` elements in the vector, doing this allocation up front is slightly more efficient than using `Vec::new`, which resizes itself as elements are inserted."
-msgstr ""
+msgstr "Depois que um tamanho válido é recebido, nosso `ThreadPool` cria um novo vetor que pode armazenar `size` itens. A função `with_capacity` realiza a mesma tarefa que `Vec::new`, mas com uma diferença importante: ela pré-aloca espaço no vetor. Como sabemos que precisamos armazenar `size` elementos no vetor, fazer essa alocação logo de início é um pouco mais eficiente do que usar `Vec::new`, que se redimensiona conforme os elementos são inseridos."
 
 #: src/ch21-02-multithreaded.md
 msgid "When you run `cargo check` again, it should succeed."
-msgstr ""
+msgstr "Quando você executar `cargo check` de novo, ele deve concluir com sucesso."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id =\"a-worker-struct-responsible-for-sending-code-from-the-threadpool-to-a-thread\"></a>"
@@ -23165,135 +23167,135 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Sending Code from the `ThreadPool` to a Thread"
-msgstr ""
+msgstr "Enviando código do `ThreadPool` para uma thread {#sending-code-from-the-threadpool-to-a-thread}"
 
 #: src/ch21-02-multithreaded.md
 msgid "We left a comment in the `for` loop in Listing 21-14 regarding the creation of threads. Here, we’ll look at how we actually create threads. The standard library provides `thread::spawn` as a way to create threads, and `thread::spawn` expects to get some code the thread should run as soon as the thread is created. However, in our case, we want to create the threads and have them _wait_ for code that we’ll send later. The standard library’s implementation of threads doesn’t include any way to do that; we have to implement it manually."
-msgstr ""
+msgstr "Deixamos um comentário no loop `for` da Listagem 21-14 sobre a criação de threads. Aqui, vamos ver como criamos as threads de fato. A biblioteca padrão oferece `thread::spawn` como forma de criar threads, e `thread::spawn` espera receber algum código que a thread deve executar assim que for criada. No nosso caso, porém, queremos criar as threads e fazer com que elas _esperem_ pelo código que enviaremos depois. A implementação de threads da biblioteca padrão não inclui nenhuma forma de fazer isso; precisamos implementar essa funcionalidade manualmente."
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ll implement this behavior by introducing a new data structure between the `ThreadPool` and the threads that will manage this new behavior. We’ll call this data structure _Worker_, which is a common term in pooling implementations. The `Worker` picks up code that needs to be run and runs the code in its thread."
-msgstr ""
+msgstr "Vamos implementar esse comportamento introduzindo uma nova estrutura de dados entre o `ThreadPool` e as threads, que vai gerenciar esse novo comportamento. Vamos chamar essa estrutura de dados de _Worker_, que é um termo comum em implementações de pools de threads. O `Worker` pega o código que precisa ser executado e o executa na sua thread."
 
 #: src/ch21-02-multithreaded.md
 msgid "Think of people working in the kitchen at a restaurant: The workers wait until orders come in from customers, and then they’re responsible for taking those orders and filling them."
-msgstr ""
+msgstr "Pense nas pessoas que trabalham na cozinha de um restaurante: os funcionários esperam até que os pedidos cheguem dos clientes e, então, ficam responsáveis por receber esses pedidos e atendê-los."
 
 #: src/ch21-02-multithreaded.md
 msgid "Instead of storing a vector of `JoinHandle<()>` instances in the thread pool, we’ll store instances of the `Worker` struct. Each `Worker` will store a single `JoinHandle<()>` instance. Then, we’ll implement a method on `Worker` that will take a closure of code to run and send it to the already running thread for execution. We’ll also give each `Worker` an `id` so that we can distinguish between the different instances of `Worker` in the pool when logging or debugging."
-msgstr ""
+msgstr "Em vez de armazenar um vetor de instâncias de `JoinHandle<()>` no pool de threads, vamos armazenar instâncias do struct `Worker`. Cada `Worker` vai armazenar uma única instância de `JoinHandle<()>`. Depois, vamos implementar um método em `Worker` que vai receber um closure com o código a ser executado e enviá-lo para a thread já em execução, para que ele seja executado. Também vamos dar a cada `Worker` um `id`, para que possamos distinguir as diferentes instâncias de `Worker` no pool ao registrar logs ou durante a depuração."
 
 #: src/ch21-02-multithreaded.md
 msgid "Here is the new process that will happen when we create a `ThreadPool`. We’ll implement the code that sends the closure to the thread after we have `Worker` set up in this way:"
-msgstr ""
+msgstr "Este é o novo processo que vai acontecer quando criarmos um `ThreadPool`. Vamos implementar o código que envia o closure para a thread depois de termos o `Worker` configurado dessa forma:"
 
 #: src/ch21-02-multithreaded.md
 msgid "Define a `Worker` struct that holds an `id` and a `JoinHandle<()>`."
-msgstr ""
+msgstr "Defina um struct `Worker` que armazena um `id` e um `JoinHandle<()>`."
 
 #: src/ch21-02-multithreaded.md
 msgid "Change `ThreadPool` to hold a vector of `Worker` instances."
-msgstr ""
+msgstr "Altere o `ThreadPool` para armazenar um vetor de instâncias de `Worker`."
 
 #: src/ch21-02-multithreaded.md
 msgid "Define a `Worker::new` function that takes an `id` number and returns a `Worker` instance that holds the `id` and a thread spawned with an empty closure."
-msgstr ""
+msgstr "Defina uma função `Worker::new` que recebe um número `id` e retorna uma instância de `Worker` que armazena o `id` e uma thread criada com um closure vazio."
 
 #: src/ch21-02-multithreaded.md
 msgid "In `ThreadPool::new`, use the `for` loop counter to generate an `id`, create a new `Worker` with that `id`, and store the `Worker` in the vector."
-msgstr ""
+msgstr "Em `ThreadPool::new`, use o contador do loop `for` para gerar um `id`, crie um novo `Worker` com esse `id` e armazene o `Worker` no vetor."
 
 #: src/ch21-02-multithreaded.md
 msgid "If you’re up for a challenge, try implementing these changes on your own before looking at the code in Listing 21-15."
-msgstr ""
+msgstr "Se você topar um desafio, tente implementar essas mudanças por conta própria antes de olhar o código da Listagem 21-15."
 
 #: src/ch21-02-multithreaded.md
 msgid "Ready? Here is Listing 21-15 with one way to make the preceding modifications."
-msgstr ""
+msgstr "Pronto? Aqui está a Listagem 21-15, com uma forma de fazer as modificações anteriores."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-15\" file-name=\"src/lib.rs\" caption=\"Modifying `ThreadPool` to hold `Worker` instances instead of holding threads directly\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-15\" file-name=\"src/lib.rs\" caption=\"Modificando o `ThreadPool` para armazenar instâncias de `Worker` em vez de armazenar threads diretamente\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ve changed the name of the field on `ThreadPool` from `threads` to `workers` because it’s now holding `Worker` instances instead of `JoinHandle<()>` instances. We use the counter in the `for` loop as an argument to `Worker::new`, and we store each new `Worker` in the vector named `workers`."
-msgstr ""
+msgstr "Mudamos o nome do campo de `ThreadPool` de `threads` para `workers`, porque agora ele armazena instâncias de `Worker`, em vez de instâncias de `JoinHandle<()>`. Usamos o contador do loop `for` como argumento de `Worker::new` e armazenamos cada novo `Worker` no vetor chamado `workers`."
 
 #: src/ch21-02-multithreaded.md
 msgid "External code (like our server in _src/main.rs_) doesn’t need to know the implementation details regarding using a `Worker` struct within `ThreadPool`, so we make the `Worker` struct and its `new` function private. The `Worker::new` function uses the `id` we give it and stores a `JoinHandle<()>` instance that is created by spawning a new thread using an empty closure."
-msgstr ""
+msgstr "Código externo (como o nosso servidor em _src/main.rs_) não precisa conhecer os detalhes de implementação sobre o uso de um struct `Worker` dentro do `ThreadPool`; por isso, tornamos privados o struct `Worker` e a função `new` dele. A função `Worker::new` usa o `id` que recebe e armazena uma instância de `JoinHandle<()>`, que é o resultado de criar uma nova thread com um closure vazio."
 
 #: src/ch21-02-multithreaded.md
 msgid "Note: If the operating system can’t create a thread because there aren’t enough system resources, `thread::spawn` will panic. That will cause our whole server to panic, even though the creation of some threads might succeed. For simplicity’s sake, this behavior is fine, but in a production thread pool implementation, you’d likely want to use [`std::thread::Builder`](../std/thread/struct.Builder.html)<!-- ignore --> and its [`spawn`](../std/thread/struct.Builder.html#method.spawn)<!-- ignore --> method that returns `Result` instead."
-msgstr ""
+msgstr "Nota: se o sistema operacional não conseguir criar uma thread por falta de recursos do sistema, `thread::spawn` vai entrar em pânico. Isso fará com que todo o nosso servidor entre em pânico, mesmo que a criação de algumas threads possa ser bem-sucedida. Por simplicidade, esse comportamento é aceitável, mas, em uma implementação de pool de threads voltada para produção, você provavelmente vai querer usar [`std::thread::Builder`](../std/thread/struct.Builder.html)<!-- ignore --> e o método [`spawn`](../std/thread/struct.Builder.html#method.spawn)<!-- ignore --> dele, que retorna `Result` em vez disso."
 
 #: src/ch21-02-multithreaded.md
 msgid "This code will compile and will store the number of `Worker` instances we specified as an argument to `ThreadPool::new`. But we’re _still_ not processing the closure that we get in `execute`. Let’s look at how to do that next."
-msgstr ""
+msgstr "Este código vai compilar e vai armazenar o número de instâncias de `Worker` que especificamos como argumento de `ThreadPool::new`. Mas _ainda_ não estamos processando o closure que recebemos em `execute`. Vamos ver como fazer isso a seguir."
 
 #: src/ch21-02-multithreaded.md
 msgid "Sending Requests to Threads via Channels"
-msgstr ""
+msgstr "Enviando requisições para threads por meio de canais {#sending-requests-to-threads-via-channels}"
 
 #: src/ch21-02-multithreaded.md
 msgid "The next problem we’ll tackle is that the closures given to `thread::spawn` do absolutely nothing. Currently, we get the closure we want to execute in the `execute` method. But we need to give `thread::spawn` a closure to run when we create each `Worker` during the creation of the `ThreadPool`."
-msgstr ""
+msgstr "O próximo problema que vamos enfrentar é que os closures passados para `thread::spawn` não fazem absolutamente nada. Atualmente, recebemos o closure que queremos executar no método `execute`. Mas precisamos dar a `thread::spawn` um closure para executar quando criarmos cada `Worker`, durante a criação do `ThreadPool`."
 
 #: src/ch21-02-multithreaded.md
 msgid "We want the `Worker` structs that we just created to fetch the code to run from a queue held in the `ThreadPool` and send that code to its thread to run."
-msgstr ""
+msgstr "Queremos que os structs `Worker` que acabamos de criar busquem o código a ser executado em uma fila mantida pelo `ThreadPool` e enviem esse código para a própria thread executar."
 
 #: src/ch21-02-multithreaded.md
 msgid "The channels we learned about in Chapter 16—a simple way to communicate between two threads—would be perfect for this use case. We’ll use a channel to function as the queue of jobs, and `execute` will send a job from the `ThreadPool` to the `Worker` instances, which will send the job to its thread. Here is the plan:"
-msgstr ""
+msgstr "Os canais que aprendemos no Capítulo 16—uma forma simples de se comunicar entre duas threads—seriam perfeitos para esse caso de uso. Vamos usar um canal para funcionar como a fila de jobs, e `execute` vai enviar um job do `ThreadPool` para as instâncias de `Worker`, que, por sua vez, enviarão o job para a própria thread. Este é o plano:"
 
 #: src/ch21-02-multithreaded.md
 msgid "The `ThreadPool` will create a channel and hold on to the sender."
-msgstr ""
+msgstr "O `ThreadPool` vai criar um canal e guardar o transmissor."
 
 #: src/ch21-02-multithreaded.md
 msgid "Each `Worker` will hold on to the receiver."
-msgstr ""
+msgstr "Cada `Worker` vai guardar o receptor."
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ll create a new `Job` struct that will hold the closures we want to send down the channel."
-msgstr ""
+msgstr "Vamos criar um novo struct `Job` que vai armazenar os closures que queremos enviar pelo canal."
 
 #: src/ch21-02-multithreaded.md
 msgid "The `execute` method will send the job it wants to execute through the sender."
-msgstr ""
+msgstr "O método `execute` vai enviar o job que quer executar pelo transmissor."
 
 #: src/ch21-02-multithreaded.md
 msgid "In its thread, the `Worker` will loop over its receiver and execute the closures of any jobs it receives."
-msgstr ""
+msgstr "Na sua thread, o `Worker` vai ficar em um loop percorrendo o seu receptor e executando os closures de quaisquer jobs que receber."
 
 #: src/ch21-02-multithreaded.md
 msgid "Let’s start by creating a channel in `ThreadPool::new` and holding the sender in the `ThreadPool` instance, as shown in Listing 21-16. The `Job` struct doesn’t hold anything for now but will be the type of item we’re sending down the channel."
-msgstr ""
+msgstr "Vamos começar criando um canal em `ThreadPool::new` e guardando o transmissor na instância de `ThreadPool`, como mostrado na Listagem 21-16. O struct `Job` não armazena nada por enquanto, mas será o tipo de item que enviaremos pelo canal."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-16\" file-name=\"src/lib.rs\" caption=\"Modifying `ThreadPool` to store the sender of a channel that transmits `Job` instances\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-16\" file-name=\"src/lib.rs\" caption=\"Modificando o `ThreadPool` para armazenar o transmissor de um canal que envia instâncias de `Job`\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "In `ThreadPool::new`, we create our new channel and have the pool hold the sender. This will successfully compile."
-msgstr ""
+msgstr "Em `ThreadPool::new`, criamos o nosso novo canal e fazemos o pool guardar o transmissor. Isso vai compilar com sucesso."
 
 #: src/ch21-02-multithreaded.md
 msgid "Let’s try passing a receiver of the channel into each `Worker` as the thread pool creates the channel. We know we want to use the receiver in the thread that the `Worker` instances spawn, so we’ll reference the `receiver` parameter in the closure. The code in Listing 21-17 won’t quite compile yet."
-msgstr ""
+msgstr "Vamos tentar passar um receptor do canal para cada `Worker` enquanto o pool de threads cria o canal. Sabemos que queremos usar o receptor na thread que as instâncias de `Worker` criam, então vamos referenciar o parâmetro `receiver` no closure. O código da Listagem 21-17 ainda não vai compilar direito."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-17\" file-name=\"src/lib.rs\" caption=\"Passing the receiver to each `Worker`\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-17\" file-name=\"src/lib.rs\" caption=\"Passando o receptor para cada `Worker`\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "We’ve made some small and straightforward changes: We pass the receiver into `Worker::new`, and then we use it inside the closure."
-msgstr ""
+msgstr "Fizemos algumas mudanças pequenas e diretas: passamos o receptor para `Worker::new` e, em seguida, o usamos dentro do closure."
 
 #: src/ch21-02-multithreaded.md
 msgid "When we try to check this code, we get this error:"
-msgstr ""
+msgstr "Quando tentamos verificar esse código, recebemos este erro:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -23324,51 +23326,51 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "The code is trying to pass `receiver` to multiple `Worker` instances. This won’t work, as you’ll recall from Chapter 16: The channel implementation that Rust provides is multiple _producer_, single _consumer_. This means we can’t just clone the consuming end of the channel to fix this code. We also don’t want to send a message multiple times to multiple consumers; we want one list of messages with multiple `Worker` instances such that each message gets processed once."
-msgstr ""
+msgstr "O código está tentando passar `receiver` para várias instâncias de `Worker`. Isso não vai funcionar, como você deve se lembrar do Capítulo 16: a implementação de canais que o Rust oferece é de múltiplos _produtores_ e único _consumidor_. Isso significa que não podemos simplesmente clonar a extremidade de recebimento do canal para resolver este código. Também não queremos enviar uma mensagem várias vezes para vários consumidores; queremos uma única lista de mensagens com várias instâncias de `Worker`, de modo que cada mensagem seja processada uma única vez."
 
 #: src/ch21-02-multithreaded.md
 msgid "Additionally, taking a job off the channel queue involves mutating the `receiver`, so the threads need a safe way to share and modify `receiver`; otherwise, we might get race conditions (as covered in Chapter 16)."
-msgstr ""
+msgstr "Além disso, retirar um job da fila do canal envolve alterar o `receiver`; por isso, as threads precisam de uma forma segura de compartilhar e modificar o `receiver`. Caso contrário, podemos ter condições de corrida (como abordado no Capítulo 16)."
 
 #: src/ch21-02-multithreaded.md
 msgid "Recall the thread-safe smart pointers discussed in Chapter 16: To share ownership across multiple threads and allow the threads to mutate the value, we need to use `Arc<Mutex<T>>`. The `Arc` type will let multiple `Worker` instances own the receiver, and `Mutex` will ensure that only one `Worker` gets a job from the receiver at a time. Listing 21-18 shows the changes we need to make."
-msgstr ""
+msgstr "Lembre-se dos ponteiros inteligentes seguros para threads discutidos no Capítulo 16: para compartilhar o ownership entre várias threads e permitir que elas alterem o valor, precisamos usar `Arc<Mutex<T>>`. O tipo `Arc` vai permitir que várias instâncias de `Worker` tenham o ownership do receptor, e o `Mutex` vai garantir que apenas um `Worker` por vez obtenha um job do receptor. A Listagem 21-18 mostra as mudanças que precisamos fazer."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-18\" file-name=\"src/lib.rs\" caption=\"Sharing the receiver among the `Worker` instances using `Arc` and `Mutex`\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-18\" file-name=\"src/lib.rs\" caption=\"Compartilhando o receptor entre as instâncias de `Worker` usando `Arc` e `Mutex`\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "In `ThreadPool::new`, we put the receiver in an `Arc` and a `Mutex`. For each new `Worker`, we clone the `Arc` to bump the reference count so that the `Worker` instances can share ownership of the receiver."
-msgstr ""
+msgstr "Em `ThreadPool::new`, colocamos o receptor em um `Arc` e em um `Mutex`. Para cada novo `Worker`, clonamos o `Arc` para incrementar a contagem de referências, de modo que as instâncias de `Worker` possam compartilhar o ownership do receptor."
 
 #: src/ch21-02-multithreaded.md
 msgid "With these changes, the code compiles! We’re getting there!"
-msgstr ""
+msgstr "Com essas mudanças, o código compila! Estamos chegando lá!"
 
 #: src/ch21-02-multithreaded.md
 msgid "Implementing the `execute` Method"
-msgstr ""
+msgstr "Implementando o método `execute` {#implementing-the-execute-method}"
 
 #: src/ch21-02-multithreaded.md
 msgid "Let’s finally implement the `execute` method on `ThreadPool`. We’ll also change `Job` from a struct to a type alias for a trait object that holds the type of closure that `execute` receives. As discussed in the [“Type Synonyms and Type Aliases”](ch20-03-advanced-types.html#type-synonyms-and-type-aliases)<!-- ignore --> section in Chapter 20, type aliases allow us to make long types shorter for ease of use. Look at Listing 21-19."
-msgstr ""
+msgstr "Vamos finalmente implementar o método `execute` em `ThreadPool`. Também vamos mudar `Job` de um struct para um alias de tipo para um objeto de trait que armazena o tipo de closure que `execute` recebe. Como discutido na seção [“Sinônimos de tipo e aliases de tipo”](ch20-03-advanced-types.html#type-synonyms-and-type-aliases)<!-- ignore --> do Capítulo 20, os aliases de tipo permitem tornar tipos longos mais curtos para facilitar o uso. Veja a Listagem 21-19."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-19\" file-name=\"src/lib.rs\" caption=\"Creating a `Job` type alias for a `Box` that holds each closure and then sending the job down the channel\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-19\" file-name=\"src/lib.rs\" caption=\"Criando um alias de tipo `Job` para um `Box` que armazena cada closure e, em seguida, enviando o job pelo canal\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "After creating a new `Job` instance using the closure we get in `execute`, we send that job down the sending end of the channel. We’re calling `unwrap` on `send` for the case that sending fails. This might happen if, for example, we stop all our threads from executing, meaning the receiving end has stopped receiving new messages. At the moment, we can’t stop our threads from executing: Our threads continue executing as long as the pool exists. The reason we use `unwrap` is that we know the failure case won’t happen, but the compiler doesn’t know that."
-msgstr ""
+msgstr "Depois de criar uma nova instância de `Job` com o closure que recebemos em `execute`, enviamos esse job pela extremidade de envio do canal. Estamos chamando `unwrap` em `send` para o caso de o envio falhar. Isso pode acontecer, por exemplo, se interrompermos a execução de todas as nossas threads, o que significa que a extremidade de recebimento parou de receber novas mensagens. No momento, não conseguimos interromper a execução das nossas threads: elas continuam executando enquanto o pool existir. O motivo de usarmos `unwrap` é que sabemos que o caso de falha não vai acontecer, mas o compilador não sabe disso."
 
 #: src/ch21-02-multithreaded.md
 msgid "But we’re not quite done yet! In the `Worker`, our closure being passed to `thread::spawn` still only _references_ the receiving end of the channel. Instead, we need the closure to loop forever, asking the receiving end of the channel for a job and running the job when it gets one. Let’s make the change shown in Listing 21-20 to `Worker::new`."
-msgstr ""
+msgstr "Mas ainda não terminamos! No `Worker`, o nosso closure passado para `thread::spawn` ainda apenas _referencia_ a extremidade de recebimento do canal. Em vez disso, precisamos que o closure fique em um loop infinito, pedindo um job à extremidade de recebimento do canal e executando o job quando receber um. Vamos fazer a mudança mostrada na Listagem 21-20 em `Worker::new`."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-20\" file-name=\"src/lib.rs\" caption=\"Receiving and executing the jobs in the `Worker` instance’s thread\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-20\" file-name=\"src/lib.rs\" caption=\"Recebendo e executando os jobs na thread da instância de `Worker`\">\n"
 
 #: src/ch21-02-multithreaded.md src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Worker {id} got a job; executing.\""
@@ -23376,19 +23378,19 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Here, we first call `lock` on the `receiver` to acquire the mutex, and then we call `unwrap` to panic on any errors. Acquiring a lock might fail if the mutex is in a _poisoned_ state, which can happen if some other thread panicked while holding the lock rather than releasing the lock. In this situation, calling `unwrap` to have this thread panic is the correct action to take. Feel free to change this `unwrap` to an `expect` with an error message that is meaningful to you."
-msgstr ""
+msgstr "Aqui, primeiro chamamos `lock` no `receiver` para adquirir o mutex e, em seguida, chamamos `unwrap` para entrar em pânico em caso de erros. Adquirir um lock pode falhar se o mutex estiver em um estado _envenenado_, o que pode acontecer quando alguma outra thread entrou em pânico enquanto segurava o lock, em vez de liberá-lo. Nessa situação, chamar `unwrap` para que esta thread entre em pânico é a ação correta. Sinta-se à vontade para trocar este `unwrap` por um `expect` com uma mensagem de erro que faça sentido para você."
 
 #: src/ch21-02-multithreaded.md
 msgid "If we get the lock on the mutex, we call `recv` to receive a `Job` from the channel. A final `unwrap` moves past any errors here as well, which might occur if the thread holding the sender has shut down, similar to how the `send` method returns `Err` if the receiver shuts down."
-msgstr ""
+msgstr "Se conseguirmos o lock do mutex, chamamos `recv` para receber um `Job` do canal. Um `unwrap` final também passa por cima de quaisquer erros aqui, que podem ocorrer se a thread que tem o transmissor tiver sido encerrada, assim como o método `send` retorna `Err` se o receptor for encerrado."
 
 #: src/ch21-02-multithreaded.md
 msgid "The call to `recv` blocks, so if there is no job yet, the current thread will wait until a job becomes available. The `Mutex<T>` ensures that only one `Worker` thread at a time is trying to request a job."
-msgstr ""
+msgstr "A chamada a `recv` bloqueia; por isso, se ainda não houver nenhum job, a thread atual vai esperar até que um job esteja disponível. O `Mutex<T>` garante que apenas uma thread `Worker` por vez tente requisitar um job."
 
 #: src/ch21-02-multithreaded.md
 msgid "Our thread pool is now in a working state! Give it a `cargo run` and make some requests:"
-msgstr ""
+msgstr "Nosso pool de threads agora está funcionando! Execute `cargo run` e faça algumas requisições:"
 
 #: src/ch21-02-multithreaded.md
 msgid ""
@@ -23443,55 +23445,55 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "Success! We now have a thread pool that executes connections asynchronously. There are never more than four threads created, so our system won’t get overloaded if the server receives a lot of requests. If we make a request to _/sleep_, the server will be able to serve other requests by having another thread run them."
-msgstr ""
+msgstr "Sucesso! Agora temos um pool de threads que executa conexões de forma assíncrona. Nunca são criadas mais de quatro threads, então nosso sistema não ficará sobrecarregado se o servidor receber muitas requisições. Se fizermos uma requisição para _/sleep_, o servidor conseguirá atender outras requisições, fazendo com que outra thread as execute."
 
 #: src/ch21-02-multithreaded.md
 msgid "Note: If you open _/sleep_ in multiple browser windows simultaneously, they might load one at a time in five-second intervals. Some web browsers execute multiple instances of the same request sequentially for caching reasons. This limitation is not caused by our web server."
-msgstr ""
+msgstr "Nota: se você abrir _/sleep_ em várias janelas do navegador ao mesmo tempo, elas podem carregar uma de cada vez, em intervalos de cinco segundos. Alguns navegadores executam várias instâncias da mesma requisição em sequência por motivos de cache. Essa limitação não é causada pelo nosso servidor web."
 
 #: src/ch21-02-multithreaded.md
 msgid "This is a good time to pause and consider how the code in Listings 21-18, 21-19, and 21-20 would be different if we were using futures instead of a closure for the work to be done. What types would change? How would the method signatures be different, if at all? What parts of the code would stay the same?"
-msgstr ""
+msgstr "Este é um bom momento para fazer uma pausa e considerar como o código das Listagens 21-18, 21-19 e 21-20 seria diferente se estivéssemos usando futures, em vez de um closure, para o trabalho a ser feito. Quais tipos mudariam? Como as assinaturas dos métodos seriam diferentes, se é que seriam? Quais partes do código permaneceriam iguais?"
 
 #: src/ch21-02-multithreaded.md
 msgid "After learning about the `while let` loop in Chapter 17 and Chapter 19, you might be wondering why we didn’t write the `Worker` thread code as shown in Listing 21-21."
-msgstr ""
+msgstr "Depois de aprender sobre o loop `while let` nos Capítulos 17 e 19, você pode estar se perguntando por que não escrevemos o código da thread do `Worker` como mostrado na Listagem 21-21."
 
 #: src/ch21-02-multithreaded.md
 msgid "<Listing number=\"21-21\" file-name=\"src/lib.rs\" caption=\"An alternative implementation of `Worker::new` using `while let`\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-21\" file-name=\"src/lib.rs\" caption=\"Uma implementação alternativa de `Worker::new` usando `while let`\">\n"
 
 #: src/ch21-02-multithreaded.md
 msgid "This code compiles and runs but doesn’t result in the desired threading behavior: A slow request will still cause other requests to wait to be processed. The reason is somewhat subtle: The `Mutex` struct has no public `unlock` method because the ownership of the lock is based on the lifetime of the `MutexGuard<T>` within the `LockResult<MutexGuard<T>>` that the `lock` method returns. At compile time, the borrow checker can then enforce the rule that a resource guarded by a `Mutex` cannot be accessed unless we hold the lock. However, this implementation can also result in the lock being held longer than intended if we aren’t mindful of the lifetime of the `MutexGuard<T>`."
-msgstr ""
+msgstr "Este código compila e executa, mas não resulta no comportamento de threads desejado: uma requisição lenta ainda faz com que outras requisições tenham que esperar para serem processadas. O motivo é um pouco sutil: o struct `Mutex` não tem nenhum método `unlock` público, porque o ownership do lock se baseia no tempo de vida do `MutexGuard<T>` dentro do `LockResult<MutexGuard<T>>` que o método `lock` retorna. Em tempo de compilação, o verificador de empréstimos pode então impor a regra de que um recurso protegido por um `Mutex` não pode ser acessado a menos que mantenhamos o lock. No entanto, essa implementação também pode fazer com que o lock fique retido por mais tempo do que o pretendido, se não tomarmos cuidado com o tempo de vida do `MutexGuard<T>`."
 
 #: src/ch21-02-multithreaded.md
 msgid "The code in Listing 21-20 that uses `let job = receiver.lock().unwrap().recv().unwrap();` works because with `let`, any temporary values used in the expression on the right-hand side of the equal sign are immediately dropped when the `let` statement ends. However, `while let` (and `if let` and `match`) does not drop temporary values until the end of the associated block. In Listing 21-21, the lock remains held for the duration of the call to `job()`, meaning other `Worker` instances cannot receive jobs."
-msgstr ""
+msgstr "O código da Listagem 21-20 que usa `let job = receiver.lock().unwrap().recv().unwrap();` funciona porque, com `let`, quaisquer valores temporários usados na expressão do lado direito do sinal de igual são imediatamente descartados quando a instrução `let` termina. No entanto, `while let` (e também `if let` e `match`) não descarta valores temporários até o fim do bloco associado. Na Listagem 21-21, o lock permanece retido durante toda a chamada a `job()`, o que significa que outras instâncias de `Worker` não podem receber jobs."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "The code in Listing 21-20 is responding to requests asynchronously through the use of a thread pool, as we intended. We get some warnings about the `workers`, `id`, and `thread` fields that we’re not using in a direct way that reminds us we’re not cleaning up anything. When we use the less elegant <kbd>ctrl</kbd>\\-<kbd>C</kbd> method to halt the main thread, all other threads are stopped immediately as well, even if they’re in the middle of serving a request."
-msgstr ""
+msgstr "O código da Listagem 21-20 está respondendo às requisições de forma assíncrona por meio do uso de um pool de threads, como pretendíamos. Recebemos alguns avisos sobre os campos `workers`, `id` e `thread`, que não estamos usando de forma direta, o que nos lembra de que não estamos limpando nada. Quando usamos o método menos elegante <kbd>ctrl</kbd>\\-<kbd>C</kbd> para interromper a thread principal, todas as outras threads também são encerradas imediatamente, mesmo que estejam no meio do atendimento de uma requisição."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Next, then, we’ll implement the `Drop` trait to call `join` on each of the threads in the pool so that they can finish the requests they’re working on before closing. Then, we’ll implement a way to tell the threads they should stop accepting new requests and shut down. To see this code in action, we’ll modify our server to accept only two requests before gracefully shutting down its thread pool."
-msgstr ""
+msgstr "A seguir, vamos implementar o trait `Drop` para chamar `join` em cada uma das threads do pool, para que elas possam terminar as requisições em que estão trabalhando antes de serem encerradas. Depois, vamos implementar uma forma de dizer às threads que elas devem parar de aceitar novas requisições e encerrar. Para ver esse código em ação, vamos modificar nosso servidor para aceitar apenas duas requisições antes de encerrar graciosamente o pool de threads do servidor."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "One thing to notice as we go: None of this affects the parts of the code that handle executing the closures, so everything here would be the same if we were using a thread pool for an async runtime."
-msgstr ""
+msgstr "Uma coisa a notar enquanto avançamos: nada disso afeta as partes do código que tratam da execução dos closures, então tudo aqui seria igual se estivéssemos usando um pool de threads para um runtime assíncrono."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Implementing the `Drop` Trait on `ThreadPool`"
-msgstr ""
+msgstr "Implementando o trait `Drop` em `ThreadPool` {#implementing-the-drop-trait-on-threadpool}"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Let’s start with implementing `Drop` on our thread pool. When the pool is dropped, our threads should all join to make sure they finish their work. Listing 21-22 shows a first attempt at a `Drop` implementation; this code won’t quite work yet."
-msgstr ""
+msgstr "Vamos começar implementando `Drop` no nosso pool de threads. Quando o pool for descartado, devemos esperar todas as threads terminarem para garantir que elas concluam o trabalho. A Listagem 21-22 mostra uma primeira tentativa de implementação de `Drop`; este código ainda não vai funcionar direito."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-22\" file-name=\"src/lib.rs\" caption=\"Joining each thread when the thread pool goes out of scope\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-22\" file-name=\"src/lib.rs\" caption=\"Esperando cada thread quando o pool de threads sai do escopo\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Shutting down worker {}\""
@@ -23499,11 +23501,11 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "First, we loop through each of the thread pool `workers`. We use `&mut` for this because `self` is a mutable reference, and we also need to be able to mutate `worker`. For each `worker`, we print a message saying that this particular `Worker` instance is shutting down, and then we call `join` on that `Worker` instance’s thread. If the call to `join` fails, we use `unwrap` to make Rust panic and go into an ungraceful shutdown."
-msgstr ""
+msgstr "Primeiro, percorremos cada um dos `workers` do pool de threads. Usamos `&mut` para isso porque `self` é uma referência mutável, e também precisamos ser capazes de alterar `worker`. Para cada `worker`, imprimimos uma mensagem dizendo que esta instância específica de `Worker` está sendo encerrada e, em seguida, chamamos `join` na thread dessa instância de `Worker`. Se a chamada a `join` falhar, usamos `unwrap` para fazer o Rust entrar em pânico e seguir para um encerramento não gracioso."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Here is the error we get when we compile this code:"
-msgstr ""
+msgstr "Este é o erro que recebemos ao compilar este código:"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid ""
@@ -23528,51 +23530,51 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "The error tells us we can’t call `join` because we only have a mutable borrow of each `worker` and `join` takes ownership of its argument. To solve this issue, we need to move the thread out of the `Worker` instance that owns `thread` so that `join` can consume the thread. One way to do this is to take the same approach we took in Listing 18-15. If `Worker` held an `Option<thread::JoinHandle<()>>`, we could call the `take` method on the `Option` to move the value out of the `Some` variant and leave a `None` variant in its place. In other words, a `Worker` that is running would have a `Some` variant in `thread`, and when we wanted to clean up a `Worker`, we’d replace `Some` with `None` so that the `Worker` wouldn’t have a thread to run."
-msgstr ""
+msgstr "O erro nos mostra que não podemos chamar `join`, porque temos apenas um empréstimo mutável de cada `worker`, e `join` assume o ownership do seu argumento. Para resolver esse problema, precisamos mover a thread para fora da instância de `Worker` que possui `thread`, para que `join` possa consumir a thread. Uma forma de fazer isso é adotar a mesma abordagem que usamos na Listagem 18-15. Se `Worker` contivesse um `Option<thread::JoinHandle<()>>`, poderíamos chamar o método `take` no `Option` para mover o valor para fora da variante `Some` e deixar uma variante `None` no lugar dela. Em outras palavras, um `Worker` que está em execução teria uma variante `Some` em `thread` e, quando quiséssemos fazer a limpeza de um `Worker`, substituiríamos `Some` por `None`, para que o `Worker` não tivesse uma thread para executar."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "However, the _only_ time this would come up would be when dropping the `Worker`. In exchange, we’d have to deal with an `Option<thread::JoinHandle<()>>` anywhere we accessed `worker.thread`. Idiomatic Rust uses `Option` quite a bit, but when you find yourself wrapping something you know will always be present in an `Option` as a workaround like this, it’s a good idea to look for alternative approaches to make your code cleaner and less error-prone."
-msgstr ""
+msgstr "No entanto, a _única_ vez em que isso surgiria seria ao descartar o `Worker`. Em troca, teríamos de lidar com um `Option<thread::JoinHandle<()>>` em qualquer lugar em que acessássemos `worker.thread`. O Rust idiomático usa bastante `Option`, mas, quando você percebe que está envolvendo algo que sabe que sempre estará presente em um `Option`, como um contorno desse tipo, vale a pena procurar abordagens alternativas para deixar seu código mais limpo e menos propenso a erros."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "In this case, a better alternative exists: the `Vec::drain` method. It accepts a range parameter to specify which items to remove from the vector and returns an iterator of those items. Passing the `..` range syntax will remove _every_ value from the vector."
-msgstr ""
+msgstr "Neste caso, existe uma alternativa melhor: o método `Vec::drain`. Ele aceita um parâmetro de intervalo para especificar quais itens remover do vetor e retorna um iterador com esses itens. Passar a sintaxe de intervalo `..` vai remover _todos_ os valores do vetor."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "So, we need to update the `ThreadPool` `drop` implementation like this:"
-msgstr ""
+msgstr "Portanto, precisamos atualizar a implementação de `drop` do `ThreadPool` assim:"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "This resolves the compiler error and does not require any other changes to our code. Note that, because drop can be called when panicking, the unwrap could also panic and cause a double panic, which immediately crashes the program and ends any cleanup in progress. This is fine for an example program, but it isn’t recommended for production code."
-msgstr ""
+msgstr "Isso resolve o erro de compilação e não exige nenhuma outra alteração no nosso código. Vale notar que, como drop pode ser chamado quando ocorre um pânico, o unwrap também poderia entrar em pânico e causar um pânico duplo, o que faz o programa falhar imediatamente e encerra qualquer limpeza em andamento. Isso é adequado para um programa de exemplo, mas não é recomendado para código de produção."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Signaling to the Threads to Stop Listening for Jobs"
-msgstr ""
+msgstr "Sinalizando às threads que parem de escutar jobs {#signaling-to-the-threads-to-stop-listening-for-jobs}"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "With all the changes we’ve made, our code compiles without any warnings. However, the bad news is that this code doesn’t function the way we want it to yet. The key is the logic in the closures run by the threads of the `Worker` instances: At the moment, we call `join`, but that won’t shut down the threads, because they `loop` forever looking for jobs. If we try to drop our `ThreadPool` with our current implementation of `drop`, the main thread will block forever, waiting for the first thread to finish."
-msgstr ""
+msgstr "Com todas as alterações que fizemos, nosso código compila sem nenhum aviso. No entanto, a má notícia é que este código ainda não funciona da forma que queremos. O ponto central está na lógica dos closures executados pelas threads das instâncias de `Worker`: no momento, chamamos `join`, mas isso não vai encerrar as threads, porque elas executam um `loop` infinito à procura de jobs. Se tentarmos descartar nosso `ThreadPool` com a implementação atual de `drop`, a thread principal vai ficar bloqueada para sempre, esperando a primeira thread terminar."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "To fix this problem, we’ll need a change in the `ThreadPool` `drop` implementation and then a change in the `Worker` loop."
-msgstr ""
+msgstr "Para resolver esse problema, precisaremos fazer uma alteração na implementação de `drop` do `ThreadPool` e, depois, uma alteração no loop do `Worker`."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "First, we’ll change the `ThreadPool` `drop` implementation to explicitly drop the `sender` before waiting for the threads to finish. Listing 21-23 shows the changes to `ThreadPool` to explicitly drop `sender`. Unlike with the thread, here we _do_ need to use an `Option` to be able to move `sender` out of `ThreadPool` with `Option::take`."
-msgstr ""
+msgstr "Primeiro, vamos alterar a implementação de `drop` do `ThreadPool` para descartar explicitamente o `sender` antes de esperar que as threads terminem. A Listagem 21-23 mostra as alterações no `ThreadPool` para descartar explicitamente o `sender`. Ao contrário do que acontece com a thread, aqui _precisamos_ usar um `Option` para conseguir mover o `sender` para fora do `ThreadPool` com `Option::take`."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-23\" file-name=\"src/lib.rs\" caption=\"Explicitly dropping `sender` before joining the `Worker` threads\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-23\" file-name=\"src/lib.rs\" caption=\"Descartando explicitamente `sender` antes de esperar pelas threads de `Worker`\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Dropping `sender` closes the channel, which indicates no more messages will be sent. When that happens, all the calls to `recv` that the `Worker` instances do in the infinite loop will return an error. In Listing 21-24, we change the `Worker` loop to gracefully exit the loop in that case, which means the threads will finish when the `ThreadPool` `drop` implementation calls `join` on them."
-msgstr ""
+msgstr "Descartar o `sender` fecha o canal, o que indica que nenhuma outra mensagem será enviada. Quando isso acontecer, todas as chamadas a `recv` que as instâncias de `Worker` fazem no loop infinito vão retornar um erro. Na Listagem 21-24, alteramos o loop do `Worker` para sair do loop de forma graciosa nesse caso, o que significa que as threads vão terminar quando a implementação de `drop` do `ThreadPool` chamar `join` nelas."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-24\" file-name=\"src/lib.rs\" caption=\"Explicitly breaking out of the loop when `recv` returns an error\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-24\" file-name=\"src/lib.rs\" caption=\"Saindo explicitamente do loop quando `recv` retorna um erro\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Worker {id} disconnected; shutting down.\""
@@ -23580,11 +23582,11 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "To see this code in action, let’s modify `main` to accept only two requests before gracefully shutting down the server, as shown in Listing 21-25."
-msgstr ""
+msgstr "Para ver este código em ação, vamos modificar `main` para aceitar apenas duas requisições antes de encerrar o servidor de forma graciosa, como mostrado na Listagem 21-25."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-25\" file-name=\"src/main.rs\" caption=\"Shutting down the server after serving two requests by exiting the loop\">\n"
-msgstr ""
+msgstr "<Listing number=\"21-25\" file-name=\"src/main.rs\" caption=\"Encerrando o servidor após atender duas requisições saindo do loop\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Shutting down.\""
@@ -23592,15 +23594,15 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "You wouldn’t want a real-world web server to shut down after serving only two requests. This code just demonstrates that the graceful shutdown and cleanup is in working order."
-msgstr ""
+msgstr "Você não gostaria que um servidor web do mundo real fosse encerrado depois de atender apenas duas requisições. Este código apenas demonstra que o encerramento gracioso e a limpeza estão funcionando corretamente."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "The `take` method is defined in the `Iterator` trait and limits the iteration to the first two items at most. The `ThreadPool` will go out of scope at the end of `main`, and the `drop` implementation will run."
-msgstr ""
+msgstr "O método `take` é definido no trait `Iterator` e limita a iteração aos primeiros dois itens, no máximo. O `ThreadPool` vai sair do escopo no fim de `main`, e a implementação de `drop` será executada."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Start the server with `cargo run` and make three requests. The third request should error, and in your terminal, you should see output similar to this:"
-msgstr ""
+msgstr "Inicie o servidor com `cargo run` e faça três requisições. A terceira requisição deve dar erro, e no seu terminal você deve ver uma saída semelhante a esta:"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid ""
@@ -23639,47 +23641,47 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "You might see a different ordering of `Worker` IDs and messages printed. We can see how this code works from the messages: `Worker` instances 0 and 3 got the first two requests. The server stopped accepting connections after the second connection, and the `Drop` implementation on `ThreadPool` starts executing before `Worker 3` even starts its job. Dropping the `sender` disconnects all the `Worker` instances and tells them to shut down. The `Worker` instances each print a message when they disconnect, and then the thread pool calls `join` to wait for each `Worker` thread to finish."
-msgstr ""
+msgstr "Você pode ver uma ordem diferente dos IDs de `Worker` e das mensagens impressas. Podemos ver como este código funciona a partir das mensagens: as instâncias de `Worker` 0 e 3 receberam as duas primeiras requisições. O servidor parou de aceitar conexões depois da segunda conexão, e a implementação de `Drop` em `ThreadPool` começa a ser executada antes que `Worker 3` sequer comece o seu job. Descartar o `sender` desconecta todas as instâncias de `Worker` e as instrui a encerrar. Cada instância de `Worker` imprime uma mensagem quando se desconecta, e então o pool de threads chama `join` para esperar que cada thread de `Worker` termine."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Notice one interesting aspect of this particular execution: The `ThreadPool` dropped the `sender`, and before any `Worker` received an error, we tried to join `Worker 0`. `Worker 0` had not yet gotten an error from `recv`, so the main thread blocked, waiting for `Worker 0` to finish. In the meantime, `Worker 3` received a job and then all threads received an error. When `Worker 0` finished, the main thread waited for the rest of the `Worker` instances to finish. At that point, they had all exited their loops and stopped."
-msgstr ""
+msgstr "Observe um aspecto interessante desta execução específica: o `ThreadPool` descartou o `sender` e, antes que qualquer `Worker` recebesse um erro, tentamos esperar por `Worker 0`. O `Worker 0` ainda não tinha recebido um erro de `recv`, então a thread principal ficou bloqueada, esperando que `Worker 0` terminasse. Enquanto isso, `Worker 3` recebeu um job e, em seguida, todas as threads receberam um erro. Quando `Worker 0` terminou, a thread principal esperou pelas demais instâncias de `Worker`. Nesse momento, todas elas já tinham saído dos seus loops e parado."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Congrats! We’ve now completed our project; we have a basic web server that uses a thread pool to respond asynchronously. We’re able to perform a graceful shutdown of the server, which cleans up all the threads in the pool."
-msgstr ""
+msgstr "Parabéns! Agora concluímos o nosso projeto: temos um servidor web básico que usa um pool de threads para responder de forma assíncrona. Conseguimos realizar um encerramento gracioso do servidor, o que limpa todas as threads do pool."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Here’s the full code for reference:"
-msgstr ""
+msgstr "Aqui está o código completo para referência:"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "We could do more here! If you want to continue enhancing this project, here are some ideas:"
-msgstr ""
+msgstr "Poderíamos fazer mais! Se você quiser continuar aprimorando este projeto, aqui estão algumas ideias:"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Add more documentation to `ThreadPool` and its public methods."
-msgstr ""
+msgstr "Adicione mais documentação ao `ThreadPool` e aos seus métodos públicos."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Add tests of the library’s functionality."
-msgstr ""
+msgstr "Adicione testes para a funcionalidade da biblioteca."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Change calls to `unwrap` to more robust error handling."
-msgstr ""
+msgstr "Substitua as chamadas a `unwrap` por um tratamento de erros mais robusto."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Use `ThreadPool` to perform some task other than serving web requests."
-msgstr ""
+msgstr "Use o `ThreadPool` para executar alguma tarefa diferente de atender requisições web."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Find a thread pool crate on [crates.io](https://crates.io/) and implement a similar web server using the crate instead. Then, compare its API and robustness to the thread pool we implemented."
-msgstr ""
+msgstr "Encontre um crate de pool de threads no [crates.io](https://crates.io/) e implemente um servidor web semelhante usando esse crate em vez disso. Depois, compare a API e a robustez dele com o pool de threads que implementamos."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Well done! You’ve made it to the end of the book! We want to thank you for joining us on this tour of Rust. You’re now ready to implement your own Rust projects and help with other people’s projects. Keep in mind that there is a welcoming community of other Rustaceans who would love to help you with any challenges you encounter on your Rust journey."
-msgstr ""
+msgstr "Muito bem! Você chegou ao fim do livro! Queremos agradecer por nos acompanhar neste passeio pelo Rust. Agora você está pronto para implementar os seus próprios projetos Rust e ajudar nos projetos de outras pessoas. Lembre-se de que existe uma comunidade acolhedora de outros rustáceos que adoraria ajudar você com quaisquer desafios que encontrar na sua jornada com o Rust."
 
 #: src/appendix-00.md
 msgid "The following sections contain reference material you may find useful in your Rust journey."
