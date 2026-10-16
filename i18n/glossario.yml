@@ -3,7 +3,8 @@
 # O QUE É: a terminologia que toda tradução de po/pt-BR.po segue (agentes e pessoas). O
 # lotes.py anexa a cada lote as entradas cujo `en` aparece nos msgid do lote; o traduz_delta.py
 # envia o mesmo subconjunto ao modelo; o módulo `glossario` do check.py usa o campo `evitar`.
-# Em caso de conflito vale: decisões do mantenedor (i18n/CONTRATO.md §7) > este glossário >
+# Em caso de conflito vale: decisões do mantenedor (i18n/CONTRATO.md §7, só a lista “Decided by
+# the maintainer”, não os “Provisional defaults of the assistant”) > este glossário >
 # i18n/GUIA-DE-ESTILO.md.
 #
 # QUEM EDITA: SÓ O MANTENEDOR. Agentes nunca editam este arquivo. Quem traduz e precisa de um
@@ -16,7 +17,8 @@
 #   termos:                 lista; cada entrada tem todos os campos abaixo
 #     en             termo em inglês, em minúsculas; cada `en` aparece uma vez só
 #     pt             forma preferida em português; quando o termo fica em inglês, é igual a
-#                    `en` ou, num verbo inglês que a prosa só usa como substantivo, a forma em
+#                    `en` (salvo a maiúscula de nome próprio ou sigla: Cargo, API, FFI, ABI)
+#                    ou, num verbo inglês que a prosa só usa como substantivo, a forma em
 #                    -ing (poll → polling, pin → pinning)
 #     manter_ingles  true quando o termo fica em inglês na prosa
 #     classe         substantivo | verbo | adjetivo | expressão
@@ -1847,7 +1849,7 @@ termos:
     exemplo_pt: "O rustup e o papel do Rust nightly"
     evitar:
       - '(?<![^\W_])noturn[oa]s?(?![^\W_])'
-    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Os nomes dos canais de lançamento (nightly, beta, stable) ficam em inglês: “nightly Rust” → “Rust nightly”; “nightly version” → “versão nightly”. Nunca “noturno” (regras `rust-noturno` e `noturno-ambiguo` de erros-recorrentes.yml). Comprehensive Rust pt-BR (mensagens com o termo: 4): nightly 4, noturno 0."
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Os nomes dos canais de lançamento (nightly, beta, stable) ficam em inglês: “nightly Rust” → “Rust nightly”; “nightly version” → “versão nightly”. Nunca “noturno”: o `evitar` desta entrada pega qualquer “noturno” como aviso, e a regra `rust-noturno` de erros-recorrentes.yml pega “Rust noturno” (também depois de canal, versão, compilador, toolchain, release, lançamento, recurso e funcionalidade) como erro. Comprehensive Rust pt-BR (mensagens com o termo: 4): nightly 4, noturno 0."
   - en: "beta"
     pt: "beta"
     manter_ingles: true
@@ -1867,8 +1869,8 @@ termos:
     exemplo_en: "By default, you’ll have stable Rust installed."
     exemplo_pt: "Por padrão, você terá o Rust stable instalado."
     evitar:
-      - '(?<![^\W_])(?:rust|canal|toolchain|compilador)\s+estáve(?:l|is)(?![^\W_])'
-    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Só o nome do canal fica em inglês (“Rust stable”, “versão stable”, “canal stable”); fora disso, “stable” é “estável” (“API estável”). A regra `canal-stable-traduzido` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 5): stable 2, estável 3."
+      - '(?<![^\W_])(?:rust|canal|canais|toolchains?|compilador(?:es)?|conjuntos?\s+de\s+ferramentas)\s+estáve(?:l|is)(?![^\W_])'
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Só o nome do canal fica em inglês (“Rust stable”, “versão stable”, “canal stable”, “conjunto de ferramentas stable”); fora disso, “stable” é “estável” (“API estável”). A única verificação automática é o `evitar` desta entrada (aviso): “estável” logo depois de Rust, canal, toolchain, compilador ou conjunto de ferramentas; “versão estável” fica de fora porque também tem uso legítimo. Comprehensive Rust pt-BR (mensagens com o termo: 5): stable 2, estável 3."
   - en: "debug"
     pt: "depuração"
     manter_ingles: false
@@ -2963,7 +2965,7 @@ termos:
     exemplo_pt: "Escrevemos os valores de um array como uma lista separada por vírgulas dentro de colchetes:"
     evitar:
       - '(?<![^\W_])square brackets?(?![^\W_])'
-    nota: "Os sinais `[` e `]`; quase sempre no plural, “colchetes” (“Table B-10: Square Brackets” → “Tabela B-10: colchetes”)."
+    nota: "Os sinais `[` e `]`; quase sempre no plural, “colchetes”. Na legenda, que é HTML cru e começa com maiúscula como manda o guia: `<span class=\"caption\">Table B-10: Square Brackets</span>` → `<span class=\"caption\">Tabela B-10: Colchetes</span>`."
   - en: "operating system"
     pt: "sistema operacional"
     manter_ingles: false
