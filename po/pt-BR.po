@@ -968,7 +968,7 @@ msgstr "Fundamentos de um programa Rust {#rust-program-basics}"
 
 #: src/ch01-02-hello-world.md
 msgid "Next, make a new source file and call it _main.rs_. Rust files always end with the _.rs_ extension. If you’re using more than one word in your filename, the convention is to use an underscore to separate them. For example, use _hello_world.rs_ rather than _helloworld.rs_."
-msgstr "A seguir, crie um novo arquivo fonte e chame-o de _main.rs_. Os arquivos Rust sempre terminam com a extensão _.rs_. Se você estiver usando mais de uma palavra no nome do arquivo, a convenção é usar um sublinhado para separá-las. Por exemplo, use _hello_world.rs_ em vez de _helloworld.rs_."
+msgstr "A seguir, crie um novo arquivo-fonte e chame-o de _main.rs_. Os arquivos Rust sempre terminam com a extensão _.rs_. Se você estiver usando mais de uma palavra no nome do arquivo, a convenção é usar um sublinhado para separá-las. Por exemplo, use _hello_world.rs_ em vez de _helloworld.rs_."
 
 #: src/ch01-02-hello-world.md
 msgid "Now open the _main.rs_ file you just created and enter the code in Listing 1-1."
@@ -1102,7 +1102,7 @@ msgstr "Você acabou de executar um programa recém-criado, então vamos examina
 
 #: src/ch01-02-hello-world.md
 msgid "Before running a Rust program, you must compile it using the Rust compiler by entering the `rustc` command and passing it the name of your source file, like this:"
-msgstr "Antes de executar um programa Rust, você deve compilá-lo usando o compilador Rust inserindo o comando `rustc` e passando o nome do seu arquivo fonte, assim:"
+msgstr "Antes de executar um programa Rust, você deve compilá-lo com o compilador Rust, inserindo o comando `rustc` e passando a ele o nome do seu arquivo-fonte, assim:"
 
 #: src/ch01-02-hello-world.md
 msgid "If you have a C or C++ background, you’ll notice that this is similar to `gcc` or `clang`. After compiling successfully, Rust outputs a binary executable."
@@ -1229,7 +1229,7 @@ msgstr "O Cargo gerou um programa “Hello, world!” para você, assim como o q
 
 #: src/ch01-03-hello-cargo.md
 msgid "Cargo expects your source files to live inside the _src_ directory. The top-level project directory is just for README files, license information, configuration files, and anything else not related to your code. Using Cargo helps you organize your projects. There’s a place for everything, and everything is in its place."
-msgstr "O Cargo espera que seus arquivos fonte fiquem dentro do diretório _src_. O diretório principal do projeto é apenas para arquivos README, informações de licença, arquivos de configuração e qualquer outra coisa não relacionada ao seu código. Usar o Cargo ajuda a organizar seus projetos. Há um lugar para tudo, e tudo está em seu lugar."
+msgstr "O Cargo espera que seus arquivos-fonte fiquem dentro do diretório _src_. O diretório principal do projeto é apenas para arquivos README, informações de licença, arquivos de configuração e qualquer outra coisa não relacionada ao seu código. Usar o Cargo ajuda a organizar seus projetos. Há um lugar para tudo, e tudo está em seu lugar."
 
 #: src/ch01-03-hello-cargo.md
 msgid "If you started a project that doesn’t use Cargo, as we did with the “Hello, world!” project, you can convert it to a project that does use Cargo. Move the project code into the _src_ directory and create an appropriate _Cargo.toml_ file. One easy way to get that _Cargo.toml_ file is to run `cargo init`, which will create it for you automatically."
@@ -1258,7 +1258,7 @@ msgstr "Este comando cria um arquivo executável em _target/debug/hello_cargo_ (
 
 #: src/ch01-03-hello-cargo.md
 msgid "If all goes well, `Hello, world!` should print to the terminal. Running `cargo build` for the first time also causes Cargo to create a new file at the top level: _Cargo.lock_. This file keeps track of the exact versions of dependencies in your project. This project doesn’t have dependencies, so the file is a bit sparse. You won’t ever need to change this file manually; Cargo manages its contents for you."
-msgstr "Se tudo correr bem, `Hello, world!` deve ser impresso no terminal. Executar `cargo build` pela primeira vez também faz com que o Cargo crie um novo arquivo no nível superior: _Cargo.lock_. Este arquivo rastreia as versões exatas das dependências em seu projeto. Este projeto não tem dependências, então o arquivo é um pouco escasso. Você nunca precisará alterar este arquivo manualmente; o Cargo gerencia seu conteúdo para você."
+msgstr "Se tudo correr bem, `Hello, world!` deve ser impresso no terminal. Executar `cargo build` pela primeira vez também faz com que o Cargo crie um novo arquivo no nível superior: _Cargo.lock_. Este arquivo rastreia as versões exatas das dependências em seu projeto. Este projeto não tem dependências, então o arquivo tem pouco conteúdo. Você nunca precisará alterar este arquivo manualmente; o Cargo gerencia seu conteúdo para você."
 
 #: src/ch01-03-hello-cargo.md
 msgid "We just built a project with `cargo build` and ran it with `./target/debug/hello_cargo`, but we can also use `cargo run` to compile the code and then run the resultant executable all in one command:"
@@ -1285,7 +1285,7 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "Cargo also provides a command called `cargo check`. This command quickly checks your code to make sure it compiles but doesn’t produce an executable:"
-msgstr "O Cargo também fornece um comando chamado `cargo check`. Este comando verifica rapidamente seu código para garantir que ele compila, mas não produz um executável:"
+msgstr "O Cargo também fornece um comando chamado `cargo check`. Este comando verifica rapidamente seu código para garantir que ele compile, mas não produz um executável:"
 
 #: src/ch01-03-hello-cargo.md
 msgid ""
@@ -1298,7 +1298,7 @@ msgstr ""
 
 #: src/ch01-03-hello-cargo.md
 msgid "Why would you not want an executable? Often, `cargo check` is much faster than `cargo build` because it skips the step of producing an executable. If you’re continually checking your work while writing the code, using `cargo check` will speed up the process of letting you know if your project is still compiling! As such, many Rustaceans run `cargo check` periodically as they write their program to make sure it compiles. Then, they run `cargo build` when they’re ready to use the executable."
-msgstr "Por que você não quereria um executável? Frequentemente, `cargo check` é muito mais rápido que `cargo build` porque pula a etapa de produzir um executável. Se você estiver verificando continuamente seu trabalho enquanto escreve o código, usar `cargo check` acelerará o processo de saber se seu projeto ainda está compilando! Por isso, muitos rustáceos executam `cargo check` periodicamente enquanto escrevem seu programa para garantir que ele compila. Então, eles executam `cargo build` quando estão prontos para usar o executável."
+msgstr "Por que você não ia querer um executável? Frequentemente, `cargo check` é muito mais rápido que `cargo build` porque pula a etapa de produzir um executável. Se você estiver verificando continuamente seu trabalho enquanto escreve o código, usar `cargo check` acelerará o processo de saber se seu projeto ainda está compilando! Por isso, muitos rustáceos executam `cargo check` periodicamente enquanto escrevem seu programa para garantir que ele compile. Então, eles executam `cargo build` quando estão prontos para usar o executável."
 
 #: src/ch01-03-hello-cargo.md
 msgid "Let’s recap what we’ve learned so far about Cargo:"
@@ -1334,7 +1334,7 @@ msgstr "Compilando para release {#building-for-release}"
 
 #: src/ch01-03-hello-cargo.md
 msgid "When your project is finally ready for release, you can use `cargo build --release` to compile it with optimizations. This command will create an executable in _target/release_ instead of _target/debug_. The optimizations make your Rust code run faster, but turning them on lengthens the time it takes for your program to compile. This is why there are two different profiles: one for development, when you want to rebuild quickly and often, and another for building the final program you’ll give to a user that won’t be rebuilt repeatedly and that will run as fast as possible. If you’re benchmarking your code’s running time, be sure to run `cargo build --release` and benchmark with the executable in _target/release_."
-msgstr "Quando seu projeto estiver finalmente pronto para release, você pode usar `cargo build --release` para compilá-lo com otimizações. Este comando criará um executável em _target/release_ em vez de _target/debug_. As otimizações fazem seu código Rust ser executado mais rapidamente, mas ativá-las aumenta o tempo que leva para seu programa compilar. É por isso que existem dois perfis diferentes: um para desenvolvimento, quando você deseja recompilar rapidamente e com frequência, e outro para compilar o programa final que você dará a um usuário, um programa que não será recompilado repetidamente e que será executado o mais rápido possível. Se você estiver medindo o tempo de execução do seu código, certifique-se de executar `cargo build --release` e medir com o executável em _target/release_."
+msgstr "Quando seu projeto estiver finalmente pronto para ser lançado, você pode usar `cargo build --release` para compilá-lo com otimizações. Este comando criará um executável em _target/release_ em vez de _target/debug_. As otimizações fazem seu código Rust ser executado mais rapidamente, mas ativá-las aumenta o tempo que leva para seu programa compilar. É por isso que existem dois perfis diferentes: um para desenvolvimento, quando você deseja recompilar rapidamente e com frequência, e outro para compilar o programa final que você dará a um usuário, um programa que não será recompilado repetidamente e que será executado o mais rápido possível. Se você estiver medindo o tempo de execução do seu código, certifique-se de executar `cargo build --release` e medir com o executável em _target/release_."
 
 #: src/ch01-03-hello-cargo.md
 msgid "<a id=\"cargo-as-convention\"></a>"
@@ -2455,7 +2455,7 @@ msgstr "Assim como variáveis imutáveis, _constantes_ são valores vinculados a
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "First, you aren’t allowed to use `mut` with constants. Constants aren’t just immutable by default—they’re always immutable. You declare constants using the `const` keyword instead of the `let` keyword, and the type of the value _must_ be annotated. We’ll cover types and type annotations in the next section, [“Data Types”](ch03-02-data-types.html#data-types)<!-- ignore -->, so don’t worry about the details right now. Just know that you must always annotate the type."
-msgstr "Primeiro, você não pode usar `mut` com constantes. Constantes não são apenas imutáveis por padrão — elas são sempre imutáveis. Você declara constantes usando a palavra-chave `const` em vez da palavra-chave `let`, e o tipo do valor _deve_ ser anotado. Vamos abordar tipos e anotações de tipo na próxima seção, [“Tipos de dados”](ch03-02-data-types.html#data-types)<!-- ignore -->, então não se preocupe com os detalhes agora. Só saiba que você sempre deve anotar o tipo."
+msgstr "Primeiro, você não pode usar `mut` com constantes. Constantes não são apenas imutáveis por padrão — elas são sempre imutáveis. Você declara constantes usando a palavra-chave `const` em vez da palavra-chave `let`, e o tipo do valor _deve_ ser anotado. Vamos abordar tipos e anotações de tipo na próxima seção, [“Tipos de dados”](ch03-02-data-types.html#data-types)<!-- ignore -->, então não se preocupe com os detalhes agora. Basta saber que você sempre deve anotar o tipo."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "Constants can be declared in any scope, including the global scope, which makes them useful for values that many parts of code need to know about."
@@ -4006,11 +4006,11 @@ msgstr "Em outras palavras, há dois momentos importantes aqui:"
 
 #: src/ch04-01-what-is-ownership.md
 msgid "When `s` comes _into_ scope, it is valid."
-msgstr "Quando `s` entra _no_ escopo, ela é válida."
+msgstr "Quando `s` _entra_ no escopo, ela é válida."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "It remains valid until it goes _out of_ scope."
-msgstr "Ela continua válida até sair _do_ escopo."
+msgstr "Ela continua válida até _sair_ do escopo."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "At this point, the relationship between scopes and when variables are valid is similar to that in other programming languages. Now we’ll build on top of this understanding by introducing the `String` type."
@@ -4038,7 +4038,7 @@ msgid ""
 "ignore --> section of Chapter 5, and when we talk about namespacing with modules in [“Paths for Referring to an Item in the Module Tree”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> in Chapter 7."
 msgstr ""
 "O operador de dois-pontos duplo `::` nos permite colocar esta função `from` específica sob o espaço de nomes do tipo `String`, em vez de usar um nome como `string_from`. Vamos discutir essa sintaxe com mais detalhes na seção [“Métodos”](ch05-03-method-syntax.html#methods)<!--\n"
-"ignore --> do Capítulo 5, e quando falarmos sobre espaços de nomes com módulos em [“Caminhos para se referir a um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> no Capítulo 7."
+"ignore --> do Capítulo 5, e quando falarmos sobre espaços de nomes com módulos em [“Caminhos para referenciar um item na árvore de módulos”](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)<!-- ignore --> no Capítulo 7."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "This kind of string _can_ be mutated:"
@@ -5233,7 +5233,7 @@ msgstr "O ownership afeta o funcionamento de muitas outras partes do Rust, entã
 
 #: src/ch05-00-structs.md
 msgid "A _struct_, or _structure_, is a custom data type that lets you package together and name multiple related values that make up a meaningful group. If you’re familiar with an object-oriented language, a struct is like an object’s data attributes. In this chapter, we’ll compare and contrast tuples with structs to build on what you already know and demonstrate when structs are a better way to group data."
-msgstr "Um _struct_, ou _structure_, é um tipo de dado personalizado que permite agrupar e nomear vários valores relacionados que formam um grupo com significado. Se você já conhece uma linguagem orientada a objetos, um struct é como os atributos de dados de um objeto. Neste capítulo, vamos comparar e contrastar tuplas com structs, partindo do que você já sabe, e demonstrar quando structs são uma forma melhor de agrupar dados."
+msgstr "Um _struct_, ou _estrutura_, é um tipo de dado personalizado que permite agrupar e nomear vários valores relacionados que formam um grupo com significado. Se você já conhece uma linguagem orientada a objetos, um struct é como os atributos de dados de um objeto. Neste capítulo, vamos comparar e contrastar tuplas com structs, partindo do que você já sabe, e demonstrar quando structs são uma forma melhor de agrupar dados."
 
 #: src/ch05-00-structs.md
 msgid "We’ll demonstrate how to define and instantiate structs. We’ll discuss how to define associated functions, especially the kind of associated functions called _methods_, to specify behavior associated with a struct type. Structs and enums (discussed in Chapter 6) are the building blocks for creating new types in your program’s domain to take full advantage of Rust’s compile-time type checking."
@@ -5976,7 +5976,7 @@ msgstr ""
 
 #: src/ch06-01-defining-an-enum.md
 msgid "But if we used the different structs, each of which has its own type, we couldn’t as easily define a function to take any of these kinds of messages as we could with the `Message` enum defined in Listing 6-2, which is a single type."
-msgstr "Mas, se usássemos os structs diferentes, cada um com seu próprio tipo, não conseguiríamos definir com a mesma facilidade uma função que recebesse qualquer uma dessas mensagens, como podemos fazer com o enum `Message` definido na Listagem 6-2, que é um único tipo."
+msgstr "Mas, se usássemos os structs diferentes, cada um com seu próprio tipo, não conseguiríamos definir com a mesma facilidade uma função que recebesse qualquer um desses tipos de mensagem, como podemos fazer com o enum `Message` definido na Listagem 6-2, que é um único tipo."
 
 #: src/ch06-01-defining-an-enum.md
 msgid "There is one more similarity between enums and structs: Just as we’re able to define methods on structs using `impl`, we’re also able to define methods on enums. Here’s a method named `call` that we could define on our `Message` enum:"
@@ -9756,7 +9756,7 @@ msgstr "Um detalhe que não discutimos na seção [“Referências e empréstimo
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Annotating lifetimes is not even a concept most other programming languages have, so this is going to feel unfamiliar. Although we won’t cover lifetimes in their entirety in this chapter, we’ll discuss common ways you might encounter lifetime syntax so that you can get comfortable with the concept."
-msgstr "Anotar tempos de vida nem sequer é um conceito que a maioria das outras linguagens de programação tem, então isso vai parecer estranho. Embora não vamos cobrir os tempos de vida por completo neste capítulo, vamos discutir as formas comuns como você pode encontrar a sintaxe de tempo de vida, para que você se familiarize com o conceito."
+msgstr "Anotar tempos de vida nem sequer é um conceito que a maioria das outras linguagens de programação tem, então isso vai parecer pouco familiar. Embora não abordemos os tempos de vida por completo neste capítulo, vamos discutir as formas comuns como você pode encontrar a sintaxe de tempo de vida, para que você se familiarize com o conceito."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<a id=\"preventing-dangling-references-with-lifetimes\"></a>"
@@ -10023,7 +10023,7 @@ msgstr "A assinatura da função agora diz ao Rust que, para algum tempo de vida
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Remember, when we specify the lifetime parameters in this function signature, we’re not changing the lifetimes of any values passed in or returned. Rather, we’re specifying that the borrow checker should reject any values that don’t adhere to these constraints. Note that the `longest` function doesn’t need to know exactly how long `x` and `y` will live, only that some scope can be substituted for `'a` that will satisfy this signature."
-msgstr "Lembre-se de que, quando especificamos os parâmetros de tempo de vida nesta assinatura de função, não estamos mudando os tempos de vida de nenhum valor passado ou retornado. Em vez disso, estamos especificando que o verificador de empréstimos deve rejeitar quaisquer valores que não respeitem essas restrições. Observe que a função `longest` não precisa saber exatamente por quanto tempo `x` e `y` vão viver, apenas que algum escopo possa ser substituído por `'a` de modo a satisfazer esta assinatura."
+msgstr "Lembre-se de que, quando especificamos os parâmetros de tempo de vida nesta assinatura de função, não estamos mudando os tempos de vida de nenhum valor passado ou retornado. Em vez disso, estamos especificando que o verificador de empréstimos deve rejeitar quaisquer valores que não respeitem essas restrições. Observe que a função `longest` não precisa saber exatamente por quanto tempo `x` e `y` vão viver, apenas que algum escopo possa ocupar o lugar de `'a` e satisfazer esta assinatura."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When annotating lifetimes in functions, the annotations go in the function signature, not in the function body. The lifetime annotations become part of the contract of the function, much like the types in the signature. Having function signatures contain the lifetime contract means the analysis the Rust compiler does can be simpler. If there’s a problem with the way a function is annotated or the way it is called, the compiler errors can point to the part of our code and the constraints more precisely. If, instead, the Rust compiler made more inferences about what we intended the relationships of the lifetimes to be, the compiler might only be able to point to a use of our code many steps away from the cause of the problem."
@@ -10031,7 +10031,7 @@ msgstr "Ao anotar tempos de vida em funções, as anotações vão na assinatura
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we pass concrete references to `longest`, the concrete lifetime that is substituted for `'a` is the part of the scope of `x` that overlaps with the scope of `y`. In other words, the generic lifetime `'a` will get the concrete lifetime that is equal to the smaller of the lifetimes of `x` and `y`. Because we’ve annotated the returned reference with the same lifetime parameter `'a`, the returned reference will also be valid for the length of the smaller of the lifetimes of `x` and `y`."
-msgstr "Quando passamos referências concretas para `longest`, o tempo de vida concreto que é substituído por `'a` é a parte do escopo de `x` que se sobrepõe ao escopo de `y`. Em outras palavras, o tempo de vida genérico `'a` vai receber o tempo de vida concreto que é igual ao menor dos tempos de vida de `x` e `y`. Como anotamos a referência retornada com o mesmo parâmetro de tempo de vida `'a`, a referência retornada também será válida pelo período do menor dos tempos de vida de `x` e `y`."
+msgstr "Quando passamos referências concretas para `longest`, o tempo de vida concreto que ocupa o lugar de `'a` é a parte do escopo de `x` que se sobrepõe ao escopo de `y`. Em outras palavras, o tempo de vida genérico `'a` vai receber o tempo de vida concreto que é igual ao menor dos tempos de vida de `x` e `y`. Como anotamos a referência retornada com o mesmo parâmetro de tempo de vida `'a`, a referência retornada também será válida pelo período do menor dos tempos de vida de `x` e `y`."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "Let’s look at how the lifetime annotations restrict the `longest` function by passing in references that have different concrete lifetimes. Listing 10-22 is a straightforward example."
@@ -11674,7 +11674,7 @@ msgstr ""
 
 #: src/ch11-03-test-organization.md
 msgid "Having `common` appear in the test results with `running 0 tests` displayed for it is not what we wanted. We just wanted to share some code with the other integration test files. To avoid having `common` appear in the test output, instead of creating _tests/common.rs_, we’ll create _tests/common/mod.rs_. The project directory now looks like this:"
-msgstr "Ter `common` aparecendo nos resultados dos testes, com `running 0 tests` exibido para ele, não é o que queríamos. Só queríamos compartilhar algum código com os outros arquivos de teste de integração. Para evitar que `common` apareça na saída dos testes, em vez de criar _tests/common.rs_, vamos criar _tests/common/mod.rs_. O diretório do projeto agora está assim:"
+msgstr "Não queríamos que `common` aparecesse nos resultados dos testes, com `running 0 tests` exibido para ele. Só queríamos compartilhar algum código com os outros arquivos de teste de integração. Para evitar que `common` apareça na saída dos testes, em vez de criar _tests/common.rs_, vamos criar _tests/common/mod.rs_. O diretório do projeto agora está assim:"
 
 #: src/ch11-03-test-organization.md
 msgid "This is the older naming convention that Rust also understands that we mentioned in [“Alternate File Paths”](ch07-05-separating-modules-into-different-files.html#alternate-file-paths)<!-- ignore --> in Chapter 7. Naming the file this way tells Rust not to treat the `common` module as an integration test file. When we move the `setup` function code into _tests/common/mod.rs_ and delete the _tests/common.rs_ file, the section in the test output will no longer appear. Files in subdirectories of the _tests_ directory don’t get compiled as separate crates or have sections in the test output."
@@ -13057,7 +13057,7 @@ msgstr "Isso demonstra que agora usamos a saída padrão para a saída bem-suced
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "This chapter recapped some of the major concepts you’ve learned so far and covered how to perform common I/O operations in Rust. By using command line arguments, files, environment variables, and the `eprintln!` macro for printing errors, you’re now prepared to write command line applications. Combined with the concepts in previous chapters, your code will be well organized, store data effectively in the appropriate data structures, handle errors nicely, and be well tested."
-msgstr "Este capítulo recapitulou alguns dos principais conceitos que você aprendeu até agora e abordou como realizar operações comuns de E/S no Rust. Usando argumentos de linha de comando, arquivos, variáveis de ambiente e a macro `eprintln!` para imprimir erros, você agora está preparado para escrever aplicações de linha de comando. Combinados com os conceitos dos capítulos anteriores, seu código será bem organizado, armazenará dados de forma eficaz nas estruturas de dados apropriadas, lidará bem com erros e será bem testado."
+msgstr "Este capítulo recapitulou alguns dos principais conceitos que você aprendeu até agora e abordou como realizar operações comuns de E/S no Rust. Usando argumentos de linha de comando, arquivos, variáveis de ambiente e a macro `eprintln!` para imprimir erros, você agora está preparado para escrever aplicações de linha de comando. Somando isso aos conceitos dos capítulos anteriores, seu código será bem organizado, armazenará dados de forma eficaz nas estruturas de dados apropriadas, lidará bem com erros e será bem testado."
 
 #: src/ch12-06-writing-to-stderr-instead-of-stdout.md
 msgid "Next, we’ll explore some Rust features that were influenced by functional languages: closures and iterators."
@@ -16475,7 +16475,7 @@ msgstr "Inicialmente, a equipe do Rust achava que garantir a segurança de memó
 
 #: src/ch16-00-concurrency.md
 msgid "Note: For simplicity’s sake, we’ll refer to many of the problems as _concurrent_ rather than being more precise by saying _concurrent and/or parallel_. For this chapter, please mentally substitute _concurrent and/or parallel_ whenever we use _concurrent_. In the next chapter, where the distinction matters more, we’ll be more specific."
-msgstr "Nota: por simplicidade, vamos nos referir a muitos dos problemas como _concorrentes_, em vez de sermos mais precisos e dizermos _concorrentes e/ou paralelos_. Neste capítulo, por favor, substitua mentalmente _concorrentes e/ou paralelos_ sempre que usarmos _concorrentes_. No próximo capítulo, em que a distinção importa mais, seremos mais específicos."
+msgstr "Nota: por simplicidade, vamos nos referir a muitos dos problemas como _concorrentes_, em vez de sermos mais precisos e dizermos _concorrentes e/ou paralelos_. Neste capítulo, por favor, leia mentalmente _concorrentes e/ou paralelos_ sempre que usarmos _concorrentes_. No próximo capítulo, em que a distinção importa mais, seremos mais específicos."
 
 #: src/ch16-00-concurrency.md
 msgid "Many languages are dogmatic about the solutions they offer for handling concurrent problems. For example, Erlang has elegant functionality for message-passing concurrency but has only obscure ways to share state between threads. Supporting only a subset of possible solutions is a reasonable strategy for higher-level languages because a higher-level language promises benefits from giving up some control to gain abstractions. However, lower-level languages are expected to provide the solution with the best performance in any given situation and have fewer abstractions over the hardware. Therefore, Rust offers a variety of tools for modeling problems in whatever way is appropriate for your situation and requirements."
@@ -17356,11 +17356,11 @@ msgstr "Como usar o modelo assíncrono para resolver alguns dos mesmos desafios 
 
 #: src/ch17-00-async-await.md
 msgid "How multithreading and async provide complementary solutions that you can combine in many cases"
-msgstr "Como multithreading e async oferecem soluções complementares que você pode combinar em muitos casos"
+msgstr "Como o multithreading e a programação assíncrona oferecem soluções complementares que você pode combinar em muitos casos"
 
 #: src/ch17-00-async-await.md
 msgid "Before we see how async works in practice, though, we need to take a short detour to discuss the differences between parallelism and concurrency."
-msgstr "Antes de ver como o async funciona na prática, no entanto, precisamos fazer um breve desvio para discutir as diferenças entre paralelismo e concorrência."
+msgstr "Antes de ver como a programação assíncrona funciona na prática, no entanto, precisamos fazer um breve desvio para discutir as diferenças entre paralelismo e concorrência."
 
 #: src/ch17-00-async-await.md
 msgid "Parallelism and Concurrency"
@@ -17428,7 +17428,7 @@ msgstr "Paralelismo e concorrência também podem se cruzar. Se você descobrir 
 
 #: src/ch17-00-async-await.md
 msgid "The same basic dynamics come into play with software and hardware. On a machine with a single CPU core, the CPU can perform only one operation at a time, but it can still work concurrently. Using tools such as threads, processes, and async, the computer can pause one activity and switch to others before eventually cycling back to that first activity again. On a machine with multiple CPU cores, it can also do work in parallel. One core can be performing one task while another core performs a completely unrelated one, and those operations actually happen at the same time."
-msgstr "As mesmas dinâmicas básicas entram em jogo com software e hardware. Em uma máquina com um único núcleo de CPU, a CPU só consegue executar uma operação por vez, mas ainda pode trabalhar de forma concorrente. Usando ferramentas como threads, processos e async, o computador pode pausar uma atividade e alternar para outras, antes de por fim voltar àquela primeira atividade. Em uma máquina com vários núcleos de CPU, ela também pode fazer trabalho em paralelo. Um núcleo pode estar executando uma tarefa enquanto outro núcleo executa uma completamente não relacionada, e essas operações de fato acontecem ao mesmo tempo."
+msgstr "As mesmas dinâmicas básicas entram em jogo com software e hardware. Em uma máquina com um único núcleo de CPU, a CPU só consegue executar uma operação por vez, mas ainda pode trabalhar de forma concorrente. Usando ferramentas como threads, processos e programação assíncrona, o computador pode pausar uma atividade e alternar para outras, antes de por fim voltar àquela primeira atividade. Em uma máquina com vários núcleos de CPU, ela também pode fazer trabalho em paralelo. Um núcleo pode estar executando uma tarefa enquanto outro núcleo executa uma completamente não relacionada, e essas operações de fato acontecem ao mesmo tempo."
 
 #: src/ch17-00-async-await.md
 msgid "Running async code in Rust usually happens concurrently. Depending on the hardware, the operating system, and the async runtime we are using (more on async runtimes shortly), that concurrency may also use parallelism under the hood."
@@ -18716,7 +18716,7 @@ msgstr "Juntando tudo: futures, tarefas e threads {#putting-it-all-together-futu
 
 #: src/ch17-06-futures-tasks-threads.md
 msgid "As we saw in [Chapter 16](ch16-00-concurrency.html)<!-- ignore -->, threads provide one approach to concurrency. We’ve seen another approach in this chapter: using async with futures and streams. If you’re wondering when to choose one method over the other, the answer is: it depends! And in many cases, the choice isn’t threads _or_ async but rather threads _and_ async."
-msgstr "Como vimos no [Capítulo 16](ch16-00-concurrency.html)<!-- ignore -->, threads oferecem uma abordagem para a concorrência. Vimos outra abordagem neste capítulo: usar async com futures e streams. Se você está se perguntando quando escolher um método em vez do outro, a resposta é: depende! E, em muitos casos, a escolha não é threads _ou_ async, mas sim threads _e_ async."
+msgstr "Como vimos no [Capítulo 16](ch16-00-concurrency.html)<!-- ignore -->, threads oferecem uma abordagem para a concorrência. Vimos outra abordagem neste capítulo: usar programação assíncrona com futures e streams. Se você está se perguntando quando escolher um método em vez do outro, a resposta é: depende! E, em muitos casos, a escolha não é threads _ou_ programação assíncrona, mas sim threads _e_ programação assíncrona."
 
 #: src/ch17-06-futures-tasks-threads.md
 msgid "Many operating systems have supplied threading-based concurrency models for decades now, and many programming languages support them as a result. However, these models are not without their tradeoffs. On many operating systems, they use a fair bit of memory for each thread. Threads are also only an option when your operating system and hardware support them. Unlike mainstream desktop and mobile computers, some embedded systems don’t have an OS at all, so they also don’t have threads."
@@ -18748,11 +18748,11 @@ msgstr "Se o trabalho for _muito paralelizável_ (ou seja, CPU-bound), como proc
 
 #: src/ch17-06-futures-tasks-threads.md
 msgid "If the work is _very concurrent_ (that is, I/O-bound), such as handling messages from a bunch of different sources that may come in at different intervals or different rates, async is a better choice."
-msgstr "Se o trabalho for _muito concorrente_ (ou seja, I/O-bound), como lidar com mensagens de um monte de fontes diferentes que podem chegar em intervalos ou taxas diferentes, async é uma escolha melhor."
+msgstr "Se o trabalho for _muito concorrente_ (ou seja, I/O-bound), como lidar com mensagens de um monte de fontes diferentes que podem chegar em intervalos ou taxas diferentes, a programação assíncrona é uma escolha melhor."
 
 #: src/ch17-06-futures-tasks-threads.md
 msgid "And if you need both parallelism and concurrency, you don’t have to choose between threads and async. You can use them together freely, letting each play the part it’s best at. For example, Listing 17-25 shows a fairly common example of this kind of mix in real-world Rust code."
-msgstr "E se você precisar de paralelismo e de concorrência ao mesmo tempo, não precisa escolher entre threads e async. Você pode usá-los juntos livremente, deixando cada um desempenhar o papel em que se sai melhor. Por exemplo, a Listagem 17-25 mostra um exemplo bastante comum desse tipo de combinação em código Rust do mundo real."
+msgstr "E se você precisar de paralelismo e de concorrência ao mesmo tempo, não precisa escolher entre threads e programação assíncrona. Você pode usar as duas juntas livremente, deixando cada uma desempenhar o papel em que se sai melhor. Por exemplo, a Listagem 17-25 mostra um exemplo bastante comum desse tipo de combinação em código Rust do mundo real."
 
 #: src/ch17-06-futures-tasks-threads.md
 msgid "<Listing number=\"17-25\" caption=\"Sending messages with blocking code in a thread and awaiting the messages in an async block\" file-name=\"src/main.rs\">\n"
@@ -22603,7 +22603,7 @@ msgstr "A primeira linha é a _linha de requisição_, que contém informações
 
 #: src/ch21-01-single-threaded.md
 msgid "The next part of the request line is _/_, which indicates the _uniform resource identifier_ _(URI)_ the client is requesting: A URI is almost, but not quite, the same as a _uniform resource locator_ _(URL)_. The difference between URIs and URLs isn’t important for our purposes in this chapter, but the HTTP spec uses the term _URI_, so we can just mentally substitute _URL_ for _URI_ here."
-msgstr "A próxima parte da linha de requisição é _/_, que indica o _identificador uniforme de recursos_ _(URI)_ que o cliente está solicitando: a URI é quase, mas não exatamente, a mesma coisa que um _localizador uniforme de recursos_ _(URL)_. A diferença entre URIs e URLs não é importante para os nossos propósitos neste capítulo, mas a especificação do HTTP usa o termo _URI_, então podemos simplesmente substituir mentalmente _URL_ por _URI_ aqui."
+msgstr "A próxima parte da linha de requisição é _/_, que indica o _identificador uniforme de recursos_ _(URI)_ que o cliente está solicitando: a URI é quase, mas não exatamente, a mesma coisa que um _localizador uniforme de recursos_ _(URL)_. A diferença entre URIs e URLs não é importante para os nossos propósitos neste capítulo, mas a especificação do HTTP usa o termo _URI_, então podemos simplesmente ler mentalmente _URL_ no lugar de _URI_ aqui."
 
 #: src/ch21-01-single-threaded.md
 msgid "The last part is the HTTP version the client uses, and then the request line ends in a CRLF sequence. (_CRLF_ stands for _carriage return_ and _line feed_, which are terms from the typewriter days!) The CRLF sequence can also be written as `\\r\\n`, where `\\r` is a carriage return and `\\n` is a line feed. The _CRLF sequence_ separates the request line from the rest of the request data. Note that when the CRLF is printed, we see a new line start rather than `\\r\\n`."
@@ -22925,7 +22925,7 @@ msgstr "Como você aprendeu no Capítulo 16, `thread::spawn` vai criar uma nova 
 
 #: src/ch21-02-multithreaded.md
 msgid "You may also recall from Chapter 17 that this is exactly the kind of situation where async and await really shine! Keep that in mind as we build the thread pool and think about how things would look different or the same with async."
-msgstr "Você também pode se lembrar, pelo Capítulo 17, de que esse é exatamente o tipo de situação em que async e await realmente se destacam! Tenha isso em mente enquanto construímos o pool de threads e pensamos em como as coisas ficariam diferentes ou iguais com async."
+msgstr "Você também pode se lembrar, pelo Capítulo 17, de que esse é exatamente o tipo de situação em que async e await realmente se destacam! Tenha isso em mente enquanto construímos o pool de threads e pensamos em como as coisas ficariam diferentes ou iguais com programação assíncrona."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"creating-a-similar-interface-for-a-finite-number-of-threads\"></a>"
