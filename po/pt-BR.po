@@ -6131,7 +6131,7 @@ msgstr "Pense em uma expressão `match` como uma máquina classificadora de moed
 
 #: src/ch06-02-match.md
 msgid "Speaking of coins, let’s use them as an example using `match`! We can write a function that takes an unknown US coin and, in a similar way as the counting machine, determines which coin it is and returns its value in cents, as shown in Listing 6-3."
-msgstr "Falando em moedas, vamos usá-las como exemplo usando o `match`! Podemos escrever uma função que recebe uma moeda dos EUA desconhecida e, de forma parecida com a máquina de contar, determina qual moeda é e retorna o seu valor em centavos, como mostrado na Listagem 6-3."
+msgstr "Falando em moedas, vamos usá-las como exemplo com o `match`! Podemos escrever uma função que recebe uma moeda dos EUA desconhecida e, de forma parecida com a máquina de contar, determina qual moeda é e retorna o seu valor em centavos, como mostrado na Listagem 6-3."
 
 #: src/ch06-02-match.md
 msgid "<Listing number=\"6-3\" caption=\"An enum and a `match` expression that has the variants of the enum as its patterns\">\n"
@@ -6404,7 +6404,7 @@ msgstr "<Listing number=\"6-7\" caption=\"Verificando se um estado existia em 19
 
 #: src/ch06-03-if-let.md
 msgid "That gets the job done, but it has pushed the work into the body of the `if let` statement, and if the work to be done is more complicated, it might be hard to follow exactly how the top-level branches relate. We could also take advantage of the fact that expressions produce a value either to produce the `state` from the `if let` or to return early, as in Listing 6-8. (You could do something similar with a `match`, too.)"
-msgstr "Isso dá conta do recado, mas isso empurrou o trabalho para dentro do corpo da instrução `if let`, e, se o trabalho a ser feito for mais complicado, pode ser difícil acompanhar exatamente como os ramos de nível superior se relacionam. Também podemos aproveitar o fato de que expressões produzem um valor para produzir o `state` a partir do `if let` ou para retornar antecipadamente, como na Listagem 6-8. (Você também poderia fazer algo parecido com um `match`.)"
+msgstr "Isso dá conta do recado, mas empurrou o trabalho para dentro do corpo da instrução `if let`, e, se o trabalho a ser feito for mais complicado, pode ser difícil acompanhar exatamente como os ramos de nível superior se relacionam. Também podemos aproveitar o fato de que expressões produzem um valor para produzir o `state` a partir do `if let` ou para retornar antecipadamente, como na Listagem 6-8. (Você também poderia fazer algo parecido com um `match`.)"
 
 #: src/ch06-03-if-let.md
 msgid "<Listing number=\"6-8\" caption=\"Using `if let` to produce a value or return early\">\n"
