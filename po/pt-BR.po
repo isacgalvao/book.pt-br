@@ -14192,7 +14192,7 @@ msgstr "No Capítulo 7, abordamos como tornar itens públicos usando a palavra-c
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "The good news is that if the structure _isn’t_ convenient for others to use from another library, you don’t have to rearrange your internal organization: Instead, you can re-export items to make a public structure that’s different from your private structure by using `pub use`. _Re-exporting_ takes a public item in one location and makes it public in another location, as if it were defined in the other location instead."
-msgstr "A boa notícia é que, se a estrutura _não for_ conveniente para que outros a usem a partir de outra biblioteca, você não precisa reorganizar a sua organização interna. Em vez disso, pode reexportar itens para criar uma estrutura pública diferente da sua estrutura privada, usando `pub use`. A _reexportação_ pega um item público de um local e o torna público em outro, como se ele tivesse sido definido ali, e não no local original."
+msgstr "A boa notícia é que, se a estrutura _não for_ conveniente para que outros a usem a partir de outra biblioteca, você não precisa mudar a sua organização interna. Em vez disso, pode reexportar itens para criar uma estrutura pública diferente da sua estrutura privada, usando `pub use`. A _reexportação_ pega um item público de um local e o torna público em outro, como se ele tivesse sido definido ali, e não no local original."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "For example, say we made a library named `art` for modeling artistic concepts. Within this library are two modules: a `kinds` module containing two enums named `PrimaryColor` and `SecondaryColor` and a `utils` module containing a function named `mix`, as shown in Listing 14-3."
@@ -14289,7 +14289,7 @@ msgstr "<Listing number=\"14-6\" file-name=\"src/main.rs\" caption=\"Um programa
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "In cases where there are many nested modules, re-exporting the types at the top level with `pub use` can make a significant difference in the experience of people who use the crate. Another common use of `pub use` is to re-export definitions of a dependency in the current crate to make that crate's definitions part of your crate’s public API."
-msgstr "Em casos em que há muitos módulos aninhados, reexportar os tipos no nível superior com `pub use` pode fazer uma diferença significativa na experiência de quem usa o crate. Outro uso comum de `pub use` é reexportar definições de uma dependência no crate atual, para tornar as definições desse crate parte da API pública do seu crate."
+msgstr "Em casos em que há muitos módulos aninhados, reexportar os tipos no nível superior com `pub use` pode fazer uma diferença significativa na experiência de quem usa o crate. Outro uso comum de `pub use` é reexportar definições de uma dependência no crate atual, para tornar as definições dessa dependência parte da API pública do seu crate."
 
 #: src/ch14-02-publishing-to-crates-io.md
 msgid "Creating a useful public API structure is more an art than a science, and you can iterate to find the API that works best for your users. Choosing `pub use` gives you flexibility in how you structure your crate internally and decouples that internal structure from what you present to your users. Look at some of the code of crates you’ve installed to see if their internal structure differs from their public API."
@@ -14498,7 +14498,7 @@ msgstr "Uma retirada _não_ exclui nenhum código. Ela não consegue, por exempl
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "In Chapter 12, we built a package that included a binary crate and a library crate. As your project develops, you might find that the library crate continues to get bigger and you want to split your package further into multiple library crates. Cargo offers a feature called _workspaces_ that can help manage multiple related packages that are developed in tandem."
-msgstr "No Capítulo 12, criamos um pacote que incluía um crate binário e um crate de biblioteca. Conforme o seu projeto evolui, você pode perceber que o crate de biblioteca continua crescendo e que quer dividir o seu pacote em vários crates de biblioteca. O Cargo oferece um recurso chamado _workspaces_ que pode ajudar a gerenciar vários pacotes relacionados que são desenvolvidos em conjunto."
+msgstr "No Capítulo 12, criamos um pacote que incluía um crate binário e um crate de biblioteca. Conforme o seu projeto evolui, você pode perceber que o crate de biblioteca continua crescendo e que quer dividir ainda mais o seu pacote em vários crates de biblioteca. O Cargo oferece um recurso chamado _workspaces_ que pode ajudar a gerenciar vários pacotes relacionados que são desenvolvidos em conjunto."
 
 #: src/ch14-03-cargo-workspaces.md
 msgid "Creating a Workspace"
@@ -14900,7 +14900,7 @@ msgstr "A penúltima linha da saída mostra o local e o nome do binário instala
 
 #: src/ch14-05-extending-cargo.md
 msgid "Cargo is designed so that you can extend it with new subcommands without having to modify it. If a binary in your `$PATH` is named `cargo-something`, you can run it as if it were a Cargo subcommand by running `cargo something`. Custom commands like this are also listed when you run `cargo --list`. Being able to use `cargo install` to install extensions and then run them just like the built-in Cargo tools is a super-convenient benefit of Cargo’s design!"
-msgstr "O Cargo foi projetado para que você possa estendê-lo com novos subcomandos sem precisar modificá-lo. Se um binário no seu `$PATH` se chamar `cargo-something`, você pode executá-lo como se fosse um subcomando do Cargo, executando `cargo something`. Comandos personalizados como esse também aparecem na lista quando você executa `cargo --list`. Poder usar `cargo install` para instalar extensões e, depois, executá-las exatamente como as ferramentas integradas do Cargo é um benefício super prático do design do Cargo!"
+msgstr "O Cargo foi projetado para que você possa estendê-lo com novos subcomandos sem precisar modificá-lo. Se um binário no seu `$PATH` se chamar `cargo-something`, você pode executá-lo como se fosse um subcomando do Cargo, executando `cargo something`. Comandos personalizados como esse também aparecem na lista quando você executa `cargo --list`. Poder usar `cargo install` para instalar extensões e, depois, executá-las exatamente como as ferramentas embutidas no Cargo é um benefício superprático do design do Cargo!"
 
 #: src/ch14-05-extending-cargo.md
 msgid ""
