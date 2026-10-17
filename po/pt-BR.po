@@ -437,7 +437,7 @@ msgstr "C - Traits deriváveis"
 
 #: src/SUMMARY.md
 msgid "D - Useful Development Tools"
-msgstr "D - Ferramentas úteis para desenvolvimento"
+msgstr "D - Ferramentas úteis de desenvolvimento"
 
 #: src/SUMMARY.md
 msgid "E - Editions"
@@ -449,7 +449,7 @@ msgstr "F - Traduções do livro"
 
 #: src/SUMMARY.md
 msgid "G - How Rust is Made and “Nightly Rust”"
-msgstr "G - Como o Rust é feito e o “Rust nightly”"
+msgstr "G - Como o Rust é feito e “Rust nightly”"
 
 #: src/title-page.md
 msgid "_by Steve Klabnik, Carol Nichols, and Chris Krycho, with contributions from the Rust Community_"
