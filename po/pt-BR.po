@@ -7582,7 +7582,7 @@ msgstr "Descartar um vetor descarta seus elementos {#dropping-a-vector-drops-its
 
 #: src/ch08-01-vectors.md
 msgid "Like any other `struct`, a vector is freed when it goes out of scope, as annotated in Listing 8-10."
-msgstr "Assim como qualquer outro `struct`, um vetor é descartado quando sai do escopo, como indicado na Listagem 8-10."
+msgstr "Assim como qualquer outro `struct`, um vetor é liberado quando sai do escopo, como indicado na Listagem 8-10."
 
 #: src/ch08-01-vectors.md
 msgid "<Listing number=\"8-10\" caption=\"Showing where the vector and its elements are dropped\">\n"
