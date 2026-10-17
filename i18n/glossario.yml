@@ -3004,3 +3004,745 @@ termos:
     evitar:
       - '(?<![^\W_])struct update syntax(?![^\W_])'
     nota: "Masculino “struct”: “a sintaxe de atualização do struct”, quando o original se refere a um struct específico."
+
+  # -------- Termos propostos pelos tradutores (16/10/2026), provisórios até o mantenedor confirmar
+  #
+  # Cada termo foi proposto em `notas` pelos tradutores das ondas 0 a 2 e não estava aqui. O `pt` é a forma que
+  # po/pt-BR.po já usa na maioria das mensagens (contagem na `nota`); onde o uso se divide, a nota lista as
+  # variantes. Ficaram de fora os cognatos sem variação (identifier, constructor, annotation...), os nomes
+  # próprios e a maioria dos termos de uma só ocorrência. O `evitar` só traz formas ausentes do PO.
+
+  # -------- Memória, pilha e ownership
+  - en: "push onto the stack"
+    pt: "empilhar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "When your code calls a function, the values passed into the function (including, potentially, pointers to data on the heap) and the function’s local variables get pushed onto the stack."
+    exemplo_pt: "Quando o seu código chama uma função, os valores passados para ela (incluindo, potencialmente, ponteiros para dados no heap) e as variáveis locais da função são empilhados na pilha."
+    evitar: []
+    nota: "“Pushing onto the stack” → “empilhar”; “get pushed onto the stack” → “são empilhados na pilha”. Uma mensagem diz “são colocados na pilha” (os dois valores `5`): prefira “empilhar”. O método `push` de `Vec` é código. Uso no PO (mensagens com o termo: 4): empilhar 3."
+  - en: "pop off the stack"
+    pt: "desempilhar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "When the function is over, those values get popped off the stack."
+    exemplo_pt: "Quando a função termina, esses valores são desempilhados."
+    evitar: []
+    nota: "“Get popped off the stack” → “são desempilhados”; “popping off the stack” → “desempilhar”. O método `pop` de `Vec` é código. “Pop off a request from the queue” é outro sentido (retirar de uma fila) e não entra aqui. Uso no PO (mensagens com o termo: 3): desempilhar 3."
+  - en: "garbage collection"
+    pt: "coleta de lixo"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Some languages have garbage collection that regularly looks for no-longer-used memory as the program runs"
+    exemplo_pt: "Algumas linguagens têm coleta de lixo, que procura regularmente por memória que não está mais em uso enquanto o programa executa"
+    evitar:
+      - '(?<![^\W_])garbage collection(?![^\W_])'
+    nota: "Complementa garbage collector (coletor de lixo); a sigla GC fica. Uso no PO (mensagens com o termo: 1): coleta de lixo 1; garbage collection 0."
+  - en: "double free"
+    pt: "double free"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "This would cause a double free error because Rust would be trying to clean up the same value twice."
+    exemplo_pt: "Isso causaria um erro de double free, porque o Rust tentaria limpar o mesmo valor duas vezes."
+    evitar: []
+    nota: "Nome de classe de erro de memória: fica em inglês, no masculino (“um erro de double free”), com o itálico só quando o original o tem (Capítulo 4: “um erro de _double free_”; Capítulo 15: “um erro de double free”). Uso no PO (mensagens com o termo: 2): double free 2. Gênero provisório (no PO nenhum artigo ou contração fica logo antes do termo): masculino."
+  - en: "allocator"
+    pt: "alocador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The memory must be requested from the memory allocator at runtime."
+    exemplo_pt: "A memória precisa ser solicitada ao alocador de memória em tempo de execução."
+    evitar:
+      - '(?<![^\W_])allocators?(?![^\W_])'
+    nota: "Complementa allocate (alocar). “Memory allocator” → “alocador de memória”. Plural “alocadores”. Uso no PO (mensagens com o termo: 7): alocador 7."
+  - en: "deallocate"
+    pt: "desalocar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Ownership is moved out, and nothing is deallocated."
+    exemplo_pt: "O ownership é movido para fora, e nada é desalocado."
+    evitar:
+      - '(?<![^\W_])deallocat\w*(?![^\W_])'
+    nota: "“Deallocated” → “desalocado”; “deallocation” → “desalocação”; “deallocating resources” → “desalocar recursos”. Par de allocate (alocar). “Liberar” continua valendo para a memória liberada (“memory is freed”, “nunca é liberada”), que é outra ideia. Uso no PO (mensagens com o termo: 7): desalocar 7."
+  - en: "resource"
+    pt: "recurso"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "You can provide an implementation for the `Drop` trait on any type, and that code can be used to release resources like files or network connections."
+    exemplo_pt: "Você pode fornecer uma implementação do trait `Drop` para qualquer tipo, e esse código pode ser usado para liberar recursos, como arquivos ou conexões de rede."
+    evitar: []
+    nota: "Recurso do sistema (arquivo, conexão de rede, memória): “recurso”. Não confundir com feature (“recurso da linguagem”, já no glossário): o contexto desfaz a ambiguidade. “Resource Acquisition Is Initialization” é o nome de um padrão de C++ e fica em inglês. Uso no PO (mensagens com o termo: 15): recurso 15."
+  - en: "leak"
+    pt: "vazar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "As a result, you don’t need to be careful about placing cleanup code everywhere in a program that an instance of a particular type is finished with—you still won’t leak resources!"
+    exemplo_pt: "Como consequência, você não precisa se preocupar em colocar código de limpeza em todos os pontos do programa em que uma instância de um determinado tipo deixa de ser usada — mesmo assim, você não vai vazar recursos!"
+    evitar: []
+    nota: "Substantivo “leak” → “vazamento”; “memory leak” já está no glossário (vazamento de memória). “Can leak memory” → “podem vazar memória”; “leak resources” → “vazar recursos”; “leaking out” (abstração) → “vaze para todos os lugares”. Uso no PO (mensagens com o termo: 10): vazar/vazamento 10."
+  - en: "owned"
+    pt: "dono dos próprios dados"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "In this case, the best fix would be to return an owned data type rather than a reference so that the calling function is then responsible for cleaning up the value."
+    exemplo_pt: "Nesse caso, a melhor correção seria retornar um tipo de dado que seja dono dos próprios dados, em vez de uma referência, para que a função que chama fique responsável por liberar o valor."
+    evitar:
+      - '(?<![^\W_])possuíd[oa]s?(?![^\W_])'
+    nota: "Adjetivo em “owned type/string/data”: “tipo que é dono dos próprios dados” (a forma mais usada), “mutável, dono dos próprios dados”; “owned values” → “valores que têm dono”; “owned by X” (passiva) → “pertencente a X” ou “pertence a X”; “the variable is the owner” → “a variável é a dona”. “Possuído” não aparece no PO. Uso no PO (mensagens com o termo: 16): dono dos próprios dados 5; tem/têm dono 2; pertencer a 5."
+  - en: "indirection"
+    pt: "indireção"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Due to this indirection, macro definitions are generally more difficult to read, understand, and maintain than function definitions."
+    exemplo_pt: "Por causa dessa indireção, as definições de macro geralmente são mais difíceis de ler, entender e manter do que as definições de função."
+    evitar: []
+    nota: "“Boxes provide only the indirection and heap allocation” → “os boxes fornecem apenas indireção e alocação no heap”; “due to this indirection” → “por causa dessa indireção”. Uso no PO (mensagens com o termo: 3): indireção 3."
+
+  # -------- Tipos, literais e dados
+  - en: "byte literal"
+    pt: "literal de byte"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "we search for the byte that represents the space by using the byte literal syntax."
+    exemplo_pt: "procuramos o byte que representa o espaço usando a sintaxe de literal de byte."
+    evitar:
+      - '(?<![^\W_])byte literals?(?![^\W_])'
+    nota: "Paralelo a “literal de string” (string literal). Plural “literais de byte”. Uso no PO (mensagens com o termo: 2): literal de byte 2."
+  - en: "alias"
+    pt: "alias"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Type Synonyms and Type Aliases"
+    exemplo_pt: "Sinônimos de tipo e aliases de tipo"
+    evitar: []
+    nota: "Fora de “type alias” (alias de tipo, já no glossário), “alias” fica em inglês, no masculino (“um alias para o tipo”, “o alias de linha de comando”). Plural “aliases”. “Apelido” só serve a outro sentido (o apelido “rustáceo”). Uso no PO (mensagens com o termo: 9): alias 9; apelido 0. Gênero no PO: masculino 11, feminino 0 (no 1, o 4, pelo 1, um 5)."
+  - en: "flag"
+    pt: "flag"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "When you’re compiling in release mode with the `--release` flag, Rust does _not_ include checks for integer overflow that cause panics."
+    exemplo_pt: "Ao compilar em modo release com a flag `--release`, o Rust _não_ inclui verificações de estouro de inteiro que causam pânicos."
+    evitar: []
+    nota: "Opção de linha de comando (`--release`, `--offline`): fica em inglês, no feminino (“a flag”, “com a flag”). Só duas mensagens do Capítulo 1 (a da instalação e a do `cargo new`) dizem “sinalizador”; as dos Capítulos 3, 9, 11 e 14 e as do Apêndice G usam “flag”: não repita “sinalizador”. “Feature flag” → “flag de recurso” (ver feature). Uso no PO (mensagens com o termo: 10): flag 8; sinalizador 2. Gênero no PO: masculino 0, feminino 8 (a 7, uma 1)."
+  - en: "union"
+    pt: "union"
+    manter_ingles: true
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The final action that works only with `unsafe` is accessing fields of a union."
+    exemplo_pt: "A última ação que funciona apenas com `unsafe` é acessar campos de uma union."
+    evitar: []
+    nota: "Tipo `union` do Rust: fica em inglês, no feminino (“uma union”, “campos de uma union”, “Define uma union”), para não confundir com “união” (conjunto). A palavra-chave `union` é código; o plural fica “`union`s”. Uso no PO (mensagens com o termo: 3): union 3; união 0. Gênero no PO: masculino 0, feminino 6 (as 1, da 1, uma 4)."
+  - en: "newline"
+    pt: "nova linha"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The browser signals the end of an HTTP request by sending two newline characters in a row, so to get one request from the stream, we take lines until we get a line that is the empty string."
+    exemplo_pt: "O navegador sinaliza o fim de uma requisição HTTP enviando dois caracteres de nova linha seguidos; por isso, para obter uma requisição do stream, pegamos linhas até obter uma linha que seja a string vazia."
+    evitar: []
+    nota: "“Newline character” → “caractere de nova linha”; “newline byte” → “byte de nova linha”. “Quebra de linha” aparece uma vez para o mesmo caractere (literal de string): prefira “nova linha”. Uso no PO (mensagens com o termo: 5): nova linha 4; quebra de linha 1."
+  - en: "growable"
+    pt: "expansível"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "The `String` type, which is provided by Rust’s standard library rather than coded into the core language, is a growable, mutable, owned, UTF-8 encoded string type."
+    exemplo_pt: "O tipo `String`, que é fornecido pela biblioteca padrão do Rust em vez de estar embutido na linguagem central, é um tipo de string expansível, mutável, dono dos próprios dados e codificado em UTF-8."
+    evitar: []
+    nota: "Uso dividido em quatro mensagens, cada uma com uma redação: “expansível” (a definição de `String`, Capítulo 8), “que pode crescer” (Capítulo 4), “possa crescer” (hash maps) e “de tamanho variável” (Capítulo 2). Este glossário escolhe a palavra única “expansível” para a definição de `String` (“string expansível, mutável, dono dos próprios dados”), e o mantenedor pode preferir outra. Uso no PO (mensagens com o termo: 4): expansível 1; que pode/possa crescer 2; de tamanho variável 1."
+  - en: "hashing function"
+    pt: "função de hash"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "By default, `HashMap` uses a hashing function called _SipHash_"
+    exemplo_pt: "Por padrão, o `HashMap` usa uma função de hash chamada _SipHash_"
+    evitar:
+      - '(?<![^\W_])hash(?:ing)? functions?(?![^\W_])'
+    nota: "Vale também para “hash function”; “hashing algorithm” → “algoritmo de hash”. O hasher (o tipo que implementa `BuildHasher`) fica em inglês, no masculino (“um _hasher_”, plural “hashers”). Título: “Hashing Functions” → “Funções de hash”. Uso no PO (mensagens com o termo: 4): função de hash 4."
+  - en: "hash table"
+    pt: "tabela hash"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Many programming languages support this kind of data structure, but they often use a different name, such as _hash_, _map_, _object_, _hash table_, _dictionary_, or _associative array_, just to name a few."
+    exemplo_pt: "Muitas linguagens de programação oferecem suporte a esse tipo de estrutura de dados, mas costumam usar outro nome, como _hash_, _map_, _objeto_, _tabela hash_, _dicionário_ ou _array associativo_, só para citar alguns."
+    evitar:
+      - '(?<![^\W_])tabelas? de hash(?![^\W_])'
+    nota: "Termo geral (outros nomes de hash map em outras linguagens). O PO usa “tabela hash” nas duas ocorrências, não “tabela de hash” (proposta de um tradutor); “função de hash” e “algoritmo de hash” levam “de”, porque ali hash é o determinante (ver hashing function). `HashMap` é código e “hash map” já está no glossário. Uso no PO (mensagens com o termo: 2): tabela hash 2; tabela de hash 0."
+  - en: "key-value pair"
+    pt: "par chave-valor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We can iterate over each key-value pair in a hash map in a similar manner as we do with vectors, using a `for` loop:"
+    exemplo_pt: "Podemos iterar sobre cada par chave-valor em um hash map de maneira semelhante à que usamos com vetores, usando um loop `for`:"
+    evitar:
+      - '(?<![^\W_])key-value pairs?(?![^\W_])'
+    nota: "Plural “pares chave-valor”, com hífen entre chave e valor, como no original. Uso no PO (mensagens com o termo: 3): par chave-valor 3."
+  - en: "getter"
+    pt: "getter"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Methods like this are called _getters_, and Rust does not implement them automatically for struct fields as some other languages do."
+    exemplo_pt: "Métodos assim são chamados de _getters_, e o Rust não os implementa automaticamente para os campos de struct, como algumas outras linguagens fazem."
+    evitar: []
+    nota: "Fica em inglês, no masculino (“o getter”, “os getters”), em itálico se o original estiver em itálico. Não há tradução consolidada. Uso no PO (mensagens com o termo: 2): getter 2. Gênero provisório (no PO nenhum artigo ou contração fica logo antes do termo): masculino."
+  - en: "underscore"
+    pt: "sublinhado"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "However, using the underscore by itself doesn’t ever bind to the value."
+    exemplo_pt: "No entanto, usar o sublinhado sozinho nunca vincula o valor."
+    evitar:
+      - '(?<![^\W_])underscores?(?![^\W_])'
+    nota: "O caractere `_`: “o sublinhado”; “o braço do sublinhado”; “sublinhados entre as palavras”. O caractere em si fica em code span. Uso no PO (mensagens com o termo: 16): sublinhado 16; underscore 0."
+
+  # -------- Expressões, controle de fluxo e erros
+  - en: "branch"
+    pt: "ramo"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Notice that it stays on the “happy path” in the main body of the function this way, without having significantly different control flow for two branches the way the `if let` did."
+    exemplo_pt: "Observe que, dessa forma, o código permanece no “caminho feliz” no corpo principal da função, sem ter um fluxo de controle significativamente diferente para dois ramos, como fazia o `if let`."
+    evitar: []
+    nota: "No fluxo de controle (“the top-level branches”, “two branches”): “ramo” (“os ramos de nível superior”, “dois ramos”); o verbo (“branch your code”) → “ramificar” (“ramifique seu código”); “branching construct” → “construção de ramificação”. Os braços de um `match` são “braços” (arm), não “ramos”. No sentido de Git (Apêndice G), “branch” fica em inglês, no masculino (“o branch beta”, “se ramifica a partir do branch principal”): ver main branch. Uso no PO (mensagens com o termo: 16): ramo (fluxo de controle) 4; ramificar/ramificação 3; branch (Git) 7."
+  - en: "happy path"
+    pt: "caminho feliz"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Staying on the “Happy Path” with `let...else`"
+    exemplo_pt: "Permanecendo no “caminho feliz” com `let...else`"
+    evitar:
+      - '(?<![^\W_])happy path(?![^\W_])'
+    nota: "Trecho do código em que nada deu errado; entre aspas na prosa, como no original. Uso no PO (mensagens com o termo: 2): caminho feliz 2."
+  - en: "syntax sugar"
+    pt: "açúcar sintático"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form known as a _trait bound_; it looks like this:"
+    exemplo_pt: "A sintaxe `impl Trait` funciona para casos simples, mas na verdade é um açúcar sintático para uma forma mais longa conhecida como _limite de trait_; ela fica assim:"
+    evitar:
+      - '(?<![^\W_])syntax(?:ic)? sugar(?![^\W_])'
+    nota: "Também “syntactic sugar”. Uso no PO (mensagens com o termo: 2): açúcar sintático 2."
+  - en: "unwrap"
+    pt: "unwrap"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Its `Output` type is a `Result`, so we also unwrap it after awaiting it."
+    exemplo_pt: "O tipo `Output` dele é um `Result`, então também fazemos o unwrap depois de aguardá-lo."
+    evitar: []
+    nota: "Quando o verbo inglês fica em inglês, é nominalizado no masculino: “fazemos o unwrap”, “o unwrap também poderia entrar em pânico”, como o glossário já faz com poll (“o polling”); a regra do cabeçalho pediria a forma em -ing (“unwrapping”), que o PO não usa. Uso dividido: “unwrap” em 2 mensagens, “desempacotar” (“desempacotamos o erro”) em 1 e “extrair” (“um valor que queiramos extrair”) em 1; o método `unwrap` e `unwrap_or_else` são código. Uso no PO (mensagens com o termo: 4): unwrap 2; desempacotar 1; extrair 1. Gênero no PO: masculino 2, feminino 0 (o 2)."
+  - en: "i/o"
+    pt: "E/S"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "This chapter recapped some of the major concepts you’ve learned so far and covered how to perform common I/O operations in Rust."
+    exemplo_pt: "Este capítulo recapitulou alguns dos principais conceitos que você aprendeu até agora e abordou como realizar operações comuns de E/S no Rust."
+    evitar:
+      - '(?<![^\W_])I/O(?![^\W_]|-bound)'
+    nota: "Sigla de “entrada/saída”: “I/O project” → “projeto de E/S”; “file or network I/O” → “E/S de arquivos ou de rede”; “I/O operations” → “operações de E/S”. Feminino (“a E/S”, por “a entrada/saída”); no PO nenhum artigo vem logo antes do termo. Em “I/O-bound” o termo fica em inglês (ver compute-bound). Uso no PO (mensagens com o termo: 15): E/S 13; I/O 2."
+  - en: "parse"
+    pt: "analisar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "It parses arguments and reads files."
+    exemplo_pt: "ela analisa argumentos e lê arquivos."
+    evitar:
+      - '(?<![^\W_])pars(?:e|es|ed|ing)(?![^\W_])'
+    nota: "“Parsing” → “análise” (“análise da linha de comando”, “análise dos argumentos”); “parses arguments” → “analisa argumentos”; “parsing a string” → “analisando uma string”. Quando o original fala do método `str::parse` convertendo texto em número, “converter” também vale (“parse the guess as an `i32`” → “converter o palpite para um `i32`”). O método `parse` é código. Uso no PO (mensagens com o termo: 22): analisar/análise 20; converter 4."
+  - en: "parser"
+    pt: "analisador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Extracting the Argument Parser"
+    exemplo_pt: "Extraindo o analisador de argumentos"
+    evitar: []
+    nota: "“Argument parser” → “analisador de argumentos”. Plural “analisadores”. Uso no PO (mensagens com o termo: 3): analisador 3; parser 1."
+  - en: "correctness"
+    pt: "corretude"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "_Correctness_ in our programs is the extent to which our code does what we intend it to do."
+    exemplo_pt: "_Corretude_ nos nossos programas é o grau em que nosso código faz o que pretendemos que ele faça."
+    evitar: []
+    nota: "“Corretude” (propriedade de o programa fazer o que se pretende), para não confundir com “correção” no sentido de consertar um erro (“fix” → “correção”). Uso no PO (mensagens com o termo: 2): corretude 1; correção 0."
+  - en: "override"
+    pt: "sobrescrever"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Then, as we implement the trait on a particular type, we can keep or override each method’s default behavior."
+    exemplo_pt: "Assim, ao implementar o trait em um tipo específico, podemos manter ou sobrescrever o comportamento padrão de cada método."
+    evitar:
+      - '(?<![^\W_])overrid\w*(?![^\W_])'
+    nota: "Uso dividido por objeto: métodos, implementações padrão e operadores → “sobrescrever” (7 mensagens); configurações, perfis e padrões do compilador → “substituir” (6 mensagens: “você pode substituir uma configuração padrão”, “a palavra-chave `move` substitui o padrão conservador do Rust”). “Overriding implementation” → “implementação que sobrescreve”. Uso no PO (mensagens com o termo: 13): sobrescrever 7; substituir 6."
+
+  # -------- Pacotes, módulos e Cargo
+  - en: "namespace"
+    pt: "espaço de nomes"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Note that the variants of the enum are namespaced under its identifier, and we use a double colon to separate the two."
+    exemplo_pt: "Observe que as variantes do enum ficam dentro de um espaço de nomes, sob o seu identificador, e usamos dois-pontos duplos para separar os dois."
+    evitar:
+      - '(?<![^\W_])namespaces?(?![^\W_])'
+    nota: "“To namespace X under Y” → “colocar X sob o espaço de nomes de Y”; “is namespaced by the struct” → “fica dentro de um espaço de nomes definido pelo struct”; “namespace path” → “caminho de espaço de nomes”. Plural “espaços de nomes”. Uso no PO (mensagens com o termo: 4): espaço de nomes 4; namespace 0."
+  - en: "module system"
+    pt: "sistema de módulos"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The first parts of the module system we’ll cover are packages and crates."
+    exemplo_pt: "As primeiras partes do sistema de módulos que vamos abordar são os pacotes e os crates."
+    evitar:
+      - '(?<![^\W_])module system(?![^\W_])'
+    nota: "Complementa module (módulo) e module tree (árvore de módulos). Uso no PO (mensagens com o termo: 7): sistema de módulos 7."
+  - en: "front of house"
+    pt: "salão"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "In the restaurant industry, some parts of a restaurant are referred to as front of house and others as back of house."
+    exemplo_pt: "No ramo de restaurantes, algumas partes de um restaurante são chamadas de salão e outras de bastidores."
+    evitar: []
+    nota: "Analogia do restaurante (Capítulo 7): “front of house” → “salão” (atendimento aos clientes). O módulo `front_of_house` e o crate `restaurant` são código e ficam como estão. Uso no PO (mensagens com o termo: 3): salão 3."
+  - en: "back of house"
+    pt: "bastidores"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "In the restaurant industry, some parts of a restaurant are referred to as front of house and others as back of house."
+    exemplo_pt: "No ramo de restaurantes, algumas partes de um restaurante são chamadas de salão e outras de bastidores."
+    evitar: []
+    nota: "Analogia do restaurante (Capítulo 7), par de front of house: “back of house” → “os bastidores” (cozinha); “back office” (administração) → “área administrativa”. Uso no PO (mensagens com o termo: 2): bastidores 2."
+  - en: "yank"
+    pt: "retirar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "In such situations, Cargo supports yanking a crate version."
+    exemplo_pt: "Nessas situações, o Cargo permite retirar uma versão do crate."
+    evitar:
+      - '(?<![^\W_])yank\w*(?![^\W_])'
+    nota: "Ação do Cargo: “yank a version” → “retirar uma versão”; substantivo “yank” → “retirada”. O subcomando `cargo yank` é código. Uso no PO (mensagens com o termo: 5): retirar/retirada 5."
+  - en: "deprecate"
+    pt: "descontinuar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Deprecating Versions from Crates.io"
+    exemplo_pt: "Descontinuando versões do crates.io"
+    evitar: []
+    nota: "Ação (“deprecating versions” → “descontinuando versões”); a marca “Deprecated” na tabela do Apêndice B aparece como “Obsoleto”. Uso no PO (mensagens com o termo: 2): descontinuar 1; obsoleto 1."
+  - en: "built-in"
+    pt: "embutido"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Rust has a few built-in number types; the `u32` seen here is an unsigned, 32-bit integer."
+    exemplo_pt: "O Rust tem alguns tipos numéricos embutidos; o `u32` visto aqui é um inteiro sem sinal de 32 bits."
+    evitar:
+      - '(?<![^\W_])built-in(?![^\W_])'
+    nota: "Uso dividido: “embutido” (“tipos numéricos embutidos”, “construção embutida na linguagem”, “macro embutida”) é o da maioria; “integrado” aparece em duas mensagens (“tipos inteiros integrados”, “ferramentas integradas do Cargo”) e “nativo” em “suporte nativo” (IDEs). Prefira “embutido”; “integrated development environment” é “ambiente de desenvolvimento integrado”, outro termo. Uso no PO (mensagens com o termo: 8): embutido 5; integrado 2; nativo 1."
+  - en: "feature gate"
+    pt: "gate de recurso"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "If the decision is to move forward, the feature gate is removed, and the feature is now considered stable!"
+    exemplo_pt: "Se a decisão for seguir em frente, o gate de recurso é removido, e o recurso passa a ser considerado estável!"
+    evitar: []
+    nota: "Coerente com “feature flag” → “flag de recurso” (nota de feature). A proposta de manter “feature gate” em inglês perdeu para o que o PO já usa. Uso no PO (mensagens com o termo: 2): gate de recurso 2; feature gate 0."
+  - en: "main branch"
+    pt: "branch principal"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "A new feature is added to Rust: a new commit lands on the main branch."
+    exemplo_pt: "Um novo recurso é adicionado ao Rust: um novo commit é incorporado ao branch principal."
+    evitar:
+      - '(?<![^\W_])(?:ramo|ramos)\s+principal(?![^\W_])'
+    nota: "Sentido de Git (Apêndice G, trem de lançamentos): “branch” fica em inglês, no masculino, e só “main” se traduz: “o branch principal”. O nome do canal fica em code span (“o branch `beta`”); “branch off” (verbo) → “se ramificar a partir de”. Uso no PO (mensagens com o termo: 6): branch principal 6."
+  - en: "raw identifier"
+    pt: "identificador bruto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "You use a raw identifier by prefixing a keyword with `r#`."
+    exemplo_pt: "Você usa um identificador bruto adicionando o prefixo `r#` a uma palavra-chave."
+    evitar: []
+    nota: "“Raw identifiers” → “identificadores brutos”; “raw identifier syntax” → “sintaxe de identificador bruto”. Par de raw pointer (ponteiro bruto). O prefixo `r#` é código. Uso no PO (mensagens com o termo: 5): identificador bruto 5."
+  - en: "raw borrow operator"
+    pt: "operador de empréstimo bruto"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ve created raw pointers by using the raw borrow operators:"
+    exemplo_pt: "Criamos ponteiros brutos usando os operadores de empréstimo bruto:"
+    evitar: []
+    nota: "Par de raw pointer (ponteiro bruto) e borrowing (empréstimo): “operadores de empréstimo bruto” (`&raw const`, `&raw mut`). Uso no PO (mensagens com o termo: 4): operador de empréstimo bruto 4."
+
+  # -------- Testes, ferramentas e projetos (jogo de adivinhação, minigrep, camisetas)
+  - en: "test harness"
+    pt: "executor de testes"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The test harness will make sure that the failure message contains the provided text."
+    exemplo_pt: "O executor de testes vai garantir que a mensagem de falha contenha o texto fornecido."
+    evitar:
+      - '(?<![^\W_])test harness(?![^\W_])'
+    nota: "Mesmo termo de “test runner” (executor de testes, ver a nota de test). Uso no PO (mensagens com o termo: 1): executor de testes 1."
+  - en: "doc test"
+    pt: "teste de documentação"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "The three sections of output include the unit tests, the integration test, and the doc tests."
+    exemplo_pt: "As três seções da saída incluem os testes unitários, o teste de integração e os testes de documentação."
+    evitar:
+      - '(?<![^\W_])doc tests?(?![^\W_])'
+    nota: "Forma curta de documentation test (teste de documentação). Plural “testes de documentação”. Uso no PO (mensagens com o termo: 2): teste de documentação 2."
+  - en: "benchmark"
+    pt: "benchmark"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Benchmark tests are, as of this writing, only available in nightly Rust."
+    exemplo_pt: "Os testes de benchmark são, no momento em que escrevemos este texto, disponíveis apenas no Rust nightly."
+    evitar: []
+    nota: "Fica em inglês, no masculino (“um benchmark”, “o código do benchmark”, “benchmarks”), como no uso corrente em pt-BR. “Benchmark tests” → “testes de benchmark”. Uso no PO (mensagens com o termo: 5): benchmark 4; teste de desempenho 0. Gênero no PO: masculino 4, feminino 0 (do 2, um 2)."
+  - en: "guess"
+    pt: "palpite"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "To start, we’ll allow the player to input a guess."
+    exemplo_pt: "Para começar, vamos permitir que o jogador digite um palpite."
+    evitar: []
+    nota: "Substantivo do jogo de adivinhação (Capítulo 2): “guess” → “palpite”; “guessing game” → “jogo de adivinhação” (já no glossário). O verbo “to guess” é “adivinhar” (“adivinhar o número”); em “the user guessed 50” duas mensagens dizem “chutou”. Uso no PO (mensagens com o termo: 27): palpite 20."
+  - en: "query"
+    pt: "consulta"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Check whether the line contains our query string."
+    exemplo_pt: "Verificar se a linha contém nossa string de consulta."
+    evitar:
+      - '(?<![^\W_])termos? de busca(?![^\W_])'
+    nota: "Texto procurado no projeto minigrep (Capítulo 12): “query” → “consulta”; “query string” → “string de consulta”. Não é “termo de busca” (variante proposta, ausente do PO). Uso no PO (mensagens com o termo: 17): consulta 17; busca 4; query 1."
+  - en: "search"
+    pt: "buscar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Searching Each Line for the Query"
+    exemplo_pt: "Buscando a consulta em cada linha"
+    evitar: []
+    nota: "No projeto minigrep (Capítulo 12), “search” é “buscar” (substantivo “busca”): “busca sem distinção de maiúsculas e minúsculas”. “Pesquisar/pesquisa” aparece em 9 mensagens de outros trechos (crates.io, ripgrep, métodos de string, a internet): não é erro, mas no minigrep prefira “buscar”. A função `search` é código. Uso no PO (mensagens com o termo: 35): buscar/busca 23; pesquisar/pesquisa 9."
+  - en: "case-insensitive"
+    pt: "sem distinção de maiúsculas e minúsculas"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "Writing a Failing Test for Case-Insensitive Search"
+    exemplo_pt: "Escrevendo um teste que falha para a busca sem distinção de maiúsculas e minúsculas"
+    evitar: []
+    nota: "“A case-insensitive search” → “uma busca sem distinção de maiúsculas e minúsculas”. A variável de ambiente `IGNORE_CASE` e a função `search_case_insensitive` são código. Uso no PO (mensagens com o termo: 8): sem distinção de maiúsculas e minúsculas 8; case-insensitive 1."
+  - en: "case-sensitive"
+    pt: "sensível a maiúsculas e minúsculas"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "First, we’ll add a configuration option to the `Config` struct to switch between case-sensitive and case-insensitive search."
+    exemplo_pt: "Primeiro, vamos adicionar uma opção de configuração ao struct `Config`, para alternar entre a busca sensível a maiúsculas e minúsculas e a busca sem distinção de maiúsculas e minúsculas."
+    evitar:
+      - '(?<![^\W_])case-sensitive(?![^\W_])'
+    nota: "Par de case-insensitive. “Busca sensível a maiúsculas e minúsculas”. Uso no PO (mensagens com o termo: 4): sensível a maiúsculas e minúsculas 4; case-sensitive 0."
+  - en: "concern"
+    pt: "responsabilidade"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Separating Concerns in Binary Projects"
+    exemplo_pt: "Separando responsabilidades em projetos binários"
+    evitar: []
+    nota: "Em “separation of concerns”: “separação de responsabilidades”; “separating concerns” → “separando responsabilidades”. Fora desse conceito (“a high degree of concern about”), “preocupação”. Uso no PO (mensagens com o termo: 6): responsabilidade 5; preocupação 1."
+  - en: "compiler-driven development"
+    pt: "desenvolvimento orientado pelo compilador"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Building `ThreadPool` Using Compiler-Driven Development"
+    exemplo_pt: "Construindo o `ThreadPool` com desenvolvimento orientado pelo compilador"
+    evitar: []
+    nota: "Paralelo a test-driven development (desenvolvimento orientado a testes). Uso no PO (mensagens com o termo: 2): orientado pelo compilador 2."
+  - en: "append"
+    pt: "acrescentar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "Appending with `push_str` or `push`"
+    exemplo_pt: "Acrescentando com `push_str` ou `push`"
+    evitar: []
+    nota: "“Appending with `push_str` or `push`” → “Acrescentando com `push_str` ou `push`”. Os métodos `append` e `push_str` são código. “Anexar” aparece em uma mensagem e não se repete. Uso no PO (mensagens com o termo: 7): acrescentar 6; anexar 1; append 0."
+  - en: "team"
+    pt: "equipe"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "The Rust team has included this tool with the standard Rust distribution"
+    exemplo_pt: "A equipe Rust incluiu essa ferramenta com a distribuição padrão do Rust"
+    evitar: []
+    nota: "Grupo de pessoas (“a equipe Rust”, “equipes de desenvolvedores”): “equipe” (14 mensagens). “Time” só no exemplo de placar do Capítulo 8, em que são equipes de jogo (“o time Blue”, “o time Yellow”; 8 mensagens): ali o nome do jogo pede “time”, mas fora dele prefira “equipe”. Uso no PO (mensagens com o termo: 22): equipe 14; time 8."
+
+  # -------- Concorrência, async e servidor web
+  - en: "sender"
+    pt: "transmissor"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Now we can send messages from the sender to the receiver."
+    exemplo_pt: "Agora podemos enviar mensagens do transmissor para o receptor."
+    evitar:
+      - '(?<![^\W_])(?:remetentes?|emissor(?:es)?)(?![^\W_])'
+    nota: "Mesmo termo de transmitter (transmissor); “sender side” → “lado transmissor”. `Sender` e `tx` são código. “Remetente” e “emissor” (propostas de outros tradutores) não aparecem no PO. Uso no PO (mensagens com o termo: 10): transmissor 10; remetente 0; emissor 0."
+  - en: "throughput"
+    pt: "vazão"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Improving Throughput with a Thread Pool"
+    exemplo_pt: "Melhorando a vazão com um pool de threads"
+    evitar: []
+    nota: "“High-throughput” → “de alta vazão”. Uso no PO (mensagens com o termo: 6): vazão 6; throughput 1."
+  - en: "timeout"
+    pt: "tempo limite"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "If we run our code, it will print the failure mode after the timeout:"
+    exemplo_pt: "Se executarmos o código, ele vai imprimir o modo de falha depois do tempo limite:"
+    evitar:
+      - '(?<![^\W_])timeouts?(?![^\W_])'
+    nota: "Plural “tempos limite”. A função `timeout` é código. Uso no PO (mensagens com o termo: 4): tempo limite 4; timeout 0."
+  - en: "shut down"
+    pt: "encerrar"
+    manter_ingles: false
+    classe: verbo
+    genero: null
+    status: provisorio
+    exemplo_en: "You wouldn’t want a real-world web server to shut down after serving only two requests."
+    exemplo_pt: "Você não gostaria que um servidor web do mundo real fosse encerrado depois de atender apenas duas requisições."
+    evitar: []
+    nota: "“All spawned threads are shut down” → “todas as threads criadas são encerradas”; “shutdown” (substantivo) → “encerramento”, como em graceful shutdown (encerramento gracioso). Não é “desligar/desligamento”, que ficam para desligar um aparelho. Uso no PO (mensagens com o termo: 13): encerrar/encerramento 13."
+  - en: "promise"
+    pt: "promessa"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "It is still your responsibility to make sure that promise is kept!"
+    exemplo_pt: "Continua sendo sua responsabilidade garantir que essa promessa seja cumprida!"
+    evitar:
+      - '(?<![^\W_])promises?(?![^\W_])'
+    nota: "Promessa de outras linguagens, comparada às futures do Rust; “promessa”, não “promise”. Uso no PO (mensagens com o termo: 4): promessa 3; promise 0."
+  - en: "await point"
+    pt: "ponto de await"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "That means if you do a bunch of work in an async block without an await point, that future will block any other futures from making progress."
+    exemplo_pt: "Isso significa que, se você fizer um monte de trabalho em um bloco assíncrono sem um ponto de await, essa future vai bloquear o avanço de qualquer outra future."
+    evitar:
+      - '(?<![^\W_])(?:pontos? de aguardo|await points?)(?![^\W_])'
+    nota: "Cada lugar em que o código usa a palavra-chave `await`: “pontos de await” (plural). Não é “ponto de aguardo” (proposta de um tradutor, ausente do PO). `await` e “async” já estão no glossário. Uso no PO (mensagens com o termo: 11): ponto de await 11."
+  - en: "fair"
+    pt: "justo"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "That is because the `trpl::join` function is _fair_, meaning it checks each future equally often, alternating between them, and never lets one race ahead if the other is ready."
+    exemplo_pt: "Isso acontece porque a função `trpl::join` é _justa_, ou seja, ela verifica cada future com a mesma frequência, alternando entre elas, e nunca deixa uma avançar à frente da outra se esta estiver pronta."
+    evitar: []
+    nota: "Em futures e runtimes: “fair” → “justo(a)” (“a função é justa”, “a implementação não é justa”); “fairness” → “justiça” (“garantir justiça”). “A fair bit of” (bastante) é expressão comum e não é o termo. Uso no PO (mensagens com o termo: 2): justo/justa/justiça 2."
+  - en: "embedded"
+    pt: "embarcado"
+    manter_ingles: false
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "In some Rust-based embedded operating systems, this is the _only_ kind of multitasking!"
+    exemplo_pt: "Em alguns sistemas operacionais embarcados desenvolvidos com o Rust, este é o _único_ tipo de multitarefa!"
+    evitar: []
+    nota: "Sistemas e dispositivos embarcados (“sistemas operacionais embarcados”). No sentido de “contido em” (“embedded in the language”), “embutido” ou “incorporado”. Uso no PO (mensagens com o termo: 6): embarcado 4; embutido/incorporado 2."
+  - en: "compute-bound"
+    pt: "compute-bound"
+    manter_ingles: true
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "The video export is an example of a _CPU-bound_ or _compute-bound_ operation."
+    exemplo_pt: "A exportação do vídeo é um exemplo de operação _CPU-bound_ ou _compute-bound_."
+    evitar: []
+    nota: "Fica em inglês, em itálico se o original estiver em itálico (“operação _CPU-bound_ ou _compute-bound_”, “tarefas compute-bound”). Explique o sentido na primeira ocorrência, como o original faz. Par de cpu-bound e de “I/O-bound” (ver i/o). Uso no PO (mensagens com o termo: 6): compute-bound 4; CPU-bound 3."
+  - en: "cpu-bound"
+    pt: "CPU-bound"
+    manter_ingles: true
+    classe: adjetivo
+    genero: null
+    status: provisorio
+    exemplo_en: "The video export is an example of a _CPU-bound_ or _compute-bound_ operation."
+    exemplo_pt: "A exportação do vídeo é um exemplo de operação _CPU-bound_ ou _compute-bound_."
+    evitar: []
+    nota: "Mesmo conceito de compute-bound: fica em inglês, com a sigla CPU em maiúsculas (“trabalho CPU-bound”). “I/O-bound” também fica em inglês (ver i/o). Uso no PO (mensagens com o termo: 3): CPU-bound 3; compute-bound 1."
+
+  # -------- Orientação a objetos e padrões
+  - en: "oop"
+    pt: "POO"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "Object-oriented programming (OOP) is a way of modeling programs."
+    exemplo_pt: "A programação orientada a objetos (POO) é uma forma de modelar programas."
+    evitar:
+      - '(?<![^\W_])OOP(?![^\W_])'
+    nota: "Sigla de “programação orientada a objetos” (“a POO”). `ch18-00-oop.html` e outros nomes de arquivo são código e ficam como estão. Uso no PO (mensagens com o termo: 4): POO 4."
+  - en: "duck typing"
+    pt: "duck typing"
+    manter_ingles: true
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "to write code similar to code using duck typing"
+    exemplo_pt: "para escrever código semelhante ao que usa duck typing"
+    evitar: []
+    nota: "Fica em inglês, termo técnico corrente; no PO não há artigo antes dele (“o conceito de _duck typing_”, “código semelhante ao que usa duck typing”). Gênero provisório: masculino (“o duck typing”), como se usa no pt-BR; o mantenedor pode preferir o feminino (“a duck typing”, por “a tipagem”). Uso no PO (mensagens com o termo: 2): duck typing 2. Gênero provisório (no PO nenhum artigo ou contração fica logo antes do termo): masculino."
+  - en: "static dispatch"
+    pt: "despacho estático"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "This lookup incurs a runtime cost that doesn’t occur with static dispatch."
+    exemplo_pt: "Essa busca tem um custo em tempo de execução que não ocorre com o despacho estático."
+    evitar:
+      - '(?<![^\W_])static dispatch(?![^\W_])'
+    nota: "Par de dynamic dispatch (despacho dinâmico). Uso no PO (mensagens com o termo: 2): despacho estático 2."
+  - en: "state pattern"
+    pt: "padrão de estado"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "Evaluating the State Pattern"
+    exemplo_pt: "Avaliando o padrão de estado"
+    evitar:
+      - '(?<![^\W_])state pattern(?![^\W_])'
+    nota: "Padrão de projeto do Capítulo 18 (design pattern → padrão de projeto). “State” sozinho → “estado”; “state object” → “objeto de estado”; “state machine” já está no glossário. “Draft” → “rascunho”; “pending review” → “revisão pendente”. Uso no PO (mensagens com o termo: 16): padrão de estado 16."
+  - en: "workflow"
+    pt: "fluxo de trabalho"
+    manter_ingles: false
+    classe: substantivo
+    genero: m
+    status: provisorio
+    exemplo_en: "We’ve implemented the state pattern with the rules of the blog post workflow."
+    exemplo_pt: "Implementamos o padrão de estado com as regras do fluxo de trabalho da postagem de blog."
+    evitar:
+      - '(?<![^\W_])workflows?(?![^\W_])'
+    nota: "Plural “fluxos de trabalho”. No Capítulo 18, “blog post workflow” → “fluxo de trabalho de postagem de blog”. Uso no PO (mensagens com o termo: 9): fluxo de trabalho 9; workflow 0."
+  - en: "post"
+    pt: "postagem"
+    manter_ingles: false
+    classe: substantivo
+    genero: f
+    status: provisorio
+    exemplo_en: "A blog post starts as an empty draft."
+    exemplo_pt: "Uma postagem de blog começa como um rascunho vazio."
+    evitar: []
+    nota: "Exemplo de blog do Capítulo 18: “blog post” → “postagem de blog”; “draft post” → “postagem de rascunho” (duas mensagens dizem “postagem em rascunho”); “published post” → “postagem publicada”. O struct `Post` é código. Uso no PO (mensagens com o termo: 41): postagem 40; post 0."
