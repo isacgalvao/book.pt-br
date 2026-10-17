@@ -18996,7 +18996,7 @@ msgstr "Os campos `width`, `height` e `label` de `Button` serão diferentes dos 
 
 #: src/ch18-02-trait-objects.md
 msgid "If someone using our library decides to implement a `SelectBox` struct that has `width`, `height`, and `options` fields, they would implement the `Draw` trait on the `SelectBox` type as well, as shown in Listing 18-8."
-msgstr "Se alguém que usa a nossa biblioteca decidir implementar um struct `SelectBox` que tem os campos `width`, `height` e `options`, essa pessoa também implementaria o trait `Draw` no tipo `SelectBox`, como mostrado na Listagem 18-8."
+msgstr "Se alguém que usa a nossa biblioteca decidir implementar um struct `SelectBox` que tem os campos `width`, `height` e `options`, essa pessoa também implementará o trait `Draw` no tipo `SelectBox`, como mostrado na Listagem 18-8."
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-8\" file-name=\"src/main.rs\" caption=\"Another crate using `gui` and implementing the `Draw` trait on a `SelectBox` struct\">\n"
