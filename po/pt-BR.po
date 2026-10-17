@@ -4132,7 +4132,7 @@ msgstr "<Listing number=\"4-2\" caption=\"Atribuindo o valor inteiro da variáve
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We can probably guess what this is doing: “Bind the value `5` to `x`; then, make a copy of the value in `x` and bind it to `y`.” We now have two variables, `x` and `y`, and both equal `5`. This is indeed what is happening, because integers are simple values with a known, fixed size, and these two `5` values are pushed onto the stack."
-msgstr "Provavelmente podemos adivinhar o que isso faz: “Vincular o valor `5` a `x`; depois, fazer uma cópia do valor em `x` e vincular essa cópia a `y`.” Agora temos duas variáveis, `x` e `y`, e ambas são iguais a `5`. Isso é exatamente o que está acontecendo, porque inteiros são valores simples, de tamanho conhecido e fixo, e esses dois valores `5` são colocados na pilha."
+msgstr "Provavelmente podemos adivinhar o que isso faz: “Vincular o valor `5` a `x`; depois, fazer uma cópia do valor em `x` e vincular essa cópia a `y`.” Agora temos duas variáveis, `x` e `y`, e ambas são iguais a `5`. Isso é exatamente o que está acontecendo, porque inteiros são valores simples, de tamanho conhecido e fixo, e esses dois valores `5` são empilhados na pilha."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Now let’s look at the `String` version:"
@@ -4689,11 +4689,11 @@ msgstr "Podemos corrigir o código da Listagem 4-6 para nos permitir modificar u
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "First, we change `s` to be `mut`. Then, we create a mutable reference with `&mut s` where we call the `change` function and update the function signature to accept a mutable reference with `some_string: &mut String`. This makes it very clear that the `change` function will mutate the value it borrows."
-msgstr "Primeiro, mudamos `s` para `mut`. Depois, criamos uma referência mutável com `&mut s`, em que chamamos a função `change` e atualizamos a assinatura da função para aceitar uma referência mutável com `some_string: &mut String`. Isso deixa muito claro que a função `change` vai alterar o valor que ela pega emprestado."
+msgstr "Primeiro, mudamos `s` para `mut`. Depois, criamos uma referência mutável com `&mut s` na chamada da função `change` e atualizamos a assinatura da função para aceitar uma referência mutável com `some_string: &mut String`. Isso deixa muito claro que a função `change` vai alterar o valor que ela pega emprestado."
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "Mutable references have one big restriction: If you have a mutable reference to a value, you can have no other references to that value. This code that attempts to create two mutable references to `s` will fail:"
-msgstr "As referências mutáveis têm uma grande restrição: se você tiver uma referência mutável a um valor, não pode ter nenhuma outra referência a esse valor. Este código, que tenta criar duas referências mutáveis para `s`, vai falhar:"
+msgstr "As referências mutáveis têm uma grande restrição: se você tiver uma referência mutável a um valor, não pode ter nenhuma outra referência a esse valor. Este código, que tenta criar duas referências mutáveis a `s`, vai falhar:"
 
 #: src/ch04-02-references-and-borrowing.md
 msgid "\"{r1}, {r2}\""
@@ -4941,7 +4941,7 @@ msgstr "A função `first_word` tem um parâmetro do tipo `&String`. Não precis
 
 #: src/ch04-03-slices.md
 msgid "<Listing number=\"4-7\" file-name=\"src/main.rs\" caption=\"The `first_word` function that returns a byte index value into the `String` parameter\">\n"
-msgstr "<Listing number=\"4-7\" file-name=\"src/main.rs\" caption=\"A função `first_word` que retorna um valor de índice de byte para o parâmetro `String`\">\n"
+msgstr "<Listing number=\"4-7\" file-name=\"src/main.rs\" caption=\"A função `first_word` que retorna um valor de índice de byte no parâmetro `String`\">\n"
 
 #: src/ch04-03-slices.md src/ch10-03-lifetime-syntax.md
 msgid "b' '"
@@ -5115,7 +5115,7 @@ msgstr ""
 
 #: src/ch04-03-slices.md
 msgid "Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because `clear` needs to truncate the `String`, it needs to get a mutable reference. The `println!` after the call to `clear` uses the reference in `word`, so the immutable reference must still be active at that point. Rust disallows the mutable reference in `clear` and the immutable reference in `word` from existing at the same time, and compilation fails. Not only has Rust made our API easier to use, but it has also eliminated an entire class of errors at compile time!"
-msgstr "Lembre-se das regras de empréstimo: se temos uma referência imutável a algo, não podemos também obter uma referência mutável. Como `clear` precisa truncar a `String`, ele precisa obter uma referência mutável. O `println!` depois da chamada a `clear` usa a referência em `word`, então a referência imutável precisa estar ativa nesse ponto. O Rust não permite que a referência mutável em `clear` e a referência imutável em `word` existam ao mesmo tempo, e a compilação falha. Não só o Rust tornou nossa API mais fácil de usar, como também eliminou uma classe inteira de erros em tempo de compilação!"
+msgstr "Lembre-se das regras de empréstimo: se temos uma referência imutável a algo, não podemos também obter uma referência mutável. Como `clear` precisa truncar a `String`, ele precisa obter uma referência mutável. O `println!` depois da chamada a `clear` usa a referência em `word`, então a referência imutável ainda precisa estar ativa nesse ponto. O Rust não permite que a referência mutável em `clear` e a referência imutável em `word` existam ao mesmo tempo, e a compilação falha. Não só o Rust tornou nossa API mais fácil de usar, como também eliminou uma classe inteira de erros em tempo de compilação!"
 
 #: src/ch04-03-slices.md
 msgid "<a id=\"string-literals-are-slices\"></a>"
