@@ -6,11 +6,13 @@ conversa nem do container. A especificação técnica está em [`CONTRATO.md`](C
 ## Onde estamos
 
 - **Branch:** `spike/migracao-po` (nada vai para a `main` sem o mantenedor).
-- **Fase atual:** Onda 2 (ch11 a ch21, apêndices e sumário) em tradução; workflows do Actions em verificação.
-- **Base do upstream:** congelada em `1500248d` (Rust 1.98) até o fim da Onda 1.
-- **Último checkpoint concluído:** integração ponta a ponta numa cópia do PO (autoport, slugs, build pt,
-  check completo, status) e, no PO real, autoport das 6 fuzzy de versão e âncoras dos 52 títulos
-  traduzidos (`26d3d3aa`): 339 traduzidas, 3 fuzzy; 0 âncoras quebradas no build pt.
+- **Fase atual:** spike concluído. Livro 100% traduzido (rascunho de IA validado por IA); go/no-go em
+  [`SPIKE-PO.md`](SPIKE-PO.md) (recomendação: GO). Aguardando as decisões do mantenedor
+  ([`DECISOES.md`](DECISOES.md)) e a revisão humana.
+- **Base do upstream:** `1500248d` (Rust 1.98); o upstream não avançou desde então.
+- **Último checkpoint concluído (17/10):** check completo no PO real com build EN e pt: 0 erros,
+  0 âncoras quebradas, slugs idempotentes; validação final por amostragem (Opus) com notas 8,8, 8,8
+  e 9,2 e 27 correções aplicadas; `ptbr-ci` e o CI do upstream verdes no GitHub.
 
 ## Histórico curto
 
@@ -20,6 +22,11 @@ conversa nem do container. A especificação técnica está em [`CONTRATO.md`](C
   9 itens já aprovados, que existiam só no disco.
 - 15/10, tarde: retomada numa sessão nova, a partir do documento de passagem. Esta tabela é a lista
   do que refazer.
+- 15/10 e 16/10: infraestrutura refeita e verificada item a item; Onda 0 (normalização da
+  tradução de março), Onda 1 (ch03 a ch10) e Onda 2 (ch11 a ch21, apêndices e sumário). O limite de
+  uso da conta interrompeu o trabalho 4 vezes; a cada vez os workflows foram retomados do ponto em
+  que pararam, sem perda, porque tudo era commitado assim que ficava pronto.
+- 17/10: validação final por amostragem, termos propostos no glossário, `SPIKE-PO.md`.
 
 ## Entregáveis
 
@@ -31,7 +38,7 @@ Legenda: ✅ feito e verificado · 🟡 rascunho no GitHub · ⏳ em andamento �
 | D02 | Módulo base (+ `sem_texto`, `SEMPRE_VAZIAS`) | `i18n/tools/po_util.py` | ✅ (3 defeitos antigos corrigidos na revisão) |
 | D03 | Normalização | `i18n/tools/normaliza_po.py` | ✅ |
 | D04 | `.gitignore` de caches | `i18n/.gitignore` | ✅ |
-| D05 | Glossário v2 | `i18n/glossario.yml` | ✅ (270 termos; checagem cruzada final em andamento) |
+| D05 | Glossário v2 | `i18n/glossario.yml` | ✅ 276 termos + 69 propostos pelos tradutores (provisórios) |
 | D06 | Guia de estilo | `i18n/GUIA-DE-ESTILO.md` | ✅ |
 | D07 | Erros recorrentes | `i18n/erros-recorrentes.yml` | ✅ |
 | D08 | Entrada única dos agentes | `AGENTS.md` | ✅ |
@@ -54,20 +61,21 @@ Legenda: ✅ feito e verificado · 🟡 rascunho no GitHub · ⏳ em andamento �
 | D32 | Delta | `i18n/tools/delta.py` | ✅ |
 | D33 | Tradutor de delta | `i18n/tools/traduz_delta.py` | ✅ (testado só com `--simular`: não há chave de API) |
 | D34 | Status | `i18n/tools/status.py` | ✅ |
-| D35 | CI | `.github/workflows/ptbr-ci.yml` | ⏳ rascunho em verificação |
-| D36 | Deploy | `.github/workflows/ptbr-deploy.yml` | ⏳ rascunho em verificação |
-| D37 | Sync | `.github/workflows/ptbr-sync.yml` | ⏳ em escrita |
+| D35 | CI | `.github/workflows/ptbr-ci.yml` | ✅ verde no GitHub |
+| D36 | Deploy | `.github/workflows/ptbr-deploy.yml` | ✅ (precisa do Pages habilitado) |
+| D37 | Sync | `.github/workflows/ptbr-sync.yml` | ✅ (precisa do GitHub App, segredos e Issues) |
 | D38 | Integração ponta a ponta | — | ✅ (numa cópia do PO; check acha os defeitos conhecidos da tradução antiga) |
 | D39 | Onda 0 (normalizar os 10 arquivos já traduzidos) | `po/pt-BR.po` | ✅ title-page, foreword, ch00 a ch02 normalizados; check sem erros |
-| D40 | Ondas 1 a N (tradução por capítulo) | `po/pt-BR.po` | ⏳ Onda 1 (ch03 a ch10) ✅; Onda 2 em andamento |
-| D42 | Fechamento (go/no-go) | `i18n/SPIKE-PO.md` | ⬜ |
+| D40 | Ondas 1 a N (tradução por capítulo) | `po/pt-BR.po` | ✅ 4.350 de 4.350 mensagens; validação final 8,8 / 8,8 / 9,2 |
+| D42 | Fechamento (go/no-go) | `i18n/SPIKE-PO.md` | ✅ GO |
 | D46 | Este diário | `i18n/PROGRESSO.md` | ✅ |
 
 ## Tradução por capítulo
 
-Saída de `i18n/tools/status.py` no checkpoint da Onda 1 (16/10). Cada capítulo traduzido passou por
-revisão por lote (Sonnet), correção (Haiku), validação do capítulo inteiro (Sonnet), `slugs.py` e
-`check.py --capitulo` sem erros antes de entrar no PO. "rascunho IA" = ainda sem revisão humana.
+Saída de `i18n/tools/status.py` no fechamento (17/10). Cada capítulo passou por revisão por lote
+(Sonnet), correção (Haiku), validação do capítulo inteiro (Sonnet), `slugs.py` e `check.py --capitulo`
+sem erros antes de entrar no PO; no fim, validação por amostragem (Opus). "rascunho IA" = ainda sem
+revisão humana.
 
 | capítulo | total | traduzidas | fuzzy | faltando | % | status |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
@@ -84,26 +92,28 @@ revisão por lote (Sonnet), correção (Haiku), validação do capítulo inteiro
 | ch08 | 175 | 175 | 0 | 0 | 100,0% | rascunho IA |
 | ch09 | 127 | 127 | 0 | 0 | 100,0% | rascunho IA |
 | ch10 | 232 | 232 | 0 | 0 | 100,0% | rascunho IA |
-| ch11 | 169 | 0 | 0 | 169 | 0,0% | inglês |
-| ch12 | 229 | 0 | 0 | 229 | 0,0% | inglês |
-| ch13 | 151 | 0 | 0 | 151 | 0,0% | inglês |
-| ch14 | 141 | 0 | 0 | 141 | 0,0% | inglês |
-| ch15 | 274 | 0 | 0 | 274 | 0,0% | inglês |
-| ch16 | 148 | 0 | 0 | 148 | 0,0% | inglês |
-| ch17 | 297 | 0 | 0 | 297 | 0,0% | inglês |
-| ch18 | 154 | 0 | 0 | 154 | 0,0% | inglês |
-| ch19 | 182 | 0 | 0 | 182 | 0,0% | inglês |
-| ch20 | 335 | 0 | 0 | 335 | 0,0% | inglês |
-| ch21 | 240 | 0 | 0 | 240 | 0,0% | inglês |
-| appendix | 324 | 0 | 0 | 324 | 0,0% | inglês |
-| summary | 16 | 0 | 0 | 16 | 0,0% | inglês |
-| total | 4350 | 1690 | 0 | 2660 | 38,8% | — |
+| ch11 | 169 | 169 | 0 | 0 | 100,0% | rascunho IA |
+| ch12 | 229 | 229 | 0 | 0 | 100,0% | rascunho IA |
+| ch13 | 151 | 151 | 0 | 0 | 100,0% | rascunho IA |
+| ch14 | 141 | 141 | 0 | 0 | 100,0% | rascunho IA |
+| ch15 | 274 | 274 | 0 | 0 | 100,0% | rascunho IA |
+| ch16 | 148 | 148 | 0 | 0 | 100,0% | rascunho IA |
+| ch17 | 297 | 297 | 0 | 0 | 100,0% | rascunho IA |
+| ch18 | 154 | 154 | 0 | 0 | 100,0% | rascunho IA |
+| ch19 | 182 | 182 | 0 | 0 | 100,0% | rascunho IA |
+| ch20 | 335 | 335 | 0 | 0 | 100,0% | rascunho IA |
+| ch21 | 240 | 240 | 0 | 0 | 100,0% | rascunho IA |
+| appendix | 324 | 324 | 0 | 0 | 100,0% | rascunho IA |
+| summary | 16 | 16 | 0 | 0 | 100,0% | rascunho IA |
+| total | 4350 | 4350 | 0 | 0 | 100,0% | — |
 
 ## Pendências abertas
 
 - **Termos provisórios** (decididos pelo assistente, aguardando o mantenedor): "ownership" em
-  inglês; tupla, vetor, vinculação, expressão idiomática, depuração; nightly/beta/stable em inglês.
+  inglês; tupla, vetor, vinculação, expressão idiomática, depuração; nightly/beta/stable em inglês;
+  os 69 termos propostos pelos tradutores no fim do glossário.
+- **Estilo a decidir:** travessão com ou sem espaços; "async" como substantivo solto.
 - **Decisões do mantenedor antes da `main`:** orçamento e critério de parada; uso do texto do dn32;
   onde o projeto mora; publicar rascunho de IA ou só revisado; profundidade da revisão humana;
   credenciais do sync; configurações do GitHub (Pages, Issues, labels, ruleset); capítulo piloto.
-- **Entradas rejeitadas duas vezes na tradução:** nenhuma ainda.
+- **Entradas rejeitadas duas vezes na tradução:** nenhuma.

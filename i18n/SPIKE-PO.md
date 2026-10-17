@@ -36,7 +36,8 @@ mantenedor (seção "Antes da main").
   verificação independente por outro modelo e commit imediato: `build.sh` (com trava de saída),
   `pos_build.py`, patch, `po_util.py`, `slugs.py`, `mensagens.py`, `apply.py`, `lotes.py`,
   `check.py` e módulos, `delta.py`, `autoport.py`, `atualiza_po.sh`, `traduz_delta.py`,
-  `status.py`; glossário v2 (276 termos), guia de estilo, erros recorrentes; `AGENTS.md`,
+  `status.py`; glossário v2 (276 termos, mais 69 propostos pelos tradutores como provisórios),
+  guia de estilo, erros recorrentes; `AGENTS.md`,
   `CLAUDE.md`, instruções do Copilot, README, `DECISOES.md`; workflows `ptbr-ci`, `ptbr-deploy`,
   `ptbr-sync`.
 - Tradução por capítulo, como o mantenedor pediu (Haiku só para traduzir): lotes de até 3.000
@@ -49,7 +50,13 @@ mantenedor (seção "Antes da main").
   português, `[traduções][translations]`).
 - Checkpoints de onda: check completo no PO real depois da Onda 1 e da Onda 2; conferência cruzada
   dos textos de link entre capítulos (1 divergência real, corrigida).
-- Validação final por amostragem (Opus): em andamento; o resultado entra aqui ao concluir.
+- Validação final por amostragem (Opus, 17/10): três revisores leram 270 pares EN/PT sorteados e
+  varreram a consistência de cerca de 130 termos entre capítulos. Notas: **8,8** (title-page a
+  ch05), **8,8** (ch06 a ch12) e **9,2** (ch13 a ch21, apêndices e sumário). Nenhum termo com
+  tradução conflitante entre capítulos; gênero dos termos em inglês 100% de acordo com o glossário.
+  Único erro sistemático: "X is substituted for Y" traduzido como "X é substituído por Y", o que
+  inverte o sentido, em pontos centrais de tempos de vida (ch10) e no ch16 e ch21. Corrigido junto
+  com outras 23 correções pontuais (27 no total); o check completo continua sem erros.
 
 ## Avisos que ficaram (analisados, sem ação)
 
@@ -62,6 +69,10 @@ mantenedor (seção "Antes da main").
   inglês escreve sem code span (`spawn`, `Iterator`, `drop`) e a ênfase de "_n_-ésimo".
 
 ## Limitações conhecidas
+
+- Pontos de estilo que o guia não fixa e o mantenedor pode decidir: travessão com ou sem espaços
+  (o livro usa os dois), "async" como substantivo solto (às vezes "async", às vezes "programação
+  assíncrona").
 
 - Tudo é **rascunho de IA validado por IA**: nenhum capítulo teve revisão humana ainda
   (`status.py` mostra "rascunho IA"; `i18n/revisao.yml` está vazio).
