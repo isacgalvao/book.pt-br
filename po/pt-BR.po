@@ -20672,7 +20672,7 @@ msgid ""
 "--> section, we mentioned that the compiler ensures that references are always valid. Unsafe Rust has two new types called _raw pointers_ that are similar to references. As with references, raw pointers can be immutable or mutable and are written as `*const T` and `*mut T`, respectively. The asterisk isn’t the dereference operator; it’s part of the type name. In the context of raw pointers, _immutable_ means that the pointer can’t be directly assigned to after being dereferenced."
 msgstr ""
 "No Capítulo 4, na seção [“Referências pendentes”](ch04-02-references-and-borrowing.html#dangling-references)<!-- ignore\n"
-"-->, mencionamos que o compilador garante que as referências sempre são válidas. O Rust inseguro tem dois tipos novos chamados _ponteiros brutos_, que são semelhantes a referências. Assim como as referências, os ponteiros brutos podem ser imutáveis ou mutáveis e são escritos como `*const T` e `*mut T`, respectivamente. O asterisco não é o operador de desreferência; ele faz parte do nome do tipo. No contexto dos ponteiros brutos, _imutável_ significa que o ponteiro não pode ser diretamente atribuído depois de ser desreferenciado."
+"-->, mencionamos que o compilador garante que as referências sempre são válidas. O Rust inseguro tem dois tipos novos chamados _ponteiros brutos_, que são semelhantes a referências. Assim como as referências, os ponteiros brutos podem ser imutáveis ou mutáveis e são escritos como `*const T` e `*mut T`, respectivamente. O asterisco não é o operador de desreferência; ele faz parte do nome do tipo. No contexto dos ponteiros brutos, _imutável_ significa que não é possível atribuir um valor diretamente ao ponteiro depois de desreferenciá-lo."
 
 #: src/ch20-01-unsafe-rust.md
 msgid "Different from references and smart pointers, raw pointers:"
@@ -21240,7 +21240,7 @@ msgstr "Quando implementamos `Add` para `Point`, usamos o padrão para `Rhs` por
 
 #: src/ch20-02-advanced-traits.md
 msgid "We have two structs, `Millimeters` and `Meters`, holding values in different units. This thin wrapping of an existing type in another struct is known as the _newtype pattern_, which we describe in more detail in the [“Implementing External Traits with the Newtype Pattern”](ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern)<!-- ignore --> section. We want to add values in millimeters to values in meters and have the implementation of `Add` do the conversion correctly. We can implement `Add` for `Millimeters` with `Meters` as the `Rhs`, as shown in Listing 20-16."
-msgstr "Temos dois structs, `Millimeters` e `Meters`, que armazenam valores em unidades diferentes. Esse empacotamento simples de um tipo existente em outro struct é conhecido como _padrão newtype_, que descrevemos com mais detalhes na seção [“Implementando traits externos com o padrão newtype”](ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern)<!-- ignore -->. Queremos somar valores em milímetros a valores em metros e fazer com que a implementação de `Add` faça a conversão corretamente. Podemos implementar `Add` para `Millimeters` com `Meters` como `Rhs`, como mostrado na Listagem 20-16."
+msgstr "Temos dois structs, `Millimeters` e `Meters`, que armazenam valores em unidades diferentes. Essa forma simples de envolver um tipo existente em outro struct é conhecida como _padrão newtype_, que descrevemos com mais detalhes na seção [“Implementando traits externos com o padrão newtype”](ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern)<!-- ignore -->. Queremos somar valores em milímetros a valores em metros e fazer com que a implementação de `Add` faça a conversão corretamente. Podemos implementar `Add` para `Millimeters` com `Meters` como `Rhs`, como mostrado na Listagem 20-16."
 
 #: src/ch20-02-advanced-traits.md
 msgid "<Listing number=\"20-16\" file-name=\"src/lib.rs\" caption=\"Implementing the `Add` trait on `Millimeters` to add `Millimeters` and `Meters`\">\n"
@@ -21312,7 +21312,7 @@ msgstr "<Listing number=\"20-18\" file-name=\"src/main.rs\" caption=\"Chamando `
 
 #: src/ch20-02-advanced-traits.md
 msgid "Running this code will print `*waving arms furiously*`, showing that Rust called the `fly` method implemented on `Human` directly."
-msgstr "Executar este código vai imprimir `*waving arms furiously*`, mostrando que o Rust chamou diretamente o método `fly` implementado em `Human`."
+msgstr "Executar este código vai imprimir `*waving arms furiously*`, mostrando que o Rust chamou o método `fly` implementado diretamente em `Human`."
 
 #: src/ch20-02-advanced-traits.md
 msgid "To call the `fly` methods from either the `Pilot` trait or the `Wizard` trait, we need to use more explicit syntax to specify which `fly` method we mean. Listing 20-19 demonstrates this syntax."
@@ -21637,7 +21637,7 @@ msgstr "Também podemos usar o padrão newtype para abstrair alguns detalhes de 
 
 #: src/ch20-03-advanced-types.md
 msgid "Newtypes can also hide internal implementation. For example, we could provide a `People` type to wrap a `HashMap<i32, String>` that stores a person’s ID associated with their name. Code using `People` would only interact with the public API we provide, such as a method to add a name string to the `People` collection; that code wouldn’t need to know that we assign an `i32` ID to names internally. The newtype pattern is a lightweight way to achieve encapsulation to hide implementation details, which we discussed in the [“Encapsulation that Hides Implementation Details”](ch18-01-what-is-oo.html#encapsulation-that-hides-implementation-details)<!-- ignore --> section in Chapter 18."
-msgstr "Os newtypes também podem esconder a implementação interna. Por exemplo, poderíamos fornecer um tipo `People` para envolver um `HashMap<i32, String>` que armazena o ID de uma pessoa associado ao nome dela. O código que usa `People` só interage com a API pública que fornecemos, como um método para adicionar uma string de nome à coleção `People`; esse código não precisaria saber que atribuímos internamente um ID `i32` aos nomes. O padrão newtype é uma forma leve de alcançar o encapsulamento para esconder detalhes de implementação, o que discutimos na seção [“Encapsulamento que oculta detalhes de implementação”](ch18-01-what-is-oo.html#encapsulation-that-hides-implementation-details)<!-- ignore --> do Capítulo 18."
+msgstr "Os newtypes também podem esconder a implementação interna. Por exemplo, poderíamos fornecer um tipo `People` para envolver um `HashMap<i32, String>` que armazena o ID de uma pessoa associado ao nome dela. O código que usa `People` só interagiria com a API pública que fornecemos, como um método para adicionar uma string de nome à coleção `People`; esse código não precisaria saber que atribuímos internamente um ID `i32` aos nomes. O padrão newtype é uma forma leve de alcançar o encapsulamento para esconder detalhes de implementação, o que discutimos na seção [“Encapsulamento que oculta detalhes de implementação”](ch18-01-what-is-oo.html#encapsulation-that-hides-implementation-details)<!-- ignore --> do Capítulo 18."
 
 #: src/ch20-03-advanced-types.md
 msgid "<a id=\"creating-type-synonyms-with-type-aliases\"></a>"
@@ -22221,7 +22221,7 @@ msgstr "Observe que dividimos o código na função `hello_macro_derive`, que é
 
 #: src/ch20-05-macros.md
 msgid "We’ve introduced three new crates: `proc_macro`, [`syn`](https://crates.io/crates/syn)<!-- ignore -->, and [`quote`](https://crates.io/crates/quote)<!-- ignore -->. The `proc_macro` crate comes with Rust, so we didn’t need to add that to the dependencies in _Cargo.toml_. The `proc_macro` crate is the compiler’s API that allows us to read and manipulate Rust code from our code."
-msgstr "Introduzimos três novos crates: `proc_macro`, [`syn`](https://crates.io/crates/syn)<!-- ignore -->, e [`quote`](https://crates.io/crates/quote)<!-- ignore -->. O crate `proc_macro` vem com o Rust, então não precisamos adicioná-lo às dependências em _Cargo.toml_. O crate `proc_macro` é a API do compilador que nos permite ler e manipular código Rust a partir do nosso código."
+msgstr "Introduzimos três novos crates: `proc_macro`, [`syn`](https://crates.io/crates/syn)<!-- ignore --> e [`quote`](https://crates.io/crates/quote)<!-- ignore -->. O crate `proc_macro` vem com o Rust, então não precisamos adicioná-lo às dependências em _Cargo.toml_. O crate `proc_macro` é a API do compilador que nos permite ler e manipular código Rust a partir do nosso código."
 
 #: src/ch20-05-macros.md
 msgid "The `syn` crate parses Rust code from a string into a data structure that we can perform operations on. The `quote` crate turns `syn` data structures back into Rust code. These crates make it much simpler to parse any sort of Rust code we might want to handle: Writing a full parser for Rust code is no simple task."
@@ -22249,7 +22249,7 @@ msgstr "Os campos desse struct mostram que o código Rust que analisamos é um s
 
 #: src/ch20-05-macros.md
 msgid "Soon we’ll define the `impl_hello_macro` function, which is where we’ll build the new Rust code we want to include. But before we do, note that the output for our `derive` macro is also a `TokenStream`. The returned `TokenStream` is added to the code that our crate users write, so when they compile their crate, they’ll get the extra functionality that we provide in the modified `TokenStream`."
-msgstr "Em breve vamos definir a função `impl_hello_macro`, em que criaremos o novo código Rust que queremos incluir. Mas, antes disso, observe que a saída da nossa macro `derive` também é um `TokenStream`. O `TokenStream` retornado é adicionado ao código que os usuários do nosso crate escrevem, então, quando eles compilarem o crate, vão receber a funcionalidade extra que fornecemos no `TokenStream` modificado."
+msgstr "Em breve vamos definir a função `impl_hello_macro`, em que criaremos o novo código Rust que queremos incluir. Mas, antes disso, observe que a saída da nossa macro `derive` também é um `TokenStream`. O `TokenStream` retornado é adicionado ao código que os usuários do nosso crate escrevem, então, quando eles compilarem o próprio crate, vão receber a funcionalidade extra que fornecemos no `TokenStream` modificado."
 
 #: src/ch20-05-macros.md
 msgid "You might have noticed that we’re calling `unwrap` to cause the `hello_macro_derive` function to panic if the call to the `syn::parse` function fails here. It’s necessary for our procedural macro to panic on errors because `proc_macro_derive` functions must return `TokenStream` rather than `Result` to conform to the procedural macro API. We’ve simplified this example by using `unwrap`; in production code, you should provide more specific error messages about what went wrong by using `panic!` or `expect`."
@@ -22257,7 +22257,7 @@ msgstr "Talvez você tenha notado que estamos chamando `unwrap` para fazer a fun
 
 #: src/ch20-05-macros.md
 msgid "Now that we have the code to turn the annotated Rust code from a `TokenStream` into a `DeriveInput` instance, let’s generate the code that implements the `HelloMacro` trait on the annotated type, as shown in Listing 20-42."
-msgstr "Agora que temos o código que transforma o código Rust anotado, de um `TokenStream` em uma instância de `DeriveInput`, vamos gerar o código que implementa o trait `HelloMacro` no tipo anotado, como mostrado na Listagem 20-42."
+msgstr "Agora que temos o código que transforma o código Rust anotado de um `TokenStream` em uma instância de `DeriveInput`, vamos gerar o código que implementa o trait `HelloMacro` no tipo anotado, como mostrado na Listagem 20-42."
 
 #: src/ch20-05-macros.md
 msgid "<Listing number=\"20-42\" file-name=\"hello_macro_derive/src/lib.rs\" caption=\"Implementing the `HelloMacro` trait using the parsed Rust code\">\n"
