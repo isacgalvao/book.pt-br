@@ -2411,7 +2411,7 @@ msgstr "Você recebeu a mensagem de erro `` cannot assign twice to immutable var
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "It’s important that we get compile-time errors when we attempt to change a value that’s designated as immutable, because this very situation can lead to bugs. If one part of our code operates on the assumption that a value will never change and another part of our code changes that value, it’s possible that the first part of the code won’t do what it was designed to do. The cause of this kind of bug can be difficult to track down after the fact, especially when the second piece of code changes the value only _sometimes_. The Rust compiler guarantees that when you state that a value won’t change, it really won’t change, so you don’t have to keep track of it yourself. Your code is thus easier to reason through."
-msgstr "É importante recebermos erros em tempo de compilação quando tentamos mudar um valor que foi definido como imutável, porque exatamente esse tipo de situação pode levar a bugs. Se uma parte do nosso código opera assumindo que um valor nunca vai mudar e outra parte do nosso código muda esse valor, é possível que a primeira parte do código não faça o que foi projetada para fazer. A causa desse tipo de bug pode ser difícil de rastrear depois, especialmente quando o segundo trecho de código muda o valor apenas _às vezes_. O compilador Rust garante que, quando você diz que um valor não vai mudar, ele realmente não vai mudar, por isso você não precisa acompanhar isso por conta própria. Dessa forma, seu código fica mais fácil de entender."
+msgstr "É importante recebermos erros em tempo de compilação quando tentamos mudar um valor que foi definido como imutável, porque exatamente esse tipo de situação pode levar a bugs. Se uma parte do nosso código opera partindo do princípio de que um valor nunca vai mudar e outra parte do nosso código muda esse valor, é possível que a primeira parte do código não faça o que foi projetada para fazer. A causa desse tipo de bug pode ser difícil de rastrear depois, especialmente quando o segundo trecho de código muda o valor apenas _às vezes_. O compilador Rust garante que, quando você diz que um valor não vai mudar, ele realmente não vai mudar, por isso você não precisa acompanhar isso por conta própria. Dessa forma, seu código fica mais fácil de entender."
 
 #: src/ch03-01-variables-and-mutability.md
 msgid "But mutability can be very useful and can make code more convenient to write. Although variables are immutable by default, you can make them mutable by adding `mut` in front of the variable name as you did in [Chapter 2](ch02-00-guessing-game-tutorial.html#storing-values-with-variables)<!-- ignore -->. Adding `mut` also conveys intent to future readers of the code by indicating that other parts of the code will be changing this variable’s value."
@@ -2611,7 +2611,7 @@ msgstr "Tipos inteiros {#integer-types}"
 
 #: src/ch03-02-data-types.md
 msgid "An _integer_ is a number without a fractional component. We used one integer type in Chapter 2, the `u32` type. This type declaration indicates that the value it’s associated with should be an unsigned integer (signed integer types start with `i` instead of `u`) that takes up 32 bits of space. Table 3-1 shows the built-in integer types in Rust. We can use any of these variants to declare the type of an integer value."
-msgstr "Um _inteiro_ é um número sem componente fracionário. Usamos um tipo inteiro no Capítulo 2, o tipo `u32`. Essa declaração de tipo indica que o valor associado a ela deve ser um inteiro sem sinal (tipos inteiros com sinal começam com `i` em vez de `u`) que ocupa 32 bits de espaço. A Tabela 3-1 mostra os tipos inteiros integrados no Rust. Podemos usar qualquer uma destas variantes para declarar o tipo de um valor inteiro."
+msgstr "Um _inteiro_ é um número sem componente fracionário. Usamos um tipo inteiro no Capítulo 2, o tipo `u32`. Essa declaração de tipo indica que o valor associado a ela deve ser um inteiro sem sinal (tipos inteiros com sinal começam com `i` em vez de `u`) que ocupa 32 bits de espaço. A Tabela 3-1 mostra os tipos inteiros embutidos no Rust. Podemos usar qualquer uma destas variantes para declarar o tipo de um valor inteiro."
 
 #: src/ch03-02-data-types.md
 msgid "<span class=\"caption\">Table 3-1: Integer Types in Rust</span>"
@@ -2959,7 +2959,7 @@ msgstr "O tipo array {#the-array-type}"
 
 #: src/ch03-02-data-types.md
 msgid "Another way to have a collection of multiple values is with an _array_. Unlike a tuple, every element of an array must have the same type. Unlike arrays in some other languages, arrays in Rust have a fixed length."
-msgstr "Outra forma de ter uma coleção de vários valores é com um _array_. Diferente de uma tupla, todos os elementos de um array devem ter o mesmo tipo. Ao contrário de arrays em algumas outras linguagens, arrays no Rust têm tamanho fixo."
+msgstr "Outra forma de ter uma coleção de vários valores é com um _array_. Diferentemente de uma tupla, todos os elementos de um array devem ter o mesmo tipo. Ao contrário de arrays em algumas outras linguagens, arrays no Rust têm tamanho fixo."
 
 #: src/ch03-02-data-types.md
 msgid "We write the values in an array as a comma-separated list inside square brackets:"
@@ -3831,7 +3831,7 @@ msgstr "Todos os cinco valores do array aparecem no terminal, como esperado. Emb
 
 #: src/ch03-05-control-flow.md
 msgid "However, this approach is error-prone; we could cause the program to panic if the index value or test condition is incorrect. For example, if you changed the definition of the `a` array to have four elements but forgot to update the condition to `while index < 4`, the code would panic. It’s also slow, because the compiler adds runtime code to perform the conditional check of whether the index is within the bounds of the array on every iteration through the loop."
-msgstr "No entanto, essa abordagem é propensa a erros; podemos fazer o programa entrar em pânico se o valor do índice ou a condição de teste estiverem incorretos. Por exemplo, se você mudasse a definição do array `a` para ter quatro elementos, mas esquecesse de atualizar a condição para `while index < 4`, o código entraria em pânico. Ela também é lenta, porque o compilador adiciona código em tempo de execução para verificar, a cada iteração do loop, se o índice está dentro dos limites do array."
+msgstr "No entanto, essa abordagem é propensa a erros; podemos fazer o programa entrar em pânico se o valor do índice ou a condição de teste estiverem incorretos. Por exemplo, se você mudasse a definição do array `a` para ter quatro elementos, mas esquecesse de atualizar a condição para `while index < 4`, o código entraria em pânico. Ela também é lenta, porque o compilador adiciona código que verifica em tempo de execução, a cada iteração do loop, se o índice está dentro dos limites do array."
 
 #: src/ch03-05-control-flow.md
 msgid "As a more concise alternative, you can use a `for` loop and execute some code for each item in a collection. A `for` loop looks like the code in Listing 3-5."
