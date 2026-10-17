@@ -5864,7 +5864,7 @@ msgstr "Vamos ver uma situação que podemos querer expressar em código e enten
 
 #: src/ch06-01-defining-an-enum.md
 msgid "Any IP address can be either a version four or a version six address, but not both at the same time. That property of IP addresses makes the enum data structure appropriate because an enum value can only be one of its variants. Both version four and version six addresses are still fundamentally IP addresses, so they should be treated as the same type when the code is handling situations that apply to any kind of IP address."
-msgstr "Qualquer endereço IP pode ser um endereço de versão quatro ou de versão seis, mas não os dois ao mesmo tempo. Essa propriedade dos endereços IP torna a estrutura de dados enum apropriada, porque um valor de enum só pode ser uma das suas variantes. Os endereços de versão quatro e de versão seis continuam sendo, fundamentalmente, endereços IP, por isso devem ser tratados como o mesmo tipo quando o código estiver tratando situações que se aplicam a qualquer tipo de endereço IP."
+msgstr "Qualquer endereço IP pode ser um endereço de versão quatro ou de versão seis, mas não os dois ao mesmo tempo. Essa propriedade dos endereços IP torna a estrutura de dados enum apropriada, porque um valor de enum só pode ser uma das suas variantes. Os endereços de versão quatro e de versão seis continuam sendo, fundamentalmente, endereços IP, por isso devem ser tratados como o mesmo tipo quando o código lidar com situações que se aplicam a qualquer tipo de endereço IP."
 
 #: src/ch06-01-defining-an-enum.md
 msgid "We can express this concept in code by defining an `IpAddrKind` enumeration and listing the possible kinds an IP address can be, `V4` and `V6`. These are the variants of the enum:"
@@ -5964,7 +5964,7 @@ msgstr "`ChangeColor`: inclui três valores `i32`"
 
 #: src/ch06-01-defining-an-enum.md
 msgid "Defining an enum with variants such as the ones in Listing 6-2 is similar to defining different kinds of struct definitions, except the enum doesn’t use the `struct` keyword and all the variants are grouped together under the `Message` type. The following structs could hold the same data that the preceding enum variants hold:"
-msgstr "Definir um enum com variantes como as da Listagem 6-2 é parecido com definir várias definições de struct diferentes, exceto pelo fato de que o enum não usa a palavra-chave `struct` e todas as variantes ficam agrupadas sob o tipo `Message`. Os structs a seguir poderiam armazenar os mesmos dados que as variantes do enum apresentado antes armazenam:"
+msgstr "Definir um enum com variantes como as da Listagem 6-2 é parecido com definir diferentes tipos de struct, exceto pelo fato de que o enum não usa a palavra-chave `struct` e todas as variantes ficam agrupadas sob o tipo `Message`. Os structs a seguir poderiam armazenar os mesmos dados que as variantes do enum apresentado antes armazenam:"
 
 #: src/ch06-01-defining-an-enum.md
 msgid "// unit struct\n"
@@ -6416,7 +6416,7 @@ msgstr "Isso, porém, também é um pouco chato de acompanhar, de outro jeito! U
 
 #: src/ch06-03-if-let.md
 msgid "To make this common pattern nicer to express, Rust has `let...else`. The `let...else` syntax takes a pattern on the left side and an expression on the right, very similar to `if let`, but it does not have an `if` branch, only an `else` branch. If the pattern matches, it will bind the value from the pattern in the outer scope. If the pattern does _not_ match, the program will flow into the `else` arm, which must return from the function."
-msgstr "Para tornar esse padrão comum mais fácil de escrever, o Rust tem `let...else`. A sintaxe `let...else` recebe um padrão à esquerda e uma expressão à direita, muito parecida com `if let`, mas não tem um ramo `if`, apenas um ramo `else`. Se o padrão corresponder, o valor é vinculado no escopo externo. Se o padrão _não_ corresponder, o programa passa para o braço `else`, que precisa retornar da função."
+msgstr "Para tornar esse padrão comum mais fácil de escrever, o Rust tem `let...else`. A sintaxe `let...else` recebe um padrão à esquerda e uma expressão à direita, muito parecida com `if let`, mas não tem um ramo `if`, apenas um ramo `else`. Se o padrão corresponder, o valor extraído pelo padrão é vinculado no escopo externo. Se o padrão _não_ corresponder, o programa passa para o braço `else`, que precisa retornar da função."
 
 #: src/ch06-03-if-let.md
 msgid "In Listing 6-9, you can see how Listing 6-8 looks when using `let...else` in place of `if let`."
@@ -6432,7 +6432,7 @@ msgstr "Observe que, dessa forma, o código permanece no “caminho feliz” no 
 
 #: src/ch06-03-if-let.md
 msgid "If you have a situation in which your program has logic that is too verbose to express using a `match`, remember that `if let` and `let...else` are in your Rust toolbox as well."
-msgstr "Se você tiver uma situação em que a lógica do seu programa seja verbosa demais para ser expressa com um `match`, lembre-se de que `if let` e `let...else` também estão no seu conjunto de ferramentas do Rust."
+msgstr "Se você tiver uma situação em que a lógica do seu programa seja verbosa demais para ser expressa com um `match`, lembre-se de que `if let` e `let...else` também estão na sua caixa de ferramentas do Rust."
 
 #: src/ch06-03-if-let.md
 msgid "We’ve now covered how to use enums to create custom types that can be one of a set of enumerated values. We’ve shown how the standard library’s `Option<T>` type helps you use the type system to prevent errors. When enum values have data inside them, you can use `match` or `if let` to extract and use those values, depending on how many cases you need to handle."
