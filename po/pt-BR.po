@@ -22535,7 +22535,7 @@ msgstr "`BufReader` implementa o trait `std::io::BufRead`, que fornece o método
 
 #: src/ch21-01-single-threaded.md
 msgid "The browser signals the end of an HTTP request by sending two newline characters in a row, so to get one request from the stream, we take lines until we get a line that is the empty string. Once we’ve collected the lines into the vector, we’re printing them out using pretty debug formatting so that we can take a look at the instructions the web browser is sending to our server."
-msgstr "O navegador sinaliza o fim de uma requisição HTTP enviando dois caracteres de nova linha seguidos; por isso, para obter uma requisição do stream, pegamos linhas até obter uma linha que seja a string vazia. Depois de coletarmos as linhas no vetor, nós as imprimimos usando a formatação de depuração “pretty”, para que possamos dar uma olhada nas instruções que o navegador web está enviando ao nosso servidor."
+msgstr "O navegador sinaliza o fim de uma requisição HTTP enviando dois caracteres de nova linha seguidos; por isso, para obter uma requisição do stream, pegamos linhas até obter uma linha que seja a string vazia. Depois de coletarmos as linhas no vetor, nós as imprimimos usando a formatação de depuração bonita, para que possamos dar uma olhada nas instruções que o navegador web está enviando ao nosso servidor."
 
 #: src/ch21-01-single-threaded.md
 msgid "Let’s try this code! Start the program and make a request in a web browser again. Note that we’ll still get an error page in the browser, but our program’s output in the terminal will now look similar to this:"
@@ -22755,7 +22755,7 @@ msgstr "Se o `request_line` _não_ for igual à requisição GET para o caminho 
 
 #: src/ch21-01-single-threaded.md
 msgid "Run this code now and request _127.0.0.1:7878_; you should get the HTML in _hello.html_. If you make any other request, such as _127.0.0.1:7878/something-else_, you’ll get a connection error like those you saw when running the code in Listing 21-1 and Listing 21-2."
-msgstr "Execute este código agora e requisite _127.0.0.1:7878_; você deve receber o HTML contido em _hello.html_. Se você fizer qualquer outra requisição, como _127.0.0.1:7878/something-else_, você vai receber um erro de conexão como aqueles que você viu ao executar o código das Listagens 21-1 e 21-2."
+msgstr "Execute este código agora e acesse _127.0.0.1:7878_; você deve receber o HTML contido em _hello.html_. Se você fizer qualquer outra requisição, como _127.0.0.1:7878/something-else_, você vai receber um erro de conexão como aqueles que você viu ao executar o código das Listagens 21-1 e 21-2."
 
 #: src/ch21-01-single-threaded.md
 msgid "Now let’s add the code in Listing 21-7 to the `else` block to return a response with the status code 404, which signals that the content for the request was not found. We’ll also return some HTML for a page to render in the browser indicating the response to the end user."
@@ -22897,7 +22897,7 @@ msgstr "Antes de começarmos a implementar um pool de threads, vamos conversar s
 
 #: src/ch21-02-multithreaded.md
 msgid "Similar to how we used test-driven development in the project in Chapter 12, we’ll use compiler-driven development here. We’ll write the code that calls the functions we want, and then we’ll look at errors from the compiler to determine what we should change next to get the code to work. Before we do that, however, we’ll explore the technique we’re not going to use as a starting point."
-msgstr "Assim como usamos desenvolvimento orientado a testes no projeto do Capítulo 12, aqui vamos usar desenvolvimento orientado pelo compilador. Vamos escrever o código que chama as funções que queremos e, depois, olhar os erros do compilador para determinar o que devemos mudar em seguida para que o código funcione. Antes disso, porém, vamos explorar a técnica que não vamos usar como ponto de partida."
+msgstr "Assim como usamos desenvolvimento orientado a testes no projeto do Capítulo 12, aqui vamos usar desenvolvimento orientado pelo compilador. Vamos escrever o código que chama as funções que queremos e, depois, olhar os erros do compilador para determinar o que devemos mudar em seguida para que o código funcione. Antes disso, porém, vamos explorar, como ponto de partida, a técnica que não vamos usar."
 
 #: src/ch21-02-multithreaded.md
 msgid "<a id=\"code-structure-if-we-could-spawn-a-thread-for-each-request\"></a>"
@@ -23332,7 +23332,7 @@ msgstr ""
 
 #: src/ch21-02-multithreaded.md
 msgid "The code is trying to pass `receiver` to multiple `Worker` instances. This won’t work, as you’ll recall from Chapter 16: The channel implementation that Rust provides is multiple _producer_, single _consumer_. This means we can’t just clone the consuming end of the channel to fix this code. We also don’t want to send a message multiple times to multiple consumers; we want one list of messages with multiple `Worker` instances such that each message gets processed once."
-msgstr "O código está tentando passar `receiver` para várias instâncias de `Worker`. Isso não vai funcionar, como você deve se lembrar do Capítulo 16: a implementação de canais que o Rust oferece é de múltiplos _produtores_ e único _consumidor_. Isso significa que não podemos simplesmente clonar a extremidade de recebimento do canal para resolver este código. Também não queremos enviar uma mensagem várias vezes para vários consumidores; queremos uma única lista de mensagens com várias instâncias de `Worker`, de modo que cada mensagem seja processada uma única vez."
+msgstr "O código está tentando passar `receiver` para várias instâncias de `Worker`. Isso não vai funcionar, como você deve se lembrar do Capítulo 16: a implementação de canais que o Rust oferece é de múltiplos _produtores_ e único _consumidor_. Isso significa que não podemos simplesmente clonar a extremidade de recebimento do canal para corrigir este código. Também não queremos enviar uma mensagem várias vezes para vários consumidores; queremos uma única lista de mensagens com várias instâncias de `Worker`, de modo que cada mensagem seja processada uma única vez."
 
 #: src/ch21-02-multithreaded.md
 msgid "Additionally, taking a job off the channel queue involves mutating the `receiver`, so the threads need a safe way to share and modify `receiver`; otherwise, we might get race conditions (as covered in Chapter 16)."
@@ -23479,7 +23479,7 @@ msgstr "O código da Listagem 21-20 que usa `let job = receiver.lock().unwrap().
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "The code in Listing 21-20 is responding to requests asynchronously through the use of a thread pool, as we intended. We get some warnings about the `workers`, `id`, and `thread` fields that we’re not using in a direct way that reminds us we’re not cleaning up anything. When we use the less elegant <kbd>ctrl</kbd>\\-<kbd>C</kbd> method to halt the main thread, all other threads are stopped immediately as well, even if they’re in the middle of serving a request."
-msgstr "O código da Listagem 21-20 está respondendo às requisições de forma assíncrona por meio do uso de um pool de threads, como pretendíamos. Recebemos alguns avisos sobre os campos `workers`, `id` e `thread`, que não estamos usando de forma direta, o que nos lembra de que não estamos limpando nada. Quando usamos o método menos elegante <kbd>ctrl</kbd>\\-<kbd>C</kbd> para interromper a thread principal, todas as outras threads também são encerradas imediatamente, mesmo que estejam no meio do atendimento de uma requisição."
+msgstr "O código da Listagem 21-20 está respondendo às requisições de forma assíncrona por meio de um pool de threads, como pretendíamos. Recebemos alguns avisos sobre os campos `workers`, `id` e `thread`, que não estamos usando de forma direta, o que nos lembra de que não estamos limpando nada. Quando usamos o método menos elegante <kbd>ctrl</kbd>\\-<kbd>C</kbd> para interromper a thread principal, todas as outras threads também são encerradas imediatamente, mesmo que estejam no meio do atendimento de uma requisição."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Next, then, we’ll implement the `Drop` trait to call `join` on each of the threads in the pool so that they can finish the requests they’re working on before closing. Then, we’ll implement a way to tell the threads they should stop accepting new requests and shut down. To see this code in action, we’ll modify our server to accept only two requests before gracefully shutting down its thread pool."
@@ -23588,11 +23588,11 @@ msgstr ""
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "To see this code in action, let’s modify `main` to accept only two requests before gracefully shutting down the server, as shown in Listing 21-25."
-msgstr "Para ver este código em ação, vamos modificar `main` para aceitar apenas duas requisições antes de encerrar o servidor de forma graciosa, como mostrado na Listagem 21-25."
+msgstr "Para ver este código em ação, vamos modificar `main` para aceitar apenas duas requisições antes de encerrar graciosamente o servidor, como mostrado na Listagem 21-25."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-25\" file-name=\"src/main.rs\" caption=\"Shutting down the server after serving two requests by exiting the loop\">\n"
-msgstr "<Listing number=\"21-25\" file-name=\"src/main.rs\" caption=\"Encerrando o servidor após atender duas requisições saindo do loop\">\n"
+msgstr "<Listing number=\"21-25\" file-name=\"src/main.rs\" caption=\"Encerrando o servidor ao sair do loop após atender duas requisições\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Shutting down.\""
@@ -23604,7 +23604,7 @@ msgstr "Você não gostaria que um servidor web do mundo real fosse encerrado de
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "The `take` method is defined in the `Iterator` trait and limits the iteration to the first two items at most. The `ThreadPool` will go out of scope at the end of `main`, and the `drop` implementation will run."
-msgstr "O método `take` é definido no trait `Iterator` e limita a iteração aos primeiros dois itens, no máximo. O `ThreadPool` vai sair do escopo no fim de `main`, e a implementação de `drop` será executada."
+msgstr "O método `take` é definido no trait `Iterator` e limita a iteração aos dois primeiros itens, no máximo. O `ThreadPool` vai sair do escopo no fim de `main`, e a implementação de `drop` será executada."
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "Start the server with `cargo run` and make three requests. The third request should error, and in your terminal, you should see output similar to this:"
