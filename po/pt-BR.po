@@ -9063,7 +9063,7 @@ msgstr "Depois, você vai aprender a usar traits para definir comportamento de f
 
 #: src/ch10-00-generics.md
 msgid "Finally, we’ll discuss _lifetimes_: a variety of generics that give the compiler information about how references relate to each other. Lifetimes allow us to give the compiler enough information about borrowed values so that it can ensure that references will be valid in more situations than it could without our help."
-msgstr "Por fim, vamos discutir _tempos de vida_: uma variedade de genéricos que dão ao compilador informações sobre como as referências se relacionam entre si. Os tempos de vida nos permitem dar ao compilador informações suficientes sobre valores emprestados, de modo que ele consiga garantir que as referências serão válidas em mais situações do que conseguiria sem a nossa ajuda."
+msgstr "Por fim, vamos discutir _tempos de vida_: um tipo de genérico que dá ao compilador informações sobre como as referências se relacionam entre si. Os tempos de vida nos permitem dar ao compilador informações suficientes sobre valores emprestados, de modo que ele consiga garantir que as referências serão válidas em mais situações do que conseguiria sem a nossa ajuda."
 
 #: src/ch10-00-generics.md
 msgid "Removing Duplication by Extracting a Function"
@@ -9807,7 +9807,7 @@ msgstr ""
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The error message says that the variable `x` “does not live long enough.” The reason is that `x` will be out of scope when the inner scope ends on line 7. But `r` is still valid for the outer scope; because its scope is larger, we say that it “lives longer.” If Rust allowed this code to work, `r` would be referencing memory that was deallocated when `x` went out of scope, and anything we tried to do with `r` wouldn’t work correctly. So, how does Rust determine that this code is invalid? It uses a borrow checker."
-msgstr "A mensagem de erro diz que a variável `x` “não vive por tempo suficiente.” O motivo é que `x` vai sair do escopo quando o escopo interno terminar, na linha 7. Mas `r` ainda é válida no escopo externo; como o escopo dela é maior, dizemos que ela “vive mais tempo”. Se o Rust permitisse que este código funcionasse, `r` estaria referenciando uma memória que foi desalocada quando `x` saiu do escopo, e qualquer coisa que tentássemos fazer com `r` não funcionaria corretamente. Então, como o Rust determina que este código é inválido? Ele usa um verificador de empréstimos."
+msgstr "A mensagem de erro diz que a variável `x` “não vive por tempo suficiente”. O motivo é que `x` vai sair do escopo quando o escopo interno terminar, na linha 7. Mas `r` ainda é válida no escopo externo; como o escopo dela é maior, dizemos que ela “vive mais tempo”. Se o Rust permitisse que este código funcionasse, `r` estaria referenciando uma memória que foi desalocada quando `x` saiu do escopo, e qualquer coisa que tentássemos fazer com `r` não funcionaria corretamente. Então, como o Rust determina que este código é inválido? Ele usa um verificador de empréstimos."
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "The Borrow Checker"
