@@ -40,7 +40,9 @@
 #                    dizem, entre as mensagens cujo inglês tem o termo, quantas usam cada forma;
 #                    as contagens de gênero (“feminino 11: uma 7, ...”) contam o artigo, a
 #                    contração ou outro determinante logo antes do termo (singular e plural, com
-#                    ou sem ênfase) no msgstr das mensagens de prosa do CR, sem os code spans
+#                    ou sem ênfase) no msgstr das mensagens de prosa do CR, sem os code spans;
+#                    o detalhamento lista só as formas mais frequentes e pode somar menos que
+#                    o total (as demais formas ficam de fora)
 #
 # COMO O `evitar` É USADO: o módulo `glossario` do check.py aplica cada regex, sem diferenciar
 # maiúsculas, ao msgstr das mensagens traduzidas ou fuzzy dos tipos prosa, listing e html,
@@ -73,7 +75,7 @@ termos:
     exemplo_en: "Moving Ownership Into an Async Block"
     exemplo_pt: "Movendo o ownership para um bloco assíncrono"
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*ownership(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*ownership(?![^\W_])'
     nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Fica em inglês, no masculino (“o ownership”). Alternativa em aberto: “posse” (feminino); se o mantenedor escolher “posse”, fazer busca e troca revisada, ajustando o artigo (“o ownership” → “a posse”). “take ownership of” → “assumir o ownership de”; “transfer ownership” → “transferir o ownership”; “give up ownership” → “abrir mão do ownership”; “ownership rules” → “regras de ownership”. Sem glosa entre parênteses. No CR o feminino é mais comum (feminino 8: a 5, à 1, da 1, sua 1) que o masculino (masculino 4: o 4); este glossário adota o masculino, como no CONTRATO §7 (“o ownership”). Comprehensive Rust pt-BR (mensagens com o termo: 24): ownership 18, propriedade 9, posse 2."
   - en: "owner"
     pt: "dono"
@@ -136,7 +138,7 @@ termos:
     exemplo_en: "While references only borrow data, in many cases smart pointers _own_ the data they point to."
     exemplo_pt: "Enquanto as referências só pegam dados emprestados, em muitos casos os ponteiros inteligentes são _donos_ dos dados para os quais apontam."
     evitar:
-      - '(?<![^\W_])borrow(?:s|ed)?(?![^\W_])(?!\s+checker)'
+      - '(?<![^\W_])borrow(?:s|ed)?(?![^\W_])(?![\s-]+checker)'
     nota: "Decisão do mantenedor (CONTRATO §7.1). “to borrow” → “pegar emprestado” ou “emprestar”, conforme a frase; “borrowed” → “emprestado”; o substantivo (“a borrow”) → “um empréstimo”; “mutable borrow” → “empréstimo mutável”. O método `borrow` e o trait `Borrow` são código. Comprehensive Rust pt-BR (mensagens com o termo: 30): emprest- 18, empréstimo 14, borrow 10."
   - en: "borrow checker"
     pt: "verificador de empréstimos"
@@ -230,7 +232,7 @@ termos:
     exemplo_pt: "Mas poder alterar dados é muito útil!"
     evitar:
       - '(?<![^\W_])mutat(?:e|es|ed|ing)(?![^\W_])'
-    nota: "Ou “modificar”. Nunca “mutar” (calque; regra `mutar` de erros-recorrentes.yml). “mutável”, “imutável” e “mutabilidade” estão certos. Comprehensive Rust pt-BR (mensagens com o termo: 5): mut- 1, modific- 1, alter- 2."
+    nota: "Ou “modificar”. Nunca “mutar” (decalque do inglês; regra `mutar` de erros-recorrentes.yml). “mutável”, “imutável” e “mutabilidade” estão certos. Comprehensive Rust pt-BR (mensagens com o termo: 5): mut- 1, modific- 1, alter- 2."
   - en: "slice"
     pt: "slice"
     manter_ingles: true
@@ -241,7 +243,7 @@ termos:
     exemplo_pt: "Mas também existe um tipo slice mais geral."
     evitar:
       - '(?<![^\W_])fatias?(?![^\W_])'
-      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*slice(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*slices(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|algum|todo|seu|nosso)\s+[_*]*slice(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*slices(?![^\W_])'
     nota: "Fica em inglês, no feminino (“a slice”, “uma slice”, “as slices”), como no CR (feminino 11: uma 7, a 1, as 1, essa 1, nossa 1; masculino 4: o 1, um 1, os 1, do 1). Plural “slices”. “string slice” → “slice de string”. Comprehensive Rust pt-BR (mensagens com o termo: 29): slice 28, fatia 4."
   - en: "string slice"
     pt: "slice de string"
@@ -263,7 +265,7 @@ termos:
     exemplo_en: "To answer that question, we need to discuss how Rust stores strings in memory."
     exemplo_pt: "Para responder a essa pergunta, precisamos discutir como o Rust armazena strings na memória."
     evitar:
-      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*string(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*strings(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|algum|todo|seu|nosso)\s+[_*]*string(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*strings(?![^\W_])'
     nota: "Fica em inglês, no feminino (“a string”, “uma string”), como no CR (feminino 28: uma 13, a 4, as 4, da 4; nenhum masculino) e na tradução antiga; o mesmo vale para o tipo: “uma `String`”. `String` e `&str` são código. “string literal” → “literal de string”. Comprehensive Rust pt-BR (mensagens com o termo: 45): string 45, cadeia 0."
   - en: "string literal"
     pt: "literal de string"
@@ -359,7 +361,7 @@ termos:
     exemplo_en: "It enables Rust to make memory safety guarantees without needing a garbage collector, so it’s important to understand how ownership works."
     exemplo_pt: "Ele permite que o Rust dê garantias de segurança de memória sem precisar de um coletor de lixo, por isso é importante entender como o ownership funciona."
     evitar:
-      - '(?<![^\W_])garbage[ -]collect(?:or|ors|ion|ed)(?![^\W_])'
+      - '(?<![^\W_])garbage[ -]collect(?:or|ors|ed)(?![^\W_])'
     nota: "“garbage collection” → “coleta de lixo”; a sigla GC fica. Comprehensive Rust pt-BR (mensagens com o termo: 8): coletor de lixo 6, coleta de lixo 3, garbage 2."
 
   # -------- Tipos e dados
@@ -518,7 +520,7 @@ termos:
     exemplo_en: "Making Structs and Enums Public"
     exemplo_pt: "Tornando structs e enums públicos"
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*struct(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*structs(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*struct(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*structs(?![^\W_])'
     nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o struct”, “um struct”, “os structs”. No CR o gênero é dividido (masculino 11: um 3, no 2, do 2, o 2; feminino 11: uma 5, da 2); vale a decisão do mantenedor. Para o conceito do Rust não use “estrutura” (“data structure” → “estrutura de dados” continua certo). A regra `genero-struct` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 61): struct 52, estrutura 10."
   - en: "tuple struct"
     pt: "struct de tupla"
@@ -601,7 +603,7 @@ termos:
     exemplo_en: "Enums handle this case with ease:"
     exemplo_pt: "Os enums tratam esse caso com facilidade:"
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*enum(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*enums(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*enum(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*enums(?![^\W_])'
     nota: "Decisão do mantenedor (CONTRATO §7.3): masculino — “o enum”, “um enum”, “os enums”. No CR o gênero é dividido (masculino 6: o 3, um 2, próprio 1; feminino 4: uma 3, as 1); vale a decisão do mantenedor. O nome por extenso, “enumeration”, vira “enumeração”. A regra `genero-enum` de erros-recorrentes.yml verifica o mesmo. Comprehensive Rust pt-BR (mensagens com o termo: 28): enum 26, enumeração 1."
   - en: "variant"
     pt: "variante"
@@ -804,7 +806,7 @@ termos:
     exemplo_en: "Implementing a Trait on a Type"
     exemplo_pt: "Implementando um trait em um tipo"
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*trait(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*traits(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*trait(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*traits(?![^\W_])'
     nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o trait”, “um trait”, “os traits”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 73: o 32, um 15, do 10, os 7; nenhum feminino nas mensagens ativas, só 1 numa entrada obsoleta). Não traduza por “característica”. Comprehensive Rust pt-BR (mensagens com o termo: 138): trait 125, característica 2."
   - en: "trait bound"
     pt: "limite de trait"
@@ -921,7 +923,7 @@ termos:
     exemplo_en: "When we use trait objects, Rust must use dynamic dispatch."
     exemplo_pt: "Quando usamos objetos de trait, o Rust precisa usar despacho dinâmico."
     evitar:
-      - '(?<![^\W_])dispatch(?:es|ed|ing)?(?![^\W_])'
+      - '(?<![^\W_])(?<!static )dispatch(?:es|ed|ing)?(?![^\W_])'
     nota: "“static dispatch” → “despacho estático”. Comprehensive Rust pt-BR (mensagens com o termo: 5): despacho 5, dispatch 0."
   - en: "dyn compatibility"
     pt: "compatibilidade com dyn"
@@ -1252,7 +1254,7 @@ termos:
     exemplo_en: "Unlike functions, closures can capture values from the scope in which they’re defined."
     exemplo_pt: "Ao contrário das funções, os closures podem capturar valores do escopo em que são definidos."
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*closure(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*closures(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*closure(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*closures(?![^\W_])'
     nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o closure”, “um closure”, “os closures definidos”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 4: um 3, os 1; nenhum feminino) e pela escolha da sessão anterior. Comprehensive Rust pt-BR (mensagens com o termo: 10): closure 7, fechamento 0, encerramento 2, clausura 0."
   - en: "capture"
     pt: "capturar"
@@ -1480,7 +1482,7 @@ termos:
     exemplo_en: "Adding Metadata to a New Crate"
     exemplo_pt: "Adicionando metadados a um novo crate"
     evitar:
-      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|toda|sua|nossa)\s+[_*]*crate(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*crates(?![^\W_])'
+      - '(?<![^\W_])(?:uma|a|à|da|na|pela|numa|desta|dessa|nesta|nessa|esta|essa|aquela|outra|nenhuma|alguma|toda|sua|nossa)\s+[_*]*crate(?![^\W_])|(?<![^\W_])(?:umas|as|às|das|nas|pelas|destas|dessas|nestas|nessas|estas|essas|aquelas|outras|todas|suas|nossas|algumas|muitas|várias)\s+[_*]*crates(?![^\W_])'
     nota: "Decisão do mantenedor (CONTRATO §7.1): fica em inglês. O `status: decidido` vale só para manter o termo em inglês; o gênero não foi decidido (CONTRATO §7.3 decide só o de struct e enum): o masculino (“o crate”, “um crate”, “os crates”) é padrão provisório do assistente, a confirmar com o mantenedor, pela evidência do CR (masculino 95: o 30, um 17, do 12, no 8; feminino 4). Comprehensive Rust pt-BR (mensagens com o termo: 135): crate 133, caixa/caixote 0."
   - en: "binary crate"
     pt: "crate binário"
@@ -1854,7 +1856,7 @@ termos:
     exemplo_pt: "O rustup e o papel do Rust nightly"
     evitar:
       - '(?<![^\W_])noturn[oa]s?(?![^\W_])'
-    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Os nomes dos canais de lançamento (nightly, beta, stable) ficam em inglês: “nightly Rust” → “Rust nightly”; “nightly version” → “versão nightly”. Nunca “noturno”: o `evitar` desta entrada pega qualquer “noturno” como aviso, e a regra `rust-noturno` de erros-recorrentes.yml pega “Rust noturno” (também depois de canal, versão, compilador, toolchain, release, lançamento, recurso e funcionalidade) como erro. Comprehensive Rust pt-BR (mensagens com o termo: 4): nightly 4, noturno 0."
+    nota: "Padrão provisório do assistente (CONTRATO §7), a confirmar com o mantenedor. Os nomes dos canais de lançamento (nightly, beta, stable) ficam em inglês: “nightly Rust” → “Rust nightly”; “nightly version” → “versão nightly”. Nunca “noturno”: o `evitar` desta entrada pega qualquer “noturno” como aviso, e a regra `rust-noturno` de erros-recorrentes.yml pega “Rust noturno” (também depois de canal, versão, compilador, toolchain, release, lançamento, recurso e funcionalidade) como aviso (provisório; sobe para erro se o mantenedor confirmar o padrão). Comprehensive Rust pt-BR (mensagens com o termo: 4): nightly 4, noturno 0."
   - en: "beta"
     pt: "beta"
     manter_ingles: true
@@ -1896,7 +1898,7 @@ termos:
     exemplo_en: "Our test caught the bug!"
     exemplo_pt: "Nosso teste pegou o bug!"
     evitar:
-      - '(?<!cargo )(?<!unit )(?<!integration )(?<![\w/\\.-])(?:tests?|testing)(?![\w/\\]|\.\w)'
+      - '(?<!cargo )(?<!unit )(?<!integration )(?<!doc )(?<!documentation )(?<![\w/\\.-])(?:tests?|testing)(?![\w/\\]|\.\w)'
     nota: "Decisão do mantenedor (CONTRATO §7.1). “to test” → “testar”; “testing” → “testes”; “test function” → “função de teste”; “test suite” → “conjunto de testes”; “test runner” → “executor de testes”. Nomes de diretório e caminhos (_tests_, _tests/common.rs_) e o comando `cargo test` ficam como estão. Comprehensive Rust pt-BR (mensagens com o termo: 88): teste 66, test 11."
   - en: "unit test"
     pt: "teste unitário"
@@ -2203,7 +2205,7 @@ termos:
     genero: m
     status: provisorio
     exemplo_en: "A pointer’s size doesn’t change based on the amount of data it’s pointing to."
-    exemplo_pt: "O tamanho de um ponteiro não muda de acordo com a quantidade de dados para a qual ele aponta."
+    exemplo_pt: "O tamanho de um ponteiro não muda de acordo com a quantidade de dados para os quais ele aponta."
     evitar: []
     nota: "“pointer to X” → “ponteiro para X”; “null pointer” → “ponteiro nulo”."
   - en: "smart pointer"
@@ -2294,7 +2296,7 @@ termos:
     exemplo_en: "Waiting for All Threads to Finish"
     exemplo_pt: "Esperando todas as threads terminarem"
     evitar:
-      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*thread(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*threads(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|algum|todo|seu|nosso)\s+[_*]*thread(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*threads(?![^\W_])'
       - '(?<![^\W_])linhas? de execução(?![^\W_])'
     nota: "Fica em inglês, no feminino (“a thread”, “uma thread”, “as threads”), a forma mais frequente no CR (feminino 23: a 10, as 4, da 2, outra 2; masculino 12: outro 5, o 3, um 2) e a da tradução antiga. “main thread” → “thread principal”; “spawned thread” → “thread criada”; “multithreaded” → “multithread”; “single-threaded” → “de thread única”. Comprehensive Rust pt-BR (mensagens com o termo: 80): thread 76, linha de execução 0, encadeamento 0."
   - en: "spawn"
@@ -2534,7 +2536,7 @@ termos:
     exemplo_en: "You may sometimes hear this referred to as one future _starving_ other futures."
     exemplo_pt: "Às vezes você vai ouvir isso descrito como uma future _matando de fome_ as outras futures."
     evitar:
-      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*future(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*futures(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|algum|todo|seu|nosso)\s+[_*]*future(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*futures(?![^\W_])'
     nota: "Fica em inglês, no feminino (“a future”, “uma future”, “as futures”), como no CR (feminino 30: uma 8, as 5, a 4, essa 4; nenhum masculino). O trait `Future` é código. “in the future” (tempo) → “no futuro”. Comprehensive Rust pt-BR (mensagens com o termo: 37): future 32, futuro 5."
   - en: "stream"
     pt: "stream"
@@ -2610,7 +2612,7 @@ termos:
     exemplo_en: "Next, let’s look at macros!"
     exemplo_pt: "Agora, vamos ver as macros!"
     evitar:
-      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|todo|seu|nosso)\s+[_*]*macro(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*macros(?![^\W_])'
+      - '(?<![^\W_])(?:um|o|ao|do|no|pelo|num|deste|desse|neste|nesse|este|esse|aquele|outro|nenhum|algum|todo|seu|nosso)\s+[_*]*macro(?![^\W_])|(?<![^\W_])(?:uns|os|aos|dos|nos|pelos|destes|desses|nestes|nesses|estes|esses|aqueles|outros|todos|seus|nossos|alguns|muitos|vários)\s+[_*]*macros(?![^\W_])'
     nota: "Feminino (“a macro”, “uma macro”), como no CR (feminino 20: a 15, uma 2, da 2, as 1; masculino 5: os 3, o 1, um 1). Macros como `println!` são código. “macro invocation” → “invocação de macro”; “metaprogramming” → “metaprogramação”. Comprehensive Rust pt-BR (mensagens com o termo: 42): macro 42."
   - en: "declarative macro"
     pt: "macro declarativa"
@@ -2760,7 +2762,7 @@ termos:
     genero: null
     status: provisorio
     exemplo_en: "The fact that Rust makes borrowing implicit for method receivers is a big part of making ownership ergonomic in practice."
-    exemplo_pt: "O fato de o Rust tornar o empréstimo implícito para os receptores de métodos é uma parte importante do que torna o ownership ergonômico na prática."
+    exemplo_pt: "O fato de o Rust tornar o empréstimo implícito para os receptores de método é uma parte importante do que torna o ownership ergonômico na prática."
     evitar:
       - '(?<![^\W_])(?:ergonomic|ergonomics|ergonomically)(?![^\W_])'
     nota: "“ergonomics” → “ergonomia”. Comprehensive Rust pt-BR (mensagens com o termo: 4): ergonômic- 4."
@@ -3469,9 +3471,8 @@ termos:
     status: provisorio
     exemplo_en: "The three sections of output include the unit tests, the integration test, and the doc tests."
     exemplo_pt: "As três seções da saída incluem os testes unitários, o teste de integração e os testes de documentação."
-    evitar:
-      - '(?<![^\W_])doc tests?(?![^\W_])'
-    nota: "Forma curta de documentation test (teste de documentação). Plural “testes de documentação”. Uso no PO (mensagens com o termo: 2): teste de documentação 2."
+    evitar: []
+    nota: "Forma curta de documentation test (teste de documentação); o `evitar` fica na entrada de documentation test, que já pega “doc tests”. Plural “testes de documentação”. Uso no PO (mensagens com o termo: 2): teste de documentação 2."
   - en: "benchmark"
     pt: "benchmark"
     manter_ingles: true
@@ -3573,7 +3574,7 @@ termos:
     exemplo_en: "The Rust team has included this tool with the standard Rust distribution"
     exemplo_pt: "A equipe Rust incluiu essa ferramenta com a distribuição padrão do Rust"
     evitar: []
-    nota: "Grupo de pessoas (“a equipe Rust”, “equipes de desenvolvedores”): “equipe” (14 mensagens). “Time” só no exemplo de placar do Capítulo 8, em que são equipes de jogo (“o time Blue”, “o time Yellow”; 8 mensagens): ali o nome do jogo pede “time”, mas fora dele prefira “equipe”. Uso no PO (mensagens com o termo: 22): equipe 14; time 8."
+    nota: "Grupo de pessoas (“a equipe Rust”, “equipes de desenvolvedores”): “equipe” (14 mensagens). “Time” só no exemplo de placar do Capítulo 8, em que o contexto é esportivo (“o time Blue”, “o time Yellow”; 8 mensagens): ali o uso esportivo pede “time”; em qualquer outro trecho prefira “equipe”. Uso no PO (mensagens com o termo: 22): equipe 14; time 8."
 
   # -------- Concorrência, async e servidor web
   - en: "sender"
