@@ -1,9 +1,17 @@
 # ptbr-deploy.yml: publica o livro em pt-BR no GitHub Pages.
 #
-# O que faz: a cada push na main (ou à mão), compila o livro com
-# `i18n/build.sh pt` num diretório novo e o publica com actions/deploy-pages.
-# Dois jobs: `construir` (só `contents: read`) gera e envia o artefato; `publicar`
-# (o único que usa `pages: write` e `id-token: write`) faz o deploy.
+# O que faz: quando o ptbr-ci (o portão de qualidade, check.py) termina com sucesso
+# num push na main, compila o livro com `i18n/build.sh pt` num diretório novo e o
+# publica com actions/deploy-pages. Um push cujo ptbr-ci falha não publica nada.
+# O build pt-BR roda Python (gemeas.py, limpa_nomes.py, pos_build.py) e o gemeas.py
+# precisa do polib: o job instala o Python e o polib como o ptbr-sync.yml.
+# A execução à mão (workflow_dispatch) não espera o portão: quem a dispara assume
+# que o ptbr-ci da main está verde.
+# Só publica com a variável de repositório PTBR_PUBLICAR = sim (pré-requisito 4): sem
+# ela, nem o push nem a execução à mão publicam nada.
+# Três jobs: `construir` (só `contents: read`) gera e envia o artefato; `publicar`
+# (o único que usa `pages: write` e `id-token: write`) faz o deploy; `desligado`
+# (sem permissões) só avisa na execução que a publicação está desligada.
 #
 # Pré-requisitos (configuração única, do mantenedor do repositório):
 #   1. Settings > Pages > Build and deployment > Source = "GitHub Actions". Sem
@@ -13,51 +21,97 @@
 #   3. O endereço sai como https://<usuário>.github.io/<repositório>/; o SITE_URL
 #      do build usa o nome do repositório (sem isso o build.sh usa /book.pt-br/).
 #      Com domínio próprio, troque o SITE_URL por /.
+#   4. Variável de REPOSITÓRIO PTBR_PUBLICAR = sim (Settings > Secrets and variables >
+#      Actions > Variables). É o interruptor da publicação e só o mantenedor a cria,
+#      depois de decidir o P4 (i18n/DECISOES.md: o que publicar e com que aviso). Sem
+#      ela, ou com outro valor, o `construir` é pulado, nem o workflow_dispatch publica
+#      e o job `desligado` deixa um aviso: assim um ptbr-ci verde na main não publica
+#      rascunho de IA como se fosse edição oficial. Tem de ser variável de repositório,
+#      não do environment `github-pages`: uma variável de environment não aparece no
+#      `if` do `construir` nem no `concurrency` (ficam vazios). Para desligar de novo,
+#      apague a variável ou troque o valor.
 #
-# Regras deste arquivo: ações fixadas por versão maior; nenhuma expressão de
-# contexto dentro de `run:` (tudo passa por `env:`); timeout em todo job.
+# Regras deste arquivo: ações fixadas por sha de commit, com a versão no comentário
+# (para atualizar, resolva a tag como manda a OPERAÇÃO do ptbr-sync.yml, com
+# `git ls-remote --tags`; uma tag móvel entregaria o `id-token: write` a quem a
+# trocasse; confira também as ações que a ação chama por dentro); nenhuma expressão de
+# contexto dentro de `run:` (tudo passa por `env:`); timeout em todo job; nenhum
+# binário restaurado do cache do Actions (o ptbr-sync roda código do upstream no
+# mesmo escopo de cache, a main, e poderia gravar qualquer chave: o job que
+# publica compila o mdbook-i18n-helpers a cada execução).
 # O .github/workflows/main.yml é do upstream e nunca se edita.
 
 name: ptbr-deploy
 
+# O deploy espera o ptbr-ci: os dois disparam no mesmo push e, sem o workflow_run,
+# o site publicaria um commit que o check.py reprovou. Só `completed` em push da
+# main do próprio repositório (o `if` do job `construir` confere o resto).
 on:
-  push:
+  workflow_run:
+    workflows:
+      - ptbr-ci
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch:
 
-# O mínimo que o deploy-pages exige. O job `construir`, que roda o código do
-# repositório, reduz isso a `contents: read` (permissions do próprio job).
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Nada por padrão; cada job declara o que usa (job novo sem `permissions:` fica
+# sem acesso a nada). O `construir` só lê; o `publicar` é o único com escrita.
+permissions: {}
 
 defaults:
   run:
     shell: bash
 
 # Um deploy por vez; o que já está em andamento termina (nunca é cancelado no meio).
+# O grupo `pages` vale só para a execução que vai publicar: a mesma decisão do `if` do
+# job `construir` (mantenha os dois iguais). Uma execução que só vai pular os jobs (ptbr-ci
+# vermelho ou cancelado, PR, PTBR_PUBLICAR desligada) fica num grupo só dela; no `pages`
+# ela cancelaria o deploy pendente de um commit aprovado e o site ficaria parado num
+# commit mais antigo.
 concurrency:
-  group: pages
+  group: >-
+    ${{ vars.PTBR_PUBLICAR == 'sim' &&
+    (github.event_name == 'workflow_dispatch' ||
+    (github.event.workflow_run.conclusion == 'success' &&
+    github.event.workflow_run.event == 'push' &&
+    github.event.workflow_run.head_repository.full_name == github.repository))
+    && 'pages' || format('pages-pulado-{0}', github.run_id) }}
   cancel-in-progress: false
 
 env:
   # Revisão do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai <Listing caption>).
   # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh.
   I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+  # Python e polib: as mesmas versões do ptbr-sync.yml e do ptbr-ci.yml (mudam juntas).
+  PYTHON_VERSAO: '3.13'
+  POLIB_VERSAO: 1.1.1
 
 jobs:
   construir:
     name: Compilar o livro (pt-BR)
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    # Só com PTBR_PUBLICAR = sim: à mão, sempre; depois do ptbr-ci,
+    # só se ele passou, era um push (não um PR nem uma execução manual) e o commit é
+    # deste repositório (não de um fork).
+    # Mantenha igual ao `group` do `concurrency` do topo.
+    if: >-
+      vars.PTBR_PUBLICAR == 'sim' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository))
     permissions:
       contents: read
     steps:
+      # Num workflow_run o `github.sha` é o último commit da branch padrão, não o
+      # que o ptbr-ci testou: o checkout fixa o head_sha dele (à mão, o `github.sha`).
       - name: Baixar o repositório
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           persist-credentials: false
 
       - name: Definir caminhos
@@ -67,6 +121,17 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq --no-install-recommends gettext
+
+      # O python3 do ubuntu-24.04 não traz o polib e, pela PEP 668, recusa `pip install`
+      # sem venv: o setup-python dá um Python onde o pip funciona. Sem o polib, o
+      # `i18n/build.sh pt` sai com código 2 (o gemeas.py importa o po_util).
+      - name: Instalar o Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSAO }}
+
+      - name: Instalar o polib
+        run: python3 -m pip install --disable-pip-version-check -q "polib==$POLIB_VERSAO"
 
       # Como o main.yml do upstream: rustup, perfil minimal, toolchain do rust-toolchain.
       # (O componente rust-docs, que o upstream pede para o `mdbook test`, não é preciso aqui.)
@@ -94,28 +159,14 @@ jobs:
             | tar -xz --directory="$bin_dir"
           echo "$bin_dir" >> "$GITHUB_PATH"
 
-      # restore + save separados: o cache é gravado logo depois da instalação, sem
-      # depender de o resto do job terminar com sucesso.
-      - name: Restaurar o cache do mdbook-i18n-helpers
-        id: helpers
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ env.HELPERS_ROOT }}
-          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
-
+      # Sem cache de propósito: o binário que gera o site é sempre o compilado da
+      # revisão fixada, nunca um restaurado (o ptbr-ci, que não publica, usa cache).
       - name: Instalar o mdbook-i18n-helpers (revisão fixada)
-        if: steps.helpers.outputs.cache-hit != 'true'
+        working-directory: ${{ runner.temp }}
         run: |
           cargo install --locked --root "$HELPERS_ROOT" \
             --git https://github.com/google/mdbook-i18n-helpers \
             --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
-
-      - name: Guardar o mdbook-i18n-helpers no cache
-        if: steps.helpers.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.HELPERS_ROOT }}
-          key: mdbook-i18n-helpers-${{ runner.os }}-${{ runner.arch }}-${{ env.I18N_HELPERS_REV }}
 
       - name: Pôr o mdbook-i18n-helpers no PATH
         run: |
@@ -135,6 +186,7 @@ jobs:
           mdbook --version
           msgfmt --version | sed -n 1p
           python3 --version
+          python3 -c 'import polib; print("polib", polib.__version__)'
 
       # OUT fica em $RUNNER_TEMP (vazio no início do job), fora do repositório: o
       # build.sh recusa um OUT com arquivos rastreados e nunca deve compilar dentro
@@ -150,8 +202,11 @@ jobs:
             exit 1
           fi
 
+      # Versão 4 (e não a 3): a 3 chama o upload-artifact por tag móvel; a 4 o chama
+      # por sha. A 4 deixa de fora os arquivos ocultos (o .nojekyll do build), o que não
+      # importa com a fonte do Pages = GitHub Actions, que não roda o Jekyll.
       - name: Enviar o artefato do Pages
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: ${{ runner.temp }}/book
 
@@ -160,11 +215,29 @@ jobs:
     needs: construir
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    # Herda as permissions do topo: contents: read, pages: write, id-token: write.
+    # O que o deploy-pages exige; não lê o repositório, então não tem `contents`.
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Publicar
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
+  # Aviso visível quando a publicação está desligada. Não pode ser um passo do `construir`,
+  # que é pulado. Não lê o repositório, não tem segredo nem escrita, e (sem expressão de
+  # contexto no `run:`) não interpola nada. Cai no grupo `pages-pulado-<run_id>`: não segura
+  # nem cancela o grupo `pages`.
+  desligado:
+    name: Publicação desligada
+    if: vars.PTBR_PUBLICAR != 'sim'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Avisar
+        run: |
+          echo "::warning title=Publicação desligada::nada foi publicado: PTBR_PUBLICAR não é 'sim' (veja o cabeçalho do ptbr-deploy.yml)"

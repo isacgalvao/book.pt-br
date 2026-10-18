@@ -2,28 +2,78 @@
 #
 # Desenho: auditoria de outubro de 2026 (final.sync_design) e i18n/CONTRATO.md §6.
 # Quatro jobs, em ordem, mais um de saúde:
-#   preparar  sem segredos e sem escrita: busca o upstream, faz o merge num branch local,
-#             roda atualiza_po.sh, autoport.py, slugs.py e delta.py, aplica a guarda de
-#             reestruturação e publica os artefatos (delta.json, PO, bundle git, sha256).
-#   traduzir  permissions: {}; o único job com ANTHROPIC_API_KEY; um job por capítulo do
-#             delta com traduz_delta.py (chamada à API sem ferramentas, git nem shell).
+#   preparar  sem segredos e sem escrita: busca o upstream, confere a fronteira dele (veja
+#             "Fronteira do upstream"), faz o merge num branch local, roda atualiza_po.sh,
+#             autoport.py, slugs.py e delta.py, aplica a guarda de reestruturação e publica
+#             os artefatos (delta.json, PO, bundle git, sha256).
+#   traduzir  o único job com ANTHROPIC_API_KEY; um job por capítulo do delta. Não recebe
+#             código de job nenhum: faz o checkout da main (só AGENTS.md, o guia, o glossário
+#             e o traduz_delta.py), confere que ela é a main do preparar e roda esse
+#             traduz_delta.py (chamada à API sem ferramentas, git nem shell). Do preparar
+#             entra só o delta.json. permissions: contents: read, só para o checkout.
 #   montar    sem token de escrita: recria o branch a partir do bundle, aplica as traduções
 #             (apply.py --modo sync), roda slugs.py e check.py e monta o corpo do PR, os
 #             comentários de continuação da tabela e a tabela completa (entradas.md).
-#   publicar  o ÚNICO job com escrita (token do GitHub App). Não executa código do
-#             repositório nem do upstream: só git e gh sobre artefatos conferidos por
-#             sha256. Recalcula o merge por conta própria e só aceita, depois dele,
-#             commits que mexem apenas em po/pt-BR.po; faz push de sync/upstream com
-#             --force-with-lease e abre ou atualiza UM PR "Sync upstream <sha7>" (o que
-#             não cabe da tabela por entrada vai em comentários do PR).
+#   publicar  o ÚNICO job com escrita em conteúdo, PRs e workflows (token do GitHub App; o
+#             sync-quebrado gera outro, só de Issues). Não executa código do repositório nem
+#             do upstream: só git, gh, sed e awk sobre artefatos conferidos por sha256.
+#             Recalcula o merge por conta própria, confere a fronteira do upstream e só
+#             aceita, depois do merge, no máximo um commit, que mexe apenas em
+#             po/pt-BR.po; faz push de sync/upstream com --force-with-lease e abre ou
+#             atualiza UM PR "Sync upstream <sha7>", SEMPRE como rascunho: um cabeçalho
+#             escrito por ele (shas, execução, diff --stat) e, abaixo, o corpo do montar
+#             passado por um saneador (o que não cabe da tabela por entrada vai em
+#             comentários do PR, também saneados).
 #   sync-quebrado  em falha (ou alarme de atraso) abre ou comenta a issue "sync-quebrado".
 #
 # O preparar e o montar executam código do upstream (o build compila os preprocessors de
 # packages/mdbook-trpl e o book.toml manda rodá-los). Por isso nenhum dos dois tem token de
-# escrita nem segredo, e o cache só é salvo antes do merge. O script que o traduzir roda
-# (traduz_delta.py da main) é separado e tem o sha256 calculado ANTES do merge; o traduzir
-# confere esse sha256 e roda o Python isolado (-I). A lista de commits, os msgid e as
-# respostas da IA são dados não confiáveis: vão escapados para o corpo do PR.
+# escrita nem segredo, e nada que eles produzem é confiável: o publicar refaz o merge, confere
+# o branch e saneia o texto do montar antes de publicá-lo. O script que o traduzir roda vem do
+# checkout da main feito dentro do próprio job traduzir, e não de um artefato do preparar (que
+# restaura cache e roda código do upstream); o job confere que o HEAD é a main do preparar e
+# roda o Python isolado (-I). O traduz_delta.py segura a chave: recusa nome de capítulo fora
+# do padrão e escopo acima dos tetos TRAD_MAX_* (o job também confere o tamanho da matriz). A
+# lista de commits, os msgid e as respostas da IA são dados não confiáveis: vão escapados
+# para o corpo do PR.
+#
+# Fronteira do upstream. O fork nunca edita um arquivo do upstream, e o upstream nunca deve
+# tocar um caminho do fork. O preparar (antes do merge, para avisar cedo) e o publicar (que
+# decide) conferem, só com git, o que o upstream trouxe (a função guarda_fronteira, igual nos
+# dois): (a) nenhum caminho do fork (po/, i18n/, AGENTS.md, CLAUDE.md, .github/README.md,
+# .github/copilot-instructions.md, .github/workflows/ptbr-*) nem arquivo de instrução ou
+# configuração de agente (CLAUDE.md, AGENTS.md e GEMINI.md, também com .local, .mcp.json,
+# .claude e .cursor, em qualquer pasta, e .github/instructions/; pasta ou link), e nenhum link
+# simbólico (o upstream de hoje não tem nenhum; um .claude -> ci/x passaria pelos padrões de
+# caminho e o Claude Code carregaria os hooks pelo link); (b) desde o merge-base, nada em
+# .github/ além de workflows/main.yml e ISSUE_TEMPLATE/; (c) se o main.yml mudou, nenhuma
+# linha acrescentada em relação à da main com secrets, pull_request_target, workflow_run,
+# id-token, as palavras environment e permissions (o main.yml do upstream nunca as teve),
+# write depois de dois-pontos (também entre aspas), os caracteres CR, NEL (U+0085), LS
+# (U+2028) ou PS (U+2029), que o YAML lê como quebra de linha e o git não, ou uma forma de
+# YAML que monta uma palavra sem escrevê-la: o indicador ? (chave explícita) no começo da
+# linha ou depois de espaço, [, { ou ,; âncora e alias (&nome, *nome); escape (\x69,
+# \u0069); dobra de linha (linha com " ou ' que termina em \, o que recusa também um
+# comando de shell assim). A guarda é textual e lê bytes (LC_ALL=C: um byte que não é UTF-8
+# válido não a engana): recusa o óbvio e não prova que o arquivo é seguro. É defesa em
+# profundidade; a proteção principal é a configuração do mantenedor
+# (main.yml do upstream desativado no fork, Environment ptbr-sync restrito à main: veja
+# CONFIGURAÇÃO e o item P2-M01). Recusar é exit 1 com ::error, sem push, e o sync-quebrado
+# abre a issue (o que fazer: veja OPERAÇÃO).
+# Em toda mudança do main.yml, o cabeçalho do PR (escrito pelo publicar) avisa que ele roda no
+# push de sync/upstream e, depois do merge, na main.
+#
+# O que este desenho NÃO protege: o cache da main. Salvá-lo antes do merge só garante que o
+# passo cache/save grave o que este job compilou. O código do upstream roda depois, no mesmo
+# runner e no mesmo usuário (com sudo) das actions seguintes; um processo deixado por ele
+# pode ler o ACTIONS_RUNTIME_TOKEN do upload-artifact e dos post steps e gravar qualquer
+# chave no escopo de cache da main, que os outros workflows leem. A revisão humana do PR de
+# sync NÃO protege o cache: o envenenamento acontece aqui, no preparar ou no montar, antes de
+# qualquer revisão (ela só decide se o código do upstream chega à main). Quem consome o
+# cache se defende: o ptbr-deploy.yml (que publica no Pages) não restaura cache, compila o
+# mdbook-i18n-helpers fixado a cada deploy; o traduzir e o publicar também não restauram. O
+# ptbr-ci.yml (contents: read, não publica) restaura o cache dele e executa o mdbook-gettext
+# sem conferir nada além de o arquivo existir: risco aceito.
 #
 # CONFIGURAÇÃO (feita pelo mantenedor; até lá o workflow termina sem fazer nada)
 #   - GitHub App instalado só neste repositório, com permissões de repositório
@@ -32,8 +82,31 @@
 #     Issues: read and write (issue sync-quebrado).
 #   - Variável de repositório PTBR_APP_ID (ID do App). Enquanto ela não existir, as
 #     execuções agendadas terminam sem fazer nada (só o dry_run manual roda).
-#   - Segredo PTBR_APP_PRIVATE_KEY (chave privada .pem do App).
-#   - Segredo ANTHROPIC_API_KEY (usado só no job traduzir).
+#   - Environment "ptbr-sync" (Settings > Environments), com "Deployment branches and tags"
+#     em "Selected branches and tags" e só a main. Os dois segredos moram NESSE ambiente, não
+#     no repositório (apague os de repositório, se existirem):
+#       PTBR_APP_PRIVATE_KEY  chave privada .pem do App;
+#       ANTHROPIC_API_KEY     usado só no job traduzir.
+#     Por quê: o publicar empurra para sync/upstream, com o token do App, um merge que traz
+#     os .github/workflows/* do upstream ainda não revisados, e o GitHub roda o workflow desse
+#     commit no push e no PR com os segredos de repositório. Um segredo de ambiente só chega
+#     aos jobs traduzir, publicar e sync-quebrado (declaram `environment: ptbr-sync`), e só
+#     a partir da main: push em sync/upstream e pull_request não o recebem.
+#   - Settings > Actions > General > Workflow permissions em "Read repository contents and
+#     packages permissions", com "Allow GitHub Actions to create and approve pull requests"
+#     desmarcado. Isso é só o PADRÃO: deixa de leitura o GITHUB_TOKEN dos workflows do
+#     upstream que não declaram `permissions:` (como o main.yml de hoje). Um workflow que
+#     declare `permissions: contents: write` recebe escrita mesmo assim (o teto de leitura
+#     vale só para PR vindo de fork) e, rodando em sync/upstream ou no PR, poderia mexer na
+#     main, por exemplo trocando o traduz_delta.py que o traduzir roda com a ANTHROPIC_API_KEY.
+#     A barreira contra isso é o ruleset da main (DECISOES P7): exigir PR e bloquear o push
+#     direto, sem pôr o GitHub Actions na lista de bypass. O main.yml do upstream roda em todo
+#     push e pull_request, ou seja, no push de sync/upstream e nos PRs de sync, com o
+#     GITHUB_TOKEN padrão e sem os segredos do Environment. Desativá-lo (gh workflow disable
+#     main.yml; o ptbr-ci compila os dois livros) ou mantê-lo é decisão do mantenedor, assim
+#     como o ruleset (item P2-M01 da revisão final; DECISOES P6 e P7). Se ficar ativo, a guarda
+#     de fronteira só recusa o push AUTOMÁTICO de um main.yml que acrescente permissões ou
+#     segredos: um push manual não passa por ela.
 #   - Variável opcional PTBR_MODELO_TRADUCAO (modelo do traduz_delta.py; padrão
 #     claude-haiku-5-5).
 #   - Issues habilitadas e a label "sync-quebrado" criada (sem a label a issue é aberta
@@ -54,7 +127,9 @@
 # OPERAÇÃO
 #   - Execução manual: workflow_dispatch com upstream_ref (branch, tag ou sha completo do
 #     rust-lang/book; padrão main) e dry_run (prepara, traduz e monta, mas não faz push,
-#     PR nem issue; o alarme de atraso ainda marca a execução como falha).
+#     PR nem issue; o alarme de atraso ainda marca a execução como falha). Só valem os
+#     refs/heads/ e refs/tags/ do rust-lang/book (nada de refs/pull/*), e o commit precisa
+#     estar num branch do rust-lang/book: o preparar e o publicar conferem.
 #   - Sem mudança no upstream (ou com o PR de sync já atualizado) termina em poucos minutos.
 #   - MESCLE O PR DE SYNC SEMPRE COM "Create a merge commit", nunca com "Squash and merge"
 #     nem "Rebase and merge". O merge commit é o que põe o upstream no histórico da main:
@@ -70,15 +145,45 @@
 #     mescle essa branch por PR, com merge commit, e rode o sync de novo.
 #   - O PR acumula: cada execução refaz o branch a partir da main com o upstream mais novo.
 #     Um commit manual no branch sync/upstream nunca é sobrescrito: o publicar recusa e
-#     abre a issue. Para refazer um PR, feche-o (ou apague o branch) e rode de novo.
+#     abre a issue. Para refazer um PR, apague o branch sync/upstream (o GitHub fecha o PR
+#     junto) e rode de novo. Com commit que não é do bot o branch tem de ser apagado: só
+#     fechar o PR não basta, porque o publicar olha o branch, não o PR.
+#     Re-run de uma execução antiga nunca rebaixa o PR: se o branch sync/upstream já tem um
+#     upstream mais novo que o da execução, o publicar não faz nada (avisa). Um
+#     workflow_dispatch com upstream_ref mais velho, de propósito, esbarra na mesma trava:
+#     apague o branch para forçar.
 #     Limitação: ao refazer o branch, a IA porta de novo o delta inteiro (não reaproveita o
 #     porte da versão anterior do PR); custa centavos, mas as respostas podem variar.
-#   - Alarme de atraso: upstream mais de 21 dias à frente do merge-base sem PR sync/*
-#     aberto. O alarme não impede o PR (senão o sync nunca se recuperaria): o job
-#     sync-quebrado abre a issue e marca a execução como falha.
-#   - Guarda de reestruturação: capítulo com mais de 10% das mensagens fuzzy, novas ou
-#     removidas (e no mínimo 5) fica fora da IA e o PR vai como rascunho.
-#   - O PR também vai como rascunho se o check.py falhar ou se a tradução falhar.
+#   - Alarme de atraso: o commit mais antigo do upstream que a main ainda não tem (pelo
+#     primeiro pai, a data em que cada merge entrou no rust-lang/book) tem mais de 21 dias
+#     e não há PR sync/* aberto. Mede contra o relógio de agora, e não contra o intervalo
+#     entre commits do upstream: um upstream parado não é atraso do fork (e um
+#     workflow_dispatch com upstream_ref antigo, com a main atrás dele, também dispara).
+#     O alarme não impede o PR (senão o sync nunca se recuperaria): o job sync-quebrado
+#     abre a issue e marca a execução como falha.
+#   - Guarda de reestruturação: capítulo com mais de 10% das mensagens fuzzy, novas (toda
+#     entrada traduzível ainda vazia) ou removidas (e no mínimo 5) fica fora da IA e o corpo
+#     do PR avisa. O capítulo que a guarda tirou da IA continua fora no sync seguinte
+#     enquanto as entradas vazias dele passarem de 10%.
+#   - O PR é SEMPRE aberto como rascunho, e uma atualização o devolve a rascunho (gh pr ready
+#     --undo): quem decide marcá-lo como pronto é o mantenedor, depois de ler o diff e, se o
+#     cabeçalho avisar, a mudança do main.yml. O corpo diz por que ele merece atenção (guarda
+#     de reestruturação, check.py com erros, tradução que falhou), mas o resultado confiável
+#     do check é o do ptbr-ci no próprio PR: o resto do corpo vem do montar, que roda código
+#     do upstream.
+#   - A guarda de fronteira recusou (job preparar ou publicar em falha, issue sync-quebrado,
+#     ::error "Fronteira do upstream" com os caminhos, as linhas ou, para CR, NEL, LS e PS, só a
+#     contagem de linhas): não há retry que resolva.
+#     Leia o que o upstream trouxe (git fetch https://github.com/rust-lang/book main, depois
+#     git diff --stat $(git merge-base origin/main FETCH_HEAD) FETCH_HEAD -- .github po i18n
+#     e git ls-tree -r FETCH_HEAD, em que o modo 120000 é um link simbólico). Se a mudança
+#     for legítima (por exemplo, o upstream ganhou um .github/dependabot.yml), faça o sync
+#     à mão num branch a partir da main: git merge FETCH_HEAD, atualiza_po.sh, autoport.py,
+#     slugs.py, delta.py, traduz_delta.py (com --max-entradas e --max-requisicoes),
+#     apply.py --modo sync e check.py, como no AGENTS.md; leia o main.yml novo ANTES de
+#     empurrar o branch (o push dispara os workflows dele); abra o PR como rascunho e mescle
+#     com "Create a merge commit". Se não for legítima, não faça o merge. Mexer nos padrões
+#     da guarda só depois de decidir que o novo arquivo é aceitável.
 #   - Re-run: "Re-run failed jobs" repete só o que falhou (por exemplo, o capítulo cuja
 #     chamada à API caiu) e aproveita o resto; os artefatos são substituídos (overwrite).
 #     O montar só usa traduções feitas sobre o preparar desta tentativa.
@@ -86,6 +191,12 @@
 #     que o texto antigo e o novo diferem); as linhas que não cabem vão em comentários do PR
 #     (marcados com <!-- ptbr-sync:entradas -->, trocados a cada execução) e a tabela
 #     completa, sem cortes, fica em entradas.md no artifact "montar" (30 dias).
+#   - Actions fixadas por sha de commit, com a versão no comentário: uma tag móvel entregaria
+#     a chave do App e a ANTHROPIC_API_KEY a quem a trocasse. Sem dependabot (o fork não
+#     pode criar .github/dependabot.yml), atualize à mão: resolva a tag com
+#       git ls-remote --tags https://github.com/DONO/REPO 'refs/tags/vX.Y.Z' 'refs/tags/vX.Y.Z^{}'
+#     (vale o sha da linha com ^{}, se houver; senão o da própria tag) e troque o sha e o
+#     comentário.
 
 name: ptbr-sync
 
@@ -124,6 +235,19 @@ env:
   BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
   MDBOOK_VERSION: 0.5.1
   I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+  # O Python e o PyYAML vão em par (o 6.0.2 é o que traz o 3.13): é o par do CONTRATO §2. As
+  # mesmas ferramentas rodam no ptbr-ci.yml, que usa o mesmo par (3.13 e PyYAML 6.0.2); os
+  # dois mudam sempre juntos.
+  PYTHON_VERSAO: '3.13'
+  POLIB_VERSAO: 1.1.1
+  PYYAML_VERSAO: 6.0.2
+  # Tetos de custo do traduzir (a chave da API paga por requisição). O traduz_delta.py recusa o
+  # escopo que passar dos dois primeiros (exit 2, sem requisição) e o job recusa a matriz com
+  # mais capítulos que o terceiro. CAPITULO_PADRAO é o mesmo NOME_CAPITULO do traduz_delta.py.
+  TRAD_MAX_ENTRADAS: 150
+  TRAD_MAX_REQUISICOES: 12
+  TRAD_MAX_CAPITULOS: 30
+  CAPITULO_PADRAO: '^(title-page|foreword|ch[0-9]{2}|appendix|summary)$'
   ATRASO_MAX_DIAS: 21
   GUARDA_PCT: 10
   GUARDA_MINIMO: 5
@@ -150,10 +274,9 @@ jobs:
       upstream_sha: ${{ steps.upstream.outputs.upstream_sha }}
       merge_sha: ${{ steps.merge.outputs.merge_sha }}
       sha_lista: ${{ steps.artefato.outputs.sha_lista }}
-      sha_ferramentas: ${{ steps.ferramentas.outputs.sha_ferramentas }}
     steps:
       - name: Checkout da main
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ env.RAMO_BASE }}
           fetch-depth: 0
@@ -176,13 +299,35 @@ jobs:
         id: upstream
         if: steps.config.outputs.ativo == 'true'
         run: |
-          # Branch ou tag do rust-lang/book, ou um sha completo.
+          # Branch ou tag do rust-lang/book (só refs/heads/ e refs/tags/), ou um sha completo.
+          # Nada de refs/pull/*, pull/N/head nem outro namespace: o git expandiria o nome
+          # curto e buscaria o commit de um PR de terceiros.
           if [[ ! "$UPSTREAM_REF" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$ || "$UPSTREAM_REF" == *..* ]]; then
             echo "::error title=upstream_ref inválido::use um nome de branch ou tag do rust-lang/book, ou um sha completo"
             exit 1
           fi
-          git fetch --no-tags "$UPSTREAM_URL" "$UPSTREAM_REF"
+          if [[ "$UPSTREAM_REF" =~ ^[0-9a-f]{40}$ ]]; then
+            alvo="$UPSTREAM_REF"
+          else
+            case "$UPSTREAM_REF" in
+              refs/heads/* | refs/tags/*) c1="$UPSTREAM_REF"; c2="$UPSTREAM_REF" ;;
+              *) c1="refs/heads/$UPSTREAM_REF"; c2="refs/tags/$UPSTREAM_REF" ;;
+            esac
+            alvo=$(git ls-remote "$UPSTREAM_URL" "$c1" "$c2" \
+              | awk -v h="$c1" -v t="$c2" '!achou && ($2 == h || $2 == t) { print $2; achou = 1 }')
+            if [[ -z "$alvo" ]]; then
+              echo "::error title=upstream_ref inválido::'${UPSTREAM_REF:0:60}' não é um branch nem uma tag do rust-lang/book (refs/pull/* não vale)"
+              exit 1
+            fi
+          fi
+          # A prova de que o commit é do rust-lang/book: está num branch dele (o publicar repete).
+          git fetch --no-tags "$UPSTREAM_URL" '+refs/heads/*:refs/ptbr-upstream/*'
+          git fetch --no-tags "$UPSTREAM_URL" "$alvo"
           upstream_sha=$(git rev-parse --verify --end-of-options 'FETCH_HEAD^{commit}')
+          if [[ -z "$(git for-each-ref --contains "$upstream_sha" refs/ptbr-upstream/)" ]]; then
+            echo "::error title=Commit fora do rust-lang/book::${upstream_sha:0:7} (de $UPSTREAM_REF) não está em nenhum branch do rust-lang/book"
+            exit 1
+          fi
           main_sha=$(git rev-parse --verify --end-of-options 'HEAD^{commit}')
           if ! base_sha=$(git merge-base "$main_sha" "$upstream_sha"); then
             echo "::error title=Sem ancestral comum::a main e o upstream_ref não têm merge-base (é mesmo um commit do rust-lang/book?)"
@@ -248,12 +393,15 @@ jobs:
             echo "::warning title=Upstream fora do histórico da main::$motivo; mescle os PRs de sync com 'Create a merge commit'"
           else
             motivo="upstream ${UPSTREAM_SHA:0:7} ainda não está na main"
-            t_upstream=$(git log -1 --format=%ct "$UPSTREAM_SHA")
-            t_base=$(git log -1 --format=%ct "$BASE_SHA")
-            dias=$(( (t_upstream - t_base) / 86400 ))
+            # Idade do commit mais antigo do upstream que falta à main (pelo primeiro pai: a
+            # data em que cada merge entrou no rust-lang/book, que usa merge commits), e não o
+            # intervalo entre dois commits do upstream: um upstream parado não é atraso.
+            agora=$(date +%s)
+            t_pendente=$(git log --first-parent --format=%ct "$MAIN_SHA..$UPSTREAM_SHA" | tail -n 1)
+            dias=$(( (agora - ${t_pendente:-$agora}) / 86400 ))
             if (( dias > ATRASO_MAX_DIAS && PRS_ABERTOS == 0 )); then
               alarme=true
-              echo "::error title=Sync atrasado::o upstream está $dias dias à frente do merge-base e não há PR sync/* aberto (se o último PR de sync foi mesclado com squash ou rebase, o merge-base não avançou: veja OPERAÇÃO no topo do ptbr-sync.yml)"
+              echo "::error title=Sync atrasado::o upstream tem commit pendente há $dias dias e não há PR sync/* aberto (se o último PR de sync foi mesclado com squash ou rebase, o merge-base não avançou: veja OPERAÇÃO no topo do ptbr-sync.yml)"
             fi
           fi
           echo "$motivo"
@@ -268,35 +416,138 @@ jobs:
             echo "- upstream \`$UPSTREAM_REF\` = \`${UPSTREAM_SHA:0:7}\`; main = \`${MAIN_SHA:0:7}\`; merge-base = \`${BASE_SHA:0:7}\`"
             echo "- decisão: $motivo"
             if [[ "$alarme" == true ]]; then
-              echo "- **alarme de atraso**: $dias dias sem PR sync/* aberto"
+              echo "- **alarme de atraso**: commit pendente há $dias dias, sem PR sync/* aberto"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Antes de qualquer build: o código do upstream ainda não rodou. O publicar repete esta
+      # conferência (é ele que decide); aqui ela só poupa o build e a API de um upstream recusado.
+      - name: Confere a fronteira do upstream (antes do merge)
+        if: steps.decisao.outputs.has_changes == 'true'
+        env:
+          MAIN_SHA: ${{ steps.upstream.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ steps.upstream.outputs.upstream_sha }}
+        run: |
+          # Fronteira do upstream. A MESMA função roda no preparar (avisa cedo, antes do merge) e no
+          # publicar (decide, job confiável); se mudar uma cópia, mude a outra.
+          # Só git, grep, awk, tr, head, cut e paste.
+          # Uso: guarda_fronteira MAIN_SHA UPSTREAM_SHA. Devolve 1 (com ::error) se o upstream:
+          #   (a) tem, em qualquer pasta, caminho do fork, arquivo de instrução ou configuração
+          #       de agente (CLAUDE.md, .claude/, .mcp.json...) ou link simbólico;
+          #   (b) criou, apagou ou alterou em .github/ algo além de workflows/main.yml e
+          #       ISSUE_TEMPLATE/;
+          #   (c) mudou o main.yml e uma linha acrescentada (em relação à da main) tem:
+          #       secrets, environment, pull_request_target, workflow_run, id-token ou permissions
+          #       (a palavra, com ou sem aspas); CR, NEL, LS ou PS (o YAML os lê como quebra de
+          #       linha, o git não); ou uma forma de YAML que monta uma palavra sem escrevê-la: o
+          #       indicador ? no começo da linha ou depois de espaço, [, { ou ,; âncora ou alias
+          #       (&nome, *nome); escape (\x, \u, \U); dobra de linha (linha com " ou ' que
+          #       termina em \).
+          # Roda com LC_ALL=C (bytes, não caracteres): num locale UTF-8, o do runner, o grep omite
+          # a linha ou o caminho com byte que não é UTF-8 válido, e a guarda o deixaria passar.
+          # É heurística textual, defesa em profundidade: a proteção principal é a configuração
+          # do mantenedor (veja CONFIGURAÇÃO no topo do arquivo).
+          # Deixa MAIN_YML_MUDOU=true/false (o publicar avisa no corpo do PR que o main.yml mudou).
+          guarda_fronteira() {
+            local main="$1" up="$2" base achados adicionadas recusado=0
+            local -x LC_ALL=C
+            local fork='^(po|i18n)/|^\.github/(README\.md|copilot-instructions\.md|instructions/|workflows/ptbr-)|(^|/)\.(claude|cursor)(/|$)|(^|/)\.mcp\.json$|(^|/)(CLAUDE|AGENTS|GEMINI)(\.local)?\.md$'
+            local perigo="secrets|environment|pull_request_target|workflow_run|id-token|permissions|write-all|:[[:space:]]*[\"']?write([^[:alnum:]_-]|\$)"
+            # YAML que monta uma palavra sem escrevê-la: o indicador "?" (chave explícita) no começo
+            # da linha ou depois de espaço, "[", "{" ou "," (no mapeamento flow ele nem precisa de
+            # espaço depois, e uma chave de várias linhas só existe assim), âncora ou alias (&nome,
+            # *nome) e escape (\x69, \u0069).
+            local disfarce='(^|[[:space:][{,])\?|(^|[[:space:][{,])[&*][^][:space:]&*,.{}[]|\\[xuU][0-9A-Fa-f]'
+            # Dobra de linha: "\" no fim de uma linha de string entre aspas junta a linha seguinte.
+            # Contar aspas não basta (\" e " dentro de '...' enganam a paridade): recusa toda linha
+            # acrescentada que termina em \ e tem " ou ' (um comando de shell com aspas também).
+            local dobra="[\"'].*\\\\\$"
+            # Quebras de linha do YAML que o git não vê: CR, NEL (U+0085), LS (U+2028), PS (U+2029).
+            # Padrão de bytes (a função toda roda com LC_ALL=C): não depende do locale do runner.
+            local quebra=$'\r|\xc2\x85|\xe2\x80\xa8|\xe2\x80\xa9'
+            MAIN_YML_MUDOU=false
+            if ! base=$(git merge-base "$main" "$up"); then
+              echo "::error title=Fronteira do upstream::a main e o upstream não têm merge-base"
+              return 1
+            fi
+            # Caminhos terminados em NUL (-z): um nome com aspas, tab ou acento não escapa do padrão.
+            achados=$(git ls-tree -r -z --name-only "$up" | grep -zEi "$fork" | tr '\0' '\n' \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream tem caminho do fork ou arquivo de instrução ou configuração de agente: $achados"
+              recusado=1
+            fi
+            # Link simbólico (modo 120000) em qualquer pasta: o upstream de hoje não tem nenhum, e um link
+            # (.claude -> ci/x, por exemplo) esconde de um padrão de caminho o que o Claude Code carregaria.
+            achados=$(git ls-tree -r -z "$up" | grep -zE '^120000 ' | tr '\0' '\n' | cut -f2- \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream tem link simbólico (o de hoje não tem nenhum): $achados"
+              recusado=1
+            fi
+            achados=$(git diff --name-only -z --no-renames "$base" "$up" -- .github | tr '\0' '\n' \
+              | grep -vxE '\.github/(workflows/main\.yml|ISSUE_TEMPLATE/.+)' \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream mudou .github/ além de workflows/main.yml e ISSUE_TEMPLATE: $achados"
+              recusado=1
+            fi
+            if ! git diff --quiet "$base" "$up" -- .github/workflows/main.yml; then
+              MAIN_YML_MUDOU=true
+              # Só as linhas acrescentadas, depois do primeiro @@ (o cabeçalho "+++" não conta, e uma
+              # linha de conteúdo que comece por "++" também entra).
+              adicionadas=$(git diff -U0 --no-color --text "$main" "$up" -- .github/workflows/main.yml \
+                | awk '/^@@/ { h = 1; next } h && /^\+/ { print substr($0, 2) }')
+              # Cada linha que termina em \ também vai junto com a seguinte (sem o recuo dela).
+              adicionadas+=$'\n'$(awk '{ j = (p != ""); if (j) { sub(/^[ \t]+/, ""); $0 = p $0 }
+                if (/\\$/) { p = substr($0, 1, length($0) - 1); next } p = ""; if (j) print }
+                END { if (p != "") print p }' <<< "$adicionadas")
+              # CR, NEL, LS e PS: o YAML os quebra no meio da linha e o git não, então uma palavra
+              # pode ser montada entre duas "linhas" que os padrões de baixo leem separadas. Só
+              # conta (não mostra a linha) e tira a linha da verificação de baixo, que a mostra.
+              achados=$(LC_ALL=C grep -acE "$quebra" <<< "$adicionadas" || true)
+              if [[ "$achados" != 0 ]]; then
+                echo "::error title=Fronteira do upstream::o main.yml do upstream acrescentou $achados linha(s) com CR, NEL (U+0085), LS (U+2028) ou PS (U+2029), que o YAML lê como quebra de linha e o git não (faça o sync à mão depois de ler a mudança: veja OPERAÇÃO no topo do ptbr-sync.yml)"
+                recusado=1
+              fi
+              achados=$(LC_ALL=C grep -avE "$quebra" <<< "$adicionadas" | grep -iE "$perigo|$disfarce|$dobra" \
+                | head -n 5 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+              if [[ -n "$achados" ]]; then
+                echo "::error title=Fronteira do upstream::o main.yml do upstream acrescentou segredo, environment, gatilho perigoso, permissão ou YAML que esconde uma palavra (chave explícita, âncora, alias, escape, dobra de linha): $achados (faça o sync à mão depois de ler a mudança: veja OPERAÇÃO no topo do ptbr-sync.yml)"
+                recusado=1
+              fi
+            fi
+            return "$recusado"
+          }
+          guarda_fronteira "$MAIN_SHA" "$UPSTREAM_SHA" || exit 1
+          echo "fronteira do upstream ${UPSTREAM_SHA:0:7} conferida (main.yml mudou: $MAIN_YML_MUDOU)"
+          echo "- fronteira do upstream conferida (main.yml mudou: $MAIN_YML_MUDOU)" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Instala o Python
         if: steps.decisao.outputs.has_changes == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.13'
+          python-version: ${{ env.PYTHON_VERSAO }}
 
       - name: Instala gettext, polib e PyYAML
         if: steps.decisao.outputs.has_changes == 'true'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq gettext
-          python3 -m pip install --disable-pip-version-check -q polib==1.1.1 PyYAML==6.0.2
+          python3 -m pip install --disable-pip-version-check -q "polib==$POLIB_VERSAO" "PyYAML==$PYYAML_VERSAO"
 
       - name: Instala o mdbook
         if: steps.decisao.outputs.has_changes == 'true'
         run: |
           mkdir -p "$RUNNER_TEMP/bin"
-          curl -fsSL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+          curl --fail --silent --show-error --location --retry 3 "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
             | tar -xz --directory="$RUNNER_TEMP/bin"
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
       - name: Restaura o mdbook-i18n-helpers do cache
         id: cache-i18n
         if: steps.decisao.outputs.has_changes == 'true'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.local/i18n-helpers
           key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
@@ -308,11 +559,13 @@ jobs:
           cargo install --locked --root "$HOME/.local/i18n-helpers" \
             --git https://github.com/google/mdbook-i18n-helpers --rev "$I18N_HELPERS_REV" mdbook-i18n-helpers
 
-      # Salvo aqui, antes do merge: depois dele roda código do upstream, que não pode
-      # envenenar um cache lido por outros workflows.
+      # Salvo aqui, antes do merge, só para guardar o que ESTE passo compilou, e não um
+      # binário trocado pelo build do upstream. Isso não protege o cache da main: o código
+      # do upstream roda depois, neste mesmo job, e pode gravar chaves nele (veja o topo; o
+      # ptbr-deploy.yml não restaura cache, só o ptbr-ci.yml, que não publica).
       - name: Salva o mdbook-i18n-helpers no cache
         if: steps.decisao.outputs.has_changes == 'true' && steps.cache-i18n.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.local/i18n-helpers
           key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
@@ -321,26 +574,6 @@ jobs:
         if: steps.decisao.outputs.has_changes == 'true'
         run: |
           echo "$HOME/.local/i18n-helpers/bin" >> "$GITHUB_PATH"
-
-      # O job traduzir não faz checkout: recebe daqui, da main ainda sem o merge, o script
-      # e os arquivos de contexto do prompt. O sha256 é calculado AGORA, antes de qualquer
-      # código do upstream rodar neste job, e sai como output do passo (o traduzir confere
-      # por ele): assim o código do upstream não consegue trocar o script que recebe a
-      # ANTHROPIC_API_KEY.
-      - name: Separa as ferramentas do job traduzir
-        id: ferramentas
-        if: steps.decisao.outputs.has_changes == 'true'
-        run: |
-          A="$RUNNER_TEMP/artefato"
-          F="$A/ferramentas"
-          mkdir -p "$F/i18n/tools"
-          cp AGENTS.md "$F/"
-          cp i18n/GUIA-DE-ESTILO.md i18n/glossario.yml "$F/i18n/"
-          cp i18n/tools/traduz_delta.py "$F/i18n/tools/"
-          cd "$A" || exit 1
-          find ferramentas -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > ferramentas.sha256
-          cat ferramentas.sha256
-          echo "sha_ferramentas=$(sha256sum ferramentas.sha256 | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
       - name: Faz o merge do upstream num branch local
         id: merge
@@ -425,6 +658,8 @@ jobs:
           limite, minimo = float(os.environ["GUARDA_PCT"]), int(os.environ["GUARDA_MINIMO"])
 
           def contaveis(po):
+              # A mesma regra de delta.py, lotes.py, check.py e status.py (po_util não tem
+              # uma função só dela): se uma mudar, mude as cinco.
               return [e for e in po if not e.obsolete and po_util.traduzivel(e)
                       and not po_util.sem_texto(e) and e.msgid not in po_util.SEMPRE_VAZIAS]
 
@@ -433,13 +668,16 @@ jobs:
           depois = po_util.carregar("po/pt-BR.po")               # depois do autoport e do slugs
           delta = json.loads((T / "delta" / "delta.json").read_text(encoding="utf-8"))["capitulos"]
 
-          vivas_antes = {e.msgid for e in antes if not e.obsolete}
           vivas_depois = {e.msgid: e for e in depois if not e.obsolete}
           # Mensagem que o msgmerge casou como fuzzy é "alterada", não nova + removida
           # (inclusive as que o autoport já resolveu, que nem contam).
           fuzzy_mescladas = [e for e in mesclado if not e.obsolete and "fuzzy" in e.flags]
-          casadas_novas = {e.msgid for e in fuzzy_mescladas}
           casadas_antigas = {e.previous_msgid for e in fuzzy_mescladas if e.previous_msgid}
+          # Uma fuzzy que já era fuzzy e mudou de novo: o msgmerge mantém o "#| msgid"
+          # ORIGINAL, então a versão intermediária (fuzzy no PO de antes, com esse mesmo
+          # "#| msgid") é o mesmo parágrafo e não conta como removida.
+          intermediarias = {e.msgid for e in antes if not e.obsolete and "fuzzy" in e.flags
+                            and e.previous_msgid and e.previous_msgid in casadas_antigas}
           stats = {}
           def conta(cap):
               return stats.setdefault(cap, {"total": 0, "fuzzy": 0, "novas": 0, "removidas": 0})
@@ -448,10 +686,14 @@ jobs:
               s["total"] += 1
               if "fuzzy" in e.flags:
                   s["fuzzy"] += 1
-              elif e.msgid not in vivas_antes and e.msgid not in casadas_novas:
+              elif not e.msgstr.strip():
+                  # Vazia e sem fuzzy: chegou agora ou sobrou de um sync anterior (a que a
+                  # guarda deixou fora da IA, a que o apply.py recusou). O delta.py a manda à
+                  # IA do mesmo jeito, então ela pesa aqui também.
                   s["novas"] += 1
           for e in contaveis(antes):
-              if e.msgid not in vivas_depois and e.msgid not in casadas_antigas:
+              if (e.msgid not in vivas_depois and e.msgid not in casadas_antigas
+                      and e.msgid not in intermediarias):
                   conta(po_util.capitulo(e))["removidas"] += 1
 
           capitulos, excluidos, relatorio = [], [], {}
@@ -489,7 +731,7 @@ jobs:
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
               out.write(f"- autoport: {len(portadas)} entrada(s); capítulos para a IA: {', '.join(capitulos) or 'nenhum'}\n")
               if excluidos:
-                  out.write(f"- **guarda de reestruturação**: fora da IA (PR em rascunho): {', '.join(excluidos)}\n")
+                  out.write(f"- **guarda de reestruturação**: fora da IA (o corpo do PR avisa): {', '.join(excluidos)}\n")
           PY
 
       - name: Empacota os artefatos (bundle e sha256)
@@ -511,7 +753,7 @@ jobs:
 
       - name: Publica os artefatos do preparar
         if: steps.decisao.outputs.has_changes == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: preparar
           path: ${{ runner.temp }}/artefato
@@ -525,64 +767,119 @@ jobs:
     if: needs.preparar.outputs.has_changes == 'true' && needs.preparar.outputs.chapters != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    permissions: {}
+    permissions:
+      contents: read   # só para o checkout da main (sem isto, ele falha se o repositório for privado)
+    environment: ptbr-sync   # o ANTHROPIC_API_KEY é segredo deste ambiente (veja CONFIGURAÇÃO)
     strategy:
       fail-fast: false
       max-parallel: 2
       matrix:
         capitulo: ${{ fromJSON(needs.preparar.outputs.chapters) }}
     steps:
+      # Primeiro de tudo, antes de qualquer download ou da chave: o nome do capítulo e o
+      # tamanho da matriz vêm do preparar, que roda código do upstream. Fora do padrão, o job
+      # falha sem chamar a API (o traduz_delta.py repete a conferência do nome).
+      - name: Confere o capítulo e o tamanho da matriz
+        env:
+          CAPITULO: ${{ matrix.capitulo }}
+          CAPITULOS: ${{ needs.preparar.outputs.chapters }}
+        run: |
+          if [[ ! "$CAPITULO" =~ $CAPITULO_PADRAO ]]; then
+            echo "::error title=Capítulo inválido::'${CAPITULO:0:40}' não é title-page, foreword, chNN, appendix nem summary"
+            exit 1
+          fi
+          n=$(jq 'length' <<< "$CAPITULOS")
+          if [[ ! "$n" =~ ^[0-9]+$ ]] || (( n > TRAD_MAX_CAPITULOS )); then
+            echo "::error title=Matriz grande demais::o preparar mandou '${n:0:20}' capítulos para a IA (o teto é $TRAD_MAX_CAPITULOS)"
+            exit 1
+          fi
+
+      # O script que recebe a chave vem da main, nunca de um artefato: nada do que o preparar
+      # (cache restaurado, código do upstream) produziu entra no job além do delta.json. Só
+      # os quatro arquivos pedidos, sem modo cone (que traria a raiz inteira e i18n/tools/*).
+      - name: Checkout da main (só as ferramentas do traduzir)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ env.RAMO_BASE }}
+          persist-credentials: false
+          sparse-checkout: |
+            /AGENTS.md
+            /i18n/GUIA-DE-ESTILO.md
+            /i18n/glossario.yml
+            /i18n/tools/traduz_delta.py
+          sparse-checkout-cone-mode: false
+
+      # Se a main andou depois do preparar, o publicar não publicaria este sync (ele confere o
+      # mesmo sha): termina sem chamar a API, e a próxima execução refaz o sync.
+      - name: Confere que a main é a do preparar
+        id: base
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+        run: |
+          if [[ ! "$MAIN_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error title=main_sha inválido::o preparar não informou o sha da main"
+            exit 1
+          fi
+          atual=$(git rev-parse --verify --end-of-options 'HEAD^{commit}')
+          esperados=$'./AGENTS.md\n./i18n/GUIA-DE-ESTILO.md\n./i18n/glossario.yml\n./i18n/tools/traduz_delta.py'
+          presentes=$(find . -path ./.git -prune -o -type f -print | LC_ALL=C sort)
+          if [[ "$presentes" != "$esperados" ]]; then
+            echo "::error title=Checkout inesperado::o checkout esparso deveria ter só os quatro arquivos de ferramentas"
+            echo "$presentes"
+            exit 1
+          fi
+          if [[ "$atual" != "$MAIN_SHA" ]]; then
+            echo "::warning title=A main mudou durante o sync::a main agora está em ${atual:0:7} (o preparar usou ${MAIN_SHA:0:7}); nada é traduzido, a próxima execução refaz o sync"
+            echo "seguir=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "seguir=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Baixa os artefatos do preparar
-        uses: actions/download-artifact@v4
+        if: steps.base.outputs.seguir == 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: preparar
           path: ${{ runner.temp }}/preparar
 
-      # Duas conferências: a lista geral (integridade no trânsito) e a das ferramentas,
-      # contra o sha256 calculado no preparar antes do merge (o script não foi trocado nem
-      # ganhou vizinhos, como um yaml.py que o Python importaria no lugar do PyYAML).
-      - name: Confere os artefatos (sha256)
+      # Integridade no trânsito: a lista geral confere pelo sha256 do preparar e o delta.json
+      # tem de estar nela (só ele é usado; o resto do artefato é ignorado aqui).
+      - name: Confere o delta (sha256)
+        if: steps.base.outputs.seguir == 'true'
         env:
           SHA_LISTA: ${{ needs.preparar.outputs.sha_lista }}
-          SHA_FERRAMENTAS: ${{ needs.preparar.outputs.sha_ferramentas }}
         run: |
           cd "$RUNNER_TEMP/preparar" || exit 1
           echo "$SHA_LISTA  SHA256SUMS" | sha256sum -c --quiet
           sha256sum -c --quiet SHA256SUMS
-          if [[ ! "$SHA_FERRAMENTAS" =~ ^[0-9a-f]{64}$ ]]; then
-            echo "::error title=Ferramentas sem sha256::o preparar não publicou o sha256 das ferramentas"
-            exit 1
-          fi
-          echo "$SHA_FERRAMENTAS  ferramentas.sha256" | sha256sum -c --quiet
-          sha256sum -c --quiet ferramentas.sha256
-          esperados=$(sed 's/^[0-9a-f]*  //' ferramentas.sha256)
-          presentes=$(find ferramentas ! -type d | LC_ALL=C sort)
-          if [[ "$presentes" != "$esperados" ]]; then
-            echo "::error title=Ferramentas alteradas::há arquivos a mais ou a menos em ferramentas/"
-            diff <(echo "$esperados") <(echo "$presentes") || true
+          if ! grep -qE '^[0-9a-f]{64}  \./delta\.json$' SHA256SUMS; then
+            echo "::error title=Delta sem sha256::o delta.json não está no SHA256SUMS do preparar"
             exit 1
           fi
 
       - name: Instala o Python
-        uses: actions/setup-python@v5
+        if: steps.base.outputs.seguir == 'true'
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.13'
+          python-version: ${{ env.PYTHON_VERSAO }}
 
       - name: Instala o PyYAML
+        if: steps.base.outputs.seguir == 'true'
         run: |
-          python3 -m pip install --disable-pip-version-check -q PyYAML==6.0.2
+          python3 -m pip install --disable-pip-version-check -q "PyYAML==$PYYAML_VERSAO"
 
       - name: Traduz (traduz_delta.py)
+        if: steps.base.outputs.seguir == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PTBR_MODELO_TRADUCAO: ${{ vars.PTBR_MODELO_TRADUCAO }}
           CAPITULO: ${{ matrix.capitulo }}
         run: |
-          P="$RUNNER_TEMP/preparar"
           S="$RUNNER_TEMP/trad"
           mkdir -p "$S"
-          python3 -I "$P/ferramentas/i18n/tools/traduz_delta.py" --delta "$P/delta.json" \
-            --capitulo "$CAPITULO" --saida "$S/trad-$CAPITULO.json" 2>&1 | tee "$S/log-$CAPITULO.txt"
+          python3 -I "$GITHUB_WORKSPACE/i18n/tools/traduz_delta.py" --delta "$RUNNER_TEMP/preparar/delta.json" \
+            --capitulo "$CAPITULO" --saida "$S/trad-$CAPITULO.json" \
+            --max-entradas "$TRAD_MAX_ENTRADAS" --max-requisicoes "$TRAD_MAX_REQUISICOES" 2>&1 | tee "$S/log-$CAPITULO.txt"
 
       # O run guarda os artefatos de todas as tentativas: um "Re-run all jobs" refaz o
       # preparar (outro merge, outro delta), e um trad-<cap> antigo, de um capítulo que
@@ -604,7 +901,7 @@ jobs:
 
       - name: Publica as traduções
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: trad-${{ matrix.capitulo }}
           path: ${{ runner.temp }}/trad
@@ -622,26 +919,25 @@ jobs:
       contents: read
     outputs:
       tip_sha: ${{ steps.commit.outputs.tip_sha }}
-      draft: ${{ steps.corpo.outputs.draft }}
       check_ok: ${{ steps.check.outputs.check_ok }}
       sha_lista: ${{ steps.artefato.outputs.sha_lista }}
     steps:
       - name: Checkout da main usada no preparar
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ needs.preparar.outputs.main_sha }}
           fetch-depth: 0
           persist-credentials: false
 
       - name: Baixa os artefatos do preparar
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: preparar
           path: ${{ runner.temp }}/preparar
 
       - name: Baixa as traduções
         if: needs.traduzir.result != 'skipped'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           pattern: trad-*
           merge-multiple: true
@@ -650,7 +946,7 @@ jobs:
       # Só vão para trad/ as traduções conferidas: de um capítulo da matriz, íntegras
       # (sha256) e feitas sobre ESTE preparar (preparar-<cap>.txt). O resto é de outra
       # tentativa do run ou de um traduzir que morreu antes de traduzir: o capítulo fica
-      # sem IA e o PR vai como rascunho.
+      # sem IA e o corpo do PR avisa.
       - name: Confere os artefatos (sha256)
         id: trad
         env:
@@ -708,31 +1004,32 @@ jobs:
           echo "faltando=${faltando[*]}" >> "$GITHUB_OUTPUT"
 
       - name: Instala o Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
-          python-version: '3.13'
+          python-version: ${{ env.PYTHON_VERSAO }}
 
       - name: Instala gettext, polib e PyYAML
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq gettext
-          python3 -m pip install --disable-pip-version-check -q polib==1.1.1 PyYAML==6.0.2
+          python3 -m pip install --disable-pip-version-check -q "polib==$POLIB_VERSAO" "PyYAML==$PYYAML_VERSAO"
 
       - name: Instala o mdbook
         run: |
           mkdir -p "$RUNNER_TEMP/bin"
-          curl -fsSL "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+          curl --fail --silent --show-error --location --retry 3 "https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
             | tar -xz --directory="$RUNNER_TEMP/bin"
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
       - name: Restaura o mdbook-i18n-helpers do cache
         id: cache-i18n
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.local/i18n-helpers
           key: ptbr-i18n-helpers-${{ runner.os }}-${{ env.I18N_HELPERS_REV }}
 
-      # Sem salvar: este job roda código do upstream (o preparar já salvou o cache).
+      # Sem salvar: este job roda código do upstream (o preparar já salvou o cache). Não é
+      # uma barreira contra o envenenamento do cache da main (veja o topo).
       - name: Compila o mdbook-i18n-helpers fixado (cache ausente)
         if: steps.cache-i18n.outputs.cache-hit != 'true'
         working-directory: ${{ runner.temp }}
@@ -796,7 +1093,7 @@ jobs:
           if (( rc >= 2 )); then
             exit "$rc"
           elif (( rc == 1 )); then
-            echo "::warning title=apply.py::algumas traduções foram rejeitadas e ficam fuzzy ou vazias (o livro mostra o inglês)"
+            echo "::warning title=apply.py::algumas traduções foram rejeitadas e ficam fuzzy ou vazias (o livro mostra o inglês, salvo nos títulos do src/SUMMARY.md: eles mostram a tradução antiga, e o check.py barra o PR até serem portados)"
           fi
 
       - name: Acerta os slugs dos títulos traduzidos (slugs.py)
@@ -824,7 +1121,7 @@ jobs:
           if (( rc == 0 )); then
             echo "check_ok=true" >> "$GITHUB_OUTPUT"
           else
-            echo "::warning title=check.py::o check encontrou erros; o PR vai como rascunho"
+            echo "::warning title=check.py::o check encontrou erros; o corpo do PR (sempre rascunho) avisa"
             echo "check_ok=false" >> "$GITHUB_OUTPUT"
           fi
 
@@ -854,6 +1151,7 @@ jobs:
         env:
           MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
           UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+          MERGE_SHA: ${{ needs.preparar.outputs.merge_sha }}
           DRAFT_PREPARAR: ${{ needs.preparar.outputs.draft }}
           SO_HISTORICO: ${{ needs.preparar.outputs.so_historico }}
           CHECK_OK: ${{ steps.check.outputs.check_ok }}
@@ -874,12 +1172,14 @@ jobs:
                       f"/actions/runs/{os.environ['GITHUB_RUN_ID']}")
           LIMITE_CORPO = 60000   # bytes por corpo ou comentário; o GitHub aceita até 65536 caracteres
           CELULA_CORPO, CELULA_COMENTARIO = 400, 1500   # caracteres por célula de texto
-          MAX_COMENTARIOS = 10
+          MAX_COMENTARIOS = 10   # manter igual a MAX_PARTES do publicar
+          MAX_ACHADOS = 40       # erros do check.py listados no corpo do PR (o resto fica no check.json)
           MARCA = "<!-- ptbr-sync:entradas -->"   # o publicar troca os comentários com esta marca
 
           def tam(texto):
               return len(texto.encode("utf-8"))
-          ESPECIAIS = set("&<>|\\`*_[]#@$~")   # sem < e [ não se formam tags nem links
+          # Sem < e [ não se formam tags nem links; sem : não há autolink (http://, ftp://, mailto:).
+          ESPECIAIS = set("&<>|\\`*_[]#@$~:")
 
           def ler(caminho, padrao):
               try:
@@ -887,18 +1187,26 @@ jobs:
               except (OSError, ValueError):
                   return padrao
 
+          # Espaço de largura zero (U+200B), escrito como escape porque é invisível: um
+          # literal some no diff e uma "limpeza" de caracteres invisíveis o destruiria.
+          ZWSP = "\u200b"
+
           def neutro(texto):
-              # @mencao e #123 viram texto: nada de notificar pessoas nem citar issues.
-              return texto.replace("@", "@​").replace("#", "#​")
+              # @mencao e #123 viram texto: nada de notificar pessoas nem citar issues. O
+              # ZWSP depois de @ e # é o que desfaz a menção e a referência.
+              return texto.replace("@", "@" + ZWSP).replace("#", "#" + ZWSP)
+          assert neutro("@a #1") != "@a #1", "neutro() virou uma operação nula: a menção voltaria a notificar"
 
           def cel(texto, limite=None):
-              """Texto não confiável (upstream, IA) -> célula de tabela inerte."""
+              """Texto não confiável (upstream, IA) -> célula de tabela inerte: sem menção,
+              referência a issue, tag, formatação nem autolink (http://, www., mailto:)."""
               if texto is None or texto == "":
                   return "—"
               texto = str(texto)
               if limite is not None and len(texto) > limite:
                   texto = texto[:limite] + "…"
               texto = "".join(f"&#{ord(c)};" if c in ESPECIAIS else c for c in neutro(texto))
+              texto = re.sub(r"(?i)\bwww\.", lambda m: m.group(0)[:-1] + "&#46;", texto)   # www. também vira link
               return texto.replace("\r", "").replace("\n", "<br>")
 
           def recorte(antigo, novo, limite):
@@ -932,8 +1240,10 @@ jobs:
               motivos.append("a guarda de reestruturação tirou capítulos da IA")
           if os.environ.get("CHECK_OK") != "true":
               motivos.append("o check.py encontrou erros")
-          if os.environ.get("TRADUZIR_RESULT") not in ("success", "skipped"):
-              motivos.append(f"a tradução por IA não terminou bem ({os.environ.get('TRADUZIR_RESULT')})")
+          resultado = os.environ.get("TRADUZIR_RESULT", "")
+          if resultado not in ("success", "skipped"):
+              ROTULO = {"failure": "falha", "cancelled": "cancelado"}   # o resto aparece como veio
+              motivos.append(f"a tradução por IA não terminou bem ({ROTULO.get(resultado, resultado)})")
           if os.environ.get("TRAD_FALTANDO", "").split():
               motivos.append("sem tradução por IA para " + ", ".join(cel(c, 20) for c in os.environ["TRAD_FALTANDO"].split()))
 
@@ -986,7 +1296,7 @@ jobs:
                   prio = 0 if (novo or ident in rejeitadas) else (1 if fuzzy else 2)
                   linhas.append((prio, len(linhas), (cap, ident, item.get("msgid_anterior") if fuzzy else None,
                                  item.get("msgid"), item.get("msgstr_atual"),
-                                 novo or "(fuzzy ou vazia: o livro mostra o inglês)",
+                                 novo or "(fuzzy ou vazia: o livro mostra o inglês, salvo nos títulos do SUMMARY.md: a tradução antiga)",
                                  origem, t.get("confianca") or "—")))
           linhas = [l for _p, _i, l in sorted(linhas)]
 
@@ -1003,23 +1313,31 @@ jobs:
           n_commits = int(git("rev-list", "--count", "--no-merges", f"{main_sha}..{up_sha}").strip())
           commits = git("log", "--no-merges", "-n", "300", "--date=short",
                         "--format=%h %ad %an: %s", f"{main_sha}..{up_sha}")
+          # Workflows que o merge traz do upstream: depois do merge do PR eles rodam na main.
+          workflows = [w for w in git("diff", "--name-only", "-z", main_sha, os.environ["MERGE_SHA"],
+                                      "--", ".github/workflows").split("\0") if w]
 
           resumo = check.get("resumo", {})
           partes = [f"## Sync upstream {up7}\n",
                     f"Mescla o `rust-lang/book` (`{up7}`) na main (`{main_sha[:7]}`), atualiza o "
                     "`po/pt-BR.po` (msgmerge --previous), porta sem IA as trocas de versão (autoport), "
                     "acerta os `{#slug}` e aplica o porte por IA do delta (`apply.py --modo sync`). "
-                    "O que ficar fuzzy ou vazio aparece em inglês no livro.\n",
+                    "O que ficar fuzzy ou vazio aparece em inglês no livro (salvo nos títulos do `src/SUMMARY.md`: "
+                    "fuzzy, eles mostram a tradução antiga, e o `check.py` barra o PR até serem portados).\n",
                     "> [!IMPORTANT]\n> Mescle este PR com **Create a merge commit**, nunca com squash nem "
                     "rebase: o merge commit é o que põe o upstream no histórico da main. Sem ele o "
                     "merge-base não avança, o próximo sync parte de uma base antiga (e pode conflitar) "
                     "e o alarme de atraso dispara.\n"]
+          if workflows:
+              partes.append("> [!NOTE]\n> O merge do upstream altera arquivos de workflow ("
+                            + ", ".join(cel(w, 80) for w in workflows[:10]) + (", …" if len(workflows) > 10 else "")
+                            + "). Depois do merge deste PR eles passam a rodar na main: leia a mudança antes de mesclar.\n")
           if os.environ.get("SO_HISTORICO") == "true":
               partes.append("> [!NOTE]\n> A main já tinha o conteúdo deste upstream, mas não o histórico "
                             "(um PR de sync anterior foi mesclado com squash ou rebase). O commit de merge "
                             "deste PR não muda nenhum arquivo: só devolve o upstream ao histórico da main.\n")
           if motivos:
-              partes.append("> [!WARNING]\n> PR em rascunho: " + "; ".join(motivos) + ".\n")
+              partes.append("> [!WARNING]\n> Atenção antes de marcar o PR como pronto: " + "; ".join(motivos) + ".\n")
           partes += ["### Resumo\n", "| item | valor |", "| --- | --- |",
                      f"| entradas no delta | {sum(len(v) for v in delta.values())} |",
                      f"| portadas pelo autoport | {len(portadas)} |",
@@ -1036,7 +1354,12 @@ jobs:
           erros = [a for a in check.get("achados", []) if a.get("severidade") == "erro"]
           fim = ["", "### check.py\n",
                  f"<details><summary>{len(erros)} erro(s), {resumo.get('avisos', '?')} aviso(s)</summary>\n"]
-          fim += [f"- {cel(a.get('check'), 40)}: {cel(a.get('mensagem'), 300)}" for a in erros[:40]]
+          fim += [f"- {cel(a.get('check'), 40)}: {cel(a.get('mensagem'), 300)}" for a in erros[:MAX_ACHADOS]]
+          ocultos = len(erros) - MAX_ACHADOS
+          if ocultos > 0 or resumo.get("avisos") != 0:
+              onde = f"`check.json` e `check.txt` no artifact `montar` da execução {execucao}"
+              fim.append(f"- … e mais {ocultos} erro(s); a lista completa e os avisos estão em {onde}." if ocultos > 0
+                         else f"- Os avisos estão em {onde}.")
           fim += ["", "</details>\n", "### Commits do upstream (dados não confiáveis, só para contexto)\n"]
           lista = html.escape(neutro(commits.strip()))
           if tam(lista) > LIMITE_CORPO // 3:
@@ -1093,8 +1416,6 @@ jobs:
           (M / "pr-body.md").write_text(corpo, encoding="utf-8")
           print(f"corpo do PR: {tam(corpo)} bytes, {i} de {len(linhas)} linha(s) na tabela; "
                 f"{len(comentarios)} comentário(s) com {j - i} linha(s); {sobram} só no entradas.md")
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
-              out.write(f"draft={'true' if motivos else 'false'}\n")
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
               out.write(corpo)
           PY
@@ -1115,7 +1436,7 @@ jobs:
           echo "sha_lista=$(sha256sum SHA256SUMS | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
 
       - name: Publica os artefatos do montar
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: montar
           path: ${{ runner.temp }}/montar
@@ -1130,10 +1451,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions: {}
+    environment: ptbr-sync   # o PTBR_APP_PRIVATE_KEY é segredo deste ambiente (veja CONFIGURAÇÃO)
     steps:
       - name: Gera o token do GitHub App
         id: app
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
         with:
           app-id: ${{ vars.PTBR_APP_ID }}
           private-key: ${{ secrets.PTBR_APP_PRIVATE_KEY }}
@@ -1143,20 +1465,20 @@ jobs:
 
       # Só git: nenhum script, build ou action do repositório roda neste job.
       - name: Checkout da main (só para o git)
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ env.RAMO_BASE }}
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
 
       - name: Baixa os artefatos do preparar
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: preparar
           path: ${{ runner.temp }}/preparar
 
       - name: Baixa os artefatos do montar
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: montar
           path: ${{ runner.temp }}/montar
@@ -1187,7 +1509,9 @@ jobs:
           fi
 
       # Não confia no montar (que rodou código do upstream): recalcula o merge e só
-      # aceita, depois dele, commits simples que mexem apenas em po/pt-BR.po.
+      # aceita, depois dele, no máximo UM commit simples (o montar cria um só), que mexe
+      # apenas em po/pt-BR.po. Só o diff líquido não basta: uma cadeia que acrescenta e
+      # depois remove arquivos passaria por ele, com os commits indo no push.
       - name: Confere o branch montado
         if: steps.base.outputs.mudou == 'false'
         env:
@@ -1209,10 +1533,13 @@ jobs:
           if (( ${#pais[@]} != 3 )) || [[ "${pais[1]}" != "$MAIN_SHA" || "${pais[2]}" != "$UPSTREAM_SHA" ]]; then
             recusa "o commit de merge não tem como pais a main e o upstream"
           fi
-          # Sem o cabeçalho com o token do App que o checkout gravou para github.com.
-          git -c 'http.https://github.com/.extraheader=' fetch --no-tags "$UPSTREAM_URL" "$UPSTREAM_REF"
-          git merge-base --is-ancestor "$UPSTREAM_SHA" FETCH_HEAD \
-            || recusa "${UPSTREAM_SHA:0:7} não pertence ao histórico de $UPSTREAM_REF do rust-lang/book"
+          # Sem o cabeçalho com o token do App que o checkout gravou para github.com. A prova de
+          # que o commit é do rust-lang/book não pode depender do próprio $UPSTREAM_REF (com um
+          # sha ou refs/pull/N/head, o FETCH_HEAD seria o próprio commit): é estar num branch dele.
+          git -c 'http.https://github.com/.extraheader=' fetch --no-tags "$UPSTREAM_URL" '+refs/heads/*:refs/ptbr-upstream/*'
+          { git cat-file -e "${UPSTREAM_SHA}^{commit}" 2> /dev/null \
+            && [[ -n "$(git for-each-ref --contains "$UPSTREAM_SHA" refs/ptbr-upstream/)" ]]; } \
+            || recusa "${UPSTREAM_SHA:0:7} não está em nenhum branch do rust-lang/book"
           arvore=$(git merge-tree --write-tree --no-messages "$MAIN_SHA" "$UPSTREAM_SHA") \
             || recusa "o merge recalculado aqui tem conflito"
           [[ "$arvore" == "$(git rev-parse "$MERGE_SHA^{tree}")" ]] \
@@ -1220,16 +1547,124 @@ jobs:
           git merge-base --is-ancestor "$MERGE_SHA" "$tip" || recusa "o branch não parte do merge"
           [[ -z "$(git rev-list --min-parents=2 "$MERGE_SHA..$tip")" ]] \
             || recusa "há merges depois do merge do upstream"
+          (( $(git rev-list --count "$MERGE_SHA..$tip") <= 1 )) \
+            || recusa "há mais de um commit depois do merge do upstream (o montar cria no máximo um)"
           fora=$(git diff --name-only "$MERGE_SHA" "$tip" | grep -vx 'po/pt-BR.po' || true)
           [[ -z "$fora" ]] || recusa "depois do merge só po/pt-BR.po pode mudar"
           echo "branch conferido: merge ${MERGE_SHA:0:7} + $(git rev-list --count "$MERGE_SHA..$tip") commit(s) só no PO"
+
+      # A decisão sobre o que o upstream trouxe é daqui (o preparar só avisou cedo): só git,
+      # sobre os objetos que o passo anterior já buscou do rust-lang/book.
+      - name: Confere a fronteira do upstream
+        id: fronteira
+        if: steps.base.outputs.mudou == 'false'
+        env:
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
+        run: |
+          # Fronteira do upstream. A MESMA função roda no preparar (avisa cedo, antes do merge) e no
+          # publicar (decide, job confiável); se mudar uma cópia, mude a outra.
+          # Só git, grep, awk, tr, head, cut e paste.
+          # Uso: guarda_fronteira MAIN_SHA UPSTREAM_SHA. Devolve 1 (com ::error) se o upstream:
+          #   (a) tem, em qualquer pasta, caminho do fork, arquivo de instrução ou configuração
+          #       de agente (CLAUDE.md, .claude/, .mcp.json...) ou link simbólico;
+          #   (b) criou, apagou ou alterou em .github/ algo além de workflows/main.yml e
+          #       ISSUE_TEMPLATE/;
+          #   (c) mudou o main.yml e uma linha acrescentada (em relação à da main) tem:
+          #       secrets, environment, pull_request_target, workflow_run, id-token ou permissions
+          #       (a palavra, com ou sem aspas); CR, NEL, LS ou PS (o YAML os lê como quebra de
+          #       linha, o git não); ou uma forma de YAML que monta uma palavra sem escrevê-la: o
+          #       indicador ? no começo da linha ou depois de espaço, [, { ou ,; âncora ou alias
+          #       (&nome, *nome); escape (\x, \u, \U); dobra de linha (linha com " ou ' que
+          #       termina em \).
+          # Roda com LC_ALL=C (bytes, não caracteres): num locale UTF-8, o do runner, o grep omite
+          # a linha ou o caminho com byte que não é UTF-8 válido, e a guarda o deixaria passar.
+          # É heurística textual, defesa em profundidade: a proteção principal é a configuração
+          # do mantenedor (veja CONFIGURAÇÃO no topo do arquivo).
+          # Deixa MAIN_YML_MUDOU=true/false (o publicar avisa no corpo do PR que o main.yml mudou).
+          guarda_fronteira() {
+            local main="$1" up="$2" base achados adicionadas recusado=0
+            local -x LC_ALL=C
+            local fork='^(po|i18n)/|^\.github/(README\.md|copilot-instructions\.md|instructions/|workflows/ptbr-)|(^|/)\.(claude|cursor)(/|$)|(^|/)\.mcp\.json$|(^|/)(CLAUDE|AGENTS|GEMINI)(\.local)?\.md$'
+            local perigo="secrets|environment|pull_request_target|workflow_run|id-token|permissions|write-all|:[[:space:]]*[\"']?write([^[:alnum:]_-]|\$)"
+            # YAML que monta uma palavra sem escrevê-la: o indicador "?" (chave explícita) no começo
+            # da linha ou depois de espaço, "[", "{" ou "," (no mapeamento flow ele nem precisa de
+            # espaço depois, e uma chave de várias linhas só existe assim), âncora ou alias (&nome,
+            # *nome) e escape (\x69, \u0069).
+            local disfarce='(^|[[:space:][{,])\?|(^|[[:space:][{,])[&*][^][:space:]&*,.{}[]|\\[xuU][0-9A-Fa-f]'
+            # Dobra de linha: "\" no fim de uma linha de string entre aspas junta a linha seguinte.
+            # Contar aspas não basta (\" e " dentro de '...' enganam a paridade): recusa toda linha
+            # acrescentada que termina em \ e tem " ou ' (um comando de shell com aspas também).
+            local dobra="[\"'].*\\\\\$"
+            # Quebras de linha do YAML que o git não vê: CR, NEL (U+0085), LS (U+2028), PS (U+2029).
+            # Padrão de bytes (a função toda roda com LC_ALL=C): não depende do locale do runner.
+            local quebra=$'\r|\xc2\x85|\xe2\x80\xa8|\xe2\x80\xa9'
+            MAIN_YML_MUDOU=false
+            if ! base=$(git merge-base "$main" "$up"); then
+              echo "::error title=Fronteira do upstream::a main e o upstream não têm merge-base"
+              return 1
+            fi
+            # Caminhos terminados em NUL (-z): um nome com aspas, tab ou acento não escapa do padrão.
+            achados=$(git ls-tree -r -z --name-only "$up" | grep -zEi "$fork" | tr '\0' '\n' \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream tem caminho do fork ou arquivo de instrução ou configuração de agente: $achados"
+              recusado=1
+            fi
+            # Link simbólico (modo 120000) em qualquer pasta: o upstream de hoje não tem nenhum, e um link
+            # (.claude -> ci/x, por exemplo) esconde de um padrão de caminho o que o Claude Code carregaria.
+            achados=$(git ls-tree -r -z "$up" | grep -zE '^120000 ' | tr '\0' '\n' | cut -f2- \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream tem link simbólico (o de hoje não tem nenhum): $achados"
+              recusado=1
+            fi
+            achados=$(git diff --name-only -z --no-renames "$base" "$up" -- .github | tr '\0' '\n' \
+              | grep -vxE '\.github/(workflows/main\.yml|ISSUE_TEMPLATE/.+)' \
+              | head -n 10 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+            if [[ -n "$achados" ]]; then
+              echo "::error title=Fronteira do upstream::o upstream mudou .github/ além de workflows/main.yml e ISSUE_TEMPLATE: $achados"
+              recusado=1
+            fi
+            if ! git diff --quiet "$base" "$up" -- .github/workflows/main.yml; then
+              MAIN_YML_MUDOU=true
+              # Só as linhas acrescentadas, depois do primeiro @@ (o cabeçalho "+++" não conta, e uma
+              # linha de conteúdo que comece por "++" também entra).
+              adicionadas=$(git diff -U0 --no-color --text "$main" "$up" -- .github/workflows/main.yml \
+                | awk '/^@@/ { h = 1; next } h && /^\+/ { print substr($0, 2) }')
+              # Cada linha que termina em \ também vai junto com a seguinte (sem o recuo dela).
+              adicionadas+=$'\n'$(awk '{ j = (p != ""); if (j) { sub(/^[ \t]+/, ""); $0 = p $0 }
+                if (/\\$/) { p = substr($0, 1, length($0) - 1); next } p = ""; if (j) print }
+                END { if (p != "") print p }' <<< "$adicionadas")
+              # CR, NEL, LS e PS: o YAML os quebra no meio da linha e o git não, então uma palavra
+              # pode ser montada entre duas "linhas" que os padrões de baixo leem separadas. Só
+              # conta (não mostra a linha) e tira a linha da verificação de baixo, que a mostra.
+              achados=$(LC_ALL=C grep -acE "$quebra" <<< "$adicionadas" || true)
+              if [[ "$achados" != 0 ]]; then
+                echo "::error title=Fronteira do upstream::o main.yml do upstream acrescentou $achados linha(s) com CR, NEL (U+0085), LS (U+2028) ou PS (U+2029), que o YAML lê como quebra de linha e o git não (faça o sync à mão depois de ler a mudança: veja OPERAÇÃO no topo do ptbr-sync.yml)"
+                recusado=1
+              fi
+              achados=$(LC_ALL=C grep -avE "$quebra" <<< "$adicionadas" | grep -iE "$perigo|$disfarce|$dobra" \
+                | head -n 5 | tr -d '\r' | cut -c1-120 | paste -sd';' - || true)
+              if [[ -n "$achados" ]]; then
+                echo "::error title=Fronteira do upstream::o main.yml do upstream acrescentou segredo, environment, gatilho perigoso, permissão ou YAML que esconde uma palavra (chave explícita, âncora, alias, escape, dobra de linha): $achados (faça o sync à mão depois de ler a mudança: veja OPERAÇÃO no topo do ptbr-sync.yml)"
+                recusado=1
+              fi
+            fi
+            return "$recusado"
+          }
+          guarda_fronteira "$MAIN_SHA" "$UPSTREAM_SHA" || exit 1
+          echo "fronteira do upstream ${UPSTREAM_SHA:0:7} conferida (main.yml mudou: $MAIN_YML_MUDOU)"
+          echo "main_yml_mudou=$MAIN_YML_MUDOU" >> "$GITHUB_OUTPUT"
 
       - name: Protege commits manuais no branch de sync
         id: remoto
         if: steps.base.outputs.mudou == 'false'
         env:
           MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
+          UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
         run: |
+          publicar=true
           remoto=$(git ls-remote origin "refs/heads/$RAMO_SYNC" | cut -f1)
           if [[ -n "$remoto" ]]; then
             git fetch --no-tags origin "+refs/heads/$RAMO_SYNC:refs/ptbr/remoto"
@@ -1239,33 +1674,137 @@ jobs:
               while read -r linha; do
                 echo "  commit de outra pessoa: $linha"
               done <<< "$alheios"
-              echo "::error title=Commits manuais em $RAMO_SYNC::o branch tem commits que não são do bot; mescle ou feche o PR (e apague o branch) antes do próximo sync"
+              echo "::error title=Commits manuais em $RAMO_SYNC::o branch tem commits que não são do bot; mescle o PR ou apague o branch antes do próximo sync (só fechar o PR não basta)"
               exit 1
             fi
+            # Re-run de uma execução antiga: o PR não volta para um upstream mais velho que
+            # o do branch remoto (o merge do upstream é o primeiro merge do branch fora da
+            # main; vazio se o PR anterior já foi mesclado).
+            m=$(git rev-list --first-parent --min-parents=2 -n 1 refs/ptbr/remoto "^$MAIN_SHA")
+            if [[ -n "$m" ]]; then
+              up_remoto=$(git rev-parse --verify --end-of-options "$m^2")
+              if [[ "$up_remoto" != "$UPSTREAM_SHA" ]] && git merge-base --is-ancestor "$UPSTREAM_SHA" "$up_remoto"; then
+                echo "::notice title=PR com upstream mais novo::o branch $RAMO_SYNC já tem o upstream ${up_remoto:0:7}, mais novo que o desta execução (${UPSTREAM_SHA:0:7}); nada é publicado (para forçar, apague o branch)"
+                publicar=false
+              fi
+            fi
           fi
-          echo "remoto=$remoto" >> "$GITHUB_OUTPUT"
+          {
+            echo "remoto=$remoto"
+            echo "publicar=$publicar"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Faz push de sync/upstream (force-with-lease)
-        if: steps.base.outputs.mudou == 'false'
+        if: steps.base.outputs.mudou == 'false' && steps.remoto.outputs.publicar == 'true'
         env:
           TIP_SHA: ${{ needs.montar.outputs.tip_sha }}
           REMOTO: ${{ steps.remoto.outputs.remoto }}
         run: |
           git push --force-with-lease="refs/heads/$RAMO_SYNC:$REMOTO" origin "$TIP_SHA:refs/heads/$RAMO_SYNC"
 
+      # O corpo do PR e os comentários vêm do montar, que roda código do upstream: o texto passa
+      # por este saneador (sed, escrito aqui; nenhum código do repositório) antes de ser
+      # publicado. Ele tira do texto o que o GitHub transformaria em menção, link, imagem,
+      # referência a issue ou tag HTML, e deixa a tabela, o <br>, o <details>/<summary>/<pre>
+      # e os avisos do GitHub (uma linha inteira "> [!NOTE]", "> [!IMPORTANT]" ou "> [!WARNING]")
+      # que o montar usa de propósito.
+      - name: Escreve o saneador do texto do montar
+        if: steps.base.outputs.mudou == 'false' && steps.remoto.outputs.publicar == 'true'
+        run: |
+          cat > "$RUNNER_TEMP/saneia.sed" <<'SED'
+          # Saneador do texto do montar (job que roda código do upstream) antes de ele virar corpo de PR
+          # ou comentário. Uso: LC_ALL=C sed -E -f saneia.sed. O que o GitHub transforma em menção, link,
+          # imagem ou referência a partir de texto puro é quebrado com uma entidade ou com um espaço de
+          # largura zero (&#8203;); o que o montar usa de propósito continua valendo (tabela, <br>,
+          # <details>, <summary>, <pre>, as entidades que ele mesmo escreve e os avisos "> [!NOTE]").
+          # 0. "&#" (entidade numérica) vira o byte \x01 até o último comando, para as regras abaixo não
+          #    mexerem em entidades (&#35;, &#8203;) nem criarem outras; um \x01 que já viesse no texto sai.
+          s/\x01//g
+          s/&#/\x01/g
+          # 1. #123, GH-123 e dono/repo#123 (e as entidades que viram "#" antes de um número)
+          s/#([0-9])/#\x018203;\1/g
+          s/(\x010*35;|\x01[xX]0*23;|&num;)([0-9])/\1\x018203;\2/g
+          s/(GH-)([0-9])/\1\x018203;\2/g
+          # 2. menções (@nome, @org/equipe) e as entidades que viram "@"
+          s/(@|\x010*64;|\x01[xX]0*40;|&commat;)/\1\x018203;/g
+          # 3. imagens, links e referências: nenhum "[" sobra, a não ser nos avisos do GitHub, e só quando a
+          #    linha inteira é o marcador. Em qualquer outra posição "[!NOTE]" voltaria a ser um "[" e uma
+          #    definição "[!NOTE]: URL" no texto viraria link para todo "[!NOTE]" do PR, até no cabeçalho.
+          s/\[/\x0191;/g
+          s/^> \x0191;!(IMPORTANT|NOTE|WARNING)\]$/> [!\1]/
+          s/\]\(/]\x0140;/g
+          # 4. autolinks: http://, ftp://, www., mailto:
+          s|://|\x0158;//|g
+          s/([wW]{3})\./\1\x0146;/g
+          s/(mailto|xmpp):/\1\x0158;/gI
+          # 5. HTML: nenhuma tag, salvo as sem atributos que o montar usa
+          s/</\&lt;/g
+          s,&lt;(br|/?(details|summary|pre))>,<\1>,g
+          # 6. devolve as entidades
+          s/\x01/\&#/g
+          SED
+
       - name: Abre ou atualiza o PR
         id: pr
-        if: steps.base.outputs.mudou == 'false'
+        if: steps.base.outputs.mudou == 'false' && steps.remoto.outputs.publicar == 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
+          MAIN_SHA: ${{ needs.preparar.outputs.main_sha }}
           UPSTREAM_SHA: ${{ needs.preparar.outputs.upstream_sha }}
-          DRAFT: ${{ needs.montar.outputs.draft }}
+          MERGE_SHA: ${{ needs.preparar.outputs.merge_sha }}
+          TIP_SHA: ${{ needs.montar.outputs.tip_sha }}
+          MAIN_YML_MUDOU: ${{ steps.fronteira.outputs.main_yml_mudou }}
         run: |
           titulo="Sync upstream ${UPSTREAM_SHA:0:7}"
-          corpo="$RUNNER_TEMP/montar/pr-body.md"
+          execucao="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          for v in MAIN_SHA UPSTREAM_SHA MERGE_SHA TIP_SHA; do
+            if [[ ! "${!v}" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "::error title=sha inválido::$v não é um sha completo"
+              exit 1
+            fi
+          done
+          # Cabeçalho escrito aqui, com o que o publicar conferiu (git e gh, nada do montar).
+          cab="$RUNNER_TEMP/cabecalho.md"
+          cat > "$cab" <<'EOT'
+          > [!IMPORTANT]
+          > Este PR é sempre aberto como **rascunho**. Só este cabeçalho vem de um job confiável (o `publicar`: só git, sem código do repositório). Tudo abaixo da linha horizontal vem do job `montar`, que roda código do upstream: é dado não confiável, passou por um saneador e pode estar errado. O resultado confiável do check é o do `ptbr-ci` neste PR, não o `check.py` do corpo.
+
+          | conferido pelo publicar | valor |
+          | --- | --- |
+          EOT
+          {
+            echo "| main | \`$MAIN_SHA\` |"
+            echo "| upstream | \`$UPSTREAM_SHA\` |"
+            echo "| merge | \`$MERGE_SHA\` |"
+            echo "| ponta do branch | \`$TIP_SHA\` |"
+            echo "| execução | $execucao |"
+            echo
+          } >> "$cab"
+          if [[ "$MAIN_YML_MUDOU" == true ]]; then
+            cat >> "$cab" <<'EOT'
+          > [!WARNING]
+          > O `.github/workflows/main.yml` do upstream **mudou** neste sync. Ele roda no push de `sync/upstream` e nos PRs (com o `GITHUB_TOKEN` padrão e sem os segredos do Environment) e, depois do merge deste PR, passa a rodar na main. A guarda de fronteira não achou nele segredo, `environment`, gatilho perigoso nem permissão acrescentados, mas é uma heurística textual: leia a mudança (`git diff origin/main...origin/sync/upstream -- .github/workflows/main.yml`) antes de marcar o PR como pronto.
+
+          EOT
+          fi
+          stat=$(git diff --stat --no-color "$MERGE_SHA" "$TIP_SHA")
+          {
+            echo "O que o branch muda depois do merge do upstream (\`git diff --stat MERGE..PONTA\`):"
+            echo
+            echo "~~~text"
+            echo "${stat:-(sem mudança: o branch é só o merge)}"
+            echo "~~~"
+            echo
+            echo "---"
+            echo
+          } >> "$cab"
+          saneado="$RUNNER_TEMP/pr-body-saneado.md"
+          LC_ALL=C sed -E -f "$RUNNER_TEMP/saneia.sed" "$RUNNER_TEMP/montar/pr-body.md" > "$saneado"
+          corpo="$RUNNER_TEMP/pr-body-final.md"
+          cat "$cab" "$saneado" > "$corpo"
+          # O limite vale para o corpo já saneado (o saneamento aumenta o texto).
           if (( $(wc -c < "$corpo") > 65000 )); then
-            corpo="$RUNNER_TEMP/pr-body-curto.md"
-            echo "O corpo completo passou do limite do GitHub: veja o artifact \`montar\` da execução $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID." > "$corpo"
+            { cat "$cab"; echo "O corpo completo passou do limite do GitHub: veja o artifact \`montar\` da execução $execucao."; } > "$corpo"
           fi
           num=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$RAMO_SYNC" --base "$RAMO_BASE" \
             --state open --json number,isCrossRepository \
@@ -1273,19 +1812,13 @@ jobs:
           if [[ -n "$num" ]]; then
             gh pr edit "$num" --repo "$GITHUB_REPOSITORY" --title "$titulo" --body-file "$corpo"
             rascunho=$(gh pr view "$num" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')
-            if [[ "$DRAFT" == true && "$rascunho" != true ]]; then
+            if [[ "$rascunho" != true ]]; then
               gh pr ready "$num" --repo "$GITHUB_REPOSITORY" --undo
-            elif [[ "$DRAFT" != true && "$rascunho" == true ]]; then
-              gh pr ready "$num" --repo "$GITHUB_REPOSITORY"
             fi
             url=$(gh pr view "$num" --repo "$GITHUB_REPOSITORY" --json url --jq '.url')
           else
-            args=(--repo "$GITHUB_REPOSITORY" --base "$RAMO_BASE" --head "$RAMO_SYNC"
-                  --title "$titulo" --body-file "$corpo")
-            if [[ "$DRAFT" == true ]]; then
-              args+=(--draft)
-            fi
-            url=$(gh pr create "${args[@]}")
+            url=$(gh pr create --repo "$GITHUB_REPOSITORY" --base "$RAMO_BASE" --head "$RAMO_SYNC" \
+              --title "$titulo" --body-file "$corpo" --draft)
             num="${url##*/}"
           fi
           echo "PR: $url"
@@ -1293,21 +1826,27 @@ jobs:
           echo "num=$num" >> "$GITHUB_OUTPUT"
 
       # O resto da tabela por entrada (o que não coube no corpo) vai em comentários
-      # marcados; os da execução anterior, do próprio App, são apagados antes. Falha aqui
-      # só avisa: o PR já está publicado e a tabela completa está no artifact montar.
+      # marcados, saneados como o corpo (a marca da primeira linha é conferida e repetida
+      # fora do saneador); os da execução anterior, do próprio App, são apagados antes. Falha
+      # aqui só avisa: o PR já está publicado e a tabela completa está no artifact montar.
       - name: Continua a tabela nos comentários do PR
-        if: steps.base.outputs.mudou == 'false'
+        if: steps.base.outputs.mudou == 'false' && steps.remoto.outputs.publicar == 'true'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           APP_SLUG: ${{ steps.app.outputs.app-slug }}
           NUM: ${{ steps.pr.outputs.num }}
         run: |
           marca='<!-- ptbr-sync:entradas -->'
+          MAX_PARTES=10   # manter igual a MAX_COMENTARIOS do montar, que é job não confiável
           aviso() {
-            echo "::warning title=Comentários da tabela::$1 (a tabela completa está em entradas.md no artifact montar)"
+            echo "::warning title=Comentários da tabela::$1"
+          }
+          # Para o que deixa a tabela incompleta no PR: diz onde está a completa.
+          aviso_tabela() {
+            aviso "$1 (a tabela completa está em entradas.md no artifact montar)"
           }
           if [[ ! "$NUM" =~ ^[0-9]+$ ]]; then
-            aviso "número do PR inválido: '${NUM:0:20}'"
+            aviso_tabela "número do PR inválido: '${NUM:0:20}'"
             exit 0
           fi
           if [[ -z "$APP_SLUG" ]]; then
@@ -1325,19 +1864,37 @@ jobs:
           done <<< "${antigos:-}"
           shopt -s nullglob
           partes=("$RUNNER_TEMP"/montar/comentarios/parte-*.md)
+          if (( ${#partes[@]} > MAX_PARTES )); then
+            aviso_tabela "o montar mandou ${#partes[@]} partes; só as $MAX_PARTES primeiras serão publicadas"
+            partes=("${partes[@]:0:MAX_PARTES}")
+          fi
+          saneadas="$RUNNER_TEMP/comentarios-saneados"
+          mkdir -p "$saneadas"
+          pub=0
           for parte in "${partes[@]}"; do
-            if (( $(wc -c < "$parte") > 65000 )) || [[ "$(head -n 1 "$parte")" != "$marca" ]]; then
-              aviso "$(basename "$parte") fora do formato esperado; não publicado"
+            nome=$(basename "$parte")
+            if [[ ! "$nome" =~ ^parte-(0[1-9]|10)\.md$ ]] || (( $(wc -c < "$parte") > 65000 )) \
+              || [[ "$(head -n 1 "$parte")" != "$marca" ]]; then
+              aviso_tabela "$nome fora do formato esperado; não publicado"
               continue
             fi
-            gh pr comment "$NUM" --repo "$GITHUB_REPOSITORY" --body-file "$parte" > /dev/null \
-              || aviso "não consegui publicar $(basename "$parte")"
+            { printf '%s\n' "$marca"; tail -n +2 "$parte" | LC_ALL=C sed -E -f "$RUNNER_TEMP/saneia.sed"; } > "$saneadas/$nome"
+            if (( $(wc -c < "$saneadas/$nome") > 65000 )); then
+              aviso_tabela "$nome passou de 65000 bytes depois do saneamento; não publicado"
+              continue
+            fi
+            if gh pr comment "$NUM" --repo "$GITHUB_REPOSITORY" --body-file "$saneadas/$nome" > /dev/null; then
+              pub=$((pub + 1))
+            else
+              aviso_tabela "não consegui publicar $nome"
+            fi
             sleep 2
           done
-          echo "comentários: ${#partes[@]} parte(s) publicada(s) no PR #$NUM"
+          echo "comentários: $pub de ${#partes[@]} parte(s) publicada(s) no PR #$NUM"
 
   # Roda em falha de qualquer job ou no alarme de atraso. A issue só é aberta fora do
-  # dry_run e com o App configurado; o alarme falha a execução mesmo no dry_run.
+  # dry_run e com o App configurado; o alarme falha a execução mesmo no dry_run. O token
+  # do App deste job é só de Issues (permission-issues: write), e não o de escrita do publicar.
   sync-quebrado:
     name: Abre ou atualiza a issue sync-quebrado
     needs: [preparar, traduzir, montar, publicar]
@@ -1345,11 +1902,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: {}
+    environment: ptbr-sync   # o PTBR_APP_PRIVATE_KEY é segredo deste ambiente (veja CONFIGURAÇÃO)
     steps:
       - name: Gera o token do GitHub App
         id: app
         if: inputs.dry_run != true && vars.PTBR_APP_ID != ''
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
         with:
           app-id: ${{ vars.PTBR_APP_ID }}
           private-key: ${{ secrets.PTBR_APP_PRIVATE_KEY }}
@@ -1365,24 +1923,44 @@ jobs:
           R_PUBLICAR: ${{ needs.publicar.result }}
           ALARME: ${{ needs.preparar.outputs.alarme_atraso }}
           DIAS: ${{ needs.preparar.outputs.dias_atraso }}
+          APP_SLUG: ${{ steps.app.outputs.app-slug }}
         run: |
           execucao="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           corpo="$RUNNER_TEMP/issue.md"
+          # Resultado do job em português (needs.<job>.result só tem estes quatro valores).
+          rot() {
+            case "$1" in
+              success) echo sucesso ;;
+              failure) echo falha ;;
+              cancelled) echo cancelado ;;
+              skipped) echo pulado ;;
+              *) echo "$1" ;;
+            esac
+          }
           {
             echo "O ptbr-sync precisa de atenção ($(date -u '+%Y-%m-%d %H:%M UTC')): $execucao"
             echo
             echo "| job | resultado |"
             echo "| --- | --- |"
-            echo "| preparar | $R_PREPARAR |"
-            echo "| traduzir | $R_TRADUZIR |"
-            echo "| montar | $R_MONTAR |"
-            echo "| publicar | $R_PUBLICAR |"
+            echo "| preparar | $(rot "$R_PREPARAR") |"
+            echo "| traduzir | $(rot "$R_TRADUZIR") |"
+            echo "| montar | $(rot "$R_MONTAR") |"
+            echo "| publicar | $(rot "$R_PUBLICAR") |"
             if [[ "$ALARME" == true ]]; then
               echo
-              echo "**Alarme de atraso:** o upstream está $DIAS dias à frente do merge-base e não havia PR sync/* aberto."
+              echo "**Alarme de atraso:** o upstream tem commit pendente há $DIAS dias e não havia PR sync/* aberto."
             fi
           } > "$corpo"
-          num=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json number,title \
+          # A issue certa é a do App: sem filtro, a de qualquer pessoa com o mesmo título
+          # receberia os alertas, e com mais de 100 issues abertas mais novas a do App sairia
+          # da janela e nasceria uma duplicada.
+          if [[ -n "$APP_SLUG" ]]; then
+            filtro=(--author "app/$APP_SLUG" --search 'sync-quebrado in:title')
+          else
+            echo "::warning title=Issue sync-quebrado::o token não informou o app-slug: procuro a issue só pelo título (pode ser de outra pessoa)"
+            filtro=(--limit 100)
+          fi
+          num=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open "${filtro[@]}" --json number,title \
             --jq 'map(select(.title == "sync-quebrado")) | .[0].number // empty')
           if [[ -n "$num" ]]; then
             gh issue comment "$num" --repo "$GITHUB_REPOSITORY" --body-file "$corpo"
@@ -1397,5 +1975,5 @@ jobs:
         env:
           DIAS: ${{ needs.preparar.outputs.dias_atraso }}
         run: |
-          echo "::error title=Sync atrasado::o upstream está $DIAS dias à frente do merge-base e não havia PR sync/* aberto"
+          echo "::error title=Sync atrasado::o upstream tem commit pendente há $DIAS dias e não havia PR sync/* aberto"
           exit 1

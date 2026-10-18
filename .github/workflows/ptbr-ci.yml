@@ -1,24 +1,61 @@
 # ptbr-ci.yml: portão de qualidade da tradução pt-BR (i18n/tools/check.py).
 #
-# O que faz: instala o Rust (a toolchain do arquivo rust-toolchain), o mdbook
+# Dois jobs. `check` instala o Rust (a toolchain do arquivo rust-toolchain), o mdbook
 # 0.5.1, o gettext, o polib, o PyYAML e o mdbook-i18n-helpers (revisão fixada,
 # compilada uma vez e guardada no cache), busca o upstream (rust-lang/book) em
 # refs/remotes/upstream/main e roda `python3 i18n/tools/check.py --json
-# check.json`. Sem --en/--pt, o check.py compila o livro em inglês e em pt-BR
-# sozinho (i18n/build.sh) e confere fronteira, formato do PO, títulos, mensagens,
-# HTML e glossário. O check.json sobe como artefato (mesmo se o check falhar) e
-# um resumo (erros, avisos e cobertura por capítulo) vai para a página da execução.
+# $RUNNER_TEMP/check.json`. Sem --en/--pt, o check.py compila o livro em inglês e
+# em pt-BR sozinho (i18n/build.sh) e confere fronteira, formato do PO, títulos,
+# mensagens, HTML e glossário. O check.json (fora do workspace, apagado antes de
+# cada execução) sobe como artefato (mesmo se o check falhar) e um resumo (erros,
+# avisos e cobertura por capítulo) vai para a página da execução.
+#
+# Antes de tudo, `check` confere as revisões e versões fixadas em vários arquivos: a
+# revisão do mdbook-i18n-helpers (build.sh, deploy, sync e documentação), a versão do
+# mdBook (a do main.yml do upstream tem de ser a do build.sh e dos três ptbr-*.yml; o
+# PR de sync que trocar o mdBook falha aqui, com a causa) e as ações do deploy e do
+# sync (todas fixadas por SHA de 40 hexadecimais; nenhum ptbr-*.yml pode ter caractere
+# Unicode de formato, como U+200B). Depois do check.py, testa as ferramentas que ele
+# não exercita (ele só lê o PO atual): o autoteste do validador (checks/mensagens.py
+# --autoteste), um teste de fumaça do apply.py, lotes.py e status.py numa cópia do PO,
+# o replay do sync de 1500248d (Rust 1.98), sem API, com o PO de antes do merge e a
+# árvore do upstream tirados do histórico git, e todos os testes versionados em
+# i18n/tools/testes/ (teste_*.sh e teste_*.py: a trava de OUT do build.sh, o escopo do
+# PR e a paridade das duas cópias do casamento de termos). Cada teste novo naquela
+# pasta entra sozinho.
+#
+# `escopo` roda só em pull_request, sem Rust nem build (poucos minutos): lê os rótulos
+# do PR e roda o confere_pr.py, que falha quando um PR de capítulo faz mais do que
+# traduzir (muda outro caminho, o msgid ou a estrutura do PO, o msgstr de mais de um
+# capítulo; deixa i18n/entregas/ na ponta; um branch copilot/* que mexe fora de
+# i18n/entregas/<CAP>/*.json e do PO, ou cujas entregas são de outro capítulo que o do PO).
+# O PO sozinho, com o msgstr de um capítulo, passa num branch copilot/*: é o estado de
+# merge, depois que o orquestrador aplica as entregas e apaga a pasta (AGENTS.md). O PR de
+# sync (branch sync/* do próprio repositório) fica fora da regra, e o rótulo
+# `ptbr-estrutural` (posto pelo mantenedor num PR estrutural, como
+# o da migração para PO; o rótulo tem de existir no repositório) faz as violações só
+# informarem. Os rótulos vêm da API, não do evento: depois de pôr o rótulo, use "Re-run
+# jobs" (não há gatilho labeled/unlabeled, que cancelaria a verificação em andamento e
+# rodaria o job de 60 minutos de novo). O resultado vai para o resumo da execução.
+#
+# Limite do `escopo`: o `pull_request` roda o workflow do próprio PR, e um PR pode editar
+# este arquivo. Rodar o confere_pr.py e o po_util da BASE (git archive de base.sha) protege
+# contra erro, não contra má-fé; contra má-fé só protege a revisão do mantenedor dos PRs
+# que mexem no portão (o confere_pr.py avisa quando o PR altera i18n/tools, o build.sh, os
+# patches, os ptbr-*.yml, o glossário, os erros recorrentes ou o revisao.yml).
 #
 # Pré-requisitos: Actions habilitado no repositório e acesso de rede a github.com,
 # crates.io e apt. Não usa segredos, não escreve no repositório e não precisa do
-# Pages: só `contents: read`. Para rodar à mão: aba Actions > ptbr-ci > Run workflow.
+# Pages: só `contents: read` (o job `escopo` acrescenta `pull-requests: read`, só para ler
+# os rótulos). Para rodar à mão: aba Actions > ptbr-ci > Run workflow (sem o job `escopo`).
 #
 # O gatilho de push no branch spike/migracao-po vale só enquanto a migração para
 # PO estiver nele; depois que for para a main, basta deixar `main`.
 #
-# Regras deste arquivo: ações fixadas por versão maior; nenhuma expressão de
-# contexto dentro de `run:` (tudo passa por `env:`); timeout em todo job.
-# O .github/workflows/main.yml é do upstream e nunca se edita.
+# Regras deste arquivo: ações fixadas por versão maior (só leitura e sem segredo: risco
+# aceito; o deploy e o sync, com permissões maiores, fixam o SHA e o passo de conferência
+# garante); nenhuma expressão de contexto dentro de `run:` (tudo passa por `env:`);
+# timeout em todo job. O .github/workflows/main.yml é do upstream e nunca se edita.
 
 name: ptbr-ci
 
@@ -37,8 +74,10 @@ defaults:
   run:
     shell: bash
 
-# Uma execução por branch ou PR; um push novo cancela a execução em andamento do
-# PR (no push para um branch, a anterior termina para o histórico ficar completo).
+# Uma execução por branch ou PR. No PR, um push novo cancela a execução em andamento.
+# No push para um branch (e no Run workflow, que divide o mesmo grupo), a em andamento
+# termina, mas só a mais nova das que esperam roda: o GitHub cancela as pendentes do
+# meio, e um commit intermediário pode ficar sem resultado.
 concurrency:
   group: ptbr-ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -47,10 +86,95 @@ env:
   # Os scripts do check não deixam __pycache__ no repositório.
   PYTHONDONTWRITEBYTECODE: "1"
   # Revisão do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai <Listing caption>).
-  # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh.
+  # Mantenha igual a PTBR_HELPERS_REV em i18n/build.sh: o passo "Conferir as revisões, versões
+  # e ações fixadas" falha se divergir (também confere o deploy, o sync e a documentação).
   I18N_HELPERS_REV: 5025680762103f7da119fe6579e9a533299e2d8a
+  # Versão do mdBook: a do .github/workflows/main.yml do upstream. O mesmo passo de conferência
+  # exige que seja igual à do build.sh (PTBR_MDBOOK_ESPERADO), do deploy e do sync.
+  MDBOOK_VERSION: "0.5.1"
 
 jobs:
+  # Só em pull_request; sem Rust nem build. Os rótulos vêm da API (não do evento) para que o
+  # "Re-run jobs" depois de pôr o rótulo ptbr-estrutural já veja o rótulo novo.
+  escopo:
+    name: Conferir o escopo do PR (confere_pr.py)
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+        with:
+          # O merge-base de base.sha e head.sha pode estar longe da ponta.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Instalar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar o polib
+        run: python3 -m pip install --disable-pip-version-check polib==1.1.1
+
+      - name: Ler os rótulos do PR (API)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORIO: ${{ github.repository }}
+          NUMERO_PR: ${{ github.event.pull_request.number }}
+        run: |
+          rotulos="${RUNNER_TEMP:?}/rotulos.txt"
+          rm -f -- "$rotulos"
+          # Sem a lista o escopo é conferido sem rótulos (o lado seguro: o rótulo só afrouxa).
+          if ! gh api --paginate "repos/${REPOSITORIO}/issues/${NUMERO_PR}/labels?per_page=100" --jq '.[].name' > "$rotulos"; then
+            echo "::warning::não consegui ler os rótulos do PR; o escopo será conferido sem rótulos"
+            : > "$rotulos"
+          fi
+          echo "rótulos do PR:"
+          sed 's/^/  /' "$rotulos"
+
+      # Roda o confere_pr.py e o po_util da BASE (git archive de base.sha, com o src/ de que o
+      # po_util tira a lista de capítulos): protege contra erro, não contra má-fé, porque o PR
+      # também pode editar este workflow (veja o comentário do topo). Se a base ainda não tem o
+      # script (o PR que o cria), usa o do PR, com aviso. As revisões vêm do evento, não do
+      # commit de merge do checkout: se a base avançou, o diff de três pontos ignora a main.
+      - name: Conferir o escopo do PR (script da base)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORIO: ${{ github.repository }}
+        run: |
+          base="${RUNNER_TEMP:?}/base"
+          rm -rf -- "${base:?}"
+          mkdir -p "$base"
+          if git cat-file -e "${BASE_SHA}:i18n/tools/confere_pr.py" 2>/dev/null; then
+            git archive "$BASE_SHA" i18n/tools src | tar -x --directory="$base"
+            raiz="$base"
+            echo "usando o confere_pr.py e o po_util da base ($BASE_SHA)"
+          else
+            echo "::warning::a base ainda não tem i18n/tools/confere_pr.py; usando o do PR (sem rodar a versão da base)"
+            raiz="$PWD"
+          fi
+          saida="${RUNNER_TEMP:?}/escopo.txt"
+          rc=0
+          python3 -I -B "$raiz/i18n/tools/confere_pr.py" "$BASE_SHA" "$HEAD_SHA" \
+            --ramo="$HEAD_REF" --repo-ponta="$HEAD_REPO" --repo-base="$REPOSITORIO" \
+            --rotulos="${RUNNER_TEMP:?}/rotulos.txt" --anotacoes > "$saida" || rc=$?
+          cat "$saida"
+          {
+            echo "## Escopo do PR (confere_pr.py)"
+            echo
+            echo '```text'
+            cat "$saida"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
   check:
     name: Verificar a tradução (check.py)
     runs-on: ubuntu-24.04
@@ -59,7 +183,8 @@ jobs:
       - name: Baixar o repositório
         uses: actions/checkout@v4
         with:
-          # O check `fronteira` usa `git merge-base HEAD upstream/main`: precisa do histórico inteiro.
+          # O check `fronteira` usa `git merge-base HEAD upstream/main` e o replay do sync lê
+          # dois commits antigos: precisa do histórico inteiro.
           fetch-depth: 0
           persist-credentials: false
 
@@ -80,13 +205,108 @@ jobs:
       - name: Definir caminhos
         run: echo "HELPERS_ROOT=$HOME/.cache/ptbr-i18n-helpers" >> "$GITHUB_ENV"
 
+      # As revisões e versões fixadas moram em vários arquivos e nenhum build confere o que o
+      # outro instalou: sem este passo, trocar a revisão do mdbook-i18n-helpers (ou o mdBook do
+      # upstream, num sync) num lugar só deixa o CI verde validando uma ferramenta diferente da
+      # que o build local, o deploy e o sync usam. O deploy e o sync têm permissões maiores que
+      # este workflow: as ações deles ficam fixadas por SHA (a versão vai em comentário), e um
+      # caractere Unicode de formato (U+200B...) esconderia texto num workflow.
+      - name: Conferir as revisões, versões e ações fixadas (build.sh, main.yml, deploy, sync, docs)
+        run: |
+          falhou=0
+
+          # mdbook-i18n-helpers
+          rev_build="$(sed -n 's/^PTBR_HELPERS_REV=\([0-9a-f]\{40\}\)$/\1/p' i18n/build.sh)"
+          if [ "$rev_build" != "$I18N_HELPERS_REV" ]; then
+            echo "::error file=i18n/build.sh::PTBR_HELPERS_REV (${rev_build:-não achei}) difere de I18N_HELPERS_REV ($I18N_HELPERS_REV) do ptbr-ci.yml"
+            falhou=1
+          fi
+          for arq in .github/workflows/ptbr-deploy.yml .github/workflows/ptbr-sync.yml; do
+            if ! grep -qE "^  I18N_HELPERS_REV: ${I18N_HELPERS_REV}\$" "$arq"; then
+              echo "::error file=$arq::I18N_HELPERS_REV difere do ptbr-ci.yml ($I18N_HELPERS_REV)"
+              falhou=1
+            fi
+          done
+          for arq in i18n/CONTRATO.md .github/README.md; do
+            if ! grep -qF "$I18N_HELPERS_REV" "$arq"; then
+              echo "::error file=$arq::o texto não cita a revisão fixada do ptbr-ci.yml ($I18N_HELPERS_REV)"
+              falhou=1
+            fi
+          done
+
+          # mdBook: a versão do main.yml do upstream tem de ser a de todo o fork. versao_mdbook
+          # ARQ imprime o valor de MDBOOK_VERSION definido em ARQ (com ou sem aspas, com ou sem
+          # comentário no fim) e falha se o arquivo não tem um valor ou tem dois diferentes.
+          versao_mdbook() {
+            local v
+            v="$(sed -n 's/^[[:space:]]*MDBOOK_VERSION:[[:space:]]*"\{0,1\}\([0-9][0-9.]*\)"\{0,1\}[[:space:]]*\(#.*\)\{0,1\}$/\1/p' "$1" | sort -u)"
+            case "$v" in
+              ""|*$'\n'*) return 1 ;;
+            esac
+            printf '%s' "$v"
+          }
+          mdbook_upstream="$(versao_mdbook .github/workflows/main.yml)" || mdbook_upstream=""
+          if [ -z "$mdbook_upstream" ]; then
+            echo "::error file=.github/workflows/main.yml::não achei uma MDBOOK_VERSION única no main.yml do upstream"
+            falhou=1
+          else
+            for arq in .github/workflows/ptbr-ci.yml .github/workflows/ptbr-deploy.yml .github/workflows/ptbr-sync.yml; do
+              versao="$(versao_mdbook "$arq")" || versao=""
+              if [ "$versao" != "$mdbook_upstream" ]; then
+                echo "::error file=$arq::o upstream usa o mdBook $mdbook_upstream (main.yml); atualize a MDBOOK_VERSION de $arq (achei ${versao:-nenhuma, ou mais de uma})"
+                falhou=1
+              fi
+            done
+            esperada="$(sed -n 's/^PTBR_MDBOOK_ESPERADO=\([0-9][0-9.]*\)$/\1/p' i18n/build.sh)"
+            if [ "$esperada" != "$mdbook_upstream" ]; then
+              echo "::error file=i18n/build.sh::o upstream usa o mdBook $mdbook_upstream (main.yml); atualize PTBR_MDBOOK_ESPERADO em i18n/build.sh (achei ${esperada:-nenhuma})"
+              falhou=1
+            fi
+          fi
+
+          # Ações do deploy e do sync: SHA de 40 hexadecimais (nada de tag ou branch).
+          for arq in .github/workflows/ptbr-sync.yml .github/workflows/ptbr-deploy.yml; do
+            soltas="$(grep -nE '^[[:space:]]*(-[[:space:]]+)?uses:' "$arq" \
+              | grep -vE 'uses:[[:space:]]*[^[:space:]@]+@[0-9a-f]{40}([[:space:]]|$)' || true)"
+            if [ -n "$soltas" ]; then
+              echo "::error file=$arq::ação sem SHA de 40 hexadecimais no uses: (fixe o commit e ponha a versão em comentário)"
+              printf '%s\n' "$soltas"
+              falhou=1
+            fi
+          done
+
+          # Nenhum ptbr-*.yml pode ter caractere Unicode de formato (categoria Cf, ex.: U+200B).
+          if ! python3 - .github/workflows/ptbr-*.yml <<'PY'
+          import sys
+          import unicodedata
+
+          ruim = False
+          for arq in sys.argv[1:]:
+              with open(arq, encoding="utf-8") as f:
+                  for n, linha in enumerate(f, 1):
+                      for col, c in enumerate(linha, 1):
+                          if unicodedata.category(c) == "Cf":
+                              print("::error file=%s,line=%d,col=%d::caractere Unicode de formato (categoria Cf, U+%04X) no workflow" % (arq, n, col, ord(c)))
+                              ruim = True
+          sys.exit(1 if ruim else 0)
+          PY
+          then
+            falhou=1
+          fi
+
+          if [ "$falhou" -ne 0 ]; then
+            exit 1
+          fi
+          echo "revisões e versões iguais: helpers $I18N_HELPERS_REV, mdBook $mdbook_upstream"
+
+      # Mesmas versões do ptbr-sync.yml e do CONTRATO.md (o PyYAML 6.0.1 não tem wheel para o 3.13).
       - name: Instalar o Python e as bibliotecas (polib, PyYAML)
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Instalar polib e PyYAML
-        run: python3 -m pip install --disable-pip-version-check polib==1.1.1 PyYAML==6.0.1
+        run: python3 -m pip install --disable-pip-version-check polib==1.1.1 PyYAML==6.0.2
 
       - name: Instalar o gettext
         run: |
@@ -110,8 +330,6 @@ jobs:
       # Como o main.yml do upstream: tarball do release. Vai para fora do workspace
       # (um bin/ no repositório viraria "arquivo não rastreado" no check fronteira).
       - name: Instalar o mdbook
-        env:
-          MDBOOK_VERSION: "0.5.1"
         run: |
           bin_dir="$RUNNER_TEMP/bin"
           mkdir -p "$bin_dir"
@@ -164,15 +382,270 @@ jobs:
           python3 --version
           python3 -c 'import polib, yaml; print("polib", polib.__version__, "PyYAML", yaml.__version__)'
 
+      # O resultado vai para fora do workspace e é apagado antes: um check.json commitado na
+      # raiz nunca passa por resultado desta execução (nem se o check.py sair antes de gravar).
       - name: Rodar o check.py
         id: check
-        run: python3 i18n/tools/check.py --json check.json
+        env:
+          CHECK_JSON: ${{ runner.temp }}/check.json
+        run: |
+          rm -f -- "$CHECK_JSON"
+          python3 i18n/tools/check.py --json "$CHECK_JSON"
+
+      # Os testes abaixo não dependem do resultado do check.py: rodam mesmo se ele falhou,
+      # mas não se ele foi pulado por uma falha de instalação (faltaria o polib, o gettext...).
+      - name: Testar o validador (autoteste do mensagens.py)
+        if: ${{ !cancelled() && steps.check.outcome != 'skipped' }}
+        run: python3 i18n/tools/checks/mensagens.py --autoteste
+
+      - name: Testar o apply.py, o lotes.py e o status.py (cópia do PO)
+        if: ${{ !cancelled() && steps.check.outcome != 'skipped' }}
+        run: |
+          # Teste de fumaça do apply.py, lotes.py e status.py numa CÓPIA do PO (po/ não é tocado).
+          # Nenhum id é fixo: a entrada de teste vem do próprio PO. O JSON "bom" acrescenta uma
+          # palavra ao msgstr; o "ruim" muda o texto de um code span (o validador tem de recusar).
+          base="${RUNNER_TEMP:?}/fumaca"
+          rm -rf -- "${base:?}"
+          mkdir -p "$base"
+          cp po/pt-BR.po "$base/copia.po"
+          cp po/pt-BR.po "$base/original.po"
+          python3 - "$base" > "$base/alvo.txt" <<'PY'
+          import json
+          import re
+          import sys
+
+          sys.path.insert(0, "i18n/tools")
+          import po_util
+
+          base = sys.argv[1]
+          for e in po_util.carregar(base + "/copia.po"):
+              spans = re.findall(r"`([^`\n]+)`", e.msgstr)
+              if (po_util.tipo(e) == "prosa" and po_util.traduzida(e) and len(e.msgid.split()) >= 8
+                      and len(spans) == 1 and e.msgid.count("`") == 2 and "{#" not in e.msgstr):
+                  break
+          else:
+              sys.exit("nenhuma entrada de prosa traduzida com exatamente um code span")
+          bom = e.msgstr + " (teste)"
+          ruim = e.msgstr.replace("`" + spans[0] + "`", "`" + spans[0] + "_traduzido`", 1)
+          for nome, msgstr in (("bom", bom), ("ruim", ruim)):
+              with open("%s/%s.json" % (base, nome), "w", encoding="utf-8") as arq:
+                  json.dump([{"id": po_util.entry_id(e), "msgstr": msgstr}], arq, ensure_ascii=False)
+          print(po_util.entry_id(e), po_util.capitulo(e))
+          PY
+          read -r ident cap < "$base/alvo.txt"
+          echo "entrada de teste: $ident ($cap)"
+          original="$(sha256sum < "$base/copia.po")"
+
+          # aplica JSON [opções]: roda o apply.py na cópia e deixa o código de saída em $rc.
+          aplica() {
+            local json="$1"
+            shift
+            rc=0
+            python3 i18n/tools/apply.py --po "$base/copia.po" --traducoes "$json" \
+              --modo capitulo --capitulo "$cap" "$@" || rc=$?
+          }
+          # confere CÓDIGO igual|mudou DESCRIÇÃO: o código de saída e se o PO mudou ou não.
+          confere() {
+            local atual
+            atual="$(sha256sum < "$base/copia.po")"
+            if [ "$rc" -ne "$1" ] || { [ "$2" = igual ] && [ "$atual" != "$original" ]; } \
+                || { [ "$2" = mudou ] && [ "$atual" = "$original" ]; }; then
+              echo "::error::$3: esperava código $1 e PO $2 (veio código $rc)"
+              exit 1
+            fi
+          }
+
+          aplica "$base/bom.json" --dry-run
+          confere 0 igual "apply.py --dry-run com o JSON bom"
+          aplica "$base/ruim.json" --dry-run
+          confere 1 igual "apply.py --dry-run com o code span traduzido"
+          aplica "$base/ruim.json"
+          confere 1 igual "apply.py com o code span traduzido (entrada rejeitada não é gravada)"
+          aplica "$base/bom.json"
+          confere 0 mudou "apply.py com o JSON bom"
+          # A gravação foi atômica e só mexeu no msgstr da entrada de teste.
+          python3 - "$base/original.po" "$base/copia.po" "$ident" "$base/bom.json" <<'PY'
+          import json
+          import sys
+
+          sys.path.insert(0, "i18n/tools")
+          import po_util
+
+          antes = {po_util.entry_id(e): e.msgstr for e in po_util.carregar(sys.argv[1])}
+          depois = {po_util.entry_id(e): e.msgstr for e in po_util.carregar(sys.argv[2])}
+          esperado = json.load(open(sys.argv[4], encoding="utf-8"))[0]["msgstr"]
+          mudadas = sorted(i for i in antes if antes[i] != depois.get(i))
+          if sorted(antes) != sorted(depois) or mudadas != [sys.argv[3]] or depois[sys.argv[3]] != esperado:
+              sys.exit("apply.py gravou o PO de forma inesperada; mudaram: %s" % mudadas)
+          PY
+
+          python3 i18n/tools/lotes.py --capitulo ch01 --po "$base/copia.po" --saida "$base/lotes" --incluir-traduzidas
+          if ! compgen -G "$base/lotes/ch01-*.json" > /dev/null; then
+            echo "::error::lotes.py não gerou nenhum lote para ch01"
+            exit 1
+          fi
+          python3 i18n/tools/status.py --po "$base/copia.po" --formato json > "$base/status.json"
+          python3 -I -c 'import json, sys; json.load(open(sys.argv[1]))' "$base/status.json"
+
+      - name: Testar a cadeia de sync (replay de 1500248d)
+        if: ${{ !cancelled() && steps.check.outcome != 'skipped' }}
+        env:
+          # O PO de antes do merge do upstream e a árvore do upstream (Rust 1.98), fixados.
+          SYNC_PO_ANTES: df2278543bf305fbccc8dd85b9be80ca87b8ca76
+          SYNC_UPSTREAM: 1500248d8f230566e4ec9f27fcbb8fe9e2898ab1
+        run: |
+          # Replay do sync real de 1500248d (Rust 1.98) sem API: o PO de antes do merge e a
+          # árvore do upstream saem do histórico git; a resposta do "modelo" é fixa. Uma
+          # regressão na cadeia (autoport, slugs, delta, escopo do apply) falha aqui, e não
+          # só no primeiro sync real.
+          base="${RUNNER_TEMP:?}/sync"
+          rm -rf -- "${base:?}"
+          mkdir -p "$base/arvore"
+          for rev in "$SYNC_PO_ANTES" "$SYNC_UPSTREAM"; do
+            if ! git cat-file -e "${rev}^{commit}"; then
+              echo "::error::o commit $rev não está no histórico; o replay do sync precisa dele (fetch-depth 0, merge sem squash)"
+              exit 1
+            fi
+          done
+          git show "$SYNC_PO_ANTES:po/pt-BR.po" > "$base/antes.po"
+          cp "$base/antes.po" "$base/trab.po"
+          git archive "$SYNC_UPSTREAM" | tar -x --directory="$base/arvore"
+          # O i18n/ do fork vai sobre a árvore do upstream: as ferramentas leem o src/ da raiz delas.
+          cp -r i18n AGENTS.md "$base/arvore/"
+          cd "$base/arvore" || exit 1
+
+          bash i18n/build.sh pot "$base/pot"
+          bash i18n/build.sh en "$base/en"
+          bash i18n/tools/atualiza_po.sh --pot "$base/pot/messages.pot" --po "$base/trab.po"
+
+          python3 i18n/tools/autoport.py --po "$base/trab.po" | tee "$base/autoport.txt"
+          if [ "$(tail -n 1 "$base/autoport.txt")" != "resumo: 6 portada(s), 3 restante(s) fuzzy" ]; then
+            echo "::error::autoport: esperava '6 portada(s), 3 restante(s) fuzzy' no sync de 1500248d"
+            exit 1
+          fi
+          python3 i18n/tools/slugs.py --en "$base/en" --po "$base/trab.po"
+          python3 i18n/tools/delta.py --po "$base/trab.po" --po-anterior "$base/antes.po" \
+            --saida "$base/delta" --capitulo ch01 ch02
+
+          ids="$(python3 -I - "$base/delta/delta.json" <<'PY'
+          import json
+          import sys
+
+          delta = json.load(open(sys.argv[1], encoding="utf-8"))
+          print(" ".join(sorted(e["id"] for lista in delta["capitulos"].values() for e in lista)))
+          PY
+          )"
+          esperados="0a0a9f2a6772 12f9807e37e5 22d43aa8e5c2 257810d9a0b5 8ae7fcc465fd b276d5b024c8 c7e1df3e9d13"
+          if [ "$ids" != "$esperados" ]; then
+            echo "::error::delta de ch01 e ch02: esperava os ids [$esperados], veio [$ids]"
+            exit 1
+          fi
+
+          # A resposta fixa no lugar da API: 2 títulos novos (ch01), 3 fuzzy e 2 novas (ch02).
+          python3 -I - "$base/resp.json" <<'PY'
+          import json
+          import sys
+
+          RESPOSTA = [
+              ("0a0a9f2a6772", "Olá, mundo!"),
+              ("257810d9a0b5", "Olá, Cargo!"),
+              ("22d43aa8e5c2", "No arquivo _Cargo.toml_, tudo o que vem após um cabeçalho faz parte daquela seção até que outra seção comece. Em `[dependencies]`, você informa ao Cargo quais crates externos seu projeto depende e quais versões desses crates você exige. Neste caso, especificamos o crate `rand` com o especificador de versão semântica `0.10.1`. O Cargo entende [Versionamento Semântico](http://semver.org)<!-- ignore --> (às vezes chamado de _SemVer_), que é um padrão para escrever números de versão. O especificador `0.10.1` é, na verdade, uma forma abreviada de `^0.10.1`, que significa qualquer versão que seja pelo menos 0.10.1, mas menor que 0.11.0."),
+              ("12f9807e37e5", "Em seguida, estamos adicionando duas linhas no meio. Na primeira linha, chamamos a função `rand::rng`, que nos dá o gerador de números aleatórios específico que vamos usar: um que é local à thread atual de execução e inicializado pelo sistema operacional. Depois, chamamos o método `random_range` no gerador de números aleatórios. Esse método é definido pelo trait `RngExt`, que faz parte do módulo `rand::prelude` que trouxemos para o escopo com a instrução `use rand::prelude::*;`. O método `random_range` recebe uma expressão de intervalo como argumento e gera um número aleatório nesse intervalo. O tipo de expressão de intervalo que estamos usando aqui tem a forma `start..=end` e é inclusivo nos limites inferior e superior, então precisamos especificar `1..=100` para solicitar um número entre 1 e 100."),
+              ("8ae7fcc465fd", "Nota: Você não vai simplesmente saber o que trazer para o escopo e quais métodos e funções chamar de um crate, então cada crate tem documentação com instruções de uso. Outro recurso interessante do Cargo é que executar o comando `cargo doc --open` gera localmente a documentação fornecida por todas as suas dependências e a abre no navegador. Se você estiver interessado em outra funcionalidade do crate `rand`, por exemplo, execute `cargo doc --open` e clique em `rand` na barra lateral à esquerda."),
+              ("b276d5b024c8", "Primeiro, adicionamos a linha `use rand::prelude::*;`. O módulo `prelude` contém as partes mais usadas do crate `rand`, e `use` torna esses itens disponíveis no escopo do nosso programa."),
+              ("c7e1df3e9d13", "Você deve obter números aleatórios diferentes, e todos devem estar entre 1 e 100. Se aparecerem avisos, pode ignorá-los com segurança. Se aparecerem erros, confira se você tem `rand = \"0.10.1\"` no seu _Cargo.toml_, pois versões futuras do `rand` podem ter uma API diferente, mas qualquer versão da série `0.10` deve funcionar com o código deste capítulo."),
+          ]
+          with open(sys.argv[1], "w", encoding="utf-8") as arq:
+              json.dump([{"id": i, "msgstr": m, "confianca": "alta", "notas": ""} for i, m in RESPOSTA], arq, ensure_ascii=False)
+          PY
+          python3 i18n/tools/traduz_delta.py --delta "$base/delta/delta.json" --saida "$base/trad.json" \
+            --simular "$base/resp.json"
+          python3 i18n/tools/apply.py --po "$base/trab.po" --traducoes "$base/trad.json" \
+            --modo sync --delta "$base/delta/delta.json" --relatorio "$base/aplicado.json"
+          aplicadas="$(python3 -I -c 'import json, sys; print(json.load(open(sys.argv[1]))["aplicadas"])' "$base/aplicado.json")"
+          if [ "$aplicadas" != "7" ]; then
+            echo "::error::apply.py --modo sync: esperava 7 aplicadas, veio $aplicadas"
+            exit 1
+          fi
+
+          # O escopo do sync: um id fora do delta.json tem de ser rejeitado (código 1) sem tocar
+          # no PO. O controle prova que o mesmo item vale no modo capítulo (só o escopo o recusa).
+          cap="$(python3 - "$base/trab.po" "$base/delta/delta.json" "$base/fora.json" <<'PY'
+          import json
+          import sys
+
+          sys.path.insert(0, "i18n/tools")
+          import po_util
+
+          po = po_util.carregar(sys.argv[1])
+          delta = json.load(open(sys.argv[2], encoding="utf-8"))
+          no_delta = {e["id"] for lista in delta["capitulos"].values() for e in lista}
+          for e in po:
+              if (po_util.tipo(e) == "prosa" and po_util.traduzida(e) and len(e.msgid.split()) >= 8
+                      and "{#" not in e.msgstr and po_util.entry_id(e) not in no_delta):
+                  json.dump([{"id": po_util.entry_id(e), "msgstr": e.msgstr + " (fora do delta)"}],
+                            open(sys.argv[3], "w", encoding="utf-8"), ensure_ascii=False)
+                  print(po_util.capitulo(e))
+                  break
+          else:
+              sys.exit("nenhuma entrada de prosa traduzida fora do delta")
+          PY
+          )"
+          python3 i18n/tools/apply.py --po "$base/trab.po" --traducoes "$base/fora.json" \
+            --modo capitulo --capitulo "$cap" --dry-run
+          antes="$(sha256sum < "$base/trab.po")"
+          rc=0
+          python3 i18n/tools/apply.py --po "$base/trab.po" --traducoes "$base/fora.json" \
+            --modo sync --delta "$base/delta/delta.json" || rc=$?
+          if [ "$rc" -ne 1 ] || [ "$antes" != "$(sha256sum < "$base/trab.po")" ]; then
+            echo "::error::apply.py --modo sync aceitou (ou deixou mudar o PO por) um id fora do delta.json (código $rc)"
+            exit 1
+          fi
+
+          # Os títulos novos chegam sem {#id}: um 2º slugs.py repõe, e então o PO tem de estar limpo.
+          python3 i18n/tools/slugs.py --en "$base/en" --po "$base/trab.po"
+          python3 i18n/tools/slugs.py --en "$base/en" --po "$base/trab.po" --check
+          python3 i18n/tools/check.py --po "$base/trab.po" --en "$base/en" --so titulos,po_formato
+
+      # Todo teste versionado em i18n/tools/testes/ (teste_*.sh com bash, teste_*.py com python3 -B):
+      # cada um aparece no log com o nome e o resultado, e o passo só falha no fim, para um teste que
+      # cai não esconder os outros. Um teste novo na pasta entra sozinho. Precisa do polib, do PyYAML
+      # e do git; roda mesmo se o check falhou, como os testes acima.
+      - name: Rodar os testes versionados (i18n/tools/testes)
+        if: ${{ !cancelled() && steps.check.outcome != 'skipped' }}
+        run: |
+          achados=0
+          falhas=0
+          for teste in i18n/tools/testes/teste_*.sh i18n/tools/testes/teste_*.py; do
+            [ -e "$teste" ] || continue
+            achados=$((achados + 1))
+            echo "::group::$teste"
+            rc=0
+            case "$teste" in
+              *.sh) bash "$teste" || rc=$? ;;
+              *) python3 -B "$teste" || rc=$? ;;
+            esac
+            echo "::endgroup::"
+            if [ "$rc" -eq 0 ]; then
+              echo "ok: $teste"
+            else
+              echo "::error file=$teste::o teste saiu com o código $rc"
+              falhas=$((falhas + 1))
+            fi
+          done
+          if [ "$achados" -eq 0 ]; then
+            echo "::error::nenhum teste_* em i18n/tools/testes"
+            exit 1
+          fi
+          echo "testes rodados: $achados; com falha: $falhas"
+          [ "$falhas" -eq 0 ]
 
       # Daqui para baixo roda mesmo se o check falhou: o JSON é o que explica a falha.
       - name: Resumo da verificação
         if: always()
         env:
-          CHECK_JSON: check.json
+          CHECK_JSON: ${{ runner.temp }}/check.json
+          CHECK_OUTCOME: ${{ steps.check.outcome }}
         run: |
           python3 - <<'PY'
           import html
@@ -182,7 +655,10 @@ jobs:
           import sys
           import traceback
 
-          CAMINHO = os.environ.get("CHECK_JSON", "check.json")
+          # Sem padrão: um check.json "de sempre" na raiz nunca é lido por engano.
+          CAMINHO = os.environ.get("CHECK_JSON", "")
+          # skipped (ou vazio) = um passo anterior falhou e o check.py nem rodou.
+          RESULTADO_CHECK = os.environ.get("CHECK_OUTCOME", "")
           DESTINO = os.environ.get("GITHUB_STEP_SUMMARY")
           MAX_ACHADOS = 40  # por severidade; o resto fica no artefato check-json
           MAX_CHARS = 400   # por mensagem
@@ -225,8 +701,12 @@ jobs:
                   if not isinstance(dados, dict):
                       raise ValueError("o JSON não é um objeto")
               except FileNotFoundError:
-                  linhas.append("O arquivo de resultado não foi gerado: o `check.py` terminou antes de gravá-lo "
-                                "(veja o log do passo anterior).")
+                  if RESULTADO_CHECK in ("", "skipped"):
+                      linhas.append("O `check.py` não rodou: um passo anterior do job falhou "
+                                    "(veja qual no log do job).")
+                  else:
+                      linhas.append("O arquivo de resultado não foi gerado: o `check.py` terminou antes de gravá-lo "
+                                    "(veja o log do passo \"Rodar o check.py\").")
                   return linhas
               except (OSError, ValueError) as exc:
                   linhas.append("Não consegui ler o arquivo de resultado: " + esc(exc))
@@ -312,6 +792,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: check-json
-          path: check.json
+          path: ${{ runner.temp }}/check.json
           if-no-files-found: warn
           retention-days: 30
