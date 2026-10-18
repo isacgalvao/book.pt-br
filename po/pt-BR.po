@@ -10055,7 +10055,7 @@ msgstr "Em seguida, vamos tentar um exemplo que mostra que o tempo de vida da re
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "<Listing number=\"10-23\" file-name=\"src/main.rs\" caption=\"Attempting to use `result` after `string2` has gone out of scope\">\n"
-msgstr "<Listing number=\"10-23\" file-name=\"src/main.rs\" caption=\"Tentativa de usar `result` depois que `string2` saiu do escopo\">\n"
+msgstr "<Listing number=\"10-23\" file-name=\"src/main.rs\" caption=\"Tentando usar `result` depois que `string2` saiu do escopo\">\n"
 
 #: src/ch10-03-lifetime-syntax.md
 msgid "When we try to compile this code, we get this error:"
