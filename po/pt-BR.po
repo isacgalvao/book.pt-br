@@ -4929,7 +4929,7 @@ msgstr "Aqui está um pequeno problema de programação: escreva uma função qu
 
 #: src/ch04-03-slices.md
 msgid "Note: For the purposes of introducing slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the [“Storing UTF-8 Encoded Text with Strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> section of Chapter 8."
-msgstr "Nota: para fins de introdução às slices, nesta seção estamos assumindo apenas ASCII; uma discussão mais completa sobre o tratamento de UTF-8 está na seção [“Armazenando texto codificado em UTF-8 com strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> do Capítulo 8."
+msgstr "Nota: para fins de introdução às slices, nesta seção estamos considerando apenas ASCII; uma discussão mais completa sobre o tratamento de UTF-8 está na seção [“Armazenando texto codificado em UTF-8 com strings”](ch08-02-strings.html#storing-utf-8-encoded-text-with-strings)<!-- ignore --> do Capítulo 8."
 
 #: src/ch04-03-slices.md
 msgid "Let’s work through how we’d write the signature of this function without using slices, to understand the problem that slices will solve:"
