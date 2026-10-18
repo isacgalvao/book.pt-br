@@ -19048,7 +19048,7 @@ msgstr "Por exemplo, a Listagem 18-10 mostra o que acontece se tentarmos criar u
 
 #: src/ch18-02-trait-objects.md
 msgid "<Listing number=\"18-10\" file-name=\"src/main.rs\" caption=\"Attempting to use a type that doesn’t implement the trait object’s trait\">\n"
-msgstr "<Listing number=\"18-10\" file-name=\"src/main.rs\" caption=\"Tentativa de usar um tipo que não implementa o trait do objeto de trait\">\n"
+msgstr "<Listing number=\"18-10\" file-name=\"src/main.rs\" caption=\"Tentando usar um tipo que não implementa o trait do objeto de trait\">\n"
 
 #: src/ch18-02-trait-objects.md
 msgid "\"Hi\""
