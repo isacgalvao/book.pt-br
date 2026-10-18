@@ -22793,7 +22793,7 @@ msgstr ""
 
 #: src/ch21-01-single-threaded.md
 msgid "Refactoring"
-msgstr "Refatoração {#refactoring}"
+msgstr "Refatorando {#refactoring}"
 
 #: src/ch21-01-single-threaded.md
 msgid "At the moment, the `if` and `else` blocks have a lot of repetition: They’re both reading files and writing the contents of the files to the stream. The only differences are the status line and the filename. Let’s make the code more concise by pulling out those differences into separate `if` and `else` lines that will assign the values of the status line and the filename to variables; we can then use those variables unconditionally in the code to read the file and write the response. Listing 21-9 shows the resultant code after replacing the large `if` and `else` blocks."
@@ -23499,7 +23499,7 @@ msgstr "Vamos começar implementando `Drop` no nosso pool de threads. Quando o p
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "<Listing number=\"21-22\" file-name=\"src/lib.rs\" caption=\"Joining each thread when the thread pool goes out of scope\">\n"
-msgstr "<Listing number=\"21-22\" file-name=\"src/lib.rs\" caption=\"Esperando cada thread quando o pool de threads sai do escopo\">\n"
+msgstr "<Listing number=\"21-22\" file-name=\"src/lib.rs\" caption=\"Esperando cada thread terminar quando o pool de threads sai do escopo\">\n"
 
 #: src/ch21-03-graceful-shutdown-and-cleanup.md
 msgid "\"Shutting down worker {}\""
