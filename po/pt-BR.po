@@ -4132,7 +4132,7 @@ msgstr "<Listing number=\"4-2\" caption=\"Atribuindo o valor inteiro da variáve
 
 #: src/ch04-01-what-is-ownership.md
 msgid "We can probably guess what this is doing: “Bind the value `5` to `x`; then, make a copy of the value in `x` and bind it to `y`.” We now have two variables, `x` and `y`, and both equal `5`. This is indeed what is happening, because integers are simple values with a known, fixed size, and these two `5` values are pushed onto the stack."
-msgstr "Provavelmente podemos adivinhar o que isso faz: “Vincular o valor `5` a `x`; depois, fazer uma cópia do valor em `x` e vincular essa cópia a `y`.” Agora temos duas variáveis, `x` e `y`, e ambas são iguais a `5`. Isso é exatamente o que está acontecendo, porque inteiros são valores simples, de tamanho conhecido e fixo, e esses dois valores `5` são empilhados na pilha."
+msgstr "Provavelmente podemos adivinhar o que isso faz: “Vincular o valor `5` a `x`; depois, fazer uma cópia do valor em `x` e vincular essa cópia a `y`.” Agora temos duas variáveis, `x` e `y`, e ambas são iguais a `5`. Isso é exatamente o que está acontecendo, porque inteiros são valores simples, de tamanho conhecido e fixo, e esses dois valores `5` são colocados na pilha."
 
 #: src/ch04-01-what-is-ownership.md
 msgid "Now let’s look at the `String` version:"
