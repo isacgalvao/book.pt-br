@@ -1,6 +1,6 @@
 # Decisões do projeto de tradução pt-BR
 
-Data: 2026-10-15 · Branch: `spike/migracao-po`
+Data: 2026-10-18 · Branch: `spike/migracao-po`
 
 Esta é a nota de decisões do projeto, escrita para o mantenedor. Ela separa o que o mantenedor
 já decidiu, o que o assistente assumiu por conta própria como padrão provisório e o que ainda
@@ -49,8 +49,9 @@ substituição revisada no PO.
 Cada linha traz as opções e a recomendação da auditoria de outubro de 2026 (o relatório dela fica
 fora deste repositório). As linhas P1 a P6 e P9 vêm da lista de decisões do relatório. As linhas
 P7, P8, P10 e P11 não estavam nessa lista: vêm do plano da auditoria e do resumo da sessão
-anterior, e a recomendação delas é a desses textos, não a da lista. Onde a auditoria não
-recomenda nada, está escrito.
+anterior, e a recomendação delas é a desses textos, não a da lista. As linhas P12 e P13 vêm do
+`PROGRESSO.md` e do `SPIKE-PO.md` (pendências abertas depois da tradução do livro), não da
+auditoria. Onde a auditoria não recomenda nada, está escrito.
 
 | # | Decisão | Opções | Recomendação |
 | --- | --- | --- | --- |
@@ -59,12 +60,14 @@ recomenda nada, está escrito.
 | P3 | Onde o projeto mora | (a) Este fork, com a tradução em PO. (b) O repositório `rust-lang-translations`. (c) Contribuir no repositório do dn32. | O fork próprio, que é onde o trabalho está sendo feito. Segundo a auditoria, o `rust-lang-translations` não tem mantenedor do livro e só valida se o build passa, e o repositório do dn32 está inativo desde 2026-05. Espelhar o `pt-BR.po` no `rust-lang-translations` mais tarde continua possível. |
 | P4 | Publicação | (a) Publicar capítulos de rascunho de IA marcados como tal (mais cobertura, mais risco de o leitor achar erros). (b) Publicar em português só o que já foi revisado e deixar o resto em inglês. | A auditoria não recomenda uma das duas. As condições que ela impõe pedem publicar cedo, com o status de cada capítulo visível e o aviso “Tradução comunitária não oficial”. |
 | P5 | Profundidade da revisão humana | (a) Leitura integral de tudo, cerca de 25 horas. (b) Leitura integral dos caps. 0 a 10 e do front matter e amostragem nos caps. 11 a 21: 100% do que um crítico de outro modelo sinalizar mais 15% sorteados. | (b). No `status.py`, (a) vira o status `revisado` e (b) acrescenta `revisado (amostragem)`. |
-| P6 | Credenciais e custo do sync automático | Token do workflow: (a) GitHub App com as permissões `contents`, `pull-requests` e `workflows`, ou (b) PAT *fine-grained* com o escopo `workflow`. Agentes: `ANTHROPIC_API_KEY` como segredo do sync, ou só sessões locais pela assinatura. | GitHub App. Sem isso o sync automático (o workflow `ptbr-sync.yml`, previsto no contrato e ainda não criado) não pode rodar: o `GITHUB_TOKEN` padrão não consegue enviar um merge que altere arquivos de workflow, como o `main.yml` do upstream. Nomes que o contrato espera: variável de repositório `PTBR_APP_ID`, segredos `PTBR_APP_PRIVATE_KEY` e `ANTHROPIC_API_KEY`, e a variável opcional `PTBR_MODELO_TRADUCAO` (modelo usado pelo `traduz_delta.py`). Verificar também a cota de *premium requests* do Copilot coding agent. |
-| P7 | Configurações do GitHub | Habilitar o Pages (fonte: GitHub Actions) e as Issues; criar as labels `sync-quebrado`, `status:*` e `bloqueado:sync`; criar um ruleset na `main`. | Necessárias para publicar e para o sync. Só o mantenedor pode mexer nas configurações do repositório. |
+| P6 | Credenciais e custo do sync automático | Token do workflow: (a) GitHub App com as permissões `contents`, `pull-requests`, `workflows` e `issues` (todas de leitura e escrita; a `issues` é do job `sync-quebrado`), ou (b) PAT *fine-grained* com o escopo `workflow` e escrita em Issues. Agentes: `ANTHROPIC_API_KEY` como segredo do sync, ou só sessões locais pela assinatura. | GitHub App. Sem isso o sync automático (o workflow `ptbr-sync.yml`, já escrito e verificado, mas nunca executado no GitHub; sem a variável `PTBR_APP_ID` ele termina sem fazer nada) não pode rodar: o `GITHUB_TOKEN` padrão não consegue enviar um merge que altere arquivos de workflow, como o `main.yml` do upstream. Nomes que o contrato espera: variável de repositório `PTBR_APP_ID`, segredos `PTBR_APP_PRIVATE_KEY` e `ANTHROPIC_API_KEY`, e a variável opcional `PTBR_MODELO_TRADUCAO` (modelo usado pelo `traduz_delta.py`). Verificar também a cota de *premium requests* do Copilot coding agent. |
+| P7 | Configurações do GitHub | Habilitar o Pages (fonte: GitHub Actions) e as Issues; criar a label `sync-quebrado` (a única que o `ptbr-sync.yml` usa; `status:*` e `bloqueado:sync` ainda não têm uso em nenhuma ferramenta e ficam como proposta opcional); criar um ruleset na `main` que não exija histórico linear (“Require linear history”) e não bloqueie o push do App em `sync/*`; ligar “Allow merge commits” (o PR de sync é mesclado com merge commit). A lista completa está no cabeçalho do `ptbr-sync.yml`. | Necessárias para publicar e para o sync. Só o mantenedor pode mexer nas configurações do repositório. |
 | P8 | Capítulo piloto e revisão humana antes da `main` | (a) Manter o piloto (por exemplo ch03-02 a ch03-05, ou o ch04) pelo fluxo completo, com revisor de outro modelo e aprovação humana, antes de qualquer merge. (b) Traduzir tudo e revisar depois. | Traduzir tudo no branch de teste, como o mantenedor pediu, e manter o portão humano antes da `main`: nenhum texto de IA chega à `main` sem o `check.py` verde e sem a aprovação dele. |
-| P9 | Confirmar `ownership` e a lista estendida de palavras comuns | Itens 1 e 2 da tabela de padrões provisórios. | A auditoria sugere seguir o Comprehensive Rust. Sem resposta até o ch04, o assistente continua com `ownership` em inglês, como provisório. |
+| P9 | Confirmar `ownership` e a lista estendida de palavras comuns | Itens 1 e 2 da tabela de padrões provisórios. | A auditoria sugere seguir o Comprehensive Rust. O livro inteiro já foi traduzido com `ownership` em inglês e com a lista estendida do item 2 (tupla, vetor, vinculação etc.), tudo como provisório. Se o mantenedor trocar algum termo, é uma busca e substituição revisada no PO inteiro, não automática; para `ownership` o gênero também muda (“o ownership” → “a posse”). |
 | P10 | Título e identidade do livro em pt-BR | (a) Título “A Linguagem de Programação Rust” e repositório do fork, aplicados na compilação pelo `i18n/build.sh pt`, sem mexer no `book.toml` do upstream. (b) Manter o título e o repositório do upstream. | (a), que é o que o `build.sh` faz hoje. Falta o mantenedor confirmar. |
 | P11 | Abrir o PR de migração | Quando abrir e com que escopo. | Só quando o mantenedor pedir. O plano da auditoria prevê um único PR, com merge humano. |
+| P12 | Termos propostos pelos tradutores (69, `status: provisorio` no fim do `glossario.yml`) | (a) Confirmar em bloco. (b) Revisar um a um, trocando os rejeitados por busca e substituição revisada no PO. | (a): confirmar em bloco e trocar só os que o mantenedor rejeitar. Recomendação do assistente, não da auditoria. |
+| P13 | Estilo que o guia não fixa: travessão com ou sem espaços; “async” como substantivo solto | Escolher uma forma para cada ponto e registrá-la no `GUIA-DE-ESTILO.md`. | Baixa prioridade; a auditoria não recomenda nada. Sem resposta, vale o que o texto já traduzido faz. |
 
 ## Orçamento e critério de parada
 
