@@ -5,12 +5,38 @@ packages/mdbook-trpl/src/listing/mod.rs (código do upstream, que o fork não
 altera). Este patch os troca por "Listagem N" e "Nome do arquivo:" e só é
 aplicado por i18n/build.sh sobre uma CÓPIA de packages/mdbook-trpl no cache
 (${I18N_CACHE:-$HOME/.cache/book-ptbr-i18n}); a árvore do repositório nunca
-é modificada. Verificação no repositório: git apply --check <este arquivo>.
+é modificada. Verificação, de qualquer pasta do repositório:
+
+  git -C "$(git rev-parse --show-toplevel)" apply --check -v i18n/patches/trpl-listing-rotulos.patch
+
+A saída precisa trazer "Checking patch packages/mdbook-trpl/src/listing/mod.rs...";
+"Skipped patch" quer dizer que nada foi conferido (o git apply pula em
+silêncio o que fica fora da pasta atual e sai com 0 do mesmo jeito).
 
 Se o upstream mudar essas linhas, o patch deixa de aplicar e o build pt-BR
-falha de propósito, em voz alta. Basta regerá-lo (os caminhos devem continuar
-a/packages/mdbook-trpl/... e b/packages/mdbook-trpl/...). Meta de longo prazo:
-um PR no upstream para tornar os rótulos configuráveis.
+falha de propósito, em voz alta. Para regerá-lo, NUNCA edite packages/ no
+repositório para gerar o diff: o caminho é do upstream e, com o mod.rs
+editado, este patch não aplica mais e o build pt-BR de todos os agentes
+quebra enquanto durar a edição. Trabalhe numa cópia, da raiz, depois do
+merge do upstream (HEAD: é o mod.rs do upstream, porque o fork nunca o edita;
+RUN é o seu diretório de trabalho, fora do repositório):
+
+  T="$(mktemp -d "${RUN:?}/patch.XXXXXX")"   # sem RUN ou sem a pasta, T fica vazio
+  git show HEAD:packages/mdbook-trpl/src/listing/mod.rs >"${T:?}/orig.rs"
+  cp "${T:?}/orig.rs" "${T:?}/novo.rs"      # edite só o novo.rs
+  diff -u --label a/packages/mdbook-trpl/src/listing/mod.rs \
+    --label b/packages/mdbook-trpl/src/listing/mod.rs \
+    "${T:?}/orig.rs" "${T:?}/novo.rs" >"${T:?}/corpo.diff"   # sai com 1 se houver diferença
+
+O ${T:?} faz o shell parar com T vazio, em vez de gravar na raiz do sistema.
+O patch novo é este cabeçalho, sem mudar, seguido de $T/corpo.diff (os
+caminhos devem continuar a/packages/mdbook-trpl/... e b/packages/mdbook-trpl/...);
+confira-o com o comando de verificação acima. Se o git status mostrar o
+mod.rs modificado, restaure-o, da raiz, em vez de regerar o patch:
+
+  git show HEAD:packages/mdbook-trpl/src/listing/mod.rs >packages/mdbook-trpl/src/listing/mod.rs
+
+Meta de longo prazo: um PR no upstream para tornar os rótulos configuráveis.
 
 diff --git a/packages/mdbook-trpl/src/listing/mod.rs b/packages/mdbook-trpl/src/listing/mod.rs
 --- a/packages/mdbook-trpl/src/listing/mod.rs

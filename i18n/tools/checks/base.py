@@ -59,19 +59,32 @@ class Contexto:
 
     Atributos: `raiz` (Path do repositório), `po_path` (Path do PO), `po`
     (polib.POFile), `en_dir` e `pt_dir` (Path das compilações ou None),
-    `capitulos` (set de capítulos do escopo, ou None = livro inteiro) e
-    `upstream_ref` (referência git do upstream, padrão 'upstream/main').
+    `capitulos` (set de capítulos do escopo, ou None = livro inteiro),
+    `upstream_ref` (referência git do upstream, padrão 'upstream/main') e
+    `erro_po` (str com o motivo de o polib não ter lido o PO, ou None).
+
+    `capitulos` aceita um nome (str) ou uma coleção de nomes de
+    `po_util.CAPITULOS`; um nome desconhecido levanta ValueError (senão o escopo
+    ficaria vazio e todo check passaria em silêncio).
     """
 
     def __init__(self, raiz, po_path, po, en_dir=None, pt_dir=None,
-                 capitulos=None, upstream_ref="upstream/main"):
+                 capitulos=None, upstream_ref="upstream/main", erro_po=None):
         self.raiz = Path(raiz)
         self.po_path = Path(po_path)
         self.po = po
         self.en_dir = Path(en_dir) if en_dir else None
         self.pt_dir = Path(pt_dir) if pt_dir else None
-        self.capitulos = set(capitulos) if capitulos else None
+        if isinstance(capitulos, str):  # set("ch04") seria {'c', 'h', '0', '4'}
+            capitulos = [capitulos]
+        caps = set(capitulos or ())
+        invalidos = caps - set(po_util.CAPITULOS)
+        if invalidos:
+            raise ValueError("capítulo(s) desconhecido(s): " + ", ".join(sorted(invalidos))
+                             + " (válidos: " + ", ".join(po_util.CAPITULOS) + ")")
+        self.capitulos = caps or None
         self.upstream_ref = upstream_ref or "upstream/main"
+        self.erro_po = erro_po
 
     # ------------------------------------------------------------------
     # Escopo
@@ -121,9 +134,9 @@ class Contexto:
     # ------------------------------------------------------------------
 
     def arquivo_de(self, e):
-        """Primeiro arquivo de origem da entrada fora de src/SUMMARY.md (ou None)."""
+        """Primeiro arquivo de origem fora do SUMMARY (regra de `po_util.capitulo`), ou None."""
         arqs = po_util.arquivos(e)
-        fora = [a for a in arqs if a != "src/SUMMARY.md"]
+        fora = [a for a in arqs if po_util.capitulo_de_arquivo(a) != "summary"]
         return (fora or arqs or [None])[0]
 
     def achado(self, check, severidade, mensagem, e=None, arquivo=None):

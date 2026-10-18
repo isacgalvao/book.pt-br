@@ -8,27 +8,40 @@ renderiza `<h2 id="installation">Instalação</h2>`.
 
 Os ids NUNCA são calculados aqui: saem do HTML da compilação em inglês
 (`<h1>`..`<h6>` dentro de `<main>`, em ordem de documento), emparelhados na
-ordem com os títulos ATX de src/<página>.md. O msgid de um título é o próprio
-texto do título.
+ordem com os títulos ATX e setext de src/<página>.md. O msgid de um título é o
+próprio texto do título. O texto de cada título do HTML tem de ser o do
+Markdown: se algum diferir, a compilação não é a do src/ atual e a página é
+pulada (`--en` precisa ser uma compilação nova).
 
 Ids que o `{#...}` não consegue carregar até o HTML (`_` fora do meio de uma
 palavra, que o mdbook-gettext escapa como `\\_`, ou caracteres que o
 pos_build.py não limparia) NÃO são gravados: ficam em `inseguros`, com o
-`motivo`, para o título ser traduzido sem slug.
+`motivo`, para o título ser traduzido sem slug. Se o msgstr desse título (sem
+nenhum id seguro em página alguma) já termina com `{#...}`, o slug é removido ao
+gravar (`remover`, na saída com --check).
 
 Uso:
     slugs.py --en DIR [--po FILE] [--check] [--json]
 
     --en DIR    compilação em inglês (DIR/<página>.html)
-    --po FILE   PO a atualizar (padrão: po/pt-BR.po)
+    --po FILE   PO a ler e, sem --check, atualizar (padrão: po/pt-BR.po)
     --check     não grava nada; sai com 1 se algum slug faltar ou estiver errado
     --json      imprime o resumo em JSON
 
 Nunca altera msgid nem msgstr vazio. A gravação é atômica (arquivo temporário
 na mesma pasta + os.replace) e só acontece depois de conferir que o msgcat
 existe. Códigos de saída: 0 = ok, 1 = problemas encontrados (slug faltando ou
-errado, título sem entrada no PO, página pulada; `inseguros` sozinho não conta),
-2 = erro de uso ou de ambiente.
+errado, slug a remover, título sem entrada no PO, página pulada; `inseguros`
+sozinho não conta), 2 = erro de uso ou de ambiente.
+
+Uma página de src/ sem HTML em `--en` que o src/SUMMARY.md NÃO liga (o mdbook
+não a gera) entra em `paginas_puladas` com `"tipo": "fora_do_summary"` e não
+conta para o código de saída. Sem HTML mas ligada no SUMMARY.md (compilação
+parcial ou defasada), ou com o SUMMARY.md ilegível, ela é pulada como as outras.
+
+Não pega a trava do PO (ARQ.po.lock, que o apply.py pega sozinho): em uso
+concorrente, rode-o sob `flock po/pt-BR.po.lock python3 i18n/tools/slugs.py ...`
+(o apply.py, ao contrário, não se embrulha em `flock`).
 """
 import argparse
 import html
@@ -54,12 +67,21 @@ _ATRIBUTO = re.compile(r"\s*\{#[^{}]*\}\s*$")
 _FECHAMENTO = re.compile(r"(?:^|[ \t]+)#+[ \t]*$")
 # Marca de citação (`>` com até 3 espaços de recuo e um espaço opcional depois).
 _CITACAO = re.compile(r"^ {0,3}> ?")
+# Sublinhado de título setext (`===` ou `---`), quebra temática e item de lista.
+_SETEXT = re.compile(r"^ {0,3}(=+|-+)[ \t]*$")
+_QUEBRA = re.compile(r"^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$")
+_LISTA = re.compile(r"^ {0,3}(?:[-+*]|\d{1,9}[.)])(?:[ \t]|$)")
 # Slug no fim de um msgstr: ` {#algo}`.
 _SLUG_FINAL = re.compile(r"[ \t]*\{#[^{}\n]*\}[ \t]*$")
-# O pos_build.py remove só `\s*\{#[A-Za-z0-9_.:-]+\}`; ids fora disso vazariam.
+# O pos_build.py remove só `\s*(?<!\{)\{#[A-Za-z0-9_.:-]+\}`; ids fora disso vazariam.
 _ID_SEGURO = re.compile(r"[A-Za-z0-9_.:-]+")
 _SUBLINHADOS = re.compile(r"_+")
 _ALFANUM = re.compile(r"[A-Za-z0-9]")
+# Nota que o --check acrescenta ao motivo de um inseguro cujo msgstr já termina com `{#...}`
+# (o checks/titulos.py a importa para tirá-la do motivo: uma só definição do texto).
+NOTA_REMOVE_CHECK = " O msgstr atual já termina com `{#...}`: o slugs.py o remove ao gravar (sem --check)."
+# Destino de um link do src/SUMMARY.md: `](arquivo.md)`.
+_ELO_SUMMARY = re.compile(r"\]\(\s*<?([^)<>\s]+)>?\s*\)")
 
 
 class ErroDeUso(Exception):
@@ -122,14 +144,17 @@ def _criar_parser():
         description="Garante ` {#id-em-inglês}` no fim de cada título traduzido do PO "
                     "(ids tirados da compilação em inglês, nunca calculados).",
         epilog="Códigos de saída: 0 = ok; 1 = problemas encontrados (slug faltando ou errado, "
-               "título sem entrada no PO, página pulada); 2 = erro de uso ou de ambiente.",
+               "slug a remover, título sem entrada no PO, página pulada, exceto a que o "
+               "src/SUMMARY.md não liga e por isso não tem HTML); 2 = erro de uso ou de "
+               "ambiente. Não pega a trava do PO (ARQ.po.lock, que o apply.py pega sozinho): em "
+               "uso concorrente, rode sob `flock po/pt-BR.po.lock python3 i18n/tools/slugs.py ...`.",
     )
     ap.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS,
                     help="mostra esta ajuda e sai")
     ap.add_argument("--en", required=True, metavar="DIR",
                     help="compilação em inglês do livro (DIR/<página>.html)")
     ap.add_argument("--po", metavar="FILE",
-                    help="PO a atualizar (padrão: po/pt-BR.po)")
+                    help="PO a ler e, sem --check, atualizar (padrão: po/pt-BR.po)")
     ap.add_argument("--check", action="store_true",
                     help="não grava nada; sai com 1 se algum slug faltar ou estiver errado")
     ap.add_argument("--json", action="store_true",
@@ -142,22 +167,28 @@ def _criar_parser():
 # --------------------------------------------------------------------------
 
 def titulos_md(texto):
-    """Devolve [(nível, texto)] dos títulos ATX do Markdown, fora de código.
+    """Devolve [(nível, texto)] dos títulos ATX e setext do Markdown, fora de código.
 
     Ignora blocos cercados (``` e ~~~) e comentários HTML de várias linhas;
     olha também dentro de citações (`> ### Título`). Tira a sequência de
-    fechamento e um atributo `{#...}` já existente do texto do título.
+    fechamento e um atributo `{#...}` já existente do texto do título. Um
+    título setext são as linhas de um parágrafo seguidas de `===` (nível 1) ou
+    `---` (nível 2); as linhas se juntam com um espaço, como no msgid.
     """
     achados = []
     cerca = None  # (caractere, tamanho) do bloco cercado aberto
     em_comentario = False
+    par = []  # linhas do parágrafo aberto; None = sem parágrafo até a próxima linha em branco
+    par_prof = 0  # profundidade de citação em que o parágrafo abriu
     for linha in texto.splitlines():
         # Tira as marcas de citação (aninhadas, se houver).
+        prof = 0
         while True:
             m = _CITACAO.match(linha)
             if not m:
                 break
             linha = linha[m.end():]
+            prof += 1
         if em_comentario:
             if "-->" in linha:
                 em_comentario = False
@@ -169,14 +200,30 @@ def titulos_md(texto):
             continue
         if m and not (m.group(1)[0] == "`" and "`" in m.group(2)):
             cerca = (m.group(1)[0], len(m.group(1)))
+            par = []
             continue
         if linha.lstrip().startswith("<!--") and "-->" not in linha:
             em_comentario = True
+            par = []
             continue
         m = _ATX.match(linha)
-        if not m:
-            continue
-        achados.append((len(m.group(1)), _limpar_titulo(m.group(2) or "")))
+        if m:
+            achados.append((len(m.group(1)), _limpar_titulo(m.group(2) or "")))
+            par = []
+        elif not linha.strip():
+            par = []
+        elif par and par_prof == prof and _SETEXT.match(linha):
+            achados.append((1 if linha.lstrip()[0] == "=" else 2, _ATRIBUTO.sub("", " ".join(par)).strip()))
+            par = []
+        elif _QUEBRA.match(linha) or linha.lstrip().startswith("<!--"):
+            par = []
+        elif par is None or _LISTA.match(linha) or linha.lstrip().startswith("<") \
+                or (not par and linha.startswith("    ")):
+            par = None  # item de lista, bloco HTML ou código recuado: sem setext até a linha em branco
+        else:
+            if not par or prof > par_prof:  # uma citação nova interrompe o parágrafo
+                par, par_prof = [], prof
+            par.append(linha.strip())
     return achados
 
 
@@ -196,7 +243,7 @@ def _limpar_titulo(conteudo):
 # --------------------------------------------------------------------------
 
 _MAIN = re.compile(r"<main\b[^>]*>(.*)</main>", re.S)
-_H = re.compile(r"<h([1-6])\b([^>]*)>")
+_H = re.compile(r"<h([1-6])\b([^>]*)>(.*?)</h\1\s*>", re.S)
 _ID = re.compile(r"""\bid\s*=\s*(?:"([^"]*)"|'([^']*)')""")
 _LANG = re.compile(r"""<html\b[^>]*\blang\s*=\s*["']([^"']*)["']""", re.I)
 
@@ -212,7 +259,7 @@ def _ler(caminho):
 
 
 def _ids_do_texto(pagina):
-    """[(nível, id)] dos <h1>..<h6> dentro de <main>; None se a página não tem <main>."""
+    """[(nível, id, html)] dos <h1>..<h6> dentro de <main>; None se a página não tem <main>."""
     m = _MAIN.search(pagina)
     if not m:
         return None
@@ -220,13 +267,29 @@ def _ids_do_texto(pagina):
     for h in _H.finditer(m.group(1)):
         a = _ID.search(h.group(2))
         ident = html.unescape(a.group(1) if a.group(1) is not None else a.group(2)) if a else None
-        saida.append((int(h.group(1)), ident))
+        saida.append((int(h.group(1)), ident, h.group(3)))
     return saida
 
 
-def ids_html(caminho):
-    """Devolve [(nível, id)] dos <h1>..<h6> dentro de <main>, em ordem (None sem <main>)."""
-    return _ids_do_texto(_ler(caminho))
+# Elementos do título em Markdown que não são texto visível: code span (só o conteúdo
+# fica), tag HTML, escape com barra, destino `](...)` e rótulo `][...]` de link.
+_MD_ELEMENTO = re.compile(r"(`+)(.+?)\1|<[^>]*>|\\[!-/:-@\[-`{-~]|\]\([^)]*\)|\]\[[^\]]*\]")
+_NAO_PALAVRA = re.compile(r"[\W_]+")
+
+
+def _chave_titulo(texto):
+    """Só as letras e dígitos do texto, sem entidades (`&amp;`) nem caixa."""
+    return _NAO_PALAVRA.sub("", html.unescape(texto)).casefold()
+
+
+def _chave_titulo_md(titulo):
+    """_chave_titulo de um título em Markdown (o `&` de um code span fica literal)."""
+    return _chave_titulo(_MD_ELEMENTO.sub(lambda m: m.group(2).replace("&", "&amp;") if m.group(1) else "", titulo))
+
+
+def _chave_titulo_html(conteudo):
+    """_chave_titulo do conteúdo de um <hN>: o texto do título, sem as tags."""
+    return _chave_titulo(re.sub(r"<[^>]*>", "", conteudo))
 
 
 # --------------------------------------------------------------------------
@@ -258,9 +321,10 @@ def motivo_inseguro(ident):
                 "remover o ` {#id}` do menu lateral e do índice de busca.")
     if _sublinhado_solto(ident):
         return ("o id tem `_` fora do meio de uma palavra; o mdbook-gettext reescreve o Markdown "
-                "e escapa `_` como `\\_`, então o slug não chegaria ao HTML e apareceria como "
-                "texto no título. Traduza este título sem slug (o id passa a vir do texto em "
-                "português) e confira que nenhum link do livro aponta para o id em inglês.")
+                "e escapa `_` como `\\_`, então o slug não chegaria ao HTML como atributo: o id do "
+                "título sairia estragado (o pos_build.py ainda tira o texto ` {#id}`). Traduza este "
+                "título sem slug (o id passa a vir do texto em português) e confira que nenhum "
+                "link do livro aponta para o id em inglês.")
     return None
 
 
@@ -279,24 +343,40 @@ def com_slug(msgstr, slug):
     return f"{base} {{#{slug}}}"
 
 
+def paginas_do_summary():
+    """Nomes dos arquivos (`ch01-00-x.md`) que o src/SUMMARY.md liga; None se não puder lê-lo."""
+    try:
+        texto = (SRC / "SUMMARY.md").read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    return {m.group(1).removeprefix("./") for m in _ELO_SUMMARY.finditer(texto)}
+
+
 def levantar(en_dir):
     """Emparelha os títulos de src/ com os ids do HTML inglês.
 
     Devolve (pares, puladas): `pares` = [(arquivo, titulo, id)] na ordem dos
-    arquivos e dos títulos; `puladas` = páginas cuja contagem ou nível de
-    títulos não bate com o HTML (não são processadas). Levanta ErroDeUso se
-    `en_dir` não parece a compilação em inglês do livro.
+    arquivos e dos títulos; `puladas` = páginas sem HTML em `en_dir`, sem
+    <main>, ou cuja contagem, nível ou texto de títulos não bate com o HTML
+    (não são processadas). A página sem HTML que o src/SUMMARY.md não liga (o
+    mdbook não a gera) leva `"tipo": "fora_do_summary"`; sem HTML mas ligada
+    no SUMMARY.md (`--en` parcial ou defasado) não leva tipo, pois é erro.
+    Levanta ErroDeUso se `en_dir` não parece a compilação em inglês do livro.
     """
     en_dir = Path(en_dir)
     pares, puladas = [], []
     encontradas = 0
+    no_summary = paginas_do_summary()  # None (ilegível): nenhuma página conta como fora dele
     for fonte in paginas_fonte():
         rel = f"src/{fonte.name}"
         titulos = titulos_md(_ler(fonte))
         pagina = en_dir / (fonte.stem + ".html")
         if not pagina.is_file():
-            if titulos:  # página fora do SUMMARY.md: o mdbook não a gera
-                puladas.append({"arquivo": rel, "motivo": f"{pagina.name} não existe em {en_dir}"})
+            if titulos:
+                pulada = {"arquivo": rel, "motivo": f"{pagina.name} não existe em {en_dir}"}
+                if no_summary is not None and fonte.name not in no_summary:
+                    pulada["tipo"] = "fora_do_summary"  # o mdbook não gera HTML para ela
+                puladas.append(pulada)
             continue
         encontradas += 1
         texto = _ler(pagina)
@@ -316,17 +396,49 @@ def levantar(en_dir):
                 "motivo": f"{len(titulos)} títulos no Markdown e {len(ids)} no HTML",
             })
             continue
-        if [n for n, _ in titulos] != [n for n, _ in ids]:
+        if [n for n, _ in titulos] != [h[0] for h in ids]:
             puladas.append({"arquivo": rel, "motivo": "níveis dos títulos diferem entre o Markdown e o HTML"})
             continue
-        for (_, titulo), (_, ident) in zip(titulos, ids):
-            pares.append((rel, titulo, ident))
+        # A posição não basta: uma compilação defasada (ou um parser que diverge do
+        # mdbook) pode manter contagem e níveis e trocar os ids de lugar.
+        for i, ((_, titulo), (_, _, conteudo)) in enumerate(zip(titulos, ids), 1):
+            if _chave_titulo_md(titulo) != _chave_titulo_html(conteudo):
+                puladas.append({
+                    "arquivo": rel,
+                    "motivo": f"o título {i} ({titulo!r}) difere do HTML em inglês: "
+                              "a compilação de --en está desatualizada em relação a src/ (ou o mdbook lê o título de outro modo)?",
+                })
+                break
+        else:
+            for (_, titulo), (_, ident, _) in zip(titulos, ids):
+                pares.append((rel, titulo, ident))
     if not encontradas:
         raise ErroDeUso(
             f"{en_dir} não parece a compilação em inglês do livro: nenhuma página de src/ "
             "(<página>.html) foi encontrada lá"
         )
     return pares, puladas
+
+
+def _forma_msgid(texto):
+    """Forma comparável de um título em Markdown e do msgid dele no PO.
+
+    O mdbook-xgettext re-renderiza o Markdown ao extrair (`*x*` vira `_x_`,
+    `__x__` vira `**x**`, `&amp;` vira `&`, `&lt;T&gt;` vira `\\<T\\>`): sem
+    entidades, escapes com barra e marcas de ênfase, as duas formas se igualam.
+    """
+    texto = re.sub(r"\\([!-/:-@\[-`{-~])", r"\1", html.unescape(texto))
+    return re.sub(r"[*_]", "", texto)
+
+
+def _indice_por_arquivo(po):
+    """{(arquivo, _forma_msgid(msgid)): [entradas]} das entradas não obsoletas do PO."""
+    indice = {}
+    for e in po:
+        if not e.obsolete:
+            for arquivo in po_util.arquivos(e):
+                indice.setdefault((arquivo, _forma_msgid(e.msgid)), []).append(e)
+    return indice
 
 
 def processar(po, pares, gravar):
@@ -336,24 +448,32 @@ def processar(po, pares, gravar):
     quem chama). Só entradas com msgstr não vazio são tocadas.
     """
     por_msgid = {e.msgid: e for e in po if not e.obsolete}
+    indice = None  # só montado se algum título não casar com um msgid exato
     candidatos = {}  # msgid -> [(arquivo, id)] seguros, na ordem de `pares`
     sem_entrada, inseguros = [], []
     vistos = set()
 
     for arquivo, titulo, ident in pares:
+        if not titulo:
+            continue  # título vazio (`##`): o xgettext não gera mensagem para ele
         entrada = por_msgid.get(titulo)
+        if entrada is None:
+            # O xgettext re-renderiza o Markdown: procura nas entradas da página, sem ênfase nem escapes.
+            if indice is None:
+                indice = _indice_por_arquivo(po)
+            achadas = indice.get((arquivo, _forma_msgid(titulo)), [])
+            entrada = achadas[0] if len(achadas) == 1 else None
         if entrada is None:
             if (arquivo, titulo) not in vistos:
                 vistos.add((arquivo, titulo))
                 sem_entrada.append({"arquivo": arquivo, "titulo": titulo})
             continue
+        titulo = entrada.msgid
         motivo = motivo_inseguro(ident)
         if motivo:
             # Sem tradução aparece o inglês, que já tem o id certo: nada a avisar.
             if entrada.msgstr.strip() and (arquivo, titulo) not in vistos:
                 vistos.add((arquivo, titulo))
-                if _SLUG_FINAL.search(entrada.msgstr):
-                    motivo += " O msgstr atual já termina com `{#...}`: remova-o à mão."
                 inseguros.append({"arquivo": arquivo, "titulo": titulo, "slug": ident, "motivo": motivo})
             continue
         candidatos.setdefault(titulo, []).append((arquivo, ident))
@@ -388,10 +508,32 @@ def processar(po, pares, gravar):
         else:
             faltando.append({"id": po_util.entry_id(entrada), "msgid": titulo, "slug": ident})
 
+    # Título sem nenhum id seguro cujo msgstr já termina com `{#...}`: o slug nunca chega
+    # ao HTML como atributo (o id do título sai estragado, ou o texto vaza), então sai do msgstr
+    # (o `apply.py` não o recoloca sozinho, mas recoloca o antigo quando a tradução chega sem ele).
+    remover, tratados = [], set()
+    for i in inseguros:
+        titulo = i["titulo"]
+        entrada = por_msgid[titulo]
+        m = _SLUG_FINAL.search(entrada.msgstr)
+        if titulo in candidatos or not m:
+            continue
+        i["motivo"] += (" O msgstr terminava com `{#...}`: o slugs.py o removeu." if gravar else
+                        NOTA_REMOVE_CHECK)
+        if titulo in tratados:  # o mesmo título em outra página
+            continue
+        tratados.add(titulo)
+        corrigidos += 1
+        if gravar:
+            entrada.msgstr = entrada.msgstr[:m.start()].rstrip()
+        else:
+            remover.append({"id": po_util.entry_id(entrada), "msgid": titulo, "slug": m.group(0).strip()[2:-1]})
+
     return {
         "adicionados": adicionados,
         "corrigidos": corrigidos,
         "faltando": faltando,
+        "remover": remover,
         "ambiguos": ambiguos,
         "sem_entrada": sem_entrada,
         "inseguros": inseguros,
@@ -457,6 +599,8 @@ def executar(args):
     caminho_po = Path(args.po) if args.po else po_util.PO_PADRAO
     if not en_dir.is_dir():
         raise ErroDeUso(f"{en_dir} não é um diretório (use --en com a compilação em inglês)")
+    if caminho_po.is_dir():
+        raise ErroDeUso(f"{caminho_po} é um diretório (use --po com o arquivo .po)")
     if not caminho_po.is_file():
         raise ErroDeUso(f"PO não encontrado: {caminho_po}")
     if not SRC.is_dir():
@@ -474,7 +618,9 @@ def executar(args):
         gravar_po(po, caminho_po)
 
     _emitir(resumo, args.json, args.check)
-    problemas = bool(resumo["faltando"] or resumo["sem_entrada"] or resumo["paginas_puladas"])
+    # A página fora do SUMMARY.md não vai para o livro: não é problema (o titulos.py só avisa).
+    problemas = bool(resumo["faltando"] or resumo["remover"] or resumo["sem_entrada"]
+                     or any(p.get("tipo") != "fora_do_summary" for p in resumo["paginas_puladas"]))
     return 1 if problemas else 0
 
 
@@ -501,15 +647,19 @@ def _relatorio(r, so_checar):
     print(f"slugs: {r['adicionados']} adicionados, {r['corrigidos']} corrigidos ({acao})")
     for f in r["faltando"]:
         print(f"  falta/errado: {f['msgid']!r} -> {{#{f['slug']}}} [{f['id']}]")
+    for x in r["remover"]:
+        print(f"  slug a remover: {x['msgid']!r} termina com {{#{x['slug']}}}, que não chega ao HTML [{x['id']}]")
     for a in r["ambiguos"]:
         print(f"  ambíguo: {a['msgid']!r} tem ids {', '.join(a['slugs'])} (vale o primeiro)")
     for s in r["sem_entrada"]:
         print(f"  sem entrada no PO: {s['arquivo']}: {s['titulo']!r}")
     for i in r["inseguros"]:
-        print(f"  id inseguro ({i['slug']!r}), não gravado: {i['arquivo']}: {i['titulo']!r}")
+        ident = "sem id" if i["slug"] is None else repr(i["slug"])
+        print(f"  id inseguro ({ident}), não gravado: {i['arquivo']}: {i['titulo']!r}")
         print(f"    motivo: {i['motivo']}")
     for p in r["paginas_puladas"]:
-        print(f"  página pulada: {p['arquivo']}: {p['motivo']}")
+        rotulo = "página fora do SUMMARY.md" if p.get("tipo") == "fora_do_summary" else "página pulada"
+        print(f"  {rotulo}: {p['arquivo']}: {p['motivo']}")
 
 
 if __name__ == "__main__":

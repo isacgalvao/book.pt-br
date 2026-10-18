@@ -13,21 +13,35 @@ Regra (conservadora; na dúvida a entrada continua fuzzy):
   2. as duas versões do inglês têm o mesmo número de palavras (separadas por
      espaço em branco) e toda palavra diferente só muda dentro de tokens
      de versão `\\d+\\.\\d+(\\.\\d+)?([-+][\\w.]+)?` ou de data `\\d{4}-\\d{2}-\\d{2}`
-     (a pontuação, as aspas e as crases em volta ficam idênticas);
+     (a pontuação, as aspas e as crases em volta ficam idênticas); fora os
+     tokens, as duas strings são idênticas, inclusive nos espaços em branco
+     (quebras de linha, espaços duplos, NBSP): a troca não pode deixar o msgstr
+     diferente do msgid onde o validador exige igualdade (bordas, code spans);
   3. cada token antigo ocorre EXATAMENTE UMA vez no msgstr (nenhuma vez: a
      tradução escreveu de outro jeito; mais de uma: não dá para saber se todas
-     as ocorrências mudam) e não aparece também sem mudar no inglês.
+     as ocorrências mudam) e não aparece também sem mudar no inglês;
+  4. rede de segurança: o msgstr já com os tokens trocados não recebe nenhum
+     'erro' do `validar_par` (checks/mensagens.py, o mesmo critério do
+     apply.py). Vale também para um msgstr que já tinha um erro sem relação
+     com a troca: ele continua fuzzy e segue para a IA ou para a revisão.
 
 Então os tokens são trocados no msgstr, o flag fuzzy e o previous_msgid saem.
 Qualquer outra entrada fica intocada. Grava pelo `po_util.salvar`.
+
+Trava: ao contrário do apply.py, este programa NÃO pega a trava do PO. Se outro
+escritor (apply.py, slugs.py...) puder gravar o PO ao mesmo tempo, rode-o sob a
+trava comum, `flock po/pt-BR.po.lock python3 i18n/tools/autoport.py` (ARQ.po.lock
+para outro PO): sem ela, uma gravação que caia entre a leitura e a gravação daqui
+é perdida, sem erro nenhum.
 
 Uso:
     autoport.py [--po ARQUIVO.po] [--dry-run]
 
 Códigos de saída: 0 = ok (inclusive se sobrar fuzzy), 2 = erro de uso ou de
-ambiente.
+ambiente (a saída de erro fechada, num pipe, não muda o código).
 """
 import argparse
+import errno
 import os
 import re
 import shutil
@@ -37,6 +51,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import po_util  # noqa: E402
+
+try:
+    from checks.mensagens import validar_par  # noqa: E402
+except Exception as _exc:  # erro de ambiente: código 2, sem traceback
+    print(f"erro: não consegui importar checks/mensagens.py ({type(_exc).__name__}: {_exc})",
+          file=sys.stderr)
+    sys.exit(2)
 
 # Data ISO ou versão tipo semver, como no contrato (§6).
 TOKEN = re.compile(r"\d{4}-\d{2}-\d{2}|\d+\.\d+(?:\.\d+)?(?:[-+][\w.]+)?")
@@ -94,8 +115,7 @@ class _Parser(argparse.ArgumentParser):
                           help="mostra esta ajuda e sai")
 
     def error(self, message):
-        self.print_usage(sys.stderr)
-        self.exit(2, f"{self.prog}: erro: {_traduz_erro(message)}\n")
+        sys.exit(_erro(self.format_usage() + f"{self.prog}: erro: {_traduz_erro(message)}"))
 
 
 # --------------------------------------------------------------------------
@@ -103,11 +123,13 @@ class _Parser(argparse.ArgumentParser):
 # --------------------------------------------------------------------------
 
 def comparar_ingles(anterior, atual):
-    """Compara palavra a palavra os dois ingleses.
+    """Compara palavra a palavra os dois ingleses (e, por fim, a string inteira).
 
     Devolve (mapa, fixos, motivo): `mapa` = {token_antigo: token_novo} quando a
     única diferença são tokens de versão/data, e `fixos` = tokens que aparecem
-    sem mudar no inglês; senão (None, None, motivo da recusa).
+    sem mudar no inglês; senão (None, None, motivo da recusa). O `split()` ignora
+    o espaço em branco, então a comparação final pelo esqueleto da string inteira
+    é que recusa mudança de quebra de linha, espaço duplo ou NBSP.
     """
     pa, pb = anterior.split(), atual.split()
     if len(pa) != len(pb):
@@ -127,6 +149,8 @@ def comparar_ingles(anterior, atual):
                 return None, None, f"o token {x} muda para {mapa[x]} e também para {y}"
     if not mapa:
         return None, None, "nenhuma troca de versão ou data entre previous_msgid e msgid"
+    if TOKEN.sub(_MARCA, anterior) != TOKEN.sub(_MARCA, atual):
+        return None, None, "além da versão ou data, mudaram espaços ou quebras de linha"
     return mapa, fixos, None
 
 
@@ -151,6 +175,10 @@ def avaliar(e):
         n = tokens_msgstr.count(antigo)
         if n != 1:
             return None, f"o token {antigo} ocorre {n} vez(es) no msgstr (precisa ocorrer exatamente 1)"
+    # Rede de segurança: o msgstr trocado não pode ser recusado pelo validador do apply.py.
+    for severidade, achado in validar_par(e.msgid, trocar(e.msgstr, mapa)):
+        if severidade == "erro":
+            return None, f"o msgstr com a troca seria recusado pelo validador: {' '.join(str(achado).split())}"
     return mapa, None
 
 
@@ -162,6 +190,54 @@ def trocar(msgstr, mapa):
 # --------------------------------------------------------------------------
 # Programa
 # --------------------------------------------------------------------------
+
+# Textos em português para os erros de leitura que o Python devolve no idioma do locale.
+_MOTIVOS_OS = {
+    errno.ENOENT: "o caminho não existe",
+    errno.EISDIR: "é um diretório",
+    errno.EACCES: "permissão negada",
+    errno.EPERM: "operação não permitida",
+    errno.ELOOP: "links simbólicos em ciclo",
+    errno.EIO: "erro de entrada e saída",
+}
+
+
+def _motivo_leitura(exc):
+    """Motivo, em português, de uma falha ao ler o PO (o polib e o codec falam inglês)."""
+    if isinstance(exc, UnicodeDecodeError):
+        return "o conteúdo não é texto UTF-8 válido"
+    texto = " ".join(str(exc).split())
+    if "Syntax error in po file" in texto:
+        linha = re.search(r"\(line (\d+)\)", texto)
+        return "erro de sintaxe no arquivo PO" + (f" (linha {linha.group(1)})" if linha else "")
+    if isinstance(exc, OSError):  # sem o strerror, que vem em inglês
+        return _MOTIVOS_OS.get(exc.errno) or f"erro do sistema ({errno.errorcode.get(exc.errno) or type(exc).__name__})"
+    return texto[:200] or type(exc).__name__
+
+
+def _descartar(fluxo):
+    """Aponta o descritor de `fluxo` para /dev/null: o que sobrar no buffer não falha de novo ao sair."""
+    try:
+        fd = os.open(os.devnull, os.O_WRONLY)
+        try:
+            os.dup2(fd, fluxo.fileno())
+        finally:
+            os.close(fd)
+    except (OSError, ValueError, AttributeError):  # fluxo fechado ou sem descritor
+        pass
+
+
+def _erro(mensagem):
+    """Escreve `mensagem` na saída de erro e devolve 2 (erro de uso ou de ambiente).
+
+    Com a saída de erro fechada (pipe sem leitor) só a mensagem se perde: o código 2 fica.
+    """
+    try:
+        print(mensagem, file=sys.stderr, flush=True)
+    except OSError:  # BrokenPipeError e afins
+        _descartar(sys.stderr)
+    return 2
+
 
 def _descricao(e):
     arqs = po_util.arquivos(e)
@@ -195,7 +271,10 @@ def main(argv=None):
     ap = _Parser(
         description="Porta sem IA as entradas fuzzy em que o upstream só trocou versão ou data "
                     "(troca os mesmos tokens no msgstr e tira o fuzzy).",
-        epilog="Códigos de saída: 0 = ok (mesmo que sobrem fuzzy); 2 = erro de uso ou de ambiente.",
+        epilog="Códigos de saída: 0 = ok (mesmo que sobrem fuzzy); 2 = erro de uso ou de ambiente. "
+               "Trava: ao contrário do apply.py, este programa não pega a trava do PO; se outro "
+               "escritor puder gravar o PO ao mesmo tempo, rode-o sob "
+               "`flock po/pt-BR.po.lock python3 i18n/tools/autoport.py` (ARQ.po.lock para outro PO).",
     )
     ap.add_argument("--po", metavar="ARQUIVO.po", type=Path,
                     help="PO a atualizar (padrão: po/pt-BR.po)")
@@ -205,20 +284,13 @@ def main(argv=None):
 
     caminho = args.po or po_util.PO_PADRAO
     if not caminho.exists():
-        print(f"erro: PO não encontrado: {caminho}", file=sys.stderr)
-        return 2
+        return _erro(f"erro: PO não encontrado: {caminho}")
     if not caminho.is_file():
-        print(f"erro: {caminho} não é um arquivo", file=sys.stderr)
-        return 2
-    if not args.dry_run and shutil.which("msgcat") is None:
-        print("erro: msgcat não encontrado: instale o pacote 'gettext' (o PO não foi alterado)",
-              file=sys.stderr)
-        return 2
+        return _erro(f"erro: {caminho} não é um arquivo")
     try:
         po = po_util.carregar(caminho)
     except (OSError, ValueError) as exc:
-        print(f"erro: não consegui ler {caminho}: {exc}", file=sys.stderr)
-        return 2
+        return _erro(f"erro: não consegui ler {caminho}: {_motivo_leitura(exc)}")
 
     fuzzy = [e for e in po if "fuzzy" in e.flags and not e.obsolete]
     portadas, restantes = [], []
@@ -243,23 +315,18 @@ def main(argv=None):
     if portadas and not args.dry_run:
         try:
             _gravar(po, caminho)
-        except (OSError, RuntimeError) as exc:
-            print(f"erro: não consegui gravar {caminho}: {exc} (o PO original não foi alterado)",
-                  file=sys.stderr)
-            return 2
+        except (OSError, RuntimeError) as exc:  # inclusive "msgcat não encontrado", que o salvar checa
+            return _erro(f"erro: não consegui gravar {caminho}: {exc} (o PO original não foi alterado)")
 
     resumo = f"{len(portadas)} {'portável(is)' if args.dry_run else 'portada(s)'}, {len(restantes)} restante(s) fuzzy"
     linhas.append(f"resumo: {resumo}" + (" (simulação: nada foi gravado)" if args.dry_run else ""))
     # Só imprime depois de gravar: um `| head` que feche o pipe não impede a gravação.
-    print("\n".join(linhas))
+    try:
+        print("\n".join(linhas), flush=True)
+    except BrokenPipeError:  # saída fechada (ex.: `| head`): o trabalho já foi feito
+        _descartar(sys.stdout)
     return 0
 
 
 if __name__ == "__main__":
-    try:
-        codigo = main()
-        sys.stdout.flush()
-    except BrokenPipeError:  # saída fechada (ex.: `| head`): o trabalho já foi feito
-        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
-        codigo = 0
-    sys.exit(codigo)
+    sys.exit(main())

@@ -9,19 +9,37 @@ Uso:
 Cada JSON de entrada é uma lista de objetos `{"id": "<entry_id>", "msgstr": "...",
 "notas": "..." (opcional), "confianca": ... (opcional, ignorado)}`. Para cada item:
 
+  - item que não é objeto, sem "id" texto, ou com "msgstr" que não é texto (a
+    chave ausente também)                   -> rejeitado;
   - id desconhecido                         -> rejeitado;
   - id fora do escopo (capítulo pedido; ou, no modo sync, id que não está no
     delta.json)                             -> rejeitado;
+  - entrada do PO com plural                -> rejeitada (defensivo: o PO do livro
+    não tem plural);
   - msgstr vazio (ou só o slug `{#x}`)      -> rejeitado;
   - mensagem que fica sempre vazia (po_util.SEMPRE_VAZIAS) -> rejeitado;
   - `validar_par` (checks/mensagens.py) devolve algum 'erro', ou levanta
     qualquer exceção                        -> rejeitado (o lote nunca é abortado);
-  - senão: grava o msgstr, tira a marca 'fuzzy' e o `#| msgid` anterior.
+  - regra de i18n/erros-recorrentes.yml com severidade `erro` (as mesmas do check
+    `glossario` do check.py) casa no msgstr -> rejeitado, com o id da regra e a
+    correção; no modo sync, só se o msgstr antigo não a violava (senão vira aviso,
+    para o porte de uma diferença sem relação não travar);
+  - senão: grava o msgstr, tira a marca 'fuzzy' e o `#| msgid` anterior. Forma a
+    evitar do glossário (`evitar`) e regra de severidade `aviso` só geram aviso.
 
-Se o msgstr antigo terminava em ` {#x}` e o novo não termina com esse slug, o slug
-antigo é recolocado (um slug diferente ou mal formado no fim é trocado pelo antigo,
-com aviso; slug no meio do texto é erro do validador). Ids repetidos na entrada:
-vale o último, com aviso. Entradas rejeitadas não são tocadas.
+Quem põe os slugs ` {#x}` é o slugs.py (a partir do HTML inglês); o slug da tradução
+nunca vale. Se o msgstr antigo termina num slug bem formado e de id seguro (a regra
+`slugs.motivo_inseguro`: sem `_` solto), ele é recolocado quando o novo não termina
+em slug, e trocado pelo antigo, com aviso, quando o novo termina em outro. Sem slug
+antigo utilizável (não havia, é mal formado ou o id é inseguro), o ` {#x}` do fim do
+msgstr novo é removido, com aviso, e o antigo inseguro não é recolocado: o título fica
+sem slug. Slug no meio do texto é erro do validador. Ids repetidos na entrada: vale o
+último, com aviso. Entradas rejeitadas não são tocadas.
+
+O PO tem de passar no `msgfmt --check` antes de qualquer alteração (também em --dry-run):
+o polib "conserta" calado um PO que o msgfmt recusa (msgid sem msgstr, aspa sem fechar) e
+a gravação perderia texto; nesse caso o erro de uso (código 2) cita a linha do defeito.
+Sem msgfmt instalado, a conferência é pulada.
 
 `--dry-run` só valida (o arquivo nunca é gravado). Sem ele, a gravação é feita sob
 `flock` exclusivo em ARQ.po.lock (carregar, aplicar e gravar acontecem dentro da
@@ -42,7 +60,9 @@ Saída: o relatório `{"aplicadas":N,"rejeitadas":[{"id","msgid","motivos":[...]
 o resumo legível, em português, vai para a saída de erro.
 
 Códigos de saída: 0 = tudo aplicado (ou validado, em --dry-run); 1 = alguma
-entrada foi rejeitada; 2 = erro de uso ou de ambiente (nunca um traceback).
+entrada foi rejeitada; 2 = erro de uso ou de ambiente (nunca um traceback). As regras
+de erros recorrentes e do glossário exigem o PyYAML e os dois YAML, como o check.py
+(PTBR_ERROS e PTBR_GLOSSARIO os substituem); sem eles, código 2.
 """
 import argparse
 import contextlib
@@ -61,12 +81,13 @@ import po_util  # noqa: E402
 
 try:
     from checks.mensagens import validar_par  # noqa: E402
+    import slugs  # noqa: E402  (slugs.motivo_inseguro: a regra dos ids que o `{#...}` não carrega)
 except Exception as _exc:  # erro de ambiente: código 2, sem traceback
-    print(f"apply.py: erro: não consegui importar checks/mensagens.py "
+    print(f"apply.py: erro: não consegui importar checks/mensagens.py nem slugs.py "
           f"({type(_exc).__name__}: {_exc})", file=sys.stderr)
     sys.exit(2)
 
-# Espera máxima pela trava de escrita (outro aplicador gravando o mesmo PO), em segundos.
+# Espera máxima pela trava de escrita (qualquer outro escritor do PO a segura), em segundos.
 ESPERA_TRAVA = 300.0
 
 _SLUG_BEM_FORMADO = re.compile(r"\{#[A-Za-z0-9_.:-]+\}")
@@ -137,7 +158,9 @@ def _parser():
         description=(
             "Aplica traduções (JSON) a um PO, validando cada par msgid/msgstr com\n"
             "checks/mensagens.py. Entradas rejeitadas ficam intactas; o PO só é gravado\n"
-            "(sob trava, por arquivo temporário) se houver alguma entrada aceita.\n"
+            "(sob trava, por arquivo temporário) se houver alguma entrada aceita. Também são\n"
+            "rejeitados: item que não é objeto, sem id texto ou com msgstr que não é texto;\n"
+            "entrada com plural; msgstr que viola um erro recorrente (erros-recorrentes.yml).\n"
             "\n"
             "Cada JSON é uma lista de objetos {\"id\": \"<entry_id>\", \"msgstr\": \"...\"}.\n"
             "Saída padrão: relatório JSON {\"aplicadas\", \"rejeitadas\", \"avisos\"}.\n"
@@ -184,7 +207,8 @@ def _visivel(valor, limite=None):
 
 
 def _numa_linha(valor, limite):
-    return _visivel(valor, None).replace("\n", "\\n").replace("\t", "\\t")[:limite]
+    """Texto seguro numa só linha (\\n e \\t escapados), com '…' no fim se passar de `limite`."""
+    return _visivel(_visivel(valor).replace("\n", "\\n").replace("\t", "\\t"), limite)
 
 
 # --------------------------------------------------------------------------
@@ -193,6 +217,8 @@ def _numa_linha(valor, limite):
 
 def _le_json(caminho, o_que):
     caminho = Path(caminho)
+    if caminho.is_dir():
+        raise ErroUso(f"{o_que}: é um diretório, não um arquivo: {caminho}")
     if not caminho.is_file():
         raise ErroUso(f"{o_que} não encontrado: {caminho}")
     try:
@@ -260,6 +286,50 @@ def _slug_final(texto):
 
 
 # --------------------------------------------------------------------------
+# Erros recorrentes e glossário (as regras do check `glossario` do check.py)
+# --------------------------------------------------------------------------
+
+def carrega_lint(sync):
+    """Devolve `lint(e, msgstr) -> (erros, avisos)` com as regras do check `glossario`.
+
+    Usa só a API pública de checks/glossario.py (`carregar_regras`, `limpar`, `avaliar`), a
+    mesma do check.py, para o --dry-run do tradutor e o check não divergirem: regra de erros
+    recorrentes de severidade `erro` = erro (a correção vai na mensagem); regra de severidade
+    `aviso` e forma a evitar do glossário = aviso. Só mensagens dos tipos que o check lê. No
+    modo sync (`sync`), erro de uma regra que o msgstr ANTIGO já violava vira aviso: o porte de
+    uma diferença sem relação não pode travar por uma violação herdada.
+    Falta de PyYAML, de YAML ou YAML ilegível: ErroUso (código 2).
+    """
+    try:
+        from checks import glossario as gl
+        from checks.base import ErroAmbiente
+    except Exception as exc:                              # noqa: BLE001 - ambiente: código 2
+        raise ErroUso(f"não consegui carregar o lint do glossário ({type(exc).__name__}: {exc}); "
+                      f"instale o PyYAML (pip install pyyaml)") from None
+    try:
+        termos, erros, _ = gl.carregar_regras(estrito=True)   # regra malformada: quem acusa é o check.py
+    except ErroAmbiente as exc:
+        raise ErroUso(_numa_linha(exc, 300)) from None
+
+    def lint(e, msgstr):
+        if po_util.tipo(e) not in gl.TIPOS_LIDOS:
+            return [], []
+        # as mensagens do msgstr antigo e do novo não se comparam (citam o contexto): vale a regra
+        ja_tinha = ({chave for _, _, chave in gl.avaliar(gl.limpar(e.msgstr), [], erros)}
+                    if sync else set())
+        com_erro, avisos = [], []
+        for severidade, mensagem, chave in gl.avaliar(gl.limpar(msgstr), termos, erros):
+            if severidade != "erro":
+                avisos.append(mensagem)
+            elif chave in ja_tinha:
+                avisos.append(mensagem + " [o msgstr anterior já tinha esta violação]")
+            else:
+                com_erro.append(mensagem)
+        return com_erro, avisos
+    return lint
+
+
+# --------------------------------------------------------------------------
 # Núcleo: validar e aplicar em memória
 # --------------------------------------------------------------------------
 
@@ -269,7 +339,7 @@ def _escopo_capitulo(capitulos):
         if cap in capitulos:
             return None
         return (f"fora do escopo: a entrada pertence ao capítulo '{cap}', "
-                f"e o pedido foi {', '.join(sorted(capitulos))}")
+                f"mas --capitulo permite só: {', '.join(sorted(capitulos))}")
     return checa
 
 
@@ -281,15 +351,17 @@ def _escopo_delta(ids):
     return checa
 
 
-def _processa_item(e, id_, msgstr_novo, fora_do_escopo):
+def _processa_item(e, id_, msgstr_novo, fora_do_escopo, lint=None):
     """Valida um item contra a entrada `e`.
 
+    `lint(e, msgstr)` (de `carrega_lint`) devolve (erros, avisos) das regras de erros
+    recorrentes e do glossário; None = sem lint.
     Devolve (msgstr_final, avisos, recolocou_slug, motivos); `motivos` não vazio = rejeitado.
     """
     motivo = fora_do_escopo(e, id_)
     if motivo:
         return None, [], False, [motivo]
-    if e.msgid in getattr(po_util, "SEMPRE_VAZIAS", ()):
+    if e.msgid in po_util.SEMPRE_VAZIAS:
         return None, [], False, ["esta mensagem fica sempre vazia (SEMPRE_VAZIAS): não se traduz"]
     if e.msgid_plural:
         return None, [], False, ["entrada com plural não é suportada pelo apply.py"]
@@ -304,10 +376,14 @@ def _processa_item(e, id_, msgstr_novo, fora_do_escopo):
         return None, [], False, ["msgstr vazio (só o slug)"]
 
     # Slug do título: o antigo manda (quem gera os slugs é o slugs.py, a partir do HTML inglês).
+    # Sem slug antigo utilizável (bem formado e de id seguro), o slug da tradução é removido.
     final = msgstr_novo
     recolocou = False
     _, slug_antigo = _slug_final(e.msgstr)
-    if slug_antigo is not None and _SLUG_BEM_FORMADO.fullmatch(slug_antigo):
+    mal_formado = slug_antigo is not None and not _SLUG_BEM_FORMADO.fullmatch(slug_antigo)
+    inseguro = (slugs.motivo_inseguro(slug_antigo[2:-1])
+                if slug_antigo is not None and not mal_formado else None)
+    if slug_antigo is not None and not mal_formado and inseguro is None:
         if slug_novo is None:
             final = msgstr_novo.rstrip() + " " + slug_antigo
             recolocou = True
@@ -315,6 +391,14 @@ def _processa_item(e, id_, msgstr_novo, fora_do_escopo):
             final = corpo.rstrip() + " " + slug_antigo
             avisos.append(f"slug {_numa_linha(slug_novo, 60)} no fim do msgstr trocado pelo original "
                           f"{slug_antigo} (os slugs vêm do slugs.py, não da tradução)")
+    elif slug_novo is not None:
+        final = corpo.rstrip()
+        detalhe = (f"; o slug antigo {_numa_linha(slug_antigo, 60)} é mal formado" if mal_formado
+                   else f"; o slug antigo {slug_antigo} não vale: {inseguro}" if inseguro else "")
+        avisos.append(f"slug {_numa_linha(slug_novo, 60)} no fim do msgstr removido (os slugs vêm do "
+                      f"slugs.py, não da tradução){detalhe}")
+    elif inseguro:
+        avisos.append(f"slug antigo {slug_antigo} não recolocado: {inseguro}")
 
     try:
         achados = validar_par(e.msgid, final)
@@ -325,15 +409,19 @@ def _processa_item(e, id_, msgstr_novo, fora_do_escopo):
                                  f"{_numa_linha(exc, 200)}): entrada rejeitada por segurança"]
     erros = [msg for sev, msg in achados if sev == "erro"]
     avisos.extend(msg for sev, msg in achados if sev != "erro")
+    if lint is not None:
+        erros_lint, avisos_lint = lint(e, final)
+        erros.extend(erros_lint)
+        avisos.extend(avisos_lint)
     if erros:
         return None, avisos, False, erros
     return final, avisos, recolocou, []
 
 
-def aplica_em_memoria(po, itens, fora_do_escopo):
+def aplica_em_memoria(po, itens, fora_do_escopo, lint=None):
     """Valida todos os `itens` e altera as entradas aceitas de `po` (em memória).
 
-    `itens` = [(arquivo, posição, item)]. Devolve o relatório
+    `itens` = [(arquivo, posição, item)]; `lint` como em `_processa_item`. Devolve o relatório
     {"aplicadas", "rejeitadas", "avisos"} mais a contagem `recolocados` de slugs.
     Nunca levanta exceção por causa de uma entrada.
     """
@@ -364,8 +452,9 @@ def aplica_em_memoria(po, itens, fora_do_escopo):
             continue
         id_ = item.get("id")
         if not isinstance(id_, str) or not id_:
-            rejeitadas.append({"id": _visivel(id_ if id_ is not None else ""), "msgid": "",
-                               "motivos": [f"{onde}: o item não tem um \"id\" (texto)"]})
+            veio = "" if id_ is None or id_ == "" else f"; veio {_numa_linha(id_, 40)} ({_tipo_json(id_)})"
+            rejeitadas.append({"id": "", "msgid": "",
+                               "motivos": [f"{onde}: o item não tem um \"id\" (texto){veio}"]})
             continue
         if ocorrencias[id_][-1] != idx:
             continue                                   # um item posterior com o mesmo id substitui este
@@ -373,15 +462,15 @@ def aplica_em_memoria(po, itens, fora_do_escopo):
         e = por_id.get(id_)
         if e is None:
             rejeitadas.append({"id": id_rel, "msgid": "",
-                               "motivos": ["id desconhecido: nenhuma entrada do PO tem esse id"]})
+                               "motivos": [f"{onde}: id desconhecido: nenhuma entrada do PO tem esse id"]})
             continue
         try:
-            final, avisos, recolocou, motivos = _processa_item(e, id_, item.get("msgstr"), fora_do_escopo)
+            final, avisos, recolocou, motivos = _processa_item(e, id_, item.get("msgstr"), fora_do_escopo, lint)
         except Exception as exc:                       # noqa: BLE001 - uma entrada ruim não derruba o lote
             final, avisos, recolocou = None, [], False
             motivos = [f"falha interna ({type(exc).__name__}: {_numa_linha(exc, 200)}): entrada rejeitada"]
         if motivos:
-            rejeitadas.append({"id": id_rel, "msgid": e.msgid, "motivos": motivos})
+            rejeitadas.append({"id": id_rel, "msgid": e.msgid, "motivos": [f"{onde}: {m}" for m in motivos]})
             continue
         e.msgstr = final
         if "fuzzy" in e.flags:
@@ -414,8 +503,8 @@ def trava_exclusiva(po_path, espera=None):
     no inode antigo e quem criasse um inode novo teriam, os dois, a "mesma" trava.
     `po/.gitignore` já ignora `*.lock`.
 
-    Fica o caminho inteiro de `flock(2)`: o descritor só é fechado ao sair, e a
-    trava some com ele (também se o processo morrer). Não embrulhe o apply.py em
+    A exclusão usa só `flock(2)`: o descritor fica aberto até o fim do bloco e a
+    trava some com ele, também se o processo morrer. Não embrulhe o apply.py em
     `flock` no mesmo caminho: ele mesmo pega a trava, esperaria ESPERA_TRAVA (300 s)
     e sairia com código 2.
     """
@@ -433,8 +522,10 @@ def trava_exclusiva(po_path, espera=None):
                 break
             except (BlockingIOError, InterruptedError):
                 if time.monotonic() > limite:
-                    raise ErroUso(f"outro aplicador está gravando {po_path} há mais de "
-                                  f"{int(espera)} s; tente de novo (trava: {caminho})") from None
+                    raise ErroUso(f"a trava {caminho} segue ocupada há mais de {int(espera)} s (outro "
+                                  f"escritor do PO: apply.py, slugs.py, autoport.py, normaliza_po.py, "
+                                  f"msgmerge ou um `flock {caminho}`); {po_path} não foi tocado; "
+                                  f"tente de novo") from None
                 time.sleep(0.05)
         yield
     finally:
@@ -456,6 +547,17 @@ def _msgfmt_ok(caminho):
         return None
     r = subprocess.run([exe, "--check", "-o", os.devnull, str(caminho)], capture_output=True)
     return r.returncode == 0
+
+
+def _msgfmt_defeito(caminho):
+    """Os erros do `msgfmt --check` (sem os avisos de cabeçalho), como 'linha N: defeito', para a mensagem."""
+    r = subprocess.run([shutil.which("msgfmt") or "msgfmt", "--check", "-o", os.devnull, str(caminho)],
+                       capture_output=True)
+    prefixo = f"{caminho}:"
+    linhas = [("linha " + x[len(prefixo):].strip()) if x.startswith(prefixo) else x.strip()
+              for x in r.stderr.decode("utf-8", "replace").splitlines()
+              if x.strip() and ": warning:" not in x and "fatal error" not in x]
+    return _numa_linha("; ".join(linhas[:2]), 300)
 
 
 def grava_atomico(po, destino):
@@ -500,8 +602,8 @@ def _confere_gravacao(esperado, tmp, destino):
     except (OSError, ValueError, UnicodeError) as exc:
         raise ErroUso(f"o PO gravado não confere com o esperado ({_numa_linha(exc, 300)}); "
                       f"{destino.name} ficou intacto") from None
-    if _msgfmt_ok(tmp) is False and _msgfmt_ok(destino) is not False:
-        raise ErroUso(f"o PO gravado não passa no 'msgfmt --check' (e o original passava); "
+    if _msgfmt_ok(tmp) is False:
+        raise ErroUso(f"o PO gravado não passa no 'msgfmt --check' ({_msgfmt_defeito(tmp)}); "
                       f"{destino.name} ficou intacto")
 
 
@@ -545,7 +647,7 @@ def _resumo_legivel(rel, dry_run, recolocados, destino):
     for r in rej:
         motivos = "; ".join(_numa_linha(m, 400) for m in r["motivos"])
         resumo_msgid = f" «{_numa_linha(r['msgid'], 60)}»" if r["msgid"] else ""
-        print(f"  rejeitada {r['id']}{resumo_msgid}: {motivos}", file=err)
+        print(f"  rejeitada {r['id'] or '(sem id)'}{resumo_msgid}: {motivos}", file=err)
     for a in rel["avisos"]:
         print(f"  aviso {a['id']}: " + "; ".join(_numa_linha(m, 300) for m in a["motivos"]), file=err)
     verbo = "aceita(s) (nada foi gravado: --dry-run)" if dry_run else "aplicada(s)"
@@ -581,6 +683,8 @@ def main(argv=None):
 def _executa(ap, args):
     _confere_argumentos(ap, args)
     po_path = Path(args.po)
+    if po_path.is_dir():
+        raise ErroUso(f"arquivo PO: é um diretório, não um arquivo: {po_path}")
     if not po_path.is_file():
         raise ErroUso(f"arquivo PO não encontrado: {po_path}")
     destino = Path(os.path.realpath(po_path))
@@ -593,6 +697,8 @@ def _executa(ap, args):
             raise ErroUso(f"não posso gravar o relatório em {rel_path}")
     if not args.dry_run and shutil.which("msgcat") is None:
         raise ErroUso("msgcat não encontrado: instale o pacote 'gettext' (o PO não foi tocado)")
+    if not hasattr(po_util, "SEMPRE_VAZIAS"):             # CONTRATO §6: sem ela, falha alto (código 2)
+        raise ErroUso("po_util.py não define SEMPRE_VAZIAS (mensagens que ficam sempre vazias)")
 
     itens = le_traducoes(args.traducoes)
     if args.modo == "capitulo":
@@ -600,21 +706,29 @@ def _executa(ap, args):
     else:
         escopo = _escopo_delta(le_delta(args.delta))
 
+    lint = carrega_lint(args.modo == "sync")
+
     def carrega():
         try:
-            return po_util.carregar(destino)
+            po = po_util.carregar(destino)
         except (OSError, ValueError, UnicodeError) as exc:
             raise ErroUso(f"não consegui ler o PO {po_path}: {_numa_linha(exc, 300)}") from None
+        # O polib "conserta" calado o que o msgfmt recusa (msgid sem msgstr, aspa sem fechar):
+        # aplicar e gravar sobre essa leitura perderia texto, e a gravação até passaria no msgfmt.
+        if _msgfmt_ok(destino) is False:
+            raise ErroUso(f"o PO {po_path} não passa no 'msgfmt --check' ({_msgfmt_defeito(destino)}); "
+                          f"a leitura pelo polib perderia texto: conserte o PO antes (ele não foi tocado)")
+        return po
 
     if args.dry_run:
         po = carrega()
-        rel, recolocados = aplica_em_memoria(po, itens, escopo)
+        rel, recolocados = aplica_em_memoria(po, itens, escopo, lint)
     else:
         # Carregar, aplicar e gravar acontecem DENTRO da trava: dois aplicadores
         # simultâneos se enfileiram e nenhum perde a atualização do outro.
         with trava_exclusiva(destino):
             po = carrega()
-            rel, recolocados = aplica_em_memoria(po, itens, escopo)
+            rel, recolocados = aplica_em_memoria(po, itens, escopo, lint)
             if rel["aplicadas"]:
                 grava_atomico(po, destino)
 

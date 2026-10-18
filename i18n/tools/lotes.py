@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Divide o que falta traduzir no PO em lotes (JSON) de cerca de N palavras.
+"""Divide o que falta traduzir no PO em lotes (JSON) de no máximo N palavras.
 
 Seleciona as entradas do(s) capítulo(s) pedido(s) que valem a pena traduzir
 (`po_util.traduzivel`, sem `sem_texto`, fora de `SEMPRE_VAZIAS`; só as sem tradução ou
 fuzzy, salvo com --incluir-traduzidas) e as agrupa, na ordem do PO, em lotes de no máximo
 --palavras palavras de msgid. Uma entrada nunca é partida: se uma sozinha passa do limite,
 ela forma um lote. Um lote nunca atravessa capítulos.
+
+Com --ids ARQ o lote leva só as entradas cujo id está em ARQ, traduzidas ou não (ainda valem
+`traduzivel`, `sem_texto` e `SEMPRE_VAZIAS`). ARQ é o JSON do `check.py --json` (usa
+`achados[].id`) ou uma lista de ids, um por linha (linha em branco ou começada por `#` é
+ignorada). Serve à rodada de normalização (E6): só o que o check apontou vai ao tradutor. O id
+que não entrou em nenhum lote (de outro capítulo, inexistente, vazio por regra) vai ao stderr.
 
 Quando o limite obriga a cortar, o corte recua para a última fronteira de arquivo ou título
 (entrada cujo msgid é um título ATX do fonte em inglês src/<arquivo>, fora de bloco de
@@ -29,13 +35,19 @@ equivalentes entre as partes de um termo composto. O casamento ignora código em
 `<code>`, destinos de link, URLs e tags HTML (o texto de alt/title/caption conta). Glossário
 ausente ou inválido: aviso no stderr e `termos: []`.
 
-A saída (--saida) não pode ficar dentro do repositório, salvo em i18n/ ou po/: os lotes são
-artefatos de execução e não devem sujar os caminhos do upstream. Ao regerar no mesmo DIR, os
-lotes <CAP>-<NN>.json antigos dos capítulos pedidos são removidos.
+O PO precisa ter entradas de cada capítulo pedido: PO vazio, truncado ou errado é erro de
+uso, nunca "nada a traduzir" (isso é só para capítulo que tem entradas e todas traduzidas).
+
+A saída (--saida) não pode ficar dentro do repositório (nem em i18n/ ou po/): os lotes são
+artefatos de execução e não devem sujar o repositório. Ao regerar no mesmo DIR, os lotes
+<CAP>-<NN>.json antigos dos capítulos pedidos são removidos, mas só os que são lotes desta
+ferramenta (JSON com `capitulo` igual ao do nome, `lote` e `entradas`): outro arquivo com nome
+de lote (tradução, relatório do apply.py) nunca é sobrescrito nem apagado. Se um lote novo
+cairia sobre um arquivo assim, nada é gravado (erro de uso); na remoção, ele fica, com aviso.
 
 Uso:
     lotes.py --capitulo CAP [CAP ...] --saida DIR [--palavras 1500] [--po ARQUIVO.po]
-             [--incluir-traduzidas]
+             [--incluir-traduzidas] [--ids ARQ]
 
 Códigos de saída: 0 = ok, 2 = erro de uso ou de ambiente.
 """
@@ -52,6 +64,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import po_util  # noqa: E402
+import slugs  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[2]
 ARQ_GLOSSARIO = RAIZ / "i18n" / "glossario.yml"
@@ -134,19 +147,24 @@ def _inteiro_positivo(texto):
 def _criar_parser():
     ap = _Parser(
         prog="lotes.py",
-        description="Divide as entradas do PO que faltam traduzir em lotes JSON de cerca de "
+        description="Divide as entradas do PO que faltam traduzir em lotes JSON de no máximo "
                     "N palavras, um conjunto de arquivos por capítulo (DIR/<CAP>-<NN>.json), "
                     "com o contexto anterior e os termos do glossário de cada lote.",
         epilog="Entram nos lotes as entradas traduzíveis (prosa, listing com legenda, html "
                "com texto) sem tradução ou fuzzy; --incluir-traduzidas acrescenta as já "
-               "traduzidas. Lotes antigos <CAP>-<NN>.json dos capítulos pedidos são "
-               "removidos de DIR. Variável de ambiente: PTBR_GLOSSARIO (outro glossário). "
-               "Códigos de saída: 0 = ok; 2 = erro de uso ou de ambiente.",
+               "traduzidas; --ids escolhe entradas por id, traduzidas ou não. Lotes antigos "
+               "<CAP>-<NN>.json dos capítulos pedidos são removidos de DIR, mas só os "
+               "arquivos que são lotes desta ferramenta: outro arquivo com esse nome (uma "
+               "tradução, um relatório) nunca é sobrescrito nem apagado, e o PO sem "
+               "entradas do capítulo é erro. Variável de ambiente: PTBR_GLOSSARIO (outro "
+               "glossário). Códigos de saída: 0 = ok; 2 = erro de uso ou de ambiente.",
     )
     ap.add_argument("--capitulo", required=True, nargs="+", action="extend", metavar="CAP",
                     help="capítulo(s) a dividir: " + ", ".join(po_util.CAPITULOS))
     ap.add_argument("--saida", required=True, metavar="DIR",
-                    help="diretório onde gravar os lotes (criado se não existir)")
+                    help="diretório onde gravar os lotes (criado se não existir); não pode "
+                         "ficar dentro do repositório, nem em i18n/ ou po/: use um "
+                         "diretório de trabalho fora dele")
     ap.add_argument("--palavras", type=_inteiro_positivo, default=PALAVRAS_PADRAO, metavar="N",
                     help=f"máximo de palavras de msgid por lote (padrão: {PALAVRAS_PADRAO}); "
                          "uma entrada maior que isso forma um lote sozinha")
@@ -154,6 +172,9 @@ def _criar_parser():
                     help="PO a ler (padrão: po/pt-BR.po)")
     ap.add_argument("--incluir-traduzidas", action="store_true",
                     help="inclui também as entradas já traduzidas (com msgstr_atual preenchido)")
+    ap.add_argument("--ids", metavar="ARQ",
+                    help="só as entradas com os ids de ARQ, traduzidas ou não: o JSON do "
+                         "check.py --json (achados[].id) ou um id por linha")
     return ap
 
 
@@ -163,6 +184,11 @@ class _ErroDeUso(Exception):
 
 def _aviso(texto):
     print(f"aviso: {texto}", file=sys.stderr)
+
+
+def _plural(n, singular, plural):
+    """'1 entrada', '2 entradas' (o zero fica no plural)."""
+    return f"{n} {singular if n == 1 else plural}"
 
 
 _MOTIVOS_OS = {getattr(errno, nome): texto for nome, texto in (
@@ -191,73 +217,24 @@ def _motivo_po(erro):
     if "Syntax error in po file" in texto:
         linha = re.search(r"line (\d+)", texto)
         return "erro de sintaxe no arquivo PO" + (f" (linha {linha.group(1)})" if linha else "")
+    if isinstance(erro, UnicodeError):
+        return "o arquivo não está em UTF-8"
     if isinstance(erro, OSError):
         return _motivo_os(erro)
-    return texto[:200]
+    return "conteúdo que não é um arquivo PO válido"
 
 
 # --------------------------------------------------------------------------
 # Títulos do fonte em inglês (fronteiras naturais para o corte do lote)
 # --------------------------------------------------------------------------
 
-# Cerca de bloco de código: ``` ou ~~~ (3 ou mais), com até 3 espaços de recuo.
-_CERCA = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
-# Título ATX: 1-6 `#`, depois espaço/tab ou fim de linha, com até 3 espaços de recuo.
-_ATX = re.compile(r"^ {0,3}(#{1,6})(?:[ \t]+(.*))?$")
-# Atributo `{#id}` no fim do título e sequência de fechamento ` ##`.
-_ATRIBUTO = re.compile(r"\s*\{#[^{}]*\}\s*$")
-_FECHAMENTO = re.compile(r"(?:^|[ \t]+)#+[ \t]*$")
-# Marca de citação (`>` com até 3 espaços de recuo e um espaço opcional depois).
-_CITACAO = re.compile(r"^ {0,3}> ?")
-
-
-def _limpar_titulo(conteudo):
-    """Tira a sequência de fechamento (`##`) e o atributo (`{#id}`), em qualquer ordem."""
-    conteudo = conteudo.strip()
-    while True:
-        novo = _FECHAMENTO.sub("", _ATRIBUTO.sub("", conteudo)).strip()
-        if novo == conteudo:
-            return conteudo
-        conteudo = novo
-
-
 def titulos_atx(texto):
     """Conjunto dos textos dos títulos ATX de um Markdown, fora de bloco de código.
 
-    Olha também dentro de citações (`> ### Título`) e ignora comentários HTML de várias
-    linhas.
+    O analisador é o do `slugs.py` (`titulos_md`): o corte dos lotes e o emparelhamento dos
+    slugs precisam concordar sobre o que é um título. Título vazio não conta.
     """
-    achados = set()
-    cerca = None  # (caractere, tamanho) do bloco cercado aberto
-    em_comentario = False
-    for linha in texto.splitlines():
-        while True:  # tira as marcas de citação, aninhadas ou não
-            m = _CITACAO.match(linha)
-            if not m:
-                break
-            linha = linha[m.end():]
-        if em_comentario:
-            if "-->" in linha:
-                em_comentario = False
-            continue
-        m = _CERCA.match(linha)
-        if cerca is not None:
-            if m and m.group(1)[0] == cerca[0] and len(m.group(1)) >= cerca[1] \
-                    and not m.group(2).strip():
-                cerca = None
-            continue
-        if m and not (m.group(1)[0] == "`" and "`" in m.group(2)):
-            cerca = (m.group(1)[0], len(m.group(1)))
-            continue
-        if linha.lstrip().startswith("<!--") and "-->" not in linha:
-            em_comentario = True
-            continue
-        m = _ATX.match(linha)
-        if m:
-            titulo = _limpar_titulo(m.group(2) or "")
-            if titulo:
-                achados.add(titulo)
-    return achados
+    return {titulo for _nivel, titulo in slugs.titulos_md(texto) if titulo}
 
 
 class _TitulosPorArquivo:
@@ -308,8 +285,11 @@ def contar_palavras(msgid):
     return len(msgid.split())
 
 
-def selecionar(todas, capitulos, incluir_traduzidas):
-    """{capítulo: [Item]} na ordem do PO, só com o que entra nos lotes."""
+def selecionar(todas, capitulos, incluir_traduzidas, ids=None):
+    """{capítulo: [Item]} na ordem do PO, só com o que entra nos lotes.
+
+    Com `ids` (conjunto de ids), entram só as entradas desses ids, traduzidas ou não.
+    """
     titulos = _TitulosPorArquivo()
     por_cap = {c: [] for c in capitulos}
     for pos, e in enumerate(todas):
@@ -318,13 +298,56 @@ def selecionar(todas, capitulos, incluir_traduzidas):
             continue
         if not po_util.traduzivel(e) or po_util.sem_texto(e) or e.msgid in SEMPRE_VAZIAS:
             continue
-        if po_util.traduzida(e) and not incluir_traduzidas:
+        ident = po_util.entry_id(e)
+        if ids is not None:
+            if ident not in ids:
+                continue
+        elif po_util.traduzida(e) and not incluir_traduzidas:
             continue
         arquivo = arquivo_principal(e)
         por_cap[cap].append(Item(
-            e=e, pos=pos, id=po_util.entry_id(e), arquivo=arquivo, tipo=po_util.tipo(e),
+            e=e, pos=pos, id=ident, arquivo=arquivo, tipo=po_util.tipo(e),
             palavras=contar_palavras(e.msgid), titulo=e.msgid.strip() in titulos.de(arquivo)))
     return por_cap
+
+
+def ler_ids(texto):
+    """Conjunto dos ids de um arquivo --ids: o JSON do check.py (`achados[].id`) ou um por linha."""
+    if not texto.strip():
+        raise _ErroDeUso("--ids está vazio; informe o arquivo com os ids")
+    try:
+        conteudo = Path(texto).read_text(encoding="utf-8")
+    except OSError as erro:
+        raise _ErroDeUso(f"não consegui ler o arquivo de ids {texto!r}: {_motivo_os(erro)}") \
+            from None
+    except UnicodeError:
+        raise _ErroDeUso(f"o arquivo de ids {texto!r} não está em UTF-8") from None
+    try:
+        dados = json.loads(conteudo)
+    except (ValueError, RecursionError):
+        dados = None  # não é JSON: um id por linha
+    ids = set()
+    if isinstance(dados, (dict, list)):
+        achados = dados.get("achados") if isinstance(dados, dict) else dados
+        if not isinstance(achados, list):
+            raise _ErroDeUso(f"o JSON {texto!r} não tem a lista 'achados' "
+                             "(é o do check.py --json?)")
+        sem_id = 0
+        for achado in achados:
+            ident = achado.get("id") if isinstance(achado, dict) else achado
+            if isinstance(ident, str) and ident.strip():
+                ids.add(ident.strip())
+            else:
+                sem_id += 1
+        if sem_id:
+            _aviso(f"{_plural(sem_id, 'achado', 'achados')} de {texto!r} sem 'id' "
+                   "foram ignorados")
+    else:
+        ids = {linha.strip() for linha in conteudo.splitlines()
+               if linha.strip() and not linha.lstrip().startswith("#")}
+    if not ids:
+        raise _ErroDeUso(f"o arquivo de ids {texto!r} não tem nenhum id")
+    return ids
 
 
 def _fronteira(itens, j):
@@ -393,11 +416,24 @@ def carregar_glossario(caminho=None):
     except ImportError:
         _aviso("PyYAML não está instalado (pip install pyyaml); 'termos' sai vazio")
         return []
+    # Além de YAMLError, o safe_load levanta ValueError, KeyError e AttributeError (data
+    # inexistente, `!!int dez`, `!!bool talvez`): qualquer falha vira o aviso documentado.
     try:
         dados = yaml.safe_load(caminho.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, yaml.YAMLError, RecursionError) as erro:
-        resumo = " ".join(str(erro).split())[:200]
-        _aviso(f"glossário ilegível ({caminho}): {resumo}; 'termos' sai vazio")
+    except Exception as erro:  # noqa: BLE001 - glossário ruim não derruba a geração de lotes
+        if isinstance(erro, OSError):
+            motivo = _motivo_os(erro)
+        elif isinstance(erro, UnicodeError):
+            motivo = "o arquivo não está em UTF-8"
+        elif isinstance(erro, yaml.YAMLError):
+            marca = getattr(erro, "problem_mark", None)  # o ReaderError não tem marca
+            motivo = "erro de sintaxe no YAML" + (f" (perto da linha {marca.line + 1})"
+                                                  if marca else "")
+        elif isinstance(erro, RecursionError):
+            motivo = "aninhamento fundo demais"
+        else:  # ValueError, KeyError ou AttributeError de um construtor do PyYAML
+            motivo = "valor que o YAML não constrói (data, número ou booleano inválido)"
+        _aviso(f"glossário ilegível ({caminho}): {motivo}; 'termos' sai vazio")
         return []
     termos = dados.get("termos") if isinstance(dados, dict) else None
     if not isinstance(termos, list):
@@ -413,10 +449,9 @@ def carregar_glossario(caminho=None):
     # estouraria só na hora de gravar o lote, depois de gravar os capítulos anteriores.
     try:
         json.dumps(validos, ensure_ascii=False, default=str, allow_nan=False)
-    except (TypeError, ValueError, RecursionError) as erro:
-        resumo = " ".join(str(erro).split())[:200]
-        _aviso(f"glossário com valores que não cabem em JSON ({caminho}): {resumo}; "
-               "'termos' sai vazio")
+    except (TypeError, ValueError, RecursionError):
+        _aviso(f"glossário com valores que não cabem em JSON ({caminho}): chave que não é "
+               "texto, referência circular ou NaN/Infinity; 'termos' sai vazio")
         return []
     return validos
 
@@ -624,11 +659,10 @@ def preparar_saida(texto):
         motivo = _motivo_os(erro) if isinstance(erro, OSError) else "elos simbólicos demais"
         raise _ErroDeUso(f"não foi possível resolver a saída {texto!r}: {motivo}") from None
     raiz = RAIZ.resolve()
-    if real == raiz or (real.is_relative_to(raiz) and not any(
-            real.is_relative_to(raiz / permitido) for permitido in ("i18n", "po"))):
-        raise _ErroDeUso(f"a saída {texto!r} fica dentro do repositório, fora de i18n/ e po/; "
-                         "use um diretório fora dele (por exemplo, dentro do diretório de trabalho "
-                         "da sessão)")
+    if real.is_relative_to(raiz):  # vale também para i18n/ e po/ (AGENTS.md, segurança, 3)
+        raise _ErroDeUso(f"a saída {texto!r} fica dentro do repositório (nem i18n/ nem po/ "
+                         "servem); use um diretório fora dele (por exemplo, dentro do "
+                         "diretório de trabalho da sessão)")
     try:
         saida.mkdir(parents=True, exist_ok=True)
         fd, sonda = tempfile.mkstemp(dir=saida, prefix=".lotes-sonda.")
@@ -642,18 +676,51 @@ def preparar_saida(texto):
     return saida
 
 
+def _eh_lote(caminho, cap):
+    """True se `caminho` é um arquivo comum que é um lote desta ferramenta, do capítulo `cap`.
+
+    O nome <CAP>-<NN>.json também é o das traduções e dos relatórios do apply.py (AGENTS.md):
+    só o conteúdo (objeto com `capitulo` igual a `cap`, `lote` e `entradas`) diz que é lote.
+    """
+    if caminho.is_symlink() or not caminho.is_file():
+        return False
+    try:
+        dados = json.loads(caminho.read_text(encoding="utf-8"))
+    except (OSError, ValueError, RecursionError):  # ValueError: JSON inválido ou não UTF-8
+        return False
+    return (isinstance(dados, dict) and dados.get("capitulo") == cap
+            and isinstance(dados.get("lote"), int) and isinstance(dados.get("entradas"), list))
+
+
+def conferir_destinos(saida, destinos):
+    """Erro de uso se algum (capítulo, nome) de `destinos` já existe em `saida` sem ser lote."""
+    for cap, nome in destinos:
+        destino = saida / nome
+        if os.path.lexists(destino) and not _eh_lote(destino, cap):
+            raise _ErroDeUso(f"{destino} já existe e não é um lote desta ferramenta (uma "
+                             "tradução, um relatório?); use um diretório só para lotes. "
+                             "Nada foi gravado")
+
+
 def remover_antigos(saida, capitulos, mantidos):
-    """Apaga lotes <CAP>-<NN>.json antigos dos capítulos pedidos que esta execução não gerou."""
+    """Apaga lotes <CAP>-<NN>.json antigos dos capítulos pedidos que esta execução não gerou.
+
+    Só apaga o que é lote desta ferramenta; outro arquivo com nome de lote fica, com aviso.
+    """
     removidos = 0
-    for caminho in saida.iterdir():
+    for caminho in sorted(saida.iterdir()):
         m = _NOME_LOTE.match(caminho.name)
-        if m and m.group(1) in capitulos and caminho.name not in mantidos \
-                and caminho.is_file() and not caminho.is_symlink():
-            try:
-                caminho.unlink()
-                removidos += 1
-            except OSError:
-                _aviso(f"não consegui remover o lote antigo {caminho}")
+        if not m or m.group(1) not in capitulos or caminho.name in mantidos \
+                or not caminho.is_file() or caminho.is_symlink():
+            continue
+        if not _eh_lote(caminho, m.group(1)):
+            _aviso(f"{caminho} tem nome de lote mas não é um lote desta ferramenta; mantido")
+            continue
+        try:
+            caminho.unlink()
+            removidos += 1
+        except OSError:
+            _aviso(f"não consegui remover o lote antigo {caminho}")
     return removidos
 
 
@@ -661,8 +728,9 @@ def _resumo_linha(nome, lote, termos):
     primeiro = " ".join(lote[0].e.msgid.split())
     if len(primeiro) > 60:
         primeiro = primeiro[:57] + "..."
-    return (f"{nome}: {len(lote)} entradas, {sum(i.palavras for i in lote)} palavras, "
-            f"{len(termos)} termos; primeiro msgid: {primeiro!r}")
+    return (f"{nome}: {_plural(len(lote), 'entrada', 'entradas')}, "
+            f"{_plural(sum(i.palavras for i in lote), 'palavra', 'palavras')}, "
+            f"{_plural(len(termos), 'termo', 'termos')}; primeiro msgid: {primeiro!r}")
 
 
 # --------------------------------------------------------------------------
@@ -677,6 +745,13 @@ def executar(args):
         raise _ErroDeUso("capítulo desconhecido: " + ", ".join(repr(c) for c in desconhecidos)
                          + ". Capítulos válidos: " + ", ".join(po_util.CAPITULOS))
 
+    # `--po "$COPIA"` com COPIA sem valor chega aqui como "", e `po_util.carregar` leria em
+    # silêncio o po/pt-BR.po real (o mesmo cuidado do --saida vazio).
+    if args.po is not None and not args.po.strip():
+        raise _ErroDeUso("--po está vazio; informe o PO a ler (sem --po, o padrão é "
+                         "po/pt-BR.po)")
+    ids = ler_ids(args.ids) if args.ids is not None else None
+
     try:
         po = po_util.carregar(args.po)
     except FileNotFoundError as erro:
@@ -685,14 +760,28 @@ def executar(args):
         raise _ErroDeUso(f"não consegui ler o PO {args.po or po_util.PO_PADRAO}: "
                          f"{_motivo_po(erro)}") from None
 
-    saida = preparar_saida(args.saida)
     todas = [e for e in po if not e.obsolete]
-    por_cap = selecionar(todas, capitulos, args.incluir_traduzidas)
+    # PO vazio, truncado ou de outro projeto não pode passar por "capítulo todo traduzido"
+    # (código 0). Confere antes de criar a saída e de remover lotes antigos.
+    com_entradas = {po_util.capitulo(e) for e in todas}
+    ausentes = [c for c in capitulos if c not in com_entradas]
+    if ausentes:
+        raise _ErroDeUso(f"o PO {args.po or po_util.PO_PADRAO} não tem nenhuma entrada de "
+                         f"{', '.join(ausentes)}: PO errado, vazio ou truncado?")
+
+    saida = preparar_saida(args.saida)
+    por_cap = selecionar(todas, capitulos, args.incluir_traduzidas, ids)
+    if ids is not None:
+        faltam = sorted(ids - {i.id for itens in por_cap.values() for i in itens})
+        if faltam:
+            _aviso(f"{len(faltam)} id(s) de --ids não entraram em nenhum lote (de outro "
+                   "capítulo, inexistentes ou de entrada que fica vazia por regra): "
+                   + ", ".join(faltam[:10]) + (" ..." if len(faltam) > 10 else ""))
     glossario = carregar_glossario()
 
     linhas = []
-    gravados = set()
-    total_lotes = total_entradas = total_palavras = 0
+    previstos = []  # (capítulo, nome, dados), na ordem de gravação
+    total_entradas = total_palavras = 0
     for cap in capitulos:
         lotes = dividir(por_cap[cap], args.palavras)
         if not lotes:
@@ -718,20 +807,24 @@ def executar(args):
                 "termos": termos,
             }
             nome = f"{cap}-{n:02d}.json"
-            try:
-                _gravar_atomico(saida / nome, _json(dados))
-            except OSError as erro:
-                raise _ErroDeUso(f"não consegui gravar {saida / nome}: {_motivo_os(erro)}") \
-                    from None
-            gravados.add(nome)
+            previstos.append((cap, nome, dados))
             linhas.append(_resumo_linha(nome, lote, termos))
-            total_lotes += 1
             total_entradas += len(lote)
             total_palavras += dados["palavras"]
-    removidos = remover_antigos(saida, set(capitulos), gravados)
-    linhas.append(f"{total_lotes} lotes, {total_entradas} entradas, {total_palavras} palavras "
-                  f"gravados em {saida}" + (f" ({removidos} lote(s) antigo(s) removido(s))"
-                                            if removidos else ""))
+    # Só grava depois de calcular tudo e conferir os destinos: o erro não deixa a gravação
+    # pela metade, e um arquivo que não é lote (tradução, relatório) nunca é sobrescrito.
+    conferir_destinos(saida, [(cap, nome) for cap, nome, _dados in previstos])
+    for _cap, nome, dados in previstos:
+        try:
+            _gravar_atomico(saida / nome, _json(dados))
+        except OSError as erro:
+            raise _ErroDeUso(f"não consegui gravar {saida / nome}: {_motivo_os(erro)}") \
+                from None
+    removidos = remover_antigos(saida, set(capitulos), {nome for _c, nome, _d in previstos})
+    linhas.append(f"{_plural(len(previstos), 'lote', 'lotes')}, "
+                  f"{_plural(total_entradas, 'entrada', 'entradas')}, "
+                  f"{_plural(total_palavras, 'palavra', 'palavras')} gravados em {saida}"
+                  + (f" ({removidos} lote(s) antigo(s) removido(s))" if removidos else ""))
     return linhas
 
 

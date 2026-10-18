@@ -11,9 +11,9 @@ faltando, % e status.
 
 * total      = mensagens traduzíveis (`po_util.traduzivel`) menos as `sem_texto`
                e as `SEMPRE_VAZIAS`; código, âncoras e comentários não contam;
-* traduzidas = msgstr não vazio e sem `fuzzy`;
+* traduzidas = `po_util.traduzida` (msgstr não vazio e sem `fuzzy`);
 * fuzzy      = msgstr não vazio marcado `fuzzy` (o livro mostra o inglês);
-* faltando   = msgstr vazio;
+* faltando   = o resto: msgstr vazio (mesmo com `fuzzy`);
 * %          = traduzidas / total, truncado na primeira casa decimal (100% só
                quando não falta nada).
 
@@ -27,10 +27,17 @@ Status:
 Hash de um capítulo = sha256 da concatenação (UTF-8), em ordem alfabética, de
 `msgid + '\\0' + msgstr + '\\n'` de todas as entradas vivas (não obsoletas) e
 traduzíveis do capítulo. Entradas de código, âncoras e comentários ficam de
-fora: mexer só nelas não invalida uma revisão.
+fora: mexer só nelas não invalida uma revisão. O hash cobre o que o livro
+mostra: o msgstr só entra se a entrada está traduzida (`po_util.traduzida`);
+vazia ou fuzzy entra com msgstr vazio, e pôr ou tirar o `fuzzy` muda o hash.
+Uma mensagem que aparece em mais de um capítulo (ex.: o título "Summary") entra
+no hash de todos eles, mas só conta no dono; o pseudo-capítulo `summary` não
+recebe as mensagens dos outros.
 
 Códigos de saída: 0 = ok; 2 = erro de uso ou de ambiente (mensagem em
-português, nunca um traceback).
+português, nunca um traceback). Se o leitor do pipe fechar antes do fim
+(`status.py | head`), a saída sai cortada e o código continua 0: a tabela é só
+informativa e um `--registrar` já foi gravado.
 """
 import argparse
 import datetime
@@ -63,10 +70,8 @@ ST_REVISADO = "revisado"
 ST_AMOSTRAGEM = "revisado (amostragem)"
 ST_ALTERADO = "alterado após revisão"
 
-# Compatibilidade: `sem_texto` e `SEMPRE_VAZIAS` são acrescentadas ao po_util
-# por outro item; se faltarem, nada é excluído do denominador.
-SEM_TEXTO = getattr(po_util, "sem_texto", lambda e: False)
-SEMPRE_VAZIAS = getattr(po_util, "SEMPRE_VAZIAS", frozenset())
+SEM_TEXTO = po_util.sem_texto
+SEMPRE_VAZIAS = po_util.SEMPRE_VAZIAS
 
 # Cabeçalho usado só quando o revisao.yml ainda não existe e --registrar o cria.
 CABECALHO_NOVO = (
@@ -247,17 +252,23 @@ def calcular(po):
         if e.obsolete or not po_util.traduzivel(e):
             continue
         cap = po_util.capitulo(e)
-        pares.setdefault(cap, []).append(e.msgid + "\0" + e.msgstr + "\n")
+        # Vazia e fuzzy mostram o inglês: só o msgstr de uma entrada traduzida entra no hash.
+        par = e.msgid + "\0" + (e.msgstr if po_util.traduzida(e) else "") + "\n"
+        # O hash vale para todo capítulo em que a mensagem aparece ('summary' fica de fora);
+        # a contagem, só para o dono.
+        onde = {po_util.capitulo_de_arquivo(a) for a in po_util.arquivos(e)} - {"summary"}
+        for cap_hash in onde | {cap}:
+            pares.setdefault(cap_hash, []).append(par)
         c = contagem.setdefault(cap, {"total": 0, "traduzidas": 0, "fuzzy": 0, "faltando": 0})
         if e.msgid in SEMPRE_VAZIAS or SEM_TEXTO(e):
             continue
         c["total"] += 1
-        if not e.msgstr.strip():
-            c["faltando"] += 1
-        elif "fuzzy" in e.flags:
+        if po_util.traduzida(e):
+            c["traduzidas"] += 1
+        elif e.msgstr.strip() and "fuzzy" in e.flags:
             c["fuzzy"] += 1
         else:
-            c["traduzidas"] += 1
+            c["faltando"] += 1
 
     # Ordem canônica; capítulos fora de CAPITULOS (se surgirem) vão no fim.
     extras = sorted(set(contagem) - set(po_util.CAPITULOS))
@@ -282,7 +293,7 @@ def hash_do_capitulo(pares):
 # --------------------------------------------------------------------------
 
 # Cabeçalho = linhas iniciais em branco, comentários ou '---' (e o BOM, se houver).
-_CABECALHO = re.compile(r"\A﻿?(?:[ \t]*(?:#[^\r\n]*|---[ \t]*)?(?:\r?\n|\Z))*")
+_CABECALHO = re.compile(r"\A\ufeff?(?:[ \t]*(?:#[^\r\n]*|---[ \t]*)?(?:\r?\n|\Z))*")
 
 
 def ler_revisao(caminho):
@@ -309,6 +320,9 @@ def ler_revisao(caminho):
         raise ErroUso(f"'{caminho}' não é um YAML válido{onde}") from None
     except RecursionError:  # o compositor do PyYAML é recursivo: ~500 níveis estouram a pilha
         raise ErroUso(f"'{caminho}' não é um YAML válido (aninhamento profundo demais)") from None
+    except (ValueError, TypeError, OverflowError):  # data inexistente (2026-02-30), `!!int abc`...
+        raise ErroUso(f"'{caminho}' não é um YAML válido (valor inválido, como uma data "
+                      "inexistente ou um número mal formado)") from None
     if dados is None:
         dados = {}
     if not isinstance(dados, dict):
@@ -506,7 +520,7 @@ def escrever_saida(texto):
         sys.stdout.flush()
     except BrokenPipeError:  # receita da documentação do Python para `| head`
         _descartar_stdout()
-        return 1
+        return 0  # a tabela é só informativa e um --registrar já foi gravado: não é "problema" (1)
     except (OSError, ValueError) as exc:  # disco cheio, /dev/full, caractere não UTF-8...
         _descartar_stdout()
         raise ErroUso(f"não foi possível escrever a saída: {_motivo(exc)}") from None
@@ -584,6 +598,9 @@ def main(argv=None):
         return 2
     except RecursionError:  # estrutura aninhada demais em algum ponto não previsto acima
         print(f"{PROG}: erro: dados com aninhamento profundo demais", file=sys.stderr)
+        return 2
+    except Exception as exc:  # rede de segurança: nunca um traceback (contrato §6)
+        print(f"{PROG}: erro: falha inesperada ({type(exc).__name__}): {_motivo(exc)}", file=sys.stderr)
         return 2
 
 

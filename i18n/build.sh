@@ -11,10 +11,14 @@
 # Em 2026-10-15 um build com OUT=/ apagou o /etc de um container; nunca teste a
 # trava rodando este script (nem o mdbook) com um caminho perigoso: carregue o
 # arquivo com `source` (a função main só roda quando o arquivo é executado) e
-# chame apenas `valida_saida` com caminhos falsos dentro de um `mktemp -d`.
+# chame apenas `valida_saida` com caminhos falsos dentro de um `mktemp -d`. É o
+# que faz a suíte versionada i18n/tools/testes/teste_trava.sh (rode-a depois de
+# mexer na trava).
 #
 # Contrato completo: i18n/CONTRATO.md, seção 6. Códigos de saída: 0 = ok,
-# 1 = o build falhou, 2 = uso, ambiente ou trava de OUT.
+# 1 = o build falhou, 2 = uso, ambiente ou trava de OUT, 130/143 = interrompido
+# por INT/TERM (o modo pt sai quando o mdbook em curso termina e apaga o
+# temporário; os modos en e pot não têm limpeza).
 
 # Revisão fixada do mdbook-i18n-helpers (a 0.4.0 do crates.io não extrai
 # `<Listing caption>`).
@@ -24,6 +28,8 @@ PTBR_TITULO='A Linguagem de Programação Rust'
 PTBR_REPO_URL=https://github.com/isacgalvao/book.pt-br
 PTBR_PATCH_REL=i18n/patches/trpl-listing-rotulos.patch
 PTBR_POS_BUILD_REL=i18n/tools/pos_build.py
+PTBR_GEMEAS_REL=i18n/tools/gemeas.py
+PTBR_NOMES_REL=i18n/tools/limpa_nomes.py
 
 # ---------------------------------------------------------------------------
 # Mensagens
@@ -41,17 +47,31 @@ uso: i18n/build.sh en  OUT              build em inglês
 
   OUT        diretório de saída (o conteúdo anterior é apagado pelo mdbook);
              só é aceito um diretório inexistente, vazio ou uma saída anterior
-             de livro (index.html + toc*.js) ou do modo pot (só messages.pot);
-             nunca "/", um diretório de primeiro nível, o HOME, o repositório,
-             o .git, arquivos rastreados pelo git, as fixtures ou /etc, /usr, ...
-             (também é recusado um OUT com caractere de controle, como uma
-             quebra de linha, ou que não seja um caminho canônico)
-  --po FILE  usa uma cópia de FILE em vez de po/pt-BR.po (po/ não é tocado)
+             de livro (index.html mais toc.html, book*.js ou toc*.js) ou do
+             modo pot (só o arquivo messages.pot); nunca "/", um diretório de
+             primeiro nível, o HOME, /etc, /usr, ..., nem nada dentro do
+             repositório (só book/ é aceito), nem um diretório que contenha
+             .git, .hg ou .svn, nem os diretórios de PTBR_FIXTURES (sem essa
+             variável, uma fixture que pareça saída de livro É aceita e
+             apagada). Também é recusado um OUT com caractere de controle,
+             como uma quebra de linha, ou que seja um link simbólico; o OUT é
+             usado já canonicalizado, com realpath -m.
+  --po FILE  usa uma cópia de FILE em vez de po/pt-BR.po (po/ não é tocado);
+             --po=FILE também vale
 
 modo pt: aplica a identidade pt-BR (título "A Linguagem de Programação Rust" e
   repositório isacgalvao/book.pt-br), usa o trpl-listing com rótulos em
   português ("Listagem N", "Nome do arquivo:"), compilado uma vez no cache, e
-  termina com i18n/tools/pos_build.py OUT (remove os ' {#id}' vazados).
+  monta sempre uma cópia temporária do PO (po/ nunca muda) com as entradas
+  gêmeas da pontuação inteligente (i18n/tools/gemeas.py: o trpl-note curva as
+  aspas e troca "..." e "--" antes do gettext, e sem as gêmeas esses
+  parágrafos saem em inglês). O preprocessor i18n/tools/limpa_nomes.py tira o
+  ' {#id}' do nome dos capítulos (barra lateral, ids do print.html, busca), e
+  o build termina com i18n/tools/pos_build.py OUT, que: remove os ' {#id}' que
+  escaparem (rede de segurança); põe no topo do <main> de cada página o aviso
+  de tradução comunitária não oficial; e traduz o inglês que não passa pelo PO:
+  a interface do tema fora do <main> (menus e atalhos), a página 404 e os
+  textos de searcher, book e ferris JS, sem tocar no texto do livro.
 
 variáveis MDBOOK_* do ambiente são ignoradas (o build é hermético).
 
@@ -61,7 +81,9 @@ variáveis: SITE_URL (padrão /book.pt-br/; só no modo pt)
              sem ele, usa um diretório do cache, nunca o repositório)
            PTBR_FIXTURES (diretórios separados por ":" que nunca podem ser OUT)
 
-códigos de saída: 0 = ok, 1 = o build falhou, 2 = uso, ambiente ou trava de OUT
+códigos de saída: 0 = ok, 1 = o build falhou, 2 = uso, ambiente ou trava de OUT,
+  130/143 = interrompido por INT/TERM (o modo pt sai quando o mdbook em curso
+  termina e apaga o temporário; os modos en e pot não têm limpeza)
 EOF
 }
 
@@ -86,8 +108,7 @@ dica_helpers() {
 }
 
 # ---------------------------------------------------------------------------
-# Trava de OUT (função de referência: 37 casos de teste, ver
-# $SP/ref/teste_valida.sh; a suíte de build.sh é $SP/runs/build/teste_guard.sh)
+# Trava de OUT
 #
 # Só valida e imprime o caminho canônico; não apaga nada. Precisa de RAIZ
 # (raiz do repositório) e, opcionalmente, de PTBR_FIXTURES="dir1:dir2".
@@ -102,11 +123,11 @@ _parece_saida() {
     return 0
   fi
   f="$(ls -A -- "$d" 2>/dev/null)" || return 1
-  [[ "$f" == "messages.pot" ]]
+  [[ "$f" == "messages.pot" && -f "$d/messages.pot" ]]
 }
 
 valida_saida() {
-  local bruto="${1:-}" out raiz casa p d rastreados conteudo
+  local bruto="${1:-}" sem out raiz casa p d rastreados conteudo
   local -a sistema=(/etc /usr /bin /sbin /lib /lib32 /lib64 /libx32 /boot /proc /sys /dev /run
                     /srv /opt /snap /nix /var /mnt /media /lost+found)
   local -a fixtures=()
@@ -117,12 +138,16 @@ valida_saida() {
   if [[ "$bruto" == *[[:cntrl:]]* ]]; then
     _recusa "OUT contém caractere de controle (ex.: quebra de linha): $(printf '%q' "$bruto")"; return 2
   fi
-  case "${bruto%/}" in ""|.|..|*/.|*/..) _recusa "OUT não pode ser /, . ou ..: $bruto"; return 2;; esac
-  [[ -L "${bruto%/}" ]] && { _recusa "OUT não pode ser link simbólico: $bruto"; return 2; }
+  # Sem TODAS as barras finais: "link//" tem de ser testado como "link".
+  sem="$bruto"
+  while [[ "$sem" == ?*/ ]]; do sem="${sem%/}"; done
+  case "$sem" in /|.|..|*/.|*/..) _recusa "OUT não pode ser /, . ou ..: $bruto"; return 2;; esac
+  [[ -L "$sem" ]] && { _recusa "OUT não pode ser link simbólico: $bruto"; return 2; }
   out="$(realpath -m -- "$bruto")" || return 2
-  # Defesa extra: o caminho validado tem de ser canônico (sem ".", ".." nem
-  # links); assim o que passou pelas checagens abaixo é exatamente o que o
-  # mdbook receberá.
+  # O que passa pelas checagens abaixo é exatamente o que o mdbook recebe: o
+  # chamador usa a saída desta função (o caminho canônico, sem ".", ".." nem
+  # links nos ancestrais), nunca o argumento bruto. Defesa extra: o realpath -m
+  # do caminho canônico tem de devolver o mesmo caminho.
   [[ "$(realpath -m -- "$out")" == "$out" ]] || { _recusa "OUT não é canônico: $out"; return 2; }
   raiz="$(realpath -- "${RAIZ:?RAIZ não definida}")" || return 2
   casa="$(realpath -m -- "${HOME:-/root}")"
@@ -137,8 +162,12 @@ valida_saida() {
   for p in "$casa" "$raiz"; do
     [[ "$p/" == "$out/"* ]] && { _recusa "OUT é $p ou ancestral dele: $out"; return 2; }
   done
-  # 4. o .git e tudo o que o git rastreia dentro do repositório
+  # 4. o .git e tudo dentro do repositório (menos book/, ignorado pelo git): um
+  # OUT em src/, listings/... faria o mdbook copiar a saída para o livro seguinte
   if [[ "$out" == "$raiz/.git" || "$out" == "$raiz/.git/"* ]]; then _recusa "OUT dentro de .git: $out"; return 2; fi
+  if [[ "$out" == "$raiz/"* && "$out" != "$raiz/book" && "$out" != "$raiz/book/"* ]]; then
+    _recusa "OUT dentro do repositório (só book/ é aceito; use um diretório fora dele): $out"; return 2
+  fi
   if [[ "$out" == "$raiz/"* && -e "$raiz/.git" ]]; then
     # Se o git não responder (ex.: "dubious ownership"), recusa: sem a consulta
     # não dá para garantir que OUT não contém arquivos rastreados.
@@ -156,6 +185,11 @@ valida_saida() {
   # 6. existente: só diretório vazio ou saída anterior do mdbook
   if [[ -e "$out" ]]; then
     [[ -d "$out" ]] || { _recusa "OUT existe e não é diretório: $out"; return 2; }
+    # Um repositório (clone do gh-pages: .git é pasta; worktree: .git é arquivo)
+    # nunca é saída de livro: o mdbook apagaria o .git e os commits não enviados.
+    for d in .git .hg .svn; do
+      if [[ -e "$out/$d" || -L "$out/$d" ]]; then _recusa "OUT contém um repositório ($d); use um diretório novo: $out"; return 2; fi
+    done
     # Se não der para listar o diretório, recusa: não dá para provar que está vazio.
     conteudo="$(ls -A -- "$out" 2>/dev/null)" || { _recusa "não consegui listar OUT: $out"; return 2; }
     if [[ -n "$conteudo" ]] && ! _parece_saida "$out"; then
@@ -186,14 +220,22 @@ resolve_cache() {
   fi
 }
 
-# Hash da árvore packages/mdbook-trpl (sem target/) + patch dos rótulos.
+# Hash da árvore packages/mdbook-trpl (sem target/) + patch dos rótulos. Do patch
+# entra só a parte que o git apply aplica: do primeiro `diff --git ` ou `--- ` em
+# diante (o corpo gerado pela receita do cabeçalho do patch começa em `--- a/`, sem
+# `diff --git`). Revisar o cabeçalho em prosa não pode recompilar nem criar outra
+# entrada de cache; sem nenhuma das duas linhas, entra o arquivo inteiro.
 hash_do_listing() {
   (
     cd "$RAIZ" || exit 1
     {
       find packages/mdbook-trpl -path packages/mdbook-trpl/target -prune -o -type f -print0 \
         | LC_ALL=C sort -z | xargs -0 -r sha256sum
-      sha256sum -- "$PTBR_PATCH_REL"
+      if grep -q -E '^(diff --git |--- )' -- "$PTBR_PATCH_REL"; then
+        sed -n -E '/^(diff --git |--- )/,$p' -- "$PTBR_PATCH_REL" | sha256sum
+      else
+        sha256sum < "$PTBR_PATCH_REL"
+      fi
     } | sha256sum | cut -c1-32
   )
 }
@@ -209,8 +251,12 @@ copia_pacote_trpl() {
   )
 }
 
-# Compila o mdbook-trpl-listing com os rótulos em português dentro de $1
-# (entrada do cache). Chamada com o flock da entrada já tomado.
+# compila_listing ENTRADA BIN: compila o mdbook-trpl-listing com os rótulos em
+# português dentro de ENTRADA (entrada do cache) e confere que BIN existe, é
+# executável e contém os rótulos. BIN é o caminho ESPERADO do binário, que o
+# cargo gera em ENTRADA/target/debug/mdbook-trpl-listing por causa do
+# --target-dir; a função não o escolhe (garante_listing passa esse caminho).
+# Chamada com o flock da entrada já tomado.
 compila_listing() {
   local entrada="$1" bin="$2" arvore log patch
   patch="$RAIZ/$PTBR_PATCH_REL"
@@ -286,27 +332,76 @@ cita_comando() {
   fi
 }
 
-# Cópia do PO num diretório temporário absoluto; define PO_DIR_TMP.
+# prepara_po ORIGEM [PREFIXO]: cópia do PO num diretório temporário absoluto; define
+# PO_DIR_TMP. PREFIXO (ex.: "--po: ") abre as mensagens de erro e só vale quando o PO
+# veio de uma opção (sem ela, o PO é o po/pt-BR.po e as mensagens não citam --po).
 prepara_po() {
-  local origem="$1" tmp
+  local origem="$1" prefixo="${2:-}" tmp
   if [[ ! -f "$origem" ]]; then
-    erro "--po: o arquivo '$origem' não existe."
+    erro "${prefixo}o arquivo '$origem' não existe."
     exit 2
   fi
   tmp="$(mktemp -d)" || { erro "não consegui criar um diretório temporário."; exit 2; }
   PO_DIR_TMP="$(realpath -- "$tmp")"
   # msgcat valida a sintaxe e normaliza a cópia como o repositório faz
-  # (msgcat --no-wrap --add-location=file); depois some o '#' solto na linha 1,
-  # que faz o mdbook-gettext entrar em pânico (CONTRATO, armadilha 1).
-  if ! msgcat --no-wrap --add-location=file -o "$PO_DIR_TMP/pt-BR.po" -- "$origem" 2>"$PO_DIR_TMP/msgcat.err"; then
+  # (msgcat --no-wrap --add-location=file --to-code=UTF-8: o mdbook-gettext só
+  # lê UTF-8).
+  if ! msgcat --no-wrap --add-location=file --to-code=UTF-8 -o "$PO_DIR_TMP/pt-BR.po" -- "$origem" 2>"$PO_DIR_TMP/msgcat.err"; then
     cat "$PO_DIR_TMP/msgcat.err" >&2
-    erro "--po: '$origem' não é um arquivo PO válido (msgcat falhou)."
+    erro "${prefixo}'$origem' não é um arquivo PO válido (msgcat falhou)."
     exit 2
   fi
   rm -f -- "${PO_DIR_TMP:?}/msgcat.err"
-  if [[ "$(head -n 1 -- "$PO_DIR_TMP/pt-BR.po")" == "#" ]]; then
-    sed -i '1d' -- "$PO_DIR_TMP/pt-BR.po"
+  # Sem nenhuma mensagem (arquivo vazio, só comentários, só o cabeçalho ou o
+  # cabeçalho com entradas obsoletas '#~') o msgcat sai com 0 (e, nos três
+  # primeiros casos, nem grava a saída), e o mdbook-gettext devolveria o livro
+  # em inglês com código 0.
+  if [[ ! -s "$PO_DIR_TMP/pt-BR.po" ]] || po_sem_mensagens "$PO_DIR_TMP/pt-BR.po"; then
+    erro "${prefixo}'$origem' não contém nenhuma mensagem (arquivo vazio ou truncado?)."
+    exit 2
   fi
+  # Somem os '#' solitários antes do primeiro msgid (só nesta cópia temporária,
+  # inclusive os de comentário de cabeçalho): eles fazem o mdbook-gettext entrar
+  # em pânico (CONTRATO, armadilha 1).
+  sed -i '/^msgid /,$!{/^#$/d}' -- "$PO_DIR_TMP/pt-BR.po"
+}
+
+# Sai com 0 se o PO tem uma linha '#' solitária (com ou sem \r) antes do primeiro
+# campo: o polib do Rust (mdbook-gettext) entra em pânico. Mesmo critério de
+# cerquilha_solitaria em i18n/tools/checks/po_formato.py.
+po_com_cerquilha_solitaria() {
+  awk '
+    { sub(/\r$/, "") }
+    $0 == "" { next }
+    $0 == "#" { achou = 1; exit }
+    /^#/ { if ($0 ~ /^(# |#\. |#: |#, )/) exit; next }
+    /^m/ { if ($0 ~ /^(msgctxt|msgid|msgid_plural|msgstr|msgstr\[[0-9]\]) /) exit; next }
+    /^"/ { achou = 1; exit }
+    END { exit (achou ? 0 : 1) }
+  ' "$1"
+}
+
+# Sai com 0 se o PO tem menos de 2 "msgid " (o cabeçalho conta como um; '#~ msgid'
+# de entrada obsoleta não conta): arquivo vazio, só com o cabeçalho (com ou sem
+# obsoletas) ou truncado; o livro sairia em inglês com código 0.
+po_sem_mensagens() {
+  local n
+  n="$(grep -c '^msgid ' -- "$1" 2>/dev/null || true)"
+  [[ "${n:-0}" -lt 2 ]]
+}
+
+# Acrescenta à cópia temporária do PO as entradas gêmeas da pontuação inteligente
+# (CONTRATO, armadilha 12): o trpl-note do upstream curva as aspas e troca "..." e
+# "--" no Markdown antes do mdbook-gettext, que então procura o msgid curvo; o
+# xgettext extraiu o texto cru. Só a cópia em PO_DIR_TMP é aumentada; po/ não muda.
+adiciona_gemeas() {
+  local po="$PO_DIR_TMP/pt-BR.po" aumentado="$PO_DIR_TMP/aumentado.po" relato
+  if ! relato="$(python3 "$RAIZ/$PTBR_GEMEAS_REL" "$po" "$aumentado")"; then
+    erro "$PTBR_GEMEAS_REL falhou em '$po'."
+    exit 1
+  fi
+  mv -f -- "$aumentado" "$po"
+  echo "$relato (entradas gêmeas da pontuação inteligente, só na cópia temporária do PO)" >&2
 }
 
 limpa_temporarios() {
@@ -315,19 +410,28 @@ limpa_temporarios() {
   fi
 }
 
-# Verifica (só avisa) a versão do mdbook.
+# Verifica (só avisa) a versão do mdbook, que tem de ser exatamente a esperada
+# (uma busca por trecho aceitaria a 0.5.10 no lugar da 0.5.1).
 confere_versao_mdbook() {
   local v
   v="$(mdbook --version 2>/dev/null || true)"
-  if [[ "$v" != *"$PTBR_MDBOOK_ESPERADO"* ]]; then
+  if [[ "$v" != "mdbook v$PTBR_MDBOOK_ESPERADO" ]]; then
     aviso "mdbook '${v:-desconhecido}'; o projeto usa a versão $PTBR_MDBOOK_ESPERADO."
   fi
 }
 
 # Roda `mdbook build -d OUT` na raiz do repositório.
 roda_mdbook() {
-  local rc=0
-  ( cd "$RAIZ" && mdbook build -d "$OUT" ) || rc=$?
+  local rc=0 kv n
+  local -a limpa=()
+  # Um MDBOOK_* cujo nome não é identificador do bash (ex.: MDBOOK_BOOK.TITLE)
+  # não aparece em `compgen -v` (main não o remove com unset), mas continua no
+  # ambiente e o mdbook o lê; `env -u` o tira só do ambiente do mdbook.
+  while IFS= read -r -d '' kv; do
+    n="${kv%%=*}"
+    if [[ "$n" == MDBOOK_* && ! "$n" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then limpa+=(-u "$n"); fi
+  done < <(env -0)
+  ( cd "$RAIZ" && env ${limpa[@]+"${limpa[@]}"} mdbook build -d "$OUT" ) || rc=$?
   if [[ $rc -ne 0 ]]; then
     erro "o mdbook falhou (código $rc)."
     exit 1
@@ -341,18 +445,13 @@ roda_mdbook() {
 main() {
   set -euo pipefail
 
-  local modo="" out_arg="" po_arg="" tem_po=0 arg
+  local modo="" out_arg="" po_arg="" tem_po=0 po_origem="" prefixo_po=""
   local -a posicionais=()
 
-  # Ajuda em qualquer posição.
-  for arg in "$@"; do
-    case "$arg" in
-      -h|--help) uso; exit 0;;
-    esac
-  done
-
+  # -h/--help vale em qualquer posição, menos depois de '--' e como valor de --po.
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      -h|--help) uso; exit 0;;
       --po)
         [[ $# -ge 2 ]] || { erro "--po precisa de um arquivo."; uso >&2; exit 2; }
         po_arg="$2"; tem_po=1; shift 2;;
@@ -416,7 +515,12 @@ main() {
   if [[ "$modo" == pt ]]; then
     exige msgcat "Instale o pacote gettext (ex.: apt install gettext)."
     exige flock "O flock (util-linux) protege a compilação do binário corrigido contra builds concorrentes."
-    exige python3 "O python3 roda $PTBR_POS_BUILD_REL."
+    exige python3 "O python3 roda $PTBR_POS_BUILD_REL, $PTBR_GEMEAS_REL e $PTBR_NOMES_REL."
+    if ! python3 -c 'import polib' 2>/dev/null; then
+      erro "o módulo Python 'polib' não está instalado ($PTBR_GEMEAS_REL precisa dele)."
+      erro "instale com: python3 -m pip install polib"
+      exit 2
+    fi
   fi
   confere_versao_mdbook
 
@@ -451,27 +555,45 @@ main() {
       fi
       ;;
     pt)
+      # O trap só pode apagar o diretório que o prepara_po cria nesta execução;
+      # um PO_DIR_TMP herdado do ambiente nunca é removido.
+      unset PO_DIR_TMP
       trap limpa_temporarios EXIT
       trap 'exit 130' INT
       trap 'exit 143' TERM
+      # O PO do build é sempre uma cópia temporária (com ou sem --po): ela recebe as
+      # gêmeas da pontuação inteligente, e o po/pt-BR.po nunca é alterado.
       if [[ $tem_po -eq 1 ]]; then
-        prepara_po "$po_arg"
-        export MDBOOK_PREPROCESSOR__GETTEXT__PO_DIR="$PO_DIR_TMP"
-        echo "usando uma cópia de $po_arg (po/ não é tocado)" >&2
-      elif [[ ! -f "$RAIZ/po/pt-BR.po" ]]; then
-        erro "po/pt-BR.po não existe em '$RAIZ' (use --po FILE para outro arquivo)."
-        exit 2
-      elif [[ "$(head -n 1 -- "$RAIZ/po/pt-BR.po" 2>/dev/null || true)" == "#" ]]; then
-        erro "po/pt-BR.po começa com uma linha '#' solta (o mdbook-gettext entra em pânico)."
-        erro "rode: python3 i18n/tools/normaliza_po.py"
-        exit 2
+        po_origem="$po_arg"
+        prefixo_po="--po: "
+      else
+        po_origem="$RAIZ/po/pt-BR.po"
+        if [[ ! -f "$po_origem" ]]; then
+          erro "po/pt-BR.po não existe em '$RAIZ' (use --po FILE para outro arquivo)."
+          exit 2
+        elif po_com_cerquilha_solitaria "$po_origem"; then
+          erro "po/pt-BR.po tem uma linha '#' solta antes do primeiro campo (o mdbook-gettext entra em pânico)."
+          erro "orquestrador: python3 i18n/tools/normaliza_po.py (grava po/pt-BR.po); os demais: i18n/build.sh pt OUT --po COPIA.po (o build normaliza a cópia sozinho)."
+          exit 2
+        elif po_sem_mensagens "$po_origem"; then
+          erro "po/pt-BR.po não contém nenhuma mensagem (arquivo vazio ou truncado?); o livro sairia em inglês."
+          exit 2
+        fi
       fi
+      prepara_po "$po_origem" "$prefixo_po"
+      adiciona_gemeas
+      export MDBOOK_PREPROCESSOR__GETTEXT__PO_DIR="$PO_DIR_TMP"
+      echo "usando uma cópia de $po_origem (po/ não é tocado)" >&2
       garante_listing
       MDBOOK_PREPROCESSOR__TRPL_LISTING__COMMAND="$(cita_comando "$LISTING_BIN")"
       export MDBOOK_PREPROCESSOR__TRPL_LISTING__COMMAND
       export MDBOOK_BOOK__LANGUAGE=pt-BR
       export MDBOOK_PREPROCESSOR__GETTEXT__AFTER='["links","trpl-note"]'
       export MDBOOK_PREPROCESSOR__GETTEXT__BEFORE='["trpl-listing"]'
+      # Tira o ' {#id}' do nome dos capítulos na origem (depois do gettext, que o traz).
+      MDBOOK_PREPROCESSOR__PTBR_NOMES__COMMAND="python3 $(cita_comando "$RAIZ/$PTBR_NOMES_REL")"
+      export MDBOOK_PREPROCESSOR__PTBR_NOMES__COMMAND
+      export MDBOOK_PREPROCESSOR__PTBR_NOMES__AFTER='["gettext"]'
       export MDBOOK_OUTPUT__HTML__SITE_URL="${SITE_URL:-/book.pt-br/}"
       export MDBOOK_BOOK__TITLE="$PTBR_TITULO"
       export MDBOOK_OUTPUT__HTML__GIT_REPOSITORY_URL="$PTBR_REPO_URL"

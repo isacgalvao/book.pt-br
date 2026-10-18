@@ -2,8 +2,17 @@
 """Normaliza arquivos PO (padrão: po/pt-BR.po) no lugar.
 
 Aplica `po_util.normalizar`: msgcat --no-wrap --add-location=file, remove a
-linha '#' solitária do início e garante os campos do cabeçalho. Só reescreve
-o arquivo se algo mudar. Código de saída: 0 = ok, 2 = erro de uso/ambiente.
+linha '#' solitária do início e garante os campos do cabeçalho nos POs que têm
+mensagens (um PO sem mensagens não é suportado: o msgcat o esvazia). Só
+reescreve o arquivo se algo mudar.
+
+Este script NÃO pega a trava: ao normalizar po/pt-BR.po, rode sob a trava das
+ferramentas que gravam o PO (`flock po/pt-BR.po.lock python3
+i18n/tools/normaliza_po.py`); sem ela, uma gravação do apply.py feita entre a
+leitura e a troca do arquivo se perde. Códigos de saída: 0 = ok (inclusive sem
+mudança); 2 = erro de uso, arquivo ausente ou que não é arquivo, msgcat ou polib
+ausente, PO que o msgcat rejeita, bytes que não são UTF-8 ou falha ao ler ou
+gravar.
 """
 import argparse
 import shutil
@@ -55,17 +64,30 @@ def _problema(caminho):
     return None
 
 
+def _linha_invalida(caminho):
+    """Linha (de 1 em diante) do primeiro byte que não é UTF-8 em `caminho`, ou None."""
+    try:
+        dados = caminho.read_bytes()
+        dados.decode("utf-8")
+    except UnicodeDecodeError as exc:  # a posição do erro de `normalizar` é na saída do msgcat
+        return dados.count(b"\n", 0, exc.start) + 1
+    except OSError:
+        pass
+    return None
+
+
 def main():
-    ap = _Parser(description=__doc__.split("\n\n")[0],
-                 epilog="Códigos de saída: 0 = ok; 2 = erro de uso ou de ambiente "
-                        "(arquivo ou msgcat ausente).")
+    # A description é o 1º e o 2º parágrafos do docstring; o epílogo, o 3º.
+    paragrafos = __doc__.strip().split("\n\n")
+    ap = _Parser(description=" ".join(paragrafos[:2]), epilog=" ".join(paragrafos[2:]))
     ap.add_argument("arquivos", nargs="*", type=Path, metavar="ARQUIVO.po",
                     help="arquivos PO a normalizar (padrão: po/pt-BR.po)")
     args = ap.parse_args()
 
     # Confere o ambiente antes de tocar em qualquer arquivo.
     if shutil.which("msgcat") is None:
-        print("erro: msgcat não encontrado: instale o pacote 'gettext'", file=sys.stderr)
+        print(f"{ap.prog}: erro: msgcat não encontrado: instale o pacote 'gettext'",
+              file=sys.stderr)
         return 2
 
     erro = False
@@ -77,6 +99,15 @@ def main():
             continue
         try:
             alterado = po_util.normalizar(caminho)
+        except UnicodeDecodeError:
+            # O msgcat só confere msgid e msgstr: o byte inválido está num
+            # comentário ou numa linha '#:'.
+            linha = _linha_invalida(caminho)
+            onde = f" (primeiro byte inválido na linha {linha})" if linha else ""
+            print(f"{caminho}: erro: o PO tem bytes que não são UTF-8 válido fora de "
+                  f"msgid/msgstr{onde}; regrave o arquivo em UTF-8", file=sys.stderr)
+            erro = True
+            continue
         except (OSError, RuntimeError) as exc:
             print(f"{caminho}: erro: {exc}", file=sys.stderr)
             erro = True

@@ -3,11 +3,21 @@
 
 Lê o PO já mesclado (`atualiza_po.sh`) e grava `SAIDA/delta.json` com:
 
-  - as entradas fuzzy (texto que mudou no upstream), de qualquer capítulo no escopo;
+  - as entradas fuzzy (texto que mudou no upstream), de qualquer capítulo no escopo.
+    Ficam de fora, com aviso no stderr, as fuzzy de mensagem sem texto traduzível
+    (`codigo`, `ancora`, `comentario` e `SEMPRE_VAZIAS`): o `apply.py --modo sync`
+    rejeita qualquer msgstr delas. O `atualiza_po.sh` as esvazia logo depois do msgmerge;
+    se ainda sobrar alguma, rode `i18n/tools/atualiza_po.sh` (só o orquestrador; ele pega
+    a trava sozinho): com o POT atual ele só limpa essas entradas.
+    Se o `#| msgid` de uma fuzzy é o msgid de OUTRA entrada ainda viva do PO, a
+    mensagem é nova (o msgmerge só a casou por semelhança): entra como `nova`, sem
+    `msgid_anterior` nem `msgstr_atual`, e a entrada parecida abre o `contexto`;
   - as entradas novas (traduzíveis, sem msgstr, com texto de verdade: nada de
     `sem_texto` nem de `SEMPRE_VAZIAS`) dos capítulos JÁ INICIADOS, isto é, os que
-    têm pelo menos uma entrada de prosa traduzida; com --todos-capitulos, de
-    todos os capítulos.
+    têm pelo menos uma entrada de prosa traduzida no PO mesclado ou, com
+    --po-anterior, no PO de antes do msgmerge (um sync que vira fuzzy toda a prosa
+    de um capítulo não o "desinicia"; sem --po-anterior ele cai fora, com aviso);
+    com --todos-capitulos, de todos os capítulos.
 
 Formato:
 
@@ -16,11 +26,14 @@ Formato:
                           "msgid_anterior", "msgstr_atual",
                           "contexto": [{"msgid", "msgstr"}]}]}}
 
-CAP é qualquer elemento de `po_util.CAPITULOS` (title-page, foreword, ch00..ch21,
+CAP é qualquer elemento de `po_util.CAPITULOS` (derivados de src/: title-page, foreword, chNN,
 appendix, summary). `contexto` = até 2 entradas antes e 2 depois, do mesmo
-primeiro arquivo, com o msgstr atual. `msgid_anterior` vem do `#| msgid`
-(previous_msgid); se faltar e houver --po-anterior, da entrada do PO anterior que
-tem o mesmo msgstr; senão é null.
+primeiro arquivo, com o msgstr atual (mais a entrada parecida, de qualquer arquivo,
+numa `nova` que o msgmerge casou com uma entrada viva). `msgid_anterior` vem do
+`#| msgid` (previous_msgid); se faltar e houver --po-anterior, da entrada traduzida
+(sem fuzzy) do PO anterior que tem o mesmo msgstr e outro msgid: vale a primeira
+do mesmo primeiro arquivo; só havendo candidatas de outros arquivos, vale o msgid
+delas se for o mesmo e é ambíguo (null) se forem diferentes; senão é null.
 
 Uso:
     delta.py [--po ARQUIVO.po] --saida DIR [--capitulo CAP ...] [--todos-capitulos]
@@ -143,8 +156,10 @@ def msgid_anterior(e, idx_anterior):
     """Inglês antigo de uma entrada fuzzy, ou None.
 
     1) `#| msgid` (previous_msgid); 2) a entrada do PO anterior com o mesmo
-    msgstr e msgid diferente (de preferência do mesmo primeiro arquivo; havendo
-    mais de uma, vale a primeira na ordem do PO); 3) None.
+    msgstr e msgid diferente: entre as do mesmo primeiro arquivo, vale a primeira
+    na ordem do PO; se nenhuma for desse arquivo, vale o msgid das outras quando
+    é o mesmo em todas, e é ambíguo (None) quando elas têm msgids diferentes;
+    3) None.
     """
     if e.previous_msgid:
         return e.previous_msgid
@@ -164,38 +179,87 @@ def montar_delta(po, escopo, todos, anterior=None):
     """Devolve ({CAP: [item, ...]}, capitulos_iniciados, avisos)."""
     entradas = [e for e in po if not e.obsolete]
     iniciados = capitulos_iniciados(entradas)
+    if anterior is not None:
+        # Um sync que vira fuzzy toda a prosa de um capítulo não o "desinicia":
+        # contam também as traduções de antes do msgmerge (sem fuzzy herdada).
+        iniciados |= capitulos_iniciados(anterior)
     posicao = indexar_vizinhos(entradas)
     idx_anterior = indexar_po_anterior(anterior) if anterior is not None else None
+    vivos = {}
+    for e in entradas:
+        vivos.setdefault(e.msgid, e)
 
+    avisos = []
     por_cap = {}
     for e in entradas:
         cap = po_util.capitulo(e)
         if escopo is not None and cap not in escopo:
             continue
+        parecida = None
         if "fuzzy" in e.flags:
-            tipo = "fuzzy"
+            if not po_util.traduzivel(e) or e.msgid in po_util.SEMPRE_VAZIAS:
+                # o apply.py --modo sync rejeita qualquer msgstr de uma mensagem assim
+                avisos.append(f"fuzzy sem texto traduzível ficou fora do delta [{po_util.entry_id(e)}] "
+                              f"{e.msgid[:60]!r}: rode i18n/tools/atualiza_po.sh (só o orquestrador; ele pega "
+                              f"a trava sozinho): com o POT atual ele só limpa essas entradas")
+                continue
+            # `#| msgid` de uma entrada que continua viva: o msgmerge casou uma
+            # mensagem NOVA por semelhança, não há o que portar (a viva fica no contexto)
+            parecida = vivos.get(e.previous_msgid) if e.previous_msgid else None
+            if parecida is e:
+                parecida = None
+            tipo = "fuzzy" if parecida is None else "nova"
         elif (po_util.traduzivel(e) and not e.msgstr.strip()
               and e.msgid not in po_util.SEMPRE_VAZIAS and not po_util.sem_texto(e)
               and (todos or cap in iniciados)):
             tipo = "nova"
         else:
             continue
+        vizinhas = contexto(e, posicao)
+        if parecida is not None:
+            par = {"msgid": parecida.msgid, "msgstr": parecida.msgstr}
+            vizinhas = [par] + [v for v in vizinhas if v != par]
         por_cap.setdefault(cap, []).append({
             "id": po_util.entry_id(e),
             "tipo": tipo,
             "arquivos": po_util.arquivos(e),
             "msgid": e.msgid,
             "msgid_anterior": msgid_anterior(e, idx_anterior) if tipo == "fuzzy" else None,
-            "msgstr_atual": e.msgstr,
-            "contexto": contexto(e, posicao),
+            "msgstr_atual": "" if parecida is not None else e.msgstr,
+            "contexto": vizinhas,
         })
 
-    avisos = []
     ordem = [c for c in po_util.CAPITULOS if c in por_cap]
     fora = [c for c in por_cap if c not in po_util.CAPITULOS]
     if fora:
         avisos.append("capítulo(s) fora de CAPITULOS no PO: " + ", ".join(fora))
+    if not todos:
+        for c in ordem + fora:
+            n_fuzzy = sum(1 for i in por_cap[c] if i["tipo"] == "fuzzy")
+            if n_fuzzy and c not in iniciados:
+                dica = "use --todos-capitulos"
+                if anterior is None:
+                    dica = "passe --po-anterior ou " + dica
+                avisos.append(f"{c}: {n_fuzzy} fuzzy em capítulo não iniciado; as entradas novas dele ficam "
+                              f"fora do delta (se um sync virou fuzzy toda a prosa do capítulo, {dica})")
     return {c: por_cap[c] for c in ordem + fora}, iniciados, avisos
+
+
+def _motivo_leitura(exc):
+    """Motivo, em português, de uma falha ao ler um PO (o polib e o Python falam inglês)."""
+    texto = " ".join(str(exc).split())
+    if isinstance(exc, UnicodeDecodeError):
+        return f"o conteúdo não é texto UTF-8 válido (posição {exc.start})"
+    if "Syntax error in po file" in texto:
+        linha = re.search(r"line (\d+)", texto)
+        return "erro de sintaxe no arquivo PO" + (f" (linha {linha.group(1)})" if linha else "")
+    if isinstance(exc, PermissionError):
+        return "permissão negada"
+    if isinstance(exc, IndexError):  # o polib tropeça num PO truncado
+        return "arquivo PO truncado ou malformado"
+    if isinstance(exc, OSError):
+        return exc.strerror or texto
+    return texto[:200] or type(exc).__name__
 
 
 def _gravar_json(dados, destino):
@@ -231,7 +295,13 @@ def _relatorio(delta, iniciados, escopo, todos):
                   f"{', '.join(c for c in po_util.CAPITULOS if c in fora)}")
 
 
+# Vira True depois que o delta.json foi gravado (o `__main__` precisa saber se um
+# BrokenPipeError no stdout/stderr aconteceu antes ou depois disso).
+_gravado = False
+
+
 def main(argv=None):
+    global _gravado
     ap = _Parser(
         description="Gera o delta.json: entradas fuzzy e prosa nova dos capítulos já iniciados "
                     "(o que a tradução por IA precisa tratar depois de um sync).",
@@ -242,12 +312,15 @@ def main(argv=None):
     ap.add_argument("--saida", metavar="DIR", type=Path, required=True,
                     help="diretório onde gravar delta.json (criado se não existir)")
     ap.add_argument("--capitulo", metavar="CAP", nargs="+", action="extend",
-                    help="só estes capítulos (title-page, foreword, ch00..ch21, appendix, summary)")
+                    help="só estes capítulos (elementos de po_util.CAPITULOS, derivados de src/: "
+                         "title-page, foreword, chNN, appendix, summary)")
     ap.add_argument("--todos-capitulos", action="store_true",
                     help="inclui as entradas vazias de TODOS os capítulos, não só dos já iniciados")
     ap.add_argument("--po-anterior", metavar="ARQUIVO.po", type=Path,
-                    help="PO de antes do msgmerge; fornece o msgid_anterior das entradas fuzzy "
-                         "sem `#| msgid` (entrada do PO antigo com o mesmo msgstr)")
+                    help="PO de antes do msgmerge; conta como iniciado o capítulo que já tinha prosa "
+                         "traduzida e fornece o msgid_anterior das entradas fuzzy sem `#| msgid` "
+                         "(entrada traduzida do PO antigo com o mesmo msgstr: vale a do mesmo arquivo; "
+                         "dá null quando só há candidatas de outros arquivos com ingleses diferentes)")
     args = ap.parse_args(argv)
 
     escopo = None
@@ -273,14 +346,19 @@ def main(argv=None):
         print(f"erro: --saida {args.saida} existe e não é um diretório", file=sys.stderr)
         return 2
 
-    try:
-        po = po_util.carregar(caminho)
-        anterior = None
-        if args.po_anterior:
-            anterior = [e for e in po_util.carregar(args.po_anterior) if not e.obsolete]
-    except (OSError, ValueError) as exc:
-        print(f"erro: não consegui ler o PO: {exc}", file=sys.stderr)
-        return 2
+    lidos = []
+    for rotulo, p in (("PO", caminho), ("PO anterior", args.po_anterior)):
+        if p is None:
+            lidos.append(None)
+            continue
+        try:
+            lidos.append(po_util.carregar(p))
+        except Exception as exc:  # polib levanta OSError, ValueError, IndexError...
+            print(f"erro: não consegui ler o {rotulo} {p}: {_motivo_leitura(exc)}", file=sys.stderr)
+            return 2
+    po, anterior = lidos
+    if anterior is not None:
+        anterior = [e for e in anterior if not e.obsolete]
 
     delta, iniciados, avisos = montar_delta(po, escopo, args.todos_capitulos, anterior)
 
@@ -292,6 +370,7 @@ def main(argv=None):
             return 2
         _gravar_json({"gerado_em": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                       "capitulos": delta}, destino)
+        _gravado = True
     except OSError as exc:
         print(f"erro: não consegui gravar o delta em {args.saida}: {exc}", file=sys.stderr)
         return 2
@@ -307,7 +386,10 @@ if __name__ == "__main__":
     try:
         codigo = main()
         sys.stdout.flush()
-    except BrokenPipeError:  # saída fechada (ex.: `| head`): o delta.json já foi gravado
-        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
-        codigo = 0
+    except BrokenPipeError:  # saída fechada (ex.: `| head`): só é sucesso se o delta.json já foi gravado
+        nulo = os.open(os.devnull, os.O_WRONLY)
+        for fluxo in (sys.stdout, sys.stderr):  # o flush final de nenhum dos dois pode falhar de novo
+            if fluxo is not None:  # com `2>&-` o Python deixa sys.stderr = None
+                os.dup2(nulo, fluxo.fileno())
+        codigo = 0 if _gravado else 2
     sys.exit(codigo)
